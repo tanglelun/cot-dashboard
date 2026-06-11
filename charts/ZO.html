@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oats (ZO)</title>
+    <style>
+        * { box-sizing: border-box; }
+        html, body { height: 100%; }
+        body { margin: 0; background: #f7f8fb; color: #172033; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+        .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 20px 10px; }
+        h1 { margin: 0; font-size: 20px; font-weight: 700; }
+        .meta { color: #5e6a7d; font-size: 13px; white-space: nowrap; }
+        .legend-inline { display: flex; align-items: center; gap: 14px; margin-top: 4px; color: #5e6a7d; font-size: 12px; }
+        .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+        .legend-swatch { width: 18px; height: 3px; border-radius: 999px; display: inline-block; }
+        .legend-bar { background: #0a8f62; }
+        .legend-line { background: #2f7df6; }
+        .chart-wrap { position: relative; height: calc(100vh - 62px); min-height: 420px; padding: 0 14px 14px; }
+        canvas { display: block; width: 100%; height: 100%; background: #ffffff; border: 1px solid #dbe1ea; border-radius: 8px; }
+        .tooltip { position: fixed; pointer-events: none; display: none; background: rgba(23, 32, 51, 0.95); color: white; padding: 8px 10px; border-radius: 6px; font-size: 12px; line-height: 1.35; box-shadow: 0 8px 24px rgba(23, 32, 51, 0.22); }
+        .value-pos { color: #0a8f62; }
+        .value-neg { color: #c7354f; }
+        .dragging { cursor: grabbing; }
+        @media (max-width: 640px) {
+            .toolbar { align-items: flex-start; flex-direction: column; gap: 4px; }
+            .meta { white-space: normal; }
+            .chart-wrap { height: calc(100vh - 92px); min-height: 360px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <div>
+            <h1>Oats (ZO)</h1>
+            <div class="legend-inline">
+                <span class="legend-item"><span class="legend-swatch legend-bar"></span>Non-Commercial Net</span>
+                <span class="legend-item"><span class="legend-swatch legend-line"></span>Futures Index (base=100)</span>
+            </div>
+        </div>
+        <div id="meta" class="meta">Non-Commercial Net | Weekly bars | Last 422 reports</div>
+    </div>
+    <div class="chart-wrap">
+        <canvas id="chart"></canvas>
+        <div id="tooltip" class="tooltip"></div>
+    </div>
+    <script>
+        const points = [{"date": "2016-06-07", "value": -1024, "index": 100.0}, {"date": "2016-06-14", "value": -658, "index": 105.09}, {"date": "2016-06-21", "value": 10, "index": 105.09}, {"date": "2016-06-28", "value": -782, "index": 104.83}, {"date": "2016-07-05", "value": -764, "index": 109.92}, {"date": "2016-07-12", "value": -545, "index": 120.36}, {"date": "2016-07-19", "value": -354, "index": 103.94}, {"date": "2016-07-26", "value": -49, "index": 101.91}, {"date": "2016-08-02", "value": -355, "index": 99.49}, {"date": "2016-08-09", "value": -958, "index": 89.19}, {"date": "2016-08-16", "value": -1081, "index": 87.79}, {"date": "2016-08-23", "value": -1087, "index": 87.28}, {"date": "2016-08-30", "value": -828, "index": 82.32}, {"date": "2016-09-06", "value": -1163, "index": 80.66}, {"date": "2016-09-13", "value": -1292, "index": 83.33}, {"date": "2016-09-20", "value": -1406, "index": 89.06}, {"date": "2016-09-27", "value": -1250, "index": 88.8}, {"date": "2016-10-04", "value": -1362, "index": 92.24}, {"date": "2016-10-11", "value": -296, "index": 101.27}, {"date": "2016-10-18", "value": 199, "index": 103.69}, {"date": "2016-10-25", "value": 720, "index": 107.89}, {"date": "2016-11-01", "value": 793, "index": 111.7}, {"date": "2016-11-08", "value": 1008, "index": 114.89}, {"date": "2016-11-15", "value": 518, "index": 118.58}, {"date": "2016-11-22", "value": 296, "index": 112.72}, {"date": "2016-11-29", "value": 471, "index": 101.02}, {"date": "2016-12-06", "value": -17, "index": 106.62}, {"date": "2016-12-13", "value": -109, "index": 111.07}, {"date": "2016-12-20", "value": -38, "index": 113.87}, {"date": "2016-12-27", "value": -75, "index": 116.28}, {"date": "2017-01-03", "value": -22, "index": 119.85}, {"date": "2017-01-10", "value": 89, "index": 115.27}, {"date": "2017-01-17", "value": -151, "index": 126.84}, {"date": "2017-01-24", "value": 362, "index": 130.66}, {"date": "2017-01-31", "value": 269, "index": 124.3}, {"date": "2017-02-07", "value": 211, "index": 131.04}, {"date": "2017-02-14", "value": 256, "index": 129.26}, {"date": "2017-02-21", "value": 292, "index": 128.5}, {"date": "2017-02-28", "value": 554, "index": 131.3}, {"date": "2017-03-07", "value": 732, "index": 135.11}, {"date": "2017-03-14", "value": 898, "index": 128.75}, {"date": "2017-03-21", "value": 1286, "index": 129.13}, {"date": "2017-03-28", "value": 1287, "index": 119.59}, {"date": "2017-04-04", "value": 939, "index": 113.36}, {"date": "2017-04-11", "value": 772, "index": 111.83}, {"date": "2017-04-18", "value": 774, "index": 111.32}, {"date": "2017-04-25", "value": 406, "index": 113.23}, {"date": "2017-05-02", "value": 413, "index": 124.81}, {"date": "2017-05-09", "value": 659, "index": 127.23}, {"date": "2017-05-16", "value": 938, "index": 116.92}, {"date": "2017-05-23", "value": 952, "index": 122.77}, {"date": "2017-05-30", "value": 949, "index": 123.28}, {"date": "2017-06-06", "value": 1239, "index": 130.41}, {"date": "2017-06-13", "value": 1402, "index": 128.88}, {"date": "2017-06-20", "value": 2121, "index": 132.95}, {"date": "2017-06-27", "value": 2058, "index": 125.45}, {"date": "2017-07-03", "value": 2206, "index": 144.78}, {"date": "2017-07-11", "value": 1995, "index": 156.87}, {"date": "2017-07-18", "value": 1886, "index": 148.47}, {"date": "2017-07-25", "value": 2148, "index": 143.51}, {"date": "2017-08-01", "value": 2295, "index": 142.62}, {"date": "2017-08-08", "value": 1836, "index": 139.19}, {"date": "2017-08-15", "value": 1884, "index": 131.42}, {"date": "2017-08-22", "value": 1573, "index": 121.63}, {"date": "2017-08-29", "value": 1237, "index": 119.59}, {"date": "2017-09-05", "value": 1031, "index": 111.2}, {"date": "2017-09-12", "value": 753, "index": 119.85}, {"date": "2017-09-19", "value": 1043, "index": 122.26}, {"date": "2017-09-26", "value": 1119, "index": 127.35}, {"date": "2017-10-03", "value": 1151, "index": 127.86}, {"date": "2017-10-10", "value": 1151, "index": 126.97}, {"date": "2017-10-17", "value": 1670, "index": 134.73}, {"date": "2017-10-24", "value": 1748, "index": 140.97}, {"date": "2017-10-31", "value": 2003, "index": 134.73}, {"date": "2017-11-07", "value": 2447, "index": 137.66}, {"date": "2017-11-14", "value": 2731, "index": 140.59}, {"date": "2017-11-21", "value": 2638, "index": 130.15}, {"date": "2017-11-28", "value": 2877, "index": 124.55}, {"date": "2017-12-05", "value": 2711, "index": 121.63}, {"date": "2017-12-12", "value": 2400, "index": 115.65}, {"date": "2017-12-19", "value": 2316, "index": 125.45}, {"date": "2017-12-26", "value": 2440, "index": 123.79}, {"date": "2018-01-02", "value": 1963, "index": 123.41}, {"date": "2018-01-09", "value": 1839, "index": 126.72}, {"date": "2018-01-16", "value": 1860, "index": 127.23}, {"date": "2018-01-23", "value": 2082, "index": 137.4}, {"date": "2018-01-30", "value": 1903, "index": 137.4}, {"date": "2018-02-06", "value": 1842, "index": 136.9}, {"date": "2018-02-13", "value": 2196, "index": 139.19}, {"date": "2018-02-20", "value": 2213, "index": 135.5}, {"date": "2018-02-27", "value": 2314, "index": 132.32}, {"date": "2018-03-06", "value": 2175, "index": 133.33}, {"date": "2018-03-13", "value": 2319, "index": 131.3}, {"date": "2018-03-20", "value": 1347, "index": 119.85}, {"date": "2018-03-27", "value": 405, "index": 115.01}, {"date": "2018-04-03", "value": 396, "index": 118.32}, {"date": "2018-04-10", "value": 432, "index": 120.36}, {"date": "2018-04-17", "value": 336, "index": 116.41}, {"date": "2018-04-24", "value": 345, "index": 114.12}, {"date": "2018-05-01", "value": 172, "index": 115.9}, {"date": "2018-05-08", "value": -58, "index": 116.54}, {"date": "2018-05-15", "value": -214, "index": 122.26}, {"date": "2018-05-22", "value": -32, "index": 127.1}, {"date": "2018-05-29", "value": 75, "index": 124.17}, {"date": "2018-06-05", "value": 229, "index": 124.17}, {"date": "2018-06-12", "value": -97, "index": 123.28}, {"date": "2018-06-19", "value": -230, "index": 119.59}, {"date": "2018-06-26", "value": -141, "index": 122.77}, {"date": "2018-07-03", "value": -76, "index": 129.26}, {"date": "2018-07-10", "value": 28, "index": 130.28}, {"date": "2018-07-17", "value": 324, "index": 117.81}, {"date": "2018-07-24", "value": 238, "index": 117.3}, {"date": "2018-07-31", "value": 171, "index": 119.97}, {"date": "2018-08-07", "value": 833, "index": 129.9}, {"date": "2018-08-14", "value": 985, "index": 132.44}, {"date": "2018-08-21", "value": 989, "index": 130.79}, {"date": "2018-08-28", "value": 496, "index": 125.83}, {"date": "2018-09-04", "value": 200, "index": 119.08}, {"date": "2018-09-18", "value": -36, "index": 125.06}, {"date": "2018-09-25", "value": 247, "index": 130.79}, {"date": "2018-10-02", "value": 200, "index": 138.93}, {"date": "2018-10-09", "value": 537, "index": 145.55}, {"date": "2018-10-16", "value": 734, "index": 153.82}, {"date": "2018-10-23", "value": 1060, "index": 151.15}, {"date": "2018-10-30", "value": 1279, "index": 142.37}, {"date": "2018-11-06", "value": 1278, "index": 149.49}, {"date": "2018-11-13", "value": 1400, "index": 144.78}, {"date": "2018-11-20", "value": 2133, "index": 154.58}, {"date": "2018-11-27", "value": 1893, "index": 137.15}, {"date": "2018-12-04", "value": 1926, "index": 144.27}, {"date": "2018-12-11", "value": 1701, "index": 145.29}, {"date": "2018-12-18", "value": 1899, "index": 146.06}, {"date": "2018-12-24", "value": 1779, "index": 140.33}, {"date": "2018-12-31", "value": 1450, "index": 140.08}, {"date": "2019-01-08", "value": 1369, "index": 143.89}, {"date": "2019-01-15", "value": 1782, "index": 148.85}, {"date": "2019-01-22", "value": 2035, "index": 151.15}, {"date": "2019-01-29", "value": 2261, "index": 143.51}, {"date": "2019-02-05", "value": 2184, "index": 148.22}, {"date": "2019-02-12", "value": 2205, "index": 146.06}, {"date": "2019-02-19", "value": 1899, "index": 137.4}, {"date": "2019-02-26", "value": 1392, "index": 135.11}, {"date": "2019-03-05", "value": 1056, "index": 130.41}, {"date": "2019-03-12", "value": 883, "index": 131.68}, {"date": "2019-03-19", "value": 870, "index": 138.93}, {"date": "2019-03-26", "value": 633, "index": 138.93}, {"date": "2019-04-02", "value": 563, "index": 141.48}, {"date": "2019-04-09", "value": 812, "index": 143.13}, {"date": "2019-04-16", "value": 1611, "index": 150.0}, {"date": "2019-04-23", "value": 2062, "index": 149.87}, {"date": "2019-04-30", "value": 2525, "index": 155.22}, {"date": "2019-05-07", "value": 2478, "index": 150.25}, {"date": "2019-05-14", "value": 2441, "index": 137.4}, {"date": "2019-05-21", "value": 2787, "index": 157.0}, {"date": "2019-05-28", "value": 3164, "index": 161.2}, {"date": "2019-06-04", "value": 3409, "index": 154.71}, {"date": "2019-06-11", "value": 3179, "index": 154.58}, {"date": "2019-06-18", "value": 3006, "index": 151.4}, {"date": "2019-06-25", "value": 2196, "index": 138.17}, {"date": "2019-07-02", "value": 2207, "index": 145.04}, {"date": "2019-07-09", "value": 2232, "index": 139.44}, {"date": "2019-07-16", "value": 2125, "index": 140.33}, {"date": "2019-07-23", "value": 2204, "index": 135.37}, {"date": "2019-07-30", "value": 1761, "index": 131.04}, {"date": "2019-08-06", "value": 1597, "index": 135.24}, {"date": "2019-08-13", "value": 1668, "index": 138.3}, {"date": "2019-08-20", "value": 1698, "index": 138.8}, {"date": "2019-08-27", "value": 1714, "index": 130.41}, {"date": "2019-09-03", "value": 1696, "index": 131.55}, {"date": "2019-09-10", "value": 1640, "index": 143.38}, {"date": "2019-09-17", "value": 1998, "index": 143.13}, {"date": "2019-09-24", "value": 1919, "index": 139.19}, {"date": "2019-10-01", "value": 1716, "index": 143.51}, {"date": "2019-10-08", "value": 2071, "index": 144.78}, {"date": "2019-10-15", "value": 2493, "index": 150.89}, {"date": "2019-10-22", "value": 2599, "index": 151.02}, {"date": "2019-10-29", "value": 2524, "index": 152.93}, {"date": "2019-11-05", "value": 2473, "index": 153.05}, {"date": "2019-11-12", "value": 2570, "index": 156.62}, {"date": "2019-11-19", "value": 2580, "index": 155.98}, {"date": "2019-11-26", "value": 3264, "index": 160.81}, {"date": "2019-12-03", "value": 3213, "index": 162.98}, {"date": "2019-12-10", "value": 2687, "index": 160.94}, {"date": "2019-12-17", "value": 2572, "index": 155.98}, {"date": "2019-12-24", "value": 1789, "index": 145.42}, {"date": "2020-01-07", "value": 1687, "index": 149.24}, {"date": "2020-01-14", "value": 2034, "index": 159.29}, {"date": "2020-01-21", "value": 2225, "index": 160.18}, {"date": "2020-01-28", "value": 2667, "index": 156.23}, {"date": "2020-02-04", "value": 2645, "index": 156.74}, {"date": "2020-02-11", "value": 2682, "index": 152.29}, {"date": "2020-02-18", "value": 2532, "index": 154.45}, {"date": "2020-02-25", "value": 2406, "index": 145.04}, {"date": "2020-03-03", "value": 1230, "index": 131.3}, {"date": "2020-03-10", "value": 1193, "index": 136.64}, {"date": "2020-03-17", "value": 1212, "index": 129.01}, {"date": "2020-05-12", "value": 1297, "index": 163.23}, {"date": "2020-05-19", "value": 1636, "index": 160.69}, {"date": "2020-05-26", "value": 1953, "index": 168.58}, {"date": "2020-06-02", "value": 2246, "index": 167.05}, {"date": "2020-06-09", "value": 2015, "index": 161.45}, {"date": "2020-06-16", "value": 1757, "index": 154.07}, {"date": "2020-06-23", "value": 2032, "index": 154.83}, {"date": "2020-06-30", "value": 2286, "index": 169.72}, {"date": "2020-07-07", "value": 2370, "index": 171.88}, {"date": "2020-07-14", "value": 2208, "index": 173.54}, {"date": "2020-07-21", "value": 2029, "index": 141.98}, {"date": "2020-07-28", "value": 2232, "index": 145.55}, {"date": "2020-08-04", "value": 2274, "index": 138.93}, {"date": "2020-08-11", "value": 1967, "index": 134.22}, {"date": "2020-08-18", "value": 1648, "index": 138.68}, {"date": "2020-08-25", "value": 1525, "index": 138.55}, {"date": "2020-09-01", "value": 1706, "index": 141.48}, {"date": "2020-09-08", "value": 1635, "index": 136.26}, {"date": "2020-09-15", "value": 1577, "index": 137.02}, {"date": "2020-09-22", "value": 1855, "index": 147.2}, {"date": "2020-09-29", "value": 1905, "index": 141.22}, {"date": "2020-10-06", "value": 2030, "index": 147.96}, {"date": "2020-10-13", "value": 2178, "index": 144.66}, {"date": "2020-10-20", "value": 2110, "index": 152.67}, {"date": "2020-10-27", "value": 2314, "index": 156.74}, {"date": "2020-11-03", "value": 2098, "index": 150.64}, {"date": "2020-11-10", "value": 2099, "index": 156.36}, {"date": "2020-11-17", "value": 1961, "index": 150.76}, {"date": "2020-11-24", "value": 2088, "index": 146.31}, {"date": "2020-12-15", "value": 1851, "index": 169.97}, {"date": "2020-12-21", "value": 2004, "index": 171.88}, {"date": "2020-12-29", "value": 2081, "index": 172.52}, {"date": "2021-01-05", "value": 1989, "index": 184.86}, {"date": "2021-01-12", "value": 1967, "index": 184.22}, {"date": "2021-01-19", "value": 1963, "index": 184.48}, {"date": "2021-01-26", "value": 1739, "index": 180.53}, {"date": "2021-02-02", "value": 1630, "index": 175.83}, {"date": "2021-02-09", "value": 1441, "index": 180.15}, {"date": "2021-02-16", "value": 1584, "index": 179.77}, {"date": "2021-02-23", "value": 1389, "index": 184.73}, {"date": "2021-03-02", "value": 1411, "index": 190.59}, {"date": "2021-03-09", "value": 1559, "index": 198.09}, {"date": "2021-03-16", "value": 1439, "index": 190.33}, {"date": "2021-03-23", "value": 1273, "index": 192.49}, {"date": "2021-03-30", "value": 1246, "index": 187.53}, {"date": "2021-04-06", "value": 1221, "index": 190.33}, {"date": "2021-04-13", "value": 1171, "index": 191.09}, {"date": "2021-04-20", "value": 1320, "index": 196.06}, {"date": "2021-04-27", "value": 1506, "index": 205.34}, {"date": "2021-05-04", "value": 1756, "index": 204.33}, {"date": "2021-05-11", "value": 1773, "index": 203.69}, {"date": "2021-05-18", "value": 1202, "index": 181.42}, {"date": "2021-05-25", "value": 745, "index": 183.59}, {"date": "2021-06-01", "value": 611, "index": 195.8}, {"date": "2021-06-08", "value": 777, "index": 207.63}, {"date": "2021-06-15", "value": 853, "index": 186.01}, {"date": "2021-06-22", "value": 538, "index": 183.33}, {"date": "2021-07-20", "value": 667, "index": 229.39}, {"date": "2021-07-27", "value": 624, "index": 237.02}, {"date": "2021-08-03", "value": 628, "index": 226.46}, {"date": "2021-08-10", "value": 667, "index": 237.79}, {"date": "2021-08-17", "value": 842, "index": 258.27}, {"date": "2021-08-24", "value": 759, "index": 259.03}, {"date": "2021-08-31", "value": 768, "index": 252.54}, {"date": "2021-09-07", "value": 885, "index": 252.16}, {"date": "2021-09-14", "value": 760, "index": 257.51}, {"date": "2021-09-21", "value": 774, "index": 271.12}, {"date": "2021-09-28", "value": 740, "index": 296.82}, {"date": "2021-10-05", "value": 747, "index": 302.67}, {"date": "2021-10-12", "value": 626, "index": 329.77}, {"date": "2021-10-19", "value": 594, "index": 333.84}, {"date": "2021-10-26", "value": 585, "index": 359.54}, {"date": "2021-11-02", "value": 605, "index": 386.9}, {"date": "2021-11-09", "value": 601, "index": 364.5}, {"date": "2021-11-16", "value": 694, "index": 371.76}, {"date": "2021-11-23", "value": 698, "index": 380.28}, {"date": "2021-11-30", "value": 734, "index": 367.94}, {"date": "2021-12-07", "value": 729, "index": 375.19}, {"date": "2021-12-14", "value": 670, "index": 361.96}, {"date": "2021-12-21", "value": 672, "index": 339.31}, {"date": "2021-12-28", "value": 685, "index": 357.51}, {"date": "2022-01-11", "value": 557, "index": 333.84}, {"date": "2022-06-28", "value": 224, "index": 320.48}, {"date": "2022-08-30", "value": 144, "index": 204.83}, {"date": "2022-09-06", "value": -28, "index": 202.67}, {"date": "2022-09-13", "value": 75, "index": 211.96}, {"date": "2022-09-20", "value": -11, "index": 210.31}, {"date": "2022-09-27", "value": 25, "index": 188.3}, {"date": "2022-10-04", "value": -36, "index": 205.34}, {"date": "2022-10-11", "value": -14, "index": 199.62}, {"date": "2022-10-18", "value": 59, "index": 197.07}, {"date": "2022-10-25", "value": -516, "index": 181.93}, {"date": "2022-11-01", "value": -611, "index": 203.31}, {"date": "2022-11-08", "value": -487, "index": 193.77}, {"date": "2022-11-15", "value": -531, "index": 202.54}, {"date": "2022-11-22", "value": -342, "index": 203.44}, {"date": "2022-11-29", "value": -380, "index": 199.49}, {"date": "2022-12-06", "value": -690, "index": 173.28}, {"date": "2022-12-13", "value": -996, "index": 183.84}, {"date": "2022-12-20", "value": -1226, "index": 171.25}, {"date": "2022-12-27", "value": -1010, "index": 188.55}, {"date": "2023-01-03", "value": -669, "index": 184.99}, {"date": "2023-01-10", "value": -866, "index": 173.54}, {"date": "2023-01-17", "value": -761, "index": 189.06}, {"date": "2023-01-31", "value": -279, "index": 200.51}, {"date": "2023-02-07", "value": 44, "index": 195.8}, {"date": "2023-02-21", "value": -340, "index": 185.37}, {"date": "2023-02-28", "value": -724, "index": 183.08}, {"date": "2023-03-07", "value": -1257, "index": 171.88}, {"date": "2023-03-14", "value": -685, "index": 173.16}, {"date": "2023-03-21", "value": -434, "index": 182.7}, {"date": "2023-03-28", "value": -28, "index": 193.0}, {"date": "2023-04-04", "value": -33, "index": 173.54}, {"date": "2023-04-11", "value": -235, "index": 173.16}, {"date": "2023-04-18", "value": -589, "index": 176.84}, {"date": "2023-04-25", "value": -613, "index": 168.07}, {"date": "2023-05-02", "value": -987, "index": 148.35}, {"date": "2023-05-09", "value": -614, "index": 167.43}, {"date": "2023-05-16", "value": -429, "index": 175.57}, {"date": "2023-05-23", "value": -380, "index": 163.61}, {"date": "2023-05-30", "value": -166, "index": 176.08}, {"date": "2023-06-06", "value": -278, "index": 176.46}, {"date": "2023-06-27", "value": 660, "index": 195.93}, {"date": "2023-07-18", "value": 892, "index": 219.59}, {"date": "2023-07-25", "value": 940, "index": 223.41}, {"date": "2023-08-01", "value": 749, "index": 221.63}, {"date": "2023-08-08", "value": 736, "index": 209.03}, {"date": "2023-08-15", "value": 636, "index": 218.58}, {"date": "2023-08-22", "value": 830, "index": 224.55}, {"date": "2023-08-29", "value": 1323, "index": 249.87}, {"date": "2023-09-05", "value": 1318, "index": 236.51}, {"date": "2023-09-12", "value": 1480, "index": 240.2}, {"date": "2023-09-19", "value": 1270, "index": 221.25}, {"date": "2023-09-26", "value": 902, "index": 220.36}, {"date": "2023-10-03", "value": 818, "index": 222.14}, {"date": "2023-10-10", "value": 689, "index": 208.27}, {"date": "2023-10-17", "value": 429, "index": 190.46}, {"date": "2023-10-24", "value": 213, "index": 198.35}, {"date": "2023-10-31", "value": 332, "index": 198.09}, {"date": "2023-11-14", "value": -22, "index": 181.3}, {"date": "2023-11-21", "value": -28, "index": 182.19}, {"date": "2023-11-28", "value": -235, "index": 182.44}, {"date": "2023-12-05", "value": -202, "index": 204.71}, {"date": "2023-12-12", "value": -566, "index": 180.28}, {"date": "2023-12-19", "value": -499, "index": 196.06}, {"date": "2023-12-26", "value": -549, "index": 187.4}, {"date": "2024-01-16", "value": -343, "index": 179.39}, {"date": "2024-04-02", "value": -536, "index": 179.52}, {"date": "2024-04-09", "value": -937, "index": 167.81}, {"date": "2024-04-16", "value": -701, "index": 176.08}, {"date": "2024-05-14", "value": 1142, "index": 209.03}, {"date": "2024-06-04", "value": 1208, "index": 186.01}, {"date": "2024-06-18", "value": 24, "index": 167.05}, {"date": "2024-06-25", "value": -494, "index": 155.09}, {"date": "2024-07-02", "value": -662, "index": 160.05}, {"date": "2024-07-09", "value": -1121, "index": 156.87}, {"date": "2024-07-16", "value": -1260, "index": 158.78}, {"date": "2024-07-23", "value": -1343, "index": 173.54}, {"date": "2024-07-30", "value": -1261, "index": 165.9}, {"date": "2024-08-06", "value": -1277, "index": 168.07}, {"date": "2024-08-13", "value": -1353, "index": 164.12}, {"date": "2024-08-20", "value": -1522, "index": 168.19}, {"date": "2024-08-27", "value": -1156, "index": 164.89}, {"date": "2024-09-03", "value": -793, "index": 172.01}, {"date": "2024-09-10", "value": 159, "index": 182.32}, {"date": "2024-09-17", "value": 506, "index": 178.75}, {"date": "2024-09-24", "value": 737, "index": 185.75}, {"date": "2024-10-01", "value": 819, "index": 197.46}, {"date": "2024-10-08", "value": 975, "index": 197.96}, {"date": "2024-11-05", "value": 1742, "index": 199.11}, {"date": "2024-11-12", "value": 1610, "index": 175.57}, {"date": "2024-11-19", "value": 1305, "index": 175.45}, {"date": "2025-04-15", "value": 0, "index": 174.43}, {"date": "2025-04-22", "value": 0, "index": 182.06}, {"date": "2025-04-29", "value": 0, "index": 194.02}, {"date": "2025-05-06", "value": 0, "index": 187.66}, {"date": "2025-05-13", "value": 0, "index": 191.98}, {"date": "2025-05-20", "value": 0, "index": 181.42}, {"date": "2025-05-27", "value": 0, "index": 183.21}, {"date": "2025-06-03", "value": 0, "index": 195.8}, {"date": "2025-06-10", "value": 0, "index": 188.3}, {"date": "2025-06-17", "value": 0, "index": 188.8}, {"date": "2025-06-24", "value": 0, "index": 184.99}, {"date": "2025-07-01", "value": 0, "index": 197.46}, {"date": "2025-07-08", "value": 0, "index": 201.27}, {"date": "2025-07-15", "value": 0, "index": 186.26}, {"date": "2025-07-22", "value": 0, "index": 179.26}, {"date": "2025-07-29", "value": 0, "index": 187.79}, {"date": "2025-08-05", "value": 0, "index": 167.3}, {"date": "2025-08-12", "value": 0, "index": 170.1}, {"date": "2025-08-19", "value": 0, "index": 168.45}, {"date": "2025-08-26", "value": 0, "index": 156.87}, {"date": "2025-09-02", "value": 0, "index": 154.58}, {"date": "2025-09-09", "value": 637, "index": 150.64}, {"date": "2025-09-16", "value": 303, "index": 162.34}, {"date": "2025-09-23", "value": 248, "index": 157.0}, {"date": "2025-09-30", "value": 89, "index": 156.49}, {"date": "2025-10-07", "value": 26, "index": 146.44}, {"date": "2025-10-14", "value": -116, "index": 150.76}, {"date": "2025-10-21", "value": -282, "index": 153.44}, {"date": "2025-10-28", "value": -107, "index": 148.09}, {"date": "2025-11-04", "value": 3, "index": 153.69}, {"date": "2025-11-10", "value": -60, "index": 151.65}, {"date": "2025-11-18", "value": -142, "index": 157.38}, {"date": "2025-11-25", "value": -531, "index": 157.76}, {"date": "2025-12-02", "value": -228, "index": 148.85}, {"date": "2025-12-09", "value": -280, "index": 146.95}, {"date": "2025-12-16", "value": -648, "index": 141.09}, {"date": "2025-12-23", "value": -598, "index": 149.36}, {"date": "2025-12-30", "value": 0, "index": 155.09}, {"date": "2026-01-06", "value": 0, "index": 156.74}, {"date": "2026-01-13", "value": 54, "index": 148.47}, {"date": "2026-01-20", "value": -251, "index": 152.93}, {"date": "2026-01-27", "value": -300, "index": 152.67}, {"date": "2026-02-03", "value": -162, "index": 155.09}, {"date": "2026-02-10", "value": 0, "index": 153.94}, {"date": "2026-02-17", "value": 0, "index": 158.91}, {"date": "2026-02-24", "value": 0, "index": 167.56}, {"date": "2026-03-03", "value": 0, "index": 160.18}, {"date": "2026-03-10", "value": 0, "index": 175.45}, {"date": "2026-03-17", "value": 0, "index": 181.04}, {"date": "2026-03-24", "value": 0, "index": 169.59}, {"date": "2026-03-31", "value": 0, "index": 180.28}, {"date": "2026-05-19", "value": 1034, "index": 193.64}, {"date": "2026-05-26", "value": 1086, "index": 187.4}, {"date": "2026-06-02", "value": 910, "index": 170.48}];
+        const canvas = document.getElementById('chart');
+        const tooltip = document.getElementById('tooltip');
+        const meta = document.getElementById('meta');
+        const ctx = canvas.getContext('2d');
+        const defaultWeeks = Math.min(52, points.length);
+        const state = {
+            hoverIndex: -1,
+            start: Math.max(0, points.length - defaultWeeks),
+            end: Math.max(0, points.length - 1),
+            dragMode: null,
+            dragStartX: 0,
+            dragStartRange: null
+        };
+
+        const formatNumber = value => value.toLocaleString('en-US');
+        const getColor = value => value >= 0 ? '#0a8f62' : '#c7354f';
+        const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+        const minWindow = Math.min(4, points.length);
+        let layout = null;
+
+        function setRange(start, end) {
+            if (!points.length) return;
+            let nextStart = clamp(Math.round(start), 0, points.length - 1);
+            let nextEnd = clamp(Math.round(end), 0, points.length - 1);
+            if (nextEnd < nextStart) [nextStart, nextEnd] = [nextEnd, nextStart];
+            if (nextEnd - nextStart + 1 < minWindow) {
+                if (state.dragMode === 'start') {
+                    nextStart = Math.max(0, nextEnd - minWindow + 1);
+                } else {
+                    nextEnd = Math.min(points.length - 1, nextStart + minWindow - 1);
+                }
+            }
+            state.start = nextStart;
+            state.end = nextEnd;
+            state.hoverIndex = -1;
+            updateMeta();
+            draw();
+        }
+
+        function updateMeta() {
+            if (!points.length) return;
+            const weeks = state.end - state.start + 1;
+            const hasIndex = points.some(point => point.index !== null);
+            const suffix = hasIndex ? ' | Futures Index base=100' : '';
+            meta.textContent = `Non-Commercial Net | Weekly bars | ${points[state.start].date} to ${points[state.end].date} | ${weeks} weeks${suffix}`;
+        }
+
+        function resizeCanvas() {
+            const ratio = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = Math.max(1, Math.round(rect.width * ratio));
+            canvas.height = Math.max(1, Math.round(rect.height * ratio));
+            ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+            draw();
+        }
+
+        function draw() {
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+            ctx.clearRect(0, 0, width, height);
+
+            if (!points.length) {
+                ctx.fillStyle = '#5e6a7d';
+                ctx.font = '14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+                ctx.fillText('No chart data available', 28, 38);
+                return;
+            }
+
+            const hasIndex = points.some(point => point.index !== null);
+            const pad = { left: 76, right: hasIndex ? 76 : 24, top: 28, bottom: 122 };
+            const plotW = width - pad.left - pad.right;
+            const plotH = height - pad.top - pad.bottom;
+            const slider = {
+                left: pad.left,
+                right: width - pad.right,
+                top: height - 78,
+                height: 34,
+                bottom: height - 44
+            };
+            layout = { pad, plotW, plotH, slider };
+
+            const visiblePoints = points.slice(state.start, state.end + 1);
+            const values = visiblePoints.map(point => point.value);
+            const indexValues = visiblePoints.map(point => point.index).filter(value => value !== null);
+            const maxAbs = Math.max(1, ...values.map(value => Math.abs(value)));
+            const minValue = Math.min(...values, 0);
+            const maxValue = Math.max(...values, 0);
+            const yMin = Math.min(minValue, -maxAbs * 0.08);
+            const yMax = Math.max(maxValue, maxAbs * 0.08);
+            const yRange = yMax - yMin || 1;
+            const yFor = value => pad.top + (yMax - value) / yRange * plotH;
+            const zeroY = yFor(0);
+            const indexMin = indexValues.length ? Math.min(...indexValues) : null;
+            const indexMax = indexValues.length ? Math.max(...indexValues) : null;
+            const indexPadding = indexValues.length ? Math.max(2, (indexMax - indexMin) * 0.12) : 0;
+            const indexYMin = indexValues.length ? indexMin - indexPadding : 0;
+            const indexYMax = indexValues.length ? indexMax + indexPadding : 1;
+            const indexRange = indexYMax - indexYMin || 1;
+            const indexYFor = value => pad.top + (indexYMax - value) / indexRange * plotH;
+            const visibleCount = visiblePoints.length;
+            const step = plotW / visibleCount;
+            const barW = Math.max(2, Math.min(22, step * 0.72));
+
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.strokeStyle = '#e3e8f0';
+            ctx.lineWidth = 1;
+            ctx.fillStyle = '#5e6a7d';
+            ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+            for (let tick = 0; tick <= 4; tick++) {
+                const value = yMin + (yRange * tick / 4);
+                const y = yFor(value);
+                ctx.beginPath();
+                ctx.moveTo(pad.left, y);
+                ctx.lineTo(width - pad.right, y);
+                ctx.stroke();
+                ctx.fillText(formatNumber(Math.round(value)), pad.left - 10, y);
+            }
+
+            if (indexValues.length) {
+                ctx.fillStyle = '#2f7df6';
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'middle';
+                for (let tick = 0; tick <= 4; tick++) {
+                    const value = indexYMin + (indexRange * tick / 4);
+                    const y = indexYFor(value);
+                    ctx.fillText(value.toFixed(1), width - pad.right + 10, y);
+                }
+                ctx.fillText('Index', width - pad.right + 10, pad.top - 10);
+            }
+
+            ctx.strokeStyle = '#9aa6b6';
+            ctx.beginPath();
+            ctx.moveTo(pad.left, zeroY);
+            ctx.lineTo(width - pad.right, zeroY);
+            ctx.stroke();
+
+            visiblePoints.forEach((point, index) => {
+                const x = pad.left + index * step + step / 2;
+                const y = yFor(point.value);
+                const barTop = Math.min(y, zeroY);
+                const barH = Math.max(1, Math.abs(zeroY - y));
+                ctx.fillStyle = getColor(point.value);
+                ctx.globalAlpha = index === state.hoverIndex ? 1 : 0.86;
+                ctx.fillRect(x - barW / 2, barTop, barW, barH);
+            });
+            ctx.globalAlpha = 1;
+
+            const linePoints = visiblePoints
+                .map((point, index) => ({
+                    x: pad.left + index * step + step / 2,
+                    y: point.index === null ? null : indexYFor(point.index),
+                    value: point.index
+                }))
+                .filter(point => point.y !== null);
+            if (linePoints.length > 1) {
+                ctx.strokeStyle = '#2f7df6';
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                linePoints.forEach((point, index) => {
+                    if (index === 0) ctx.moveTo(point.x, point.y);
+                    else ctx.lineTo(point.x, point.y);
+                });
+                ctx.stroke();
+
+                if (state.hoverIndex >= 0) {
+                    const point = visiblePoints[state.hoverIndex];
+                    if (point.index !== null) {
+                        const x = pad.left + state.hoverIndex * step + step / 2;
+                        const y = indexYFor(point.index);
+                        ctx.fillStyle = '#ffffff';
+                        ctx.strokeStyle = '#2f7df6';
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.arc(x, y, 4, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            ctx.fillStyle = '#5e6a7d';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            const labelEvery = Math.max(1, Math.ceil(visibleCount / Math.max(4, Math.floor(plotW / 82))));
+            visiblePoints.forEach((point, index) => {
+                if (index % labelEvery !== 0 && index !== visiblePoints.length - 1) return;
+                const x = pad.left + index * step + step / 2;
+                ctx.save();
+                ctx.translate(x, height - pad.bottom + 26);
+                ctx.rotate(-Math.PI / 4);
+                ctx.fillText(point.date.slice(5), 0, 0);
+                ctx.restore();
+            });
+
+            if (state.hoverIndex >= 0) {
+                const x = pad.left + state.hoverIndex * step + step / 2;
+                ctx.strokeStyle = '#172033';
+                ctx.globalAlpha = 0.26;
+                ctx.beginPath();
+                ctx.moveTo(x, pad.top);
+                ctx.lineTo(x, height - pad.bottom);
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+            }
+
+            drawSlider(slider);
+        }
+
+        function drawSlider(slider) {
+            const trackW = slider.right - slider.left;
+            const yMid = slider.top + slider.height / 2;
+            const allValues = points.map(point => point.value);
+            const maxAbs = Math.max(1, ...allValues.map(value => Math.abs(value)));
+            const miniH = 24;
+            const miniTop = slider.top + 5;
+            const miniZero = miniTop + miniH / 2;
+            const miniStep = trackW / points.length;
+            const miniBarW = Math.max(1, miniStep * 0.72);
+            const xForIndex = index => slider.left + index / Math.max(1, points.length - 1) * trackW;
+            const startX = xForIndex(state.start);
+            const endX = xForIndex(state.end);
+
+            ctx.fillStyle = '#f4f7fb';
+            ctx.fillRect(slider.left, slider.top, trackW, slider.height);
+            ctx.strokeStyle = '#d8e0eb';
+            ctx.strokeRect(slider.left, slider.top, trackW, slider.height);
+
+            points.forEach((point, index) => {
+                const x = slider.left + index * miniStep + miniStep / 2;
+                const barH = Math.max(1, Math.abs(point.value) / maxAbs * miniH / 2);
+                ctx.fillStyle = getColor(point.value);
+                ctx.globalAlpha = 0.34;
+                if (point.value >= 0) {
+                    ctx.fillRect(x - miniBarW / 2, miniZero - barH, miniBarW, barH);
+                } else {
+                    ctx.fillRect(x - miniBarW / 2, miniZero, miniBarW, barH);
+                }
+            });
+            ctx.globalAlpha = 1;
+
+            ctx.fillStyle = 'rgba(23, 32, 51, 0.10)';
+            ctx.fillRect(slider.left, slider.top, Math.max(0, startX - slider.left), slider.height);
+            ctx.fillRect(endX, slider.top, Math.max(0, slider.right - endX), slider.height);
+
+            ctx.fillStyle = 'rgba(76, 139, 245, 0.16)';
+            ctx.fillRect(startX, slider.top, Math.max(2, endX - startX), slider.height);
+            ctx.strokeStyle = '#3b74d7';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(startX, slider.top, Math.max(2, endX - startX), slider.height);
+
+            [startX, endX].forEach(x => {
+                ctx.fillStyle = '#ffffff';
+                ctx.strokeStyle = '#3b74d7';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.roundRect(x - 6, slider.top - 4, 12, slider.height + 8, 5);
+                ctx.fill();
+                ctx.stroke();
+                ctx.strokeStyle = '#9aa6b6';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(x - 2, yMid - 7);
+                ctx.lineTo(x - 2, yMid + 7);
+                ctx.moveTo(x + 2, yMid - 7);
+                ctx.lineTo(x + 2, yMid + 7);
+                ctx.stroke();
+            });
+
+            ctx.fillStyle = '#5e6a7d';
+            ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText(points[state.start].date, slider.left, slider.bottom + 8);
+            ctx.textAlign = 'right';
+            ctx.fillText(points[state.end].date, slider.right, slider.bottom + 8);
+        }
+
+        function updateHover(event) {
+            if (state.dragMode) return;
+            const rect = canvas.getBoundingClientRect();
+            const width = canvas.clientWidth;
+            if (!layout) return;
+            const { pad, plotW, slider } = layout;
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const visibleCount = state.end - state.start + 1;
+            const step = plotW / visibleCount;
+            const index = Math.round((x - pad.left - step / 2) / step);
+
+            if (y >= slider.top || index < 0 || index >= visibleCount) {
+                state.hoverIndex = -1;
+                tooltip.style.display = 'none';
+                draw();
+                return;
+            }
+
+            state.hoverIndex = index;
+            const point = points[state.start + index];
+            const indexLine = point.index === null ? '' : `<br><span style="color:#72a8ff">Futures Index: ${point.index.toFixed(2)}</span>`;
+            tooltip.innerHTML = `<strong>${point.date}</strong><br><span class="${point.value >= 0 ? 'value-pos' : 'value-neg'}">Net: ${formatNumber(point.value)}</span>${indexLine}`;
+            tooltip.style.display = 'block';
+            tooltip.style.left = `${Math.min(event.clientX + 12, window.innerWidth - tooltip.offsetWidth - 12)}px`;
+            tooltip.style.top = `${Math.min(event.clientY + 12, window.innerHeight - tooltip.offsetHeight - 12)}px`;
+            draw();
+        }
+
+        function getSliderHit(x, y) {
+            if (!layout || !points.length) return null;
+            const { slider } = layout;
+            if (y < slider.top - 12 || y > slider.bottom + 12 || x < slider.left - 12 || x > slider.right + 12) return null;
+            const trackW = slider.right - slider.left;
+            const xForIndex = index => slider.left + index / Math.max(1, points.length - 1) * trackW;
+            const startX = xForIndex(state.start);
+            const endX = xForIndex(state.end);
+            if (Math.abs(x - startX) <= 12) return 'start';
+            if (Math.abs(x - endX) <= 12) return 'end';
+            if (x > startX && x < endX) return 'window';
+            return null;
+        }
+
+        function pointerToIndex(x) {
+            const { slider } = layout;
+            const pct = clamp((x - slider.left) / (slider.right - slider.left), 0, 1);
+            return Math.round(pct * (points.length - 1));
+        }
+
+        function startDrag(event) {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const hit = getSliderHit(x, y);
+            if (!hit) return;
+            state.dragMode = hit;
+            state.dragStartX = x;
+            state.dragStartRange = { start: state.start, end: state.end };
+            canvas.classList.add('dragging');
+            canvas.setPointerCapture(event.pointerId);
+            tooltip.style.display = 'none';
+            event.preventDefault();
+        }
+
+        function moveDrag(event) {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            if (!state.dragMode) {
+                const y = event.clientY - rect.top;
+                const hit = getSliderHit(x, y);
+                canvas.style.cursor = hit === 'start' || hit === 'end' ? 'ew-resize' : hit === 'window' ? 'grab' : 'default';
+                return;
+            }
+
+            if (state.dragMode === 'start') {
+                setRange(pointerToIndex(x), state.end);
+            } else if (state.dragMode === 'end') {
+                setRange(state.start, pointerToIndex(x));
+            } else if (state.dragMode === 'window') {
+                const deltaIndex = pointerToIndex(x) - pointerToIndex(state.dragStartX);
+                const width = state.dragStartRange.end - state.dragStartRange.start;
+                let nextStart = clamp(state.dragStartRange.start + deltaIndex, 0, points.length - width - 1);
+                setRange(nextStart, nextStart + width);
+            }
+            event.preventDefault();
+        }
+
+        function endDrag(event) {
+            if (!state.dragMode) return;
+            state.dragMode = null;
+            state.dragStartRange = null;
+            canvas.classList.remove('dragging');
+            canvas.releasePointerCapture(event.pointerId);
+            event.preventDefault();
+        }
+
+        canvas.addEventListener('mousemove', updateHover);
+        canvas.addEventListener('mouseleave', () => {
+            state.hoverIndex = -1;
+            tooltip.style.display = 'none';
+            draw();
+        });
+        canvas.addEventListener('pointerdown', startDrag);
+        canvas.addEventListener('pointermove', moveDrag);
+        canvas.addEventListener('pointerup', endDrag);
+        canvas.addEventListener('pointercancel', endDrag);
+        window.addEventListener('resize', resizeCanvas);
+        updateMeta();
+        resizeCanvas();
+    </script>
+</body>
+</html>

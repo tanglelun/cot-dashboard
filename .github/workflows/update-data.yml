@@ -1,0 +1,46 @@
+name: Update COT data
+
+on:
+  workflow_dispatch:
+  schedule:
+    # CFTC reports are typically released Friday afternoon US Eastern time.
+    # This runs every Saturday at 02:30 UTC.
+    - cron: "30 2 * * 6"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Update COT history
+        run: python cot_historical.py
+
+      - name: Update futures prices
+        run: python fetch_prices.py
+
+      - name: Generate HTML
+        run: python generate_history_html.py
+
+      - name: Sync browser entry
+        run: cp cot_noncommercial_history.html index.html
+
+      - name: Commit updated data and pages
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Update COT data and charts"
+          file_pattern: "*.csv *.html charts/*.html"

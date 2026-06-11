@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold (GC)</title>
+    <style>
+        * { box-sizing: border-box; }
+        html, body { height: 100%; }
+        body { margin: 0; background: #f7f8fb; color: #172033; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+        .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 20px 10px; }
+        h1 { margin: 0; font-size: 20px; font-weight: 700; }
+        .meta { color: #5e6a7d; font-size: 13px; white-space: nowrap; }
+        .legend-inline { display: flex; align-items: center; gap: 14px; margin-top: 4px; color: #5e6a7d; font-size: 12px; }
+        .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+        .legend-swatch { width: 18px; height: 3px; border-radius: 999px; display: inline-block; }
+        .legend-bar { background: #0a8f62; }
+        .legend-line { background: #2f7df6; }
+        .chart-wrap { position: relative; height: calc(100vh - 62px); min-height: 420px; padding: 0 14px 14px; }
+        canvas { display: block; width: 100%; height: 100%; background: #ffffff; border: 1px solid #dbe1ea; border-radius: 8px; }
+        .tooltip { position: fixed; pointer-events: none; display: none; background: rgba(23, 32, 51, 0.95); color: white; padding: 8px 10px; border-radius: 6px; font-size: 12px; line-height: 1.35; box-shadow: 0 8px 24px rgba(23, 32, 51, 0.22); }
+        .value-pos { color: #0a8f62; }
+        .value-neg { color: #c7354f; }
+        .dragging { cursor: grabbing; }
+        @media (max-width: 640px) {
+            .toolbar { align-items: flex-start; flex-direction: column; gap: 4px; }
+            .meta { white-space: normal; }
+            .chart-wrap { height: calc(100vh - 92px); min-height: 360px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <div>
+            <h1>Gold (GC)</h1>
+            <div class="legend-inline">
+                <span class="legend-item"><span class="legend-swatch legend-bar"></span>Non-Commercial Net</span>
+                <span class="legend-item"><span class="legend-swatch legend-line"></span>Futures Index (base=100)</span>
+            </div>
+        </div>
+        <div id="meta" class="meta">Non-Commercial Net | Weekly bars | Last 522 reports</div>
+    </div>
+    <div class="chart-wrap">
+        <canvas id="chart"></canvas>
+        <div id="tooltip" class="tooltip"></div>
+    </div>
+    <script>
+        const points = [{"date": "2016-06-07", "value": 228619, "index": 100.0}, {"date": "2016-06-14", "value": 279862, "index": 103.31}, {"date": "2016-06-21", "value": 292729, "index": 102.1}, {"date": "2016-06-28", "value": 301920, "index": 105.7}, {"date": "2016-07-05", "value": 315963, "index": 109.0}, {"date": "2016-07-12", "value": 297463, "index": 107.21}, {"date": "2016-07-19", "value": 285911, "index": 107.0}, {"date": "2016-07-26", "value": 278955, "index": 106.13}, {"date": "2016-08-02", "value": 294183, "index": 109.64}, {"date": "2016-08-09", "value": 286447, "index": 107.6}, {"date": "2016-08-16", "value": 283851, "index": 108.53}, {"date": "2016-08-23", "value": 294609, "index": 107.73}, {"date": "2016-08-30", "value": 276341, "index": 105.41}, {"date": "2016-09-06", "value": 307860, "index": 108.44}, {"date": "2016-09-13", "value": 285413, "index": 105.99}, {"date": "2016-09-20", "value": 256179, "index": 105.57}, {"date": "2016-09-27", "value": 291904, "index": 106.55}, {"date": "2016-10-04", "value": 245508, "index": 101.76}, {"date": "2016-10-11", "value": 195219, "index": 100.69}, {"date": "2016-10-18", "value": 179618, "index": 101.32}, {"date": "2016-10-25", "value": 196980, "index": 102.21}, {"date": "2016-11-01", "value": 215131, "index": 103.38}, {"date": "2016-11-08", "value": 217238, "index": 102.33}, {"date": "2016-11-15", "value": 177660, "index": 98.36}, {"date": "2016-11-22", "value": 167085, "index": 97.32}, {"date": "2016-11-29", "value": 151570, "index": 95.46}, {"date": "2016-12-06", "value": 136380, "index": 93.83}, {"date": "2016-12-13", "value": 129311, "index": 92.95}, {"date": "2016-12-20", "value": 114834, "index": 90.93}, {"date": "2016-12-27", "value": 98343, "index": 91.39}, {"date": "2017-01-03", "value": 96550, "index": 93.25}, {"date": "2017-01-10", "value": 109482, "index": 95.16}, {"date": "2017-01-17", "value": 107041, "index": 97.4}, {"date": "2017-01-24", "value": 109407, "index": 97.26}, {"date": "2017-01-31", "value": 119155, "index": 97.12}, {"date": "2017-02-07", "value": 117149, "index": 99.18}, {"date": "2017-02-14", "value": 109752, "index": 98.35}, {"date": "2017-02-21", "value": 123763, "index": 99.45}, {"date": "2017-02-28", "value": 163798, "index": 100.66}, {"date": "2017-03-07", "value": 133685, "index": 97.65}, {"date": "2017-03-14", "value": 106038, "index": 96.58}, {"date": "2017-03-21", "value": 116252, "index": 100.14}, {"date": "2017-03-28", "value": 137820, "index": 100.88}, {"date": "2017-04-04", "value": 155436, "index": 100.85}, {"date": "2017-04-11", "value": 172666, "index": 102.15}, {"date": "2017-04-18", "value": 195768, "index": 103.8}, {"date": "2017-04-25", "value": 200677, "index": 101.7}, {"date": "2017-05-02", "value": 189634, "index": 100.86}, {"date": "2017-05-09", "value": 150006, "index": 97.58}, {"date": "2017-05-16", "value": 126724, "index": 99.24}, {"date": "2017-05-23", "value": 159767, "index": 100.84}, {"date": "2017-05-30", "value": 167090, "index": 101.42}, {"date": "2017-06-06", "value": 204465, "index": 104.02}, {"date": "2017-06-13", "value": 190274, "index": 101.72}, {"date": "2017-06-20", "value": 150675, "index": 99.73}, {"date": "2017-06-27", "value": 131672, "index": 100.16}, {"date": "2017-07-03", "value": 93799, "index": 97.87}, {"date": "2017-07-11", "value": 60260, "index": 97.52}, {"date": "2017-07-18", "value": 60138, "index": 99.73}, {"date": "2017-07-25", "value": 90831, "index": 100.59}, {"date": "2017-08-01", "value": 129672, "index": 102.27}, {"date": "2017-08-08", "value": 148837, "index": 100.96}, {"date": "2017-08-15", "value": 187734, "index": 102.35}, {"date": "2017-08-22", "value": 208438, "index": 103.27}, {"date": "2017-08-29", "value": 231047, "index": 105.52}, {"date": "2017-09-05", "value": 245298, "index": 107.62}, {"date": "2017-09-12", "value": 254760, "index": 106.72}, {"date": "2017-09-19", "value": 236089, "index": 104.97}, {"date": "2017-09-26", "value": 212594, "index": 104.23}, {"date": "2017-10-03", "value": 203855, "index": 102.18}, {"date": "2017-10-10", "value": 200112, "index": 103.71}, {"date": "2017-10-17", "value": 200724, "index": 103.1}, {"date": "2017-10-24", "value": 191385, "index": 102.46}, {"date": "2017-10-31", "value": 193095, "index": 101.82}, {"date": "2017-11-07", "value": 195790, "index": 102.35}, {"date": "2017-11-14", "value": 195084, "index": 102.98}, {"date": "2017-11-21", "value": 201827, "index": 102.95}, {"date": "2017-11-28", "value": 224417, "index": 104.04}, {"date": "2017-12-05", "value": 173329, "index": 101.38}, {"date": "2017-12-12", "value": 107068, "index": 99.53}, {"date": "2017-12-19", "value": 113795, "index": 101.31}, {"date": "2017-12-26", "value": 135948, "index": 103.19}, {"date": "2018-01-02", "value": 163268, "index": 105.57}, {"date": "2018-01-09", "value": 203288, "index": 105.41}, {"date": "2018-01-16", "value": 211711, "index": 107.31}, {"date": "2018-01-23", "value": 214684, "index": 107.34}, {"date": "2018-01-30", "value": 207262, "index": 107.31}, {"date": "2018-02-06", "value": 190877, "index": 106.57}, {"date": "2018-02-13", "value": 175606, "index": 106.73}, {"date": "2018-02-20", "value": 190922, "index": 106.78}, {"date": "2018-02-27", "value": 178718, "index": 105.71}, {"date": "2018-03-06", "value": 183823, "index": 107.17}, {"date": "2018-03-13", "value": 167948, "index": 106.55}, {"date": "2018-03-20", "value": 148731, "index": 105.36}, {"date": "2018-03-27", "value": 203354, "index": 107.79}, {"date": "2018-04-03", "value": 166589, "index": 107.1}, {"date": "2018-04-10", "value": 155372, "index": 107.84}, {"date": "2018-04-17", "value": 163069, "index": 108.26}, {"date": "2018-04-24", "value": 136646, "index": 106.99}, {"date": "2018-05-01", "value": 106779, "index": 104.77}, {"date": "2018-05-08", "value": 107440, "index": 105.43}, {"date": "2018-05-15", "value": 92443, "index": 103.58}, {"date": "2018-05-22", "value": 90957, "index": 103.8}, {"date": "2018-05-29", "value": 115130, "index": 104.36}, {"date": "2018-06-05", "value": 111416, "index": 104.27}, {"date": "2018-06-12", "value": 120240, "index": 104.07}, {"date": "2018-06-19", "value": 96512, "index": 102.51}, {"date": "2018-06-26", "value": 76672, "index": 100.98}, {"date": "2018-07-03", "value": 78327, "index": 100.58}, {"date": "2018-07-10", "value": 81434, "index": 100.76}, {"date": "2018-07-17", "value": 57841, "index": 98.5}, {"date": "2018-07-24", "value": 48597, "index": 98.35}, {"date": "2018-07-31", "value": 35337, "index": 98.34}, {"date": "2018-08-07", "value": 12688, "index": 97.2}, {"date": "2018-08-14", "value": -3688, "index": 95.87}, {"date": "2018-08-21", "value": -8710, "index": 95.84}, {"date": "2018-08-28", "value": -3063, "index": 97.03}, {"date": "2018-09-04", "value": -13497, "index": 95.85}, {"date": "2018-09-11", "value": -7590, "index": 96.06}, {"date": "2018-09-18", "value": -10844, "index": 96.17}, {"date": "2018-09-25", "value": -17648, "index": 96.43}, {"date": "2018-10-02", "value": -21822, "index": 96.62}, {"date": "2018-10-09", "value": -38175, "index": 95.4}, {"date": "2018-10-16", "value": 17667, "index": 98.63}, {"date": "2018-10-23", "value": 29388, "index": 99.12}, {"date": "2018-10-30", "value": 13194, "index": 98.25}, {"date": "2018-11-06", "value": 19026, "index": 98.34}, {"date": "2018-11-13", "value": -9247, "index": 96.37}, {"date": "2018-11-20", "value": 8896, "index": 97.96}, {"date": "2018-11-27", "value": 1871, "index": 97.33}, {"date": "2018-12-04", "value": 49001, "index": 99.73}, {"date": "2018-12-11", "value": 60499, "index": 99.8}, {"date": "2018-12-18", "value": 75960, "index": 100.39}, {"date": "2018-12-24", "value": 110985, "index": 101.86}, {"date": "2018-12-31", "value": 123772, "index": 102.72}, {"date": "2019-01-08", "value": 99216, "index": 103.12}, {"date": "2019-01-15", "value": 87913, "index": 103.36}, {"date": "2019-01-22", "value": 74504, "index": 103.06}, {"date": "2019-01-29", "value": 99593, "index": 105.13}, {"date": "2019-02-05", "value": 109095, "index": 105.61}, {"date": "2019-02-12", "value": 104874, "index": 105.21}, {"date": "2019-02-19", "value": 145647, "index": 107.69}, {"date": "2019-02-26", "value": 135696, "index": 106.49}, {"date": "2019-03-05", "value": 88018, "index": 103.02}, {"date": "2019-03-12", "value": 78819, "index": 104.17}, {"date": "2019-03-19", "value": 88396, "index": 104.87}, {"date": "2019-03-26", "value": 119938, "index": 105.62}, {"date": "2019-04-02", "value": 94556, "index": 103.66}, {"date": "2019-04-09", "value": 105364, "index": 104.75}, {"date": "2019-04-16", "value": 56273, "index": 102.27}, {"date": "2019-04-23", "value": 37395, "index": 102.0}, {"date": "2019-04-30", "value": 66219, "index": 103.09}, {"date": "2019-05-07", "value": 75411, "index": 103.14}, {"date": "2019-05-14", "value": 124536, "index": 104.04}, {"date": "2019-05-21", "value": 88805, "index": 102.22}, {"date": "2019-05-28", "value": 86688, "index": 102.58}, {"date": "2019-06-04", "value": 156115, "index": 106.35}, {"date": "2019-06-11", "value": 184238, "index": 106.59}, {"date": "2019-06-18", "value": 204323, "index": 108.21}, {"date": "2019-06-25", "value": 236554, "index": 113.7}, {"date": "2019-07-02", "value": 258946, "index": 112.87}, {"date": "2019-07-09", "value": 244763, "index": 112.3}, {"date": "2019-07-16", "value": 245501, "index": 113.24}, {"date": "2019-07-23", "value": 251250, "index": 114.12}, {"date": "2019-07-30", "value": 254388, "index": 114.89}, {"date": "2019-08-06", "value": 292545, "index": 118.32}, {"date": "2019-08-13", "value": 290090, "index": 120.72}, {"date": "2019-08-20", "value": 299993, "index": 120.91}, {"date": "2019-08-27", "value": 296838, "index": 123.83}, {"date": "2019-09-03", "value": 300547, "index": 124.23}, {"date": "2019-09-10", "value": 269725, "index": 119.76}, {"date": "2019-09-17", "value": 282599, "index": 120.95}, {"date": "2019-09-24", "value": 312444, "index": 123.12}, {"date": "2019-10-01", "value": 268993, "index": 119.09}, {"date": "2019-10-08", "value": 275563, "index": 120.32}, {"date": "2019-10-15", "value": 253027, "index": 118.74}, {"date": "2019-10-22", "value": 259132, "index": 119.07}, {"date": "2019-10-29", "value": 276515, "index": 119.5}, {"date": "2019-11-05", "value": 279828, "index": 119.0}, {"date": "2019-11-12", "value": 267066, "index": 116.69}, {"date": "2019-11-19", "value": 285859, "index": 118.39}, {"date": "2019-11-26", "value": 271634, "index": 117.31}, {"date": "2019-12-03", "value": 290705, "index": 118.79}, {"date": "2019-12-10", "value": 270920, "index": 117.53}, {"date": "2019-12-17", "value": 286275, "index": 118.5}, {"date": "2019-12-24", "value": 305652, "index": 120.47}, {"date": "2019-12-31", "value": 327925, "index": 122.11}, {"date": "2020-01-07", "value": 322291, "index": 126.31}, {"date": "2020-01-14", "value": 319235, "index": 123.95}, {"date": "2020-01-21", "value": 317695, "index": 125.07}, {"date": "2020-01-28", "value": 330092, "index": 126.1}, {"date": "2020-02-04", "value": 299806, "index": 124.59}, {"date": "2020-02-11", "value": 307974, "index": 125.81}, {"date": "2020-02-18", "value": 353649, "index": 128.58}, {"date": "2020-02-25", "value": 335865, "index": 132.34}, {"date": "2020-03-03", "value": 319733, "index": 131.96}, {"date": "2020-03-10", "value": 299531, "index": 133.33}, {"date": "2020-03-17", "value": 281916, "index": 122.54}, {"date": "2020-03-24", "value": 288366, "index": 133.41}, {"date": "2020-03-31", "value": 258849, "index": 127.24}, {"date": "2020-04-07", "value": 248942, "index": 133.78}, {"date": "2020-04-14", "value": 252501, "index": 141.17}, {"date": "2020-04-21", "value": 249571, "index": 134.86}, {"date": "2020-04-28", "value": 262729, "index": 137.46}, {"date": "2020-05-05", "value": 250004, "index": 136.97}, {"date": "2020-05-12", "value": 242828, "index": 136.97}, {"date": "2020-05-19", "value": 251788, "index": 140.16}, {"date": "2020-05-26", "value": 237914, "index": 137.0}, {"date": "2020-06-02", "value": 219034, "index": 138.64}, {"date": "2020-06-09", "value": 208613, "index": 137.79}, {"date": "2020-06-16", "value": 224348, "index": 138.99}, {"date": "2020-06-23", "value": 251957, "index": 142.41}, {"date": "2020-06-30", "value": 266670, "index": 144.09}, {"date": "2020-07-07", "value": 267358, "index": 144.99}, {"date": "2020-07-14", "value": 262428, "index": 145.5}, {"date": "2020-07-21", "value": 266436, "index": 148.06}, {"date": "2020-07-28", "value": 236801, "index": 156.28}, {"date": "2020-08-04", "value": 238746, "index": 160.82}, {"date": "2020-08-11", "value": 224053, "index": 155.3}, {"date": "2020-08-18", "value": 223518, "index": 160.67}, {"date": "2020-08-25", "value": 221038, "index": 153.63}, {"date": "2020-09-01", "value": 230796, "index": 158.16}, {"date": "2020-09-08", "value": 236473, "index": 155.34}, {"date": "2020-09-15", "value": 240977, "index": 157.21}, {"date": "2020-09-22", "value": 219060, "index": 152.57}, {"date": "2020-09-29", "value": 243659, "index": 152.23}, {"date": "2020-10-06", "value": 248587, "index": 152.77}, {"date": "2020-10-13", "value": 240671, "index": 151.76}, {"date": "2020-10-20", "value": 249604, "index": 153.52}, {"date": "2020-10-27", "value": 248634, "index": 153.39}, {"date": "2020-11-03", "value": 242909, "index": 153.37}, {"date": "2020-11-10", "value": 239736, "index": 150.71}, {"date": "2020-11-17", "value": 251270, "index": 151.44}, {"date": "2020-11-24", "value": 243902, "index": 145.03}, {"date": "2020-12-01", "value": 260314, "index": 145.78}, {"date": "2020-12-08", "value": 269220, "index": 150.34}, {"date": "2020-12-15", "value": 271584, "index": 148.85}, {"date": "2020-12-21", "value": 278196, "index": 151.01}, {"date": "2020-12-29", "value": 268872, "index": 151.05}, {"date": "2021-01-05", "value": 279318, "index": 156.92}, {"date": "2021-01-12", "value": 246227, "index": 148.1}, {"date": "2021-01-19", "value": 246638, "index": 147.82}, {"date": "2021-01-26", "value": 257546, "index": 148.72}, {"date": "2021-02-02", "value": 257126, "index": 147.1}, {"date": "2021-02-09", "value": 251407, "index": 147.48}, {"date": "2021-02-16", "value": 234969, "index": 144.42}, {"date": "2021-02-23", "value": 215733, "index": 145.0}, {"date": "2021-03-02", "value": 189638, "index": 139.27}, {"date": "2021-03-09", "value": 175163, "index": 137.95}, {"date": "2021-03-16", "value": 180196, "index": 139.07}, {"date": "2021-03-23", "value": 174067, "index": 138.6}, {"date": "2021-03-30", "value": 167528, "index": 135.32}, {"date": "2021-04-06", "value": 189509, "index": 139.95}, {"date": "2021-04-13", "value": 180874, "index": 140.32}, {"date": "2021-04-20", "value": 181498, "index": 142.82}, {"date": "2021-04-27", "value": 170619, "index": 142.88}, {"date": "2021-05-04", "value": 170741, "index": 142.7}, {"date": "2021-05-11", "value": 192255, "index": 147.53}, {"date": "2021-05-18", "value": 198889, "index": 150.1}, {"date": "2021-05-25", "value": 214642, "index": 152.53}, {"date": "2021-06-01", "value": 213701, "index": 152.92}, {"date": "2021-06-08", "value": 209387, "index": 152.06}, {"date": "2021-06-15", "value": 192036, "index": 149.03}, {"date": "2021-06-22", "value": 166214, "index": 142.74}, {"date": "2021-06-29", "value": 162226, "index": 141.66}, {"date": "2021-07-06", "value": 182821, "index": 144.13}, {"date": "2021-07-13", "value": 190836, "index": 145.4}, {"date": "2021-07-20", "value": 195972, "index": 145.52}, {"date": "2021-07-27", "value": 199388, "index": 144.61}, {"date": "2021-08-03", "value": 196335, "index": 145.46}, {"date": "2021-08-10", "value": 168406, "index": 138.93}, {"date": "2021-08-17", "value": 191542, "index": 143.44}, {"date": "2021-08-24", "value": 210653, "index": 145.1}, {"date": "2021-08-31", "value": 216550, "index": 145.85}, {"date": "2021-09-07", "value": 206039, "index": 144.32}, {"date": "2021-09-14", "value": 207760, "index": 145.03}, {"date": "2021-09-21", "value": 187647, "index": 142.72}, {"date": "2021-09-28", "value": 168399, "index": 139.49}, {"date": "2021-10-05", "value": 182582, "index": 141.4}, {"date": "2021-10-12", "value": 185539, "index": 141.3}, {"date": "2021-10-19", "value": 193349, "index": 142.21}, {"date": "2021-10-26", "value": 214560, "index": 144.06}, {"date": "2021-11-02", "value": 215129, "index": 143.74}, {"date": "2021-11-09", "value": 250181, "index": 147.07}, {"date": "2021-11-16", "value": 259780, "index": 148.96}, {"date": "2021-11-23", "value": 234411, "index": 143.32}, {"date": "2021-11-30", "value": 225860, "index": 142.53}, {"date": "2021-12-07", "value": 217185, "index": 143.25}, {"date": "2021-12-14", "value": 202401, "index": 142.27}, {"date": "2021-12-21", "value": 205811, "index": 143.68}, {"date": "2021-12-28", "value": 213156, "index": 145.47}, {"date": "2022-01-04", "value": 211355, "index": 145.77}, {"date": "2022-01-11", "value": 199737, "index": 146.14}, {"date": "2022-01-18", "value": 194207, "index": 145.64}, {"date": "2022-01-25", "value": 220151, "index": 148.88}, {"date": "2022-02-01", "value": 172142, "index": 144.67}, {"date": "2022-02-08", "value": 186706, "index": 146.79}, {"date": "2022-02-15", "value": 213613, "index": 149.05}, {"date": "2022-02-22", "value": 243148, "index": 153.17}, {"date": "2022-03-01", "value": 257622, "index": 156.09}, {"date": "2022-03-08", "value": 274388, "index": 163.94}, {"date": "2022-03-15", "value": 261788, "index": 154.97}, {"date": "2022-03-22", "value": 248032, "index": 154.35}, {"date": "2022-03-29", "value": 257596, "index": 153.65}, {"date": "2022-04-05", "value": 245541, "index": 154.52}, {"date": "2022-04-12", "value": 254287, "index": 158.48}, {"date": "2022-04-19", "value": 239757, "index": 157.16}, {"date": "2022-04-26", "value": 218024, "index": 152.8}, {"date": "2022-05-03", "value": 199168, "index": 150.18}, {"date": "2022-05-10", "value": 193315, "index": 147.85}, {"date": "2022-05-17", "value": 175360, "index": 146.11}, {"date": "2022-05-24", "value": 183813, "index": 149.88}, {"date": "2022-05-31", "value": 172589, "index": 148.08}, {"date": "2022-06-07", "value": 175268, "index": 148.47}, {"date": "2022-06-14", "value": 154598, "index": 145.41}, {"date": "2022-06-21", "value": 163287, "index": 147.43}, {"date": "2022-06-28", "value": 157693, "index": 146.05}, {"date": "2022-07-05", "value": 145660, "index": 141.58}, {"date": "2022-07-12", "value": 118121, "index": 138.48}, {"date": "2022-07-19", "value": 94955, "index": 137.42}, {"date": "2022-07-26", "value": 92690, "index": 138.03}, {"date": "2022-08-02", "value": 124326, "index": 142.33}, {"date": "2022-08-09", "value": 142851, "index": 144.17}, {"date": "2022-08-16", "value": 141164, "index": 142.49}, {"date": "2022-08-23", "value": 125847, "index": 140.37}, {"date": "2022-08-30", "value": 117734, "index": 138.48}, {"date": "2022-09-06", "value": 103857, "index": 136.64}, {"date": "2022-09-13", "value": 97344, "index": 137.01}, {"date": "2022-09-20", "value": 65722, "index": 133.37}, {"date": "2022-09-27", "value": 52081, "index": 130.72}, {"date": "2022-10-04", "value": 88385, "index": 138.31}, {"date": "2022-10-11", "value": 94420, "index": 134.9}, {"date": "2022-10-18", "value": 76956, "index": 132.51}, {"date": "2022-10-25", "value": 68032, "index": 132.82}, {"date": "2022-11-01", "value": 64623, "index": 132.19}, {"date": "2022-11-08", "value": 82338, "index": 137.58}, {"date": "2022-11-15", "value": 126269, "index": 142.54}, {"date": "2022-11-22", "value": 116113, "index": 139.69}, {"date": "2022-11-29", "value": 110003, "index": 140.5}, {"date": "2022-12-06", "value": 115125, "index": 142.18}, {"date": "2022-12-13", "value": 125649, "index": 145.77}, {"date": "2022-12-20", "value": 128848, "index": 145.93}, {"date": "2022-12-27", "value": 136880, "index": 145.84}, {"date": "2023-01-03", "value": 141666, "index": 147.84}, {"date": "2023-01-10", "value": 150535, "index": 150.4}, {"date": "2023-01-17", "value": 153240, "index": 153.26}, {"date": "2023-01-24", "value": 157673, "index": 155.41}, {"date": "2023-01-31", "value": 160281, "index": 155.05}, {"date": "2023-02-07", "value": 128815, "index": 150.41}, {"date": "2023-02-14", "value": 105529, "index": 148.99}, {"date": "2023-02-21", "value": 107101, "index": 147.3}, {"date": "2023-02-28", "value": 108593, "index": 146.97}, {"date": "2023-03-07", "value": 98474, "index": 145.77}, {"date": "2023-03-14", "value": 140331, "index": 153.18}, {"date": "2023-03-21", "value": 158605, "index": 155.74}, {"date": "2023-03-28", "value": 181630, "index": 158.5}, {"date": "2023-04-04", "value": 195216, "index": 162.5}, {"date": "2023-04-11", "value": 192745, "index": 161.11}, {"date": "2023-04-18", "value": 189893, "index": 161.31}, {"date": "2023-04-25", "value": 185264, "index": 160.24}, {"date": "2023-05-02", "value": 195567, "index": 161.87}, {"date": "2023-05-09", "value": 195814, "index": 163.63}, {"date": "2023-05-16", "value": 179814, "index": 159.79}, {"date": "2023-05-23", "value": 160732, "index": 158.5}, {"date": "2023-05-30", "value": 169316, "index": 157.34}, {"date": "2023-06-06", "value": 175641, "index": 157.95}, {"date": "2023-06-13", "value": 160209, "index": 156.27}, {"date": "2023-06-20", "value": 162975, "index": 155.54}, {"date": "2023-06-27", "value": 151910, "index": 153.81}, {"date": "2023-07-03", "value": 163097, "index": 154.43}, {"date": "2023-07-11", "value": 165754, "index": 155.2}, {"date": "2023-07-18", "value": 193348, "index": 158.89}, {"date": "2023-07-25", "value": 173639, "index": 157.67}, {"date": "2023-08-01", "value": 164924, "index": 155.95}, {"date": "2023-08-08", "value": 142985, "index": 154.62}, {"date": "2023-08-15", "value": 121136, "index": 152.88}, {"date": "2023-08-22", "value": 101946, "index": 152.39}, {"date": "2023-08-29", "value": 123272, "index": 155.62}, {"date": "2023-09-05", "value": 138006, "index": 154.79}, {"date": "2023-09-12", "value": 123864, "index": 153.59}, {"date": "2023-09-19", "value": 135163, "index": 155.26}, {"date": "2023-09-26", "value": 115815, "index": 152.72}, {"date": "2023-10-03", "value": 91226, "index": 146.62}, {"date": "2023-10-10", "value": 71433, "index": 149.55}, {"date": "2023-10-17", "value": 112738, "index": 154.51}, {"date": "2023-10-24", "value": 149385, "index": 158.71}, {"date": "2023-10-31", "value": 163425, "index": 159.53}, {"date": "2023-11-07", "value": 166216, "index": 158.05}, {"date": "2023-11-14", "value": 155376, "index": 157.65}, {"date": "2023-11-21", "value": 171705, "index": 160.66}, {"date": "2023-11-28", "value": 200084, "index": 163.91}, {"date": "2023-12-05", "value": 203544, "index": 162.21}, {"date": "2023-12-12", "value": 188233, "index": 158.94}, {"date": "2023-12-19", "value": 201339, "index": 163.81}, {"date": "2023-12-26", "value": 207718, "index": 165.4}, {"date": "2024-01-02", "value": 207649, "index": 165.9}, {"date": "2024-01-09", "value": 188614, "index": 162.84}, {"date": "2024-01-16", "value": 179893, "index": 162.81}, {"date": "2024-01-23", "value": 169474, "index": 162.62}, {"date": "2024-01-30", "value": 147791, "index": 163.25}, {"date": "2024-02-06", "value": 161738, "index": 163.49}, {"date": "2024-02-13", "value": 131168, "index": 160.15}, {"date": "2024-02-20", "value": 140262, "index": 162.93}, {"date": "2024-02-27", "value": 141636, "index": 163.45}, {"date": "2024-03-05", "value": 191293, "index": 171.45}, {"date": "2024-03-12", "value": 201602, "index": 173.61}, {"date": "2024-03-19", "value": 201602, "index": 173.28}, {"date": "2024-03-26", "value": 199294, "index": 174.83}, {"date": "2024-04-02", "value": 207250, "index": 181.69}, {"date": "2024-04-09", "value": 202419, "index": 188.32}, {"date": "2024-04-16", "value": 201923, "index": 192.12}, {"date": "2024-04-23", "value": 202891, "index": 187.05}, {"date": "2024-04-30", "value": 204210, "index": 184.14}, {"date": "2024-05-07", "value": 199567, "index": 186.05}, {"date": "2024-05-14", "value": 204496, "index": 189.12}, {"date": "2024-05-21", "value": 229806, "index": 194.61}, {"date": "2024-05-28", "value": 236585, "index": 189.26}, {"date": "2024-06-04", "value": 237302, "index": 186.88}, {"date": "2024-06-11", "value": 233926, "index": 185.43}, {"date": "2024-06-18", "value": 243084, "index": 187.27}, {"date": "2024-06-25", "value": 246229, "index": 186.16}, {"date": "2024-07-02", "value": 241543, "index": 186.68}, {"date": "2024-07-09", "value": 254775, "index": 189.66}, {"date": "2024-07-16", "value": 285024, "index": 197.88}, {"date": "2024-07-23", "value": 273074, "index": 193.23}, {"date": "2024-07-30", "value": 246601, "index": 193.27}, {"date": "2024-08-06", "value": 238749, "index": 191.99}, {"date": "2024-08-13", "value": 267264, "index": 198.22}, {"date": "2024-08-20", "value": 291253, "index": 201.81}, {"date": "2024-08-27", "value": 294445, "index": 202.19}, {"date": "2024-09-03", "value": 287558, "index": 200.09}, {"date": "2024-09-10", "value": 282501, "index": 201.89}, {"date": "2024-09-17", "value": 310066, "index": 206.07}, {"date": "2024-09-24", "value": 315390, "index": 213.05}, {"date": "2024-10-01", "value": 299931, "index": 214.34}, {"date": "2024-10-08", "value": 278180, "index": 210.14}, {"date": "2024-10-15", "value": 286434, "index": 213.87}, {"date": "2024-10-22", "value": 296204, "index": 220.52}, {"date": "2024-10-29", "value": 278653, "index": 222.47}, {"date": "2024-11-05", "value": 255329, "index": 220.21}, {"date": "2024-11-12", "value": 236451, "index": 208.94}, {"date": "2024-11-19", "value": 234367, "index": 211.11}, {"date": "2024-11-26", "value": 250338, "index": 210.57}, {"date": "2024-12-03", "value": 259736, "index": 212.53}, {"date": "2024-12-10", "value": 275586, "index": 216.78}, {"date": "2024-12-17", "value": 262041, "index": 212.5}, {"date": "2024-12-24", "value": 247629, "index": 210.54}, {"date": "2024-12-31", "value": 247279, "index": 211.28}, {"date": "2025-01-07", "value": 254911, "index": 213.49}, {"date": "2025-01-14", "value": 279363, "index": 215.16}, {"date": "2025-01-21", "value": 300784, "index": 221.39}, {"date": "2025-01-28", "value": 299409, "index": 222.34}, {"date": "2025-02-04", "value": 302508, "index": 229.29}, {"date": "2025-02-11", "value": 284504, "index": 234.05}, {"date": "2025-02-18", "value": 268674, "index": 235.58}, {"date": "2025-02-25", "value": 261625, "index": 233.41}, {"date": "2025-03-04", "value": 243261, "index": 233.82}, {"date": "2025-03-11", "value": 236100, "index": 234.08}, {"date": "2025-03-18", "value": 257932, "index": 243.9}, {"date": "2025-03-25", "value": 249796, "index": 242.98}, {"date": "2025-04-01", "value": 238434, "index": 250.63}, {"date": "2025-04-08", "value": 200715, "index": 238.54}, {"date": "2025-04-15", "value": 202210, "index": 258.65}, {"date": "2025-04-22", "value": 175378, "index": 273.29}, {"date": "2025-04-29", "value": 163318, "index": 266.7}, {"date": "2025-05-06", "value": 162497, "index": 274.14}, {"date": "2025-05-13", "value": 161209, "index": 260.39}, {"date": "2025-05-20", "value": 163981, "index": 263.6}, {"date": "2025-05-27", "value": 174184, "index": 265.12}, {"date": "2025-06-03", "value": 187905, "index": 269.22}, {"date": "2025-06-10", "value": 187481, "index": 266.87}, {"date": "2025-06-17", "value": 200648, "index": 272.15}, {"date": "2025-06-24", "value": 195004, "index": 266.59}, {"date": "2025-07-01", "value": 201980, "index": 268.14}, {"date": "2025-07-08", "value": 202968, "index": 265.75}, {"date": "2025-07-15", "value": 213115, "index": 267.58}, {"date": "2025-07-22", "value": 253038, "index": 276.37}, {"date": "2025-07-29", "value": 223596, "index": 267.07}, {"date": "2025-08-05", "value": 237050, "index": 271.77}, {"date": "2025-08-12", "value": 229485, "index": 269.12}, {"date": "2025-08-19", "value": 212590, "index": 266.26}, {"date": "2025-08-26", "value": 214311, "index": 272.31}, {"date": "2025-09-02", "value": 249530, "index": 285.23}, {"date": "2025-09-09", "value": 261740, "index": 292.78}, {"date": "2025-09-16", "value": 266410, "index": 296.44}, {"date": "2025-09-23", "value": 266749, "index": 303.81}, {"date": "2025-09-30", "value": 252908, "index": 308.65}, {"date": "2025-10-07", "value": 231956, "index": 319.56}, {"date": "2025-10-14", "value": 203916, "index": 332.59}, {"date": "2025-10-21", "value": 176609, "index": 328.49}, {"date": "2025-10-28", "value": 204664, "index": 318.72}, {"date": "2025-11-04", "value": 202307, "index": 317.24}, {"date": "2025-11-10", "value": 207069, "index": 330.42}, {"date": "2025-11-18", "value": 210339, "index": 326.37}, {"date": "2025-11-25", "value": 204588, "index": 332.63}, {"date": "2025-12-02", "value": 217560, "index": 336.44}, {"date": "2025-12-09", "value": 223886, "index": 338.05}, {"date": "2025-12-16", "value": 233978, "index": 345.91}, {"date": "2025-12-23", "value": 240700, "index": 360.24}, {"date": "2025-12-30", "value": 231173, "index": 351.18}, {"date": "2026-01-06", "value": 227632, "index": 360.19}, {"date": "2026-01-13", "value": 251238, "index": 368.79}, {"date": "2026-01-20", "value": 244770, "index": 382.48}, {"date": "2026-01-27", "value": 205396, "index": 408.22}, {"date": "2026-02-03", "value": 165604, "index": 394.06}, {"date": "2026-02-10", "value": 160012, "index": 402.11}, {"date": "2026-02-17", "value": 159915, "index": 392.39}, {"date": "2026-02-24", "value": 159177, "index": 414.32}, {"date": "2026-03-03", "value": 160145, "index": 410.43}, {"date": "2026-03-10", "value": 163132, "index": 420.26}, {"date": "2026-03-17", "value": 159869, "index": 401.88}, {"date": "2026-03-24", "value": 168327, "index": 353.53}, {"date": "2026-03-31", "value": 163202, "index": 373.48}, {"date": "2026-04-07", "value": 156305, "index": 374.24}, {"date": "2026-04-14", "value": 162526, "index": 387.74}, {"date": "2026-04-21", "value": 164006, "index": 377.56}, {"date": "2026-04-28", "value": 159571, "index": 368.97}, {"date": "2026-05-05", "value": 163303, "index": 366.1}, {"date": "2026-05-12", "value": 171622, "index": 375.89}, {"date": "2026-05-19", "value": 159833, "index": 362.13}, {"date": "2026-05-26", "value": 154260, "index": 361.65}, {"date": "2026-06-02", "value": 176020, "index": 360.74}];
+        const canvas = document.getElementById('chart');
+        const tooltip = document.getElementById('tooltip');
+        const meta = document.getElementById('meta');
+        const ctx = canvas.getContext('2d');
+        const defaultWeeks = Math.min(52, points.length);
+        const state = {
+            hoverIndex: -1,
+            start: Math.max(0, points.length - defaultWeeks),
+            end: Math.max(0, points.length - 1),
+            dragMode: null,
+            dragStartX: 0,
+            dragStartRange: null
+        };
+
+        const formatNumber = value => value.toLocaleString('en-US');
+        const getColor = value => value >= 0 ? '#0a8f62' : '#c7354f';
+        const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+        const minWindow = Math.min(4, points.length);
+        let layout = null;
+
+        function setRange(start, end) {
+            if (!points.length) return;
+            let nextStart = clamp(Math.round(start), 0, points.length - 1);
+            let nextEnd = clamp(Math.round(end), 0, points.length - 1);
+            if (nextEnd < nextStart) [nextStart, nextEnd] = [nextEnd, nextStart];
+            if (nextEnd - nextStart + 1 < minWindow) {
+                if (state.dragMode === 'start') {
+                    nextStart = Math.max(0, nextEnd - minWindow + 1);
+                } else {
+                    nextEnd = Math.min(points.length - 1, nextStart + minWindow - 1);
+                }
+            }
+            state.start = nextStart;
+            state.end = nextEnd;
+            state.hoverIndex = -1;
+            updateMeta();
+            draw();
+        }
+
+        function updateMeta() {
+            if (!points.length) return;
+            const weeks = state.end - state.start + 1;
+            const hasIndex = points.some(point => point.index !== null);
+            const suffix = hasIndex ? ' | Futures Index base=100' : '';
+            meta.textContent = `Non-Commercial Net | Weekly bars | ${points[state.start].date} to ${points[state.end].date} | ${weeks} weeks${suffix}`;
+        }
+
+        function resizeCanvas() {
+            const ratio = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = Math.max(1, Math.round(rect.width * ratio));
+            canvas.height = Math.max(1, Math.round(rect.height * ratio));
+            ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+            draw();
+        }
+
+        function draw() {
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+            ctx.clearRect(0, 0, width, height);
+
+            if (!points.length) {
+                ctx.fillStyle = '#5e6a7d';
+                ctx.font = '14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+                ctx.fillText('No chart data available', 28, 38);
+                return;
+            }
+
+            const hasIndex = points.some(point => point.index !== null);
+            const pad = { left: 76, right: hasIndex ? 76 : 24, top: 28, bottom: 122 };
+            const plotW = width - pad.left - pad.right;
+            const plotH = height - pad.top - pad.bottom;
+            const slider = {
+                left: pad.left,
+                right: width - pad.right,
+                top: height - 78,
+                height: 34,
+                bottom: height - 44
+            };
+            layout = { pad, plotW, plotH, slider };
+
+            const visiblePoints = points.slice(state.start, state.end + 1);
+            const values = visiblePoints.map(point => point.value);
+            const indexValues = visiblePoints.map(point => point.index).filter(value => value !== null);
+            const maxAbs = Math.max(1, ...values.map(value => Math.abs(value)));
+            const minValue = Math.min(...values, 0);
+            const maxValue = Math.max(...values, 0);
+            const yMin = Math.min(minValue, -maxAbs * 0.08);
+            const yMax = Math.max(maxValue, maxAbs * 0.08);
+            const yRange = yMax - yMin || 1;
+            const yFor = value => pad.top + (yMax - value) / yRange * plotH;
+            const zeroY = yFor(0);
+            const indexMin = indexValues.length ? Math.min(...indexValues) : null;
+            const indexMax = indexValues.length ? Math.max(...indexValues) : null;
+            const indexPadding = indexValues.length ? Math.max(2, (indexMax - indexMin) * 0.12) : 0;
+            const indexYMin = indexValues.length ? indexMin - indexPadding : 0;
+            const indexYMax = indexValues.length ? indexMax + indexPadding : 1;
+            const indexRange = indexYMax - indexYMin || 1;
+            const indexYFor = value => pad.top + (indexYMax - value) / indexRange * plotH;
+            const visibleCount = visiblePoints.length;
+            const step = plotW / visibleCount;
+            const barW = Math.max(2, Math.min(22, step * 0.72));
+
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.strokeStyle = '#e3e8f0';
+            ctx.lineWidth = 1;
+            ctx.fillStyle = '#5e6a7d';
+            ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+            for (let tick = 0; tick <= 4; tick++) {
+                const value = yMin + (yRange * tick / 4);
+                const y = yFor(value);
+                ctx.beginPath();
+                ctx.moveTo(pad.left, y);
+                ctx.lineTo(width - pad.right, y);
+                ctx.stroke();
+                ctx.fillText(formatNumber(Math.round(value)), pad.left - 10, y);
+            }
+
+            if (indexValues.length) {
+                ctx.fillStyle = '#2f7df6';
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'middle';
+                for (let tick = 0; tick <= 4; tick++) {
+                    const value = indexYMin + (indexRange * tick / 4);
+                    const y = indexYFor(value);
+                    ctx.fillText(value.toFixed(1), width - pad.right + 10, y);
+                }
+                ctx.fillText('Index', width - pad.right + 10, pad.top - 10);
+            }
+
+            ctx.strokeStyle = '#9aa6b6';
+            ctx.beginPath();
+            ctx.moveTo(pad.left, zeroY);
+            ctx.lineTo(width - pad.right, zeroY);
+            ctx.stroke();
+
+            visiblePoints.forEach((point, index) => {
+                const x = pad.left + index * step + step / 2;
+                const y = yFor(point.value);
+                const barTop = Math.min(y, zeroY);
+                const barH = Math.max(1, Math.abs(zeroY - y));
+                ctx.fillStyle = getColor(point.value);
+                ctx.globalAlpha = index === state.hoverIndex ? 1 : 0.86;
+                ctx.fillRect(x - barW / 2, barTop, barW, barH);
+            });
+            ctx.globalAlpha = 1;
+
+            const linePoints = visiblePoints
+                .map((point, index) => ({
+                    x: pad.left + index * step + step / 2,
+                    y: point.index === null ? null : indexYFor(point.index),
+                    value: point.index
+                }))
+                .filter(point => point.y !== null);
+            if (linePoints.length > 1) {
+                ctx.strokeStyle = '#2f7df6';
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                linePoints.forEach((point, index) => {
+                    if (index === 0) ctx.moveTo(point.x, point.y);
+                    else ctx.lineTo(point.x, point.y);
+                });
+                ctx.stroke();
+
+                if (state.hoverIndex >= 0) {
+                    const point = visiblePoints[state.hoverIndex];
+                    if (point.index !== null) {
+                        const x = pad.left + state.hoverIndex * step + step / 2;
+                        const y = indexYFor(point.index);
+                        ctx.fillStyle = '#ffffff';
+                        ctx.strokeStyle = '#2f7df6';
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.arc(x, y, 4, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            ctx.fillStyle = '#5e6a7d';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            const labelEvery = Math.max(1, Math.ceil(visibleCount / Math.max(4, Math.floor(plotW / 82))));
+            visiblePoints.forEach((point, index) => {
+                if (index % labelEvery !== 0 && index !== visiblePoints.length - 1) return;
+                const x = pad.left + index * step + step / 2;
+                ctx.save();
+                ctx.translate(x, height - pad.bottom + 26);
+                ctx.rotate(-Math.PI / 4);
+                ctx.fillText(point.date.slice(5), 0, 0);
+                ctx.restore();
+            });
+
+            if (state.hoverIndex >= 0) {
+                const x = pad.left + state.hoverIndex * step + step / 2;
+                ctx.strokeStyle = '#172033';
+                ctx.globalAlpha = 0.26;
+                ctx.beginPath();
+                ctx.moveTo(x, pad.top);
+                ctx.lineTo(x, height - pad.bottom);
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+            }
+
+            drawSlider(slider);
+        }
+
+        function drawSlider(slider) {
+            const trackW = slider.right - slider.left;
+            const yMid = slider.top + slider.height / 2;
+            const allValues = points.map(point => point.value);
+            const maxAbs = Math.max(1, ...allValues.map(value => Math.abs(value)));
+            const miniH = 24;
+            const miniTop = slider.top + 5;
+            const miniZero = miniTop + miniH / 2;
+            const miniStep = trackW / points.length;
+            const miniBarW = Math.max(1, miniStep * 0.72);
+            const xForIndex = index => slider.left + index / Math.max(1, points.length - 1) * trackW;
+            const startX = xForIndex(state.start);
+            const endX = xForIndex(state.end);
+
+            ctx.fillStyle = '#f4f7fb';
+            ctx.fillRect(slider.left, slider.top, trackW, slider.height);
+            ctx.strokeStyle = '#d8e0eb';
+            ctx.strokeRect(slider.left, slider.top, trackW, slider.height);
+
+            points.forEach((point, index) => {
+                const x = slider.left + index * miniStep + miniStep / 2;
+                const barH = Math.max(1, Math.abs(point.value) / maxAbs * miniH / 2);
+                ctx.fillStyle = getColor(point.value);
+                ctx.globalAlpha = 0.34;
+                if (point.value >= 0) {
+                    ctx.fillRect(x - miniBarW / 2, miniZero - barH, miniBarW, barH);
+                } else {
+                    ctx.fillRect(x - miniBarW / 2, miniZero, miniBarW, barH);
+                }
+            });
+            ctx.globalAlpha = 1;
+
+            ctx.fillStyle = 'rgba(23, 32, 51, 0.10)';
+            ctx.fillRect(slider.left, slider.top, Math.max(0, startX - slider.left), slider.height);
+            ctx.fillRect(endX, slider.top, Math.max(0, slider.right - endX), slider.height);
+
+            ctx.fillStyle = 'rgba(76, 139, 245, 0.16)';
+            ctx.fillRect(startX, slider.top, Math.max(2, endX - startX), slider.height);
+            ctx.strokeStyle = '#3b74d7';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(startX, slider.top, Math.max(2, endX - startX), slider.height);
+
+            [startX, endX].forEach(x => {
+                ctx.fillStyle = '#ffffff';
+                ctx.strokeStyle = '#3b74d7';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.roundRect(x - 6, slider.top - 4, 12, slider.height + 8, 5);
+                ctx.fill();
+                ctx.stroke();
+                ctx.strokeStyle = '#9aa6b6';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(x - 2, yMid - 7);
+                ctx.lineTo(x - 2, yMid + 7);
+                ctx.moveTo(x + 2, yMid - 7);
+                ctx.lineTo(x + 2, yMid + 7);
+                ctx.stroke();
+            });
+
+            ctx.fillStyle = '#5e6a7d';
+            ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText(points[state.start].date, slider.left, slider.bottom + 8);
+            ctx.textAlign = 'right';
+            ctx.fillText(points[state.end].date, slider.right, slider.bottom + 8);
+        }
+
+        function updateHover(event) {
+            if (state.dragMode) return;
+            const rect = canvas.getBoundingClientRect();
+            const width = canvas.clientWidth;
+            if (!layout) return;
+            const { pad, plotW, slider } = layout;
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const visibleCount = state.end - state.start + 1;
+            const step = plotW / visibleCount;
+            const index = Math.round((x - pad.left - step / 2) / step);
+
+            if (y >= slider.top || index < 0 || index >= visibleCount) {
+                state.hoverIndex = -1;
+                tooltip.style.display = 'none';
+                draw();
+                return;
+            }
+
+            state.hoverIndex = index;
+            const point = points[state.start + index];
+            const indexLine = point.index === null ? '' : `<br><span style="color:#72a8ff">Futures Index: ${point.index.toFixed(2)}</span>`;
+            tooltip.innerHTML = `<strong>${point.date}</strong><br><span class="${point.value >= 0 ? 'value-pos' : 'value-neg'}">Net: ${formatNumber(point.value)}</span>${indexLine}`;
+            tooltip.style.display = 'block';
+            tooltip.style.left = `${Math.min(event.clientX + 12, window.innerWidth - tooltip.offsetWidth - 12)}px`;
+            tooltip.style.top = `${Math.min(event.clientY + 12, window.innerHeight - tooltip.offsetHeight - 12)}px`;
+            draw();
+        }
+
+        function getSliderHit(x, y) {
+            if (!layout || !points.length) return null;
+            const { slider } = layout;
+            if (y < slider.top - 12 || y > slider.bottom + 12 || x < slider.left - 12 || x > slider.right + 12) return null;
+            const trackW = slider.right - slider.left;
+            const xForIndex = index => slider.left + index / Math.max(1, points.length - 1) * trackW;
+            const startX = xForIndex(state.start);
+            const endX = xForIndex(state.end);
+            if (Math.abs(x - startX) <= 12) return 'start';
+            if (Math.abs(x - endX) <= 12) return 'end';
+            if (x > startX && x < endX) return 'window';
+            return null;
+        }
+
+        function pointerToIndex(x) {
+            const { slider } = layout;
+            const pct = clamp((x - slider.left) / (slider.right - slider.left), 0, 1);
+            return Math.round(pct * (points.length - 1));
+        }
+
+        function startDrag(event) {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const hit = getSliderHit(x, y);
+            if (!hit) return;
+            state.dragMode = hit;
+            state.dragStartX = x;
+            state.dragStartRange = { start: state.start, end: state.end };
+            canvas.classList.add('dragging');
+            canvas.setPointerCapture(event.pointerId);
+            tooltip.style.display = 'none';
+            event.preventDefault();
+        }
+
+        function moveDrag(event) {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            if (!state.dragMode) {
+                const y = event.clientY - rect.top;
+                const hit = getSliderHit(x, y);
+                canvas.style.cursor = hit === 'start' || hit === 'end' ? 'ew-resize' : hit === 'window' ? 'grab' : 'default';
+                return;
+            }
+
+            if (state.dragMode === 'start') {
+                setRange(pointerToIndex(x), state.end);
+            } else if (state.dragMode === 'end') {
+                setRange(state.start, pointerToIndex(x));
+            } else if (state.dragMode === 'window') {
+                const deltaIndex = pointerToIndex(x) - pointerToIndex(state.dragStartX);
+                const width = state.dragStartRange.end - state.dragStartRange.start;
+                let nextStart = clamp(state.dragStartRange.start + deltaIndex, 0, points.length - width - 1);
+                setRange(nextStart, nextStart + width);
+            }
+            event.preventDefault();
+        }
+
+        function endDrag(event) {
+            if (!state.dragMode) return;
+            state.dragMode = null;
+            state.dragStartRange = null;
+            canvas.classList.remove('dragging');
+            canvas.releasePointerCapture(event.pointerId);
+            event.preventDefault();
+        }
+
+        canvas.addEventListener('mousemove', updateHover);
+        canvas.addEventListener('mouseleave', () => {
+            state.hoverIndex = -1;
+            tooltip.style.display = 'none';
+            draw();
+        });
+        canvas.addEventListener('pointerdown', startDrag);
+        canvas.addEventListener('pointermove', moveDrag);
+        canvas.addEventListener('pointerup', endDrag);
+        canvas.addEventListener('pointercancel', endDrag);
+        window.addEventListener('resize', resizeCanvas);
+        updateMeta();
+        resizeCanvas();
+    </script>
+</body>
+</html>

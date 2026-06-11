@@ -1,0 +1,260 @@
+import pandas as pd
+from pyecharts import options as opts
+from pyecharts.charts import Bar, Line
+import os
+
+df = pd.read_csv('cot_noncommercial_history.csv')
+df_prices = pd.read_csv('price_history.csv')
+
+categories = {
+    'Grains': ['Corn', 'Soybeans', 'Soybean Meal', 'Soybean Oil', 'Wheat', 
+               'Hard Red Winter Wheat', 'Spring Wheat Mpls', 'Rough Rice', 'Canola'],
+    'Energies': ['Crude Oil', 'Natural Gas'],
+    'Metals': ['Gold', 'Silver', 'Copper', 'Platinum', 'Palladium'],
+    'Softs': ['Coffee', 'Sugar', 'Cocoa', 'Cotton', 'Orange Juice'],
+    'Livestock': ['Live Cattle', 'Lean Hogs', 'Feeder Cattle'],
+    'Currencies': ['Euro FX', 'British Pound', 'Japanese Yen', 'Swiss Franc', 
+                 'Australian Dollar', 'Canadian Dollar', 'Mexican Peso', 'U.S. Dollar Index'],
+    'Indices': ['S&P 500 Micro', 'Nasdaq 100'],
+    'Treasuries': ['10-Year T-Note', '5-Year T-Note', '2-Year T-Note', '30-Year T-Bond']
+}
+
+code_map = {
+    'Corn': 'ZC', 'Soybeans': 'ZS', 'Soybean Meal': 'ZM', 'Soybean Oil': 'ZL',
+    'Wheat': 'ZW', 'Hard Red Winter Wheat': 'KE', 'Spring Wheat Mpls': 'MWE',
+    'Rough Rice': 'ZR', 'Canola': 'RS', 'Oats': 'ZO',
+    'Crude Oil': 'CL', 'Natural Gas': 'NG', 'Gold': 'GC', 'Silver': 'SI',
+    'Copper': 'HG', 'Platinum': 'PL', 'Palladium': 'PA', 'Coffee': 'KC', 'Sugar': 'SB',
+    'Cocoa': 'CC', 'Cotton': 'CT', 'Orange Juice': 'OJ', 'Live Cattle': 'LE', 
+    'Lean Hogs': 'HE', 'Feeder Cattle': 'GF', 'Euro FX': 'EC', 'British Pound': 'BP',
+    'Japanese Yen': 'JY', 'Swiss Franc': 'SF', 'Australian Dollar': 'AD', 
+    'Canadian Dollar': 'CD', 'Mexican Peso': 'MP', 'U.S. Dollar Index': 'DX',
+    'S&P 500 Micro': 'MES', 'Nasdaq 100': 'NQ', '10-Year T-Note': 'TY', '5-Year T-Note': 'FV',
+    '2-Year T-Note': 'TU', '30-Year T-Bond': 'US'
+}
+
+def get_commodity_data(comm):
+    return df[df['Commodity'] == comm].sort_values(by='Date')
+
+os.makedirs('charts', exist_ok=True)
+
+for category, comms in categories.items():
+    for comm in comms:
+        cot_data = get_commodity_data(comm)
+        if cot_data.empty:
+            continue
+        
+        dates = cot_data['Date'].tolist()[-104:]
+        net_values = cot_data['NonComm Net'].tolist()[-104:]
+        
+        bar = (
+            Bar(init_opts=opts.InitOpts(width="100%", height="100vh"))
+            .add_xaxis(dates)
+            .add_yaxis(
+                "",
+                net_values,
+                itemstyle_opts=opts.ItemStyleOpts(color="#06d6a0"),
+                label_opts=opts.LabelOpts(is_show=False)
+            )
+        )
+        
+        if comm == 'S&P 500 Micro':
+            price_data = df_prices[df_prices['Commodity'] == 'S&P 500 Micro'].sort_values(by='Date')
+            if not price_data.empty:
+                p_dates = price_data['Date'].tolist()[-104:]
+                p_values = [float(x) for x in price_data['Price'].tolist()[-104:] if x]
+                
+                line_chart = (
+                    Line()
+                    .add_xaxis(p_dates)
+                    .add_yaxis("S&P 500", p_values, yaxis_index=1)
+                )
+                bar = bar.overlap(line_chart)
+        
+        bar.set_global_opts(
+            title_opts=opts.TitleOpts(title=f"{comm} ({code_map.get(comm, '')})"),
+            tooltip_opts=opts.TooltipOpts(trigger="axis"),
+            xaxis_opts=opts.AxisOpts(
+                axislabel_opts=opts.LabelOpts(rotate=45, interval=2, margin=32)
+            ),
+            yaxis_opts=opts.AxisOpts(name=""),
+            datazoom_opts=opts.DataZoomOpts(orient="horizontal"),
+            legend_opts=opts.LegendOpts(is_show=False),
+        )
+        
+        filename = f"charts/{code_map.get(comm, comm)}.html"
+        bar.render(filename)
+
+print(f"Generated {len(os.listdir('charts'))} chart files")
+
+dates = sorted(df['Date'].unique(), reverse=True)[:104]
+
+def get_commodity(comm):
+    return df[df['Commodity'] == comm]
+
+html_rows_net = ''
+html_rows_all = ''
+
+for category, comms in categories.items():
+    html_rows_net += f'<tr class="category"><th colspan="{len(dates)+2}">{category}</th></tr>\n'
+    html_rows_net += '<tr><th>Commodity</th><th>Chart</th>'
+    for d in dates:
+        html_rows_net += f'<th>{d[5:]}</th>'
+    html_rows_net += '</tr>\n'
+    
+    html_rows_all += f'<tr class="category"><th colspan="{len(dates)+3}">{category}</th></tr>\n'
+    html_rows_all += '<tr><th>Commodity</th><th>Chart</th>'
+    for d in dates:
+        html_rows_all += f'<th colspan="3">{d[5:]}</th>'
+    html_rows_all += '</tr>\n'
+    html_rows_all += '<tr><th></th><th></th>'
+    for d in dates:
+        html_rows_all += '<th>L</th><th>S</th><th>N</th>'
+    html_rows_all += '</tr>\n'
+    
+    for comm in comms:
+        code = code_map.get(comm, '')
+        data = get_commodity(comm)
+        
+        html_rows_net += f'<tr><td class="comm">{comm} ({code})</td><td><a href="charts/{code}.html" target="_blank" class="chart-link">📊</a></td>'
+        html_rows_all += f'<tr><td class="comm">{comm} ({code})</td><td><a href="charts/{code}.html" target="_blank" class="chart-link">📊</a></td>'
+        
+        for d in dates:
+            row = data[data['Date'] == d]
+            
+            if not row.empty:
+                net = row.iloc[0]['NonComm Net']
+                long_val = row.iloc[0]['NonComm Long']
+                short_val = row.iloc[0]['NonComm Short']
+                
+                try:
+                    net_num = int(net)
+                    if net_num > 0:
+                        cls = 'pos'
+                        val = f'+{net:,}'
+                    elif net_num < 0:
+                        cls = 'neg'
+                        val = f'{net:,}'
+                    else:
+                        cls = 'neu'
+                        val = '0'
+                except:
+                    cls = 'neu'
+                    val = '-'
+            else:
+                cls = 'neu'
+                val = '-'
+                long_val = short_val = '-'
+            
+            html_rows_net += f'<td class="{cls}">{val}</td>'
+            try:
+                html_rows_all += f'<td class="pos">{int(long_val):,}</td><td class="neg">{int(short_val):,}</td><td class="{cls}">{val}</td>'
+            except (ValueError, TypeError):
+                html_rows_all += f'<td class="pos">{long_val}</td><td class="neg">{short_val}</td><td class="{cls}">{val}</td>'
+        
+        html_rows_net += '</tr>\n'
+        html_rows_all += '</tr>\n'
+
+html = f'''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CFTC Non-Commercial Positions</title>
+    <style>
+        * {{ box-sizing: border-box; }}
+        body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a1a2e; color: #eee; padding: 20px; margin: 0; }}
+        .container {{ max-width: 100%; overflow-x: auto; background: #16213e; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }}
+        h1 {{ color: #fff; margin: 0 0 10px 0; font-size: 24px; }}
+        .subtitle {{ color: #888; margin-bottom: 20px; font-size: 14px; }}
+        
+        .tabs {{ display: flex; margin-bottom: 20px; border-bottom: 2px solid #0f3460; }}
+        .tab {{ padding: 12px 24px; cursor: pointer; background: transparent; border: none; color: #888; font-size: 16px; font-weight: 600; transition: 0.3s; }}
+        .tab:hover {{ color: #fff; }}
+        .tab.active {{ color: #4cc9f0; border-bottom: 3px solid #4cc9f0; }}
+        
+        .tab-content {{ display: none; }}
+        .tab-content.active {{ display: block; }}
+        
+        table {{ width: 100%; border-collapse: collapse; font-size: 11px; }}
+        th {{ background: #0f3460; color: #fff; padding: 8px 6px; text-align: center; font-weight: 600; position: sticky; top: 0; }}
+        th:first-child {{ text-align: left; position: sticky; left: 0; background: #0f3460; z-index: 10; }}
+        td {{ padding: 6px 6px; text-align: center; border-bottom: 1px solid #1a1a2e; font-family: 'SF Mono', Monaco, monospace; font-size: 10px; }}
+        td:first-child {{ text-align: left; position: sticky; left: 0; background: #16213e; font-weight: 600; z-index: 5; }}
+        tr.category {{ background: #e94560 !important; }}
+        tr.category th {{ background: #e94560; text-align: left; padding: 10px; font-size: 14px; }}
+        .comm {{ color: #4cc9f0; }}
+        .pos {{ color: #06d6a0; }}
+        .neg {{ color: #ef476f; }}
+        .neu {{ color: #666; }}
+        tr:hover td {{ background: #1f4068; }}
+        tr:hover td:first-child {{ background: #1f4068; }}
+        .chart-link {{ text-decoration: none; font-size: 16px; }}
+        .chart-link:hover {{ transform: scale(1.2); }}
+        .legend {{ margin-top: 20px; padding: 15px; background: #0f3460; border-radius: 8px; }}
+        .legend span {{ margin-right: 20px; }}
+        .legend .pos {{ color: #06d6a0; font-weight: bold; }}
+        .legend .neg {{ color: #ef476f; font-weight: bold; }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CFTC Non-Commercial Positions</h1>
+        <p class="subtitle">Legacy COT Report | Last 2 Years | 📊 Click for Chart</p>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('net')">Net</button>
+            <button class="tab" onclick="showTab('all')">All</button>
+        </div>
+        
+        <div id="net" class="tab-content active">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Commodity</th>
+                        <th>📊</th>
+                        {''.join(f'<th>{d[5:]}</th>' for d in dates)}
+                    </tr>
+                </thead>
+                <tbody>
+{html_rows_net}                </tbody>
+            </table>
+        </div>
+        
+        <div id="all" class="tab-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Commodity</th>
+                        <th>📊</th>
+                        {''.join(f'<th>L</th><th>S</th><th>N</th>' for d in dates)}
+                    </tr>
+                </thead>
+                <tbody>
+{html_rows_all}                </tbody>
+            </table>
+        </div>
+        
+        <div class="legend">
+            <span><span class="pos">+</span> Net Long</span>
+            <span><span class="neg">-</span> Net Short</span>
+            <span><span class="neu">-</span> No Data</span>
+            <span>L = Long, S = Short, N = Net</span>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabName) {{
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab')[tabName === 'net' ? 0 : 1].classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }}
+    </script>
+</body>
+</html>'''
+
+with open('cot_noncommercial_history.html', 'w') as f:
+    f.write(html)
+
+print("✓ Generated: cot_noncommercial_history.html with Net and All tabs")
