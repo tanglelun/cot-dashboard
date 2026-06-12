@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock Chart</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:#0f1923;color:#e0e0e0;padding:16px}
+.site-nav{display:flex;align-items:center;gap:8px;max-width:1320px;margin:0 auto 16px;border-bottom:1px solid #1e2d3a}
+.site-nav a{display:inline-flex;align-items:center;padding:12px 18px;color:#99aabb;text-decoration:none;font-weight:700;border-bottom:3px solid transparent}
+.site-nav a:hover{color:#fff}
+.site-nav a.active{color:#4fc3f7;border-bottom-color:#4fc3f7}
+.container{max-width:1320px;margin:0 auto}
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:12px;flex-wrap:wrap}
+.identity{display:flex;flex-direction:column;gap:4px}
+.symbol-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+h1{font-size:24px;color:#fff;font-weight:800;letter-spacing:0}
+.name{font-size:13px;color:#99aabb}
+.meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;color:#667788}
+.badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:999px;background:#1a2d3a;color:#99aabb;font-size:11px}
+.price-line{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.last-price{font-family:"SF Mono","Fira Code",monospace;font-size:22px;font-weight:800;color:#e0e0e0}
+.change{font-family:"SF Mono","Fira Code",monospace;font-size:14px;font-weight:800}
+.change.up{color:#00c853}.change.down{color:#ff5252}
+.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid #2a3a4a;background:#1a2a38;color:#99aabb;border-radius:5px;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none}
+.btn:hover{border-color:#4fc3f7;color:#fff}
+.btn.active{background:#4fc3f7;border-color:#4fc3f7;color:#0f1923}
+.chart-shell{background:#111d27;border:1px solid #1e2d3a;border-radius:8px;overflow:hidden}
+.chart-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #1e2d3a;flex-wrap:wrap}
+.hint{font-size:11px;color:#556677}
+.chart-wrap{position:relative;height:68vh;min-height:420px}
+canvas{display:block;width:100%;height:100%;cursor:crosshair}
+.status{padding:28px;text-align:center;color:#8899aa;font-size:13px}
+.status strong{color:#4fc3f7}
+@media(max-width:768px){
+  body{padding:10px}
+  .site-nav a{padding:10px 12px}
+  h1{font-size:19px}
+  .last-price{font-size:18px}
+  .chart-wrap{height:62vh;min-height:360px}
+  .hint{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="Primary">
+  <a href="index.html">Non-Commercial</a>
+  <a href="russell2000_top100.html" class="active">Maket</a>
+</nav>
+
+<main class="container">
+  <div class="topbar">
+    <div class="identity">
+      <div class="symbol-line">
+        <h1 id="symbol">---</h1>
+        <span class="badge" id="sector">---</span>
+        <span class="badge" id="mcap">---</span>
+      </div>
+      <div class="name" id="name">Loading chart...</div>
+      <div class="price-line">
+        <span class="last-price" id="lastPrice">--</span>
+        <span class="change" id="change">--</span>
+      </div>
+    </div>
+    <div class="actions">
+      <a class="btn" href="russell2000_top100.html">Back to Maket</a>
+    </div>
+  </div>
+
+  <section class="chart-shell">
+    <div class="chart-toolbar">
+      <div class="actions" id="ranges">
+        <button class="btn" data-range="63">3M</button>
+        <button class="btn active" data-range="126">6M</button>
+        <button class="btn" data-range="252">1Y</button>
+        <button class="btn" data-range="all">All</button>
+      </div>
+      <div class="hint">Drag to pan · Mouse wheel to zoom · Move cursor for OHLC</div>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="chart"></canvas>
+      <div class="status" id="status">Loading price data...</div>
+    </div>
+  </section>
+</main>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const symbol = (params.get('symbol') || '').trim().toUpperCase();
+const fallbackName = params.get('name') || symbol;
+const canvas = document.getElementById('chart');
+const ctx = canvas.getContext('2d');
+const statusEl = document.getElementById('status');
+const state = { candles: [], start: 0, end: 0, hover: -1, dragging: false, dragX: 0, dragStart: 0, dragEnd: 0 };
+
+document.getElementById('symbol').textContent = symbol || 'UNKNOWN';
+document.getElementById('name').textContent = fallbackName || 'Stock chart';
+document.title = symbol ? symbol + ' Candlestick Chart' : 'Stock Chart';
+
+function fmt(value, digits=2){
+  if(value === null || value === undefined || Number.isNaN(Number(value))) return '--';
+  return Number(value).toFixed(digits);
+}
+
+function setStatus(text){
+  statusEl.style.display = text ? 'block' : 'none';
+  statusEl.textContent = text || '';
+}
+
+function setRange(range){
+  const total = state.candles.length;
+  const count = range === 'all' ? total : Math.min(total, Number(range));
+  state.end = total;
+  state.start = Math.max(0, total - count);
+  state.hover = -1;
+  draw();
+}
+
+function renderHeader(data){
+  const candles = data.prices;
+  const last = candles[candles.length - 1];
+  const prev = candles[candles.length - 2] || last;
+  const diff = last.close - prev.close;
+  const pct = prev.close ? diff / prev.close * 100 : 0;
+  const changeEl = document.getElementById('change');
+  document.getElementById('symbol').textContent = data.symbol;
+  document.getElementById('name').textContent = data.name || fallbackName || data.symbol;
+  document.getElementById('sector').textContent = data.sector || 'Sector';
+  document.getElementById('mcap').textContent = data.marketCap || 'Market cap';
+  document.getElementById('lastPrice').textContent = fmt(last.close);
+  changeEl.textContent = (diff >= 0 ? '+' : '') + fmt(diff) + ' (' + (pct >= 0 ? '+' : '') + fmt(pct) + '%)';
+  changeEl.className = 'change ' + (diff >= 0 ? 'up' : 'down');
+}
+
+function resizeCanvas(){
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+  canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function visibleCandles(){
+  return state.candles.slice(state.start, state.end);
+}
+
+function drawGrid(left, top, right, priceBottom, volumeTop, bottom, width, height, minPrice, maxPrice, maxVolume, candles, xFor, yFor){
+  ctx.strokeStyle = '#1d3040';
+  ctx.lineWidth = 1;
+  ctx.fillStyle = '#607d8b';
+  ctx.font = '11px SF Mono, Fira Code, monospace';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  for(let i=0;i<=5;i++){
+    const y = top + (priceBottom - top) * i / 5;
+    ctx.beginPath();
+    ctx.moveTo(left, y);
+    ctx.lineTo(width - right, y);
+    ctx.stroke();
+    const price = maxPrice - (maxPrice - minPrice) * i / 5;
+    ctx.fillText(fmt(price), width - 10, y);
+  }
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  const ticks = Math.min(6, candles.length);
+  for(let i=0;i<ticks;i++){
+    const idx = Math.floor(i * (candles.length - 1) / Math.max(1, ticks - 1));
+    const x = xFor(idx);
+    ctx.fillText(candles[idx].time.slice(5), x, height - bottom + 8);
+  }
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(maxVolume ? Math.round(maxVolume / 1000000) + 'M' : '', width - 10, volumeTop + 8);
+}
+
+function draw(){
+  const rect = canvas.getBoundingClientRect();
+  const width = rect.width;
+  const height = rect.height;
+  ctx.clearRect(0, 0, width, height);
+  const candles = visibleCandles();
+  if(!candles.length) return;
+
+  const left = 58, right = 76, top = 22, bottom = 36;
+  const volumeHeight = Math.max(64, Math.min(92, height * 0.18));
+  const gap = 16;
+  const priceBottom = height - bottom - volumeHeight - gap;
+  const volumeTop = priceBottom + gap;
+  const plotWidth = width - left - right;
+  const step = plotWidth / candles.length;
+  const bodyWidth = Math.max(2, Math.min(12, step * 0.62));
+  const highs = candles.map(c => c.high);
+  const lows = candles.map(c => c.low);
+  let maxPrice = Math.max(...highs);
+  let minPrice = Math.min(...lows);
+  const pad = (maxPrice - minPrice || maxPrice || 1) * 0.06;
+  maxPrice += pad;
+  minPrice -= pad;
+  const maxVolume = Math.max(...candles.map(c => c.volume || 0), 0);
+  const xFor = i => left + i * step + step / 2;
+  const yFor = price => top + (maxPrice - price) / (maxPrice - minPrice) * (priceBottom - top);
+
+  drawGrid(left, top, right, priceBottom, volumeTop, bottom, width, height, minPrice, maxPrice, maxVolume, candles, xFor, yFor);
+
+  candles.forEach((c, i) => {
+    const x = xFor(i);
+    const up = c.close >= c.open;
+    const color = up ? '#00c853' : '#ff5252';
+    const yOpen = yFor(c.open), yClose = yFor(c.close), yHigh = yFor(c.high), yLow = yFor(c.low);
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(x, yHigh);
+    ctx.lineTo(x, yLow);
+    ctx.stroke();
+    const bodyTop = Math.min(yOpen, yClose);
+    const bodyHeight = Math.max(1, Math.abs(yOpen - yClose));
+    if(up){
+      ctx.strokeRect(x - bodyWidth / 2, bodyTop, bodyWidth, bodyHeight);
+    }else{
+      ctx.fillRect(x - bodyWidth / 2, bodyTop, bodyWidth, bodyHeight);
+    }
+    if(maxVolume && c.volume){
+      const vh = (c.volume / maxVolume) * (height - bottom - volumeTop);
+      ctx.globalAlpha = 0.35;
+      ctx.fillRect(x - bodyWidth / 2, height - bottom - vh, bodyWidth, vh);
+      ctx.globalAlpha = 1;
+    }
+  });
+
+  if(state.hover >= state.start && state.hover < state.end){
+    const local = state.hover - state.start;
+    const c = state.candles[state.hover];
+    const x = xFor(local);
+    const y = yFor(c.close);
+    ctx.strokeStyle = '#4fc3f7';
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(x, top);
+    ctx.lineTo(x, height - bottom);
+    ctx.moveTo(left, y);
+    ctx.lineTo(width - right, y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    const lines = [
+      c.time + '  ' + symbol,
+      'O ' + fmt(c.open) + '  H ' + fmt(c.high),
+      'L ' + fmt(c.low) + '  C ' + fmt(c.close),
+      'Vol ' + (c.volume ? Math.round(c.volume / 1000000) + 'M' : '--')
+    ];
+    const boxW = 190, boxH = 78;
+    const boxX = Math.min(width - right - boxW, Math.max(left, x + 12));
+    const boxY = top + 8;
+    ctx.fillStyle = 'rgba(15,25,35,0.92)';
+    ctx.strokeStyle = '#2a3a4a';
+    ctx.fillRect(boxX, boxY, boxW, boxH);
+    ctx.strokeRect(boxX, boxY, boxW, boxH);
+    ctx.fillStyle = '#c0d0e0';
+    ctx.font = '11px SF Mono, Fira Code, monospace';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    lines.forEach((line, i) => ctx.fillText(line, boxX + 10, boxY + 9 + i * 16));
+  }
+}
+
+function nearestIndex(clientX){
+  const rect = canvas.getBoundingClientRect();
+  const left = 58, right = 76;
+  const candles = visibleCandles();
+  const step = (rect.width - left - right) / Math.max(1, candles.length);
+  const local = Math.max(0, Math.min(candles.length - 1, Math.floor((clientX - rect.left - left) / step)));
+  return state.start + local;
+}
+
+canvas.addEventListener('mousemove', event => {
+  if(state.dragging){
+    const rect = canvas.getBoundingClientRect();
+    const count = state.dragEnd - state.dragStart;
+    const step = (rect.width - 58 - 76) / Math.max(1, count);
+    const shift = Math.round((state.dragX - event.clientX) / step);
+    let start = state.dragStart + shift;
+    start = Math.max(0, Math.min(state.candles.length - count, start));
+    state.start = start;
+    state.end = start + count;
+  }else{
+    state.hover = nearestIndex(event.clientX);
+  }
+  draw();
+});
+
+canvas.addEventListener('mouseleave', () => {
+  state.hover = -1;
+  state.dragging = false;
+  draw();
+});
+
+canvas.addEventListener('mousedown', event => {
+  state.dragging = true;
+  state.dragX = event.clientX;
+  state.dragStart = state.start;
+  state.dragEnd = state.end;
+});
+
+window.addEventListener('mouseup', () => { state.dragging = false; });
+
+canvas.addEventListener('wheel', event => {
+  event.preventDefault();
+  const total = state.candles.length;
+  const current = state.end - state.start;
+  const rect = canvas.getBoundingClientRect();
+  const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left - 58) / Math.max(1, rect.width - 58 - 76)));
+  const center = state.start + current * ratio;
+  const next = Math.max(20, Math.min(total, Math.round(current * (event.deltaY > 0 ? 1.18 : 0.84))));
+  let start = Math.round(center - next * ratio);
+  start = Math.max(0, Math.min(total - next, start));
+  state.start = start;
+  state.end = start + next;
+  draw();
+}, { passive:false });
+
+document.getElementById('ranges').addEventListener('click', event => {
+  const button = event.target.closest('button[data-range]');
+  if(!button) return;
+  document.querySelectorAll('#ranges .btn').forEach(item => item.classList.remove('active'));
+  button.classList.add('active');
+  setRange(button.dataset.range);
+});
+
+async function loadChart(){
+  if(!symbol){
+    setStatus('Missing stock symbol.');
+    return;
+  }
+  try{
+    const response = await fetch('market_data/' + encodeURIComponent(symbol) + '.json', { cache:'no-store' });
+    if(!response.ok) throw new Error('No chart data found for ' + symbol);
+    const data = await response.json();
+    if(!data.prices || !data.prices.length) throw new Error('Chart data is empty for ' + symbol);
+    state.candles = data.prices;
+    renderHeader(data);
+    setStatus('');
+    setRange('126');
+  }catch(error){
+    setStatus(error.message || 'Unable to load chart data.');
+  }
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+loadChart();
+</script>
+</body>
+</html>

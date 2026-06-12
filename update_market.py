@@ -1,18 +1,22 @@
 import html
 import json
 import re
+from pathlib import Path
+
 import pandas as pd
 import yfinance as yf
 
 
 MARKET_FILE = "russell2000_top100.html"
+MARKET_DATA_DIR = Path("market_data")
+CHART_PERIOD = "2y"
 ARRAYS = {
     "r2kRaw": "Russell 2000",
     "spRaw": "S&P 500",
     "ndqRaw": "Nasdaq 100",
 }
 MAX_ABS_DAILY_CHANGE = 300
-SPLIT_FACTORS = (2, 3, 4, 5, 10, 20, 25, 50, 100)
+SPLIT_FACTORS = (10,)
 
 
 def extract_array_source(text, name):
@@ -117,15 +121,43 @@ def normalize_split_dislocations(series, symbol):
         if ratio > 4:
             factor = nearest_split_factor(ratio)
             if factor:
-                adjusted.loc[: values.index[index - 1]] *= factor
+                adjusted.loc[values.index[index] :] /= factor
                 values = adjusted.dropna()
-                print(f"Adjusted split history for {symbol} by x{factor}")
+                print(f"Adjusted split history for {symbol} by /{factor}")
         elif ratio < 0.25:
             factor = nearest_split_factor(1 / ratio)
             if factor:
-                adjusted.loc[: values.index[index - 1]] /= factor
+                adjusted.loc[values.index[index] :] *= factor
                 values = adjusted.dropna()
-                print(f"Adjusted split history for {symbol} by /{factor}")
+                print(f"Adjusted split history for {symbol} by x{factor}")
+
+    return adjusted
+
+
+def normalize_price_frame_dislocations(frame, symbol):
+    adjusted = frame.copy()
+    values = adjusted["Close"].dropna()
+    if len(values) < 2:
+        return adjusted
+
+    price_columns = [column for column in ("Open", "High", "Low", "Close") if column in adjusted.columns]
+    for index in range(1, len(values)):
+        previous = values.iloc[index - 1]
+        current = values.iloc[index]
+        if previous == 0 or pd.isna(previous) or pd.isna(current):
+            continue
+
+        ratio = current / previous
+        if ratio > 4:
+            factor = nearest_split_factor(ratio)
+            if factor:
+                adjusted.loc[values.index[index] :, price_columns] /= factor
+                values = adjusted["Close"].dropna()
+        elif ratio < 0.25:
+            factor = nearest_split_factor(1 / ratio)
+            if factor:
+                adjusted.loc[values.index[index] :, price_columns] *= factor
+                values = adjusted["Close"].dropna()
 
     return adjusted
 
@@ -134,7 +166,7 @@ def get_close_frame(symbols):
     yf_symbols = sorted({yahoo_symbol(symbol) for symbol in symbols})
     data = yf.download(
         yf_symbols,
-        period="1y",
+        period=CHART_PERIOD,
         interval="1d",
         auto_adjust=False,
         group_by="ticker",
@@ -143,6 +175,36 @@ def get_close_frame(symbols):
         timeout=30,
     )
     return data
+
+
+def clean_price_frame(frame):
+    columns = [column for column in ("Open", "High", "Low", "Close", "Volume") if column in frame.columns]
+    if not {"Open", "High", "Low", "Close"}.issubset(columns):
+        return pd.DataFrame()
+    result = frame[columns].copy()
+    return result.dropna(subset=["Open", "High", "Low", "Close"])
+
+
+def price_frame_from_download(data, display_symbol):
+    symbol = yahoo_symbol(display_symbol)
+    if data.empty:
+        return pd.DataFrame()
+    if isinstance(data.columns, pd.MultiIndex):
+        if symbol in data.columns.get_level_values(0):
+            return clean_price_frame(data[symbol])
+        if "Close" in data.columns.get_level_values(0):
+            result = pd.DataFrame(index=data.index)
+            for column in ("Open", "High", "Low", "Close", "Volume"):
+                if column not in data.columns.get_level_values(0):
+                    continue
+                values = data[column]
+                if isinstance(values, pd.DataFrame):
+                    result[column] = values[symbol] if symbol in values.columns else values.iloc[:, 0]
+                else:
+                    result[column] = values
+            return clean_price_frame(result)
+        return pd.DataFrame()
+    return clean_price_frame(data)
 
 
 def series_from_download(data, display_symbol):
@@ -167,31 +229,31 @@ def series_from_download(data, display_symbol):
     return pd.Series(dtype=float)
 
 
-def get_close_series_map(symbols):
+def get_price_frame_map(symbols):
     unique_symbols = sorted(set(symbols))
     batch_data = get_close_frame(unique_symbols)
     result = {}
     missing = []
     for symbol in unique_symbols:
-        series = series_from_download(batch_data, symbol)
-        if series.empty:
+        frame = price_frame_from_download(batch_data, symbol)
+        if frame.empty:
             missing.append(symbol)
         else:
-            result[symbol] = series
+            result[symbol] = frame
 
     for symbol in missing:
         data = yf.download(
             yahoo_symbol(symbol),
-            period="1y",
+            period=CHART_PERIOD,
             interval="1d",
             auto_adjust=False,
             progress=False,
             timeout=30,
         )
-        series = series_from_download(data, symbol)
-        if not series.empty:
+        frame = price_frame_from_download(data, symbol)
+        if not frame.empty:
             print(f"Retried {symbol} individually")
-            result[symbol] = series
+            result[symbol] = frame
 
     return result
 
@@ -201,6 +263,59 @@ def latest_price_date(series_map):
         raise RuntimeError("No price data was downloaded")
     latest = max(series.index.max() for series in series_map.values() if not series.empty)
     return pd.Timestamp(latest).strftime("%Y-%m-%d")
+
+
+def write_chart_data(static_data, price_frames, updated_at):
+    MARKET_DATA_DIR.mkdir(exist_ok=True)
+    rows_by_symbol = {}
+    for rows in static_data.values():
+        for row in rows:
+            rows_by_symbol.setdefault(row["t"], row)
+
+    index_rows = []
+    for symbol, row in sorted(rows_by_symbol.items()):
+        frame = price_frames.get(symbol, pd.DataFrame())
+        if frame.empty:
+            continue
+        frame = normalize_price_frame_dislocations(frame, symbol)
+        candles = []
+        for timestamp, values in frame.iterrows():
+            candle = {
+                "time": pd.Timestamp(timestamp).strftime("%Y-%m-%d"),
+                "open": round(float(values["Open"]), 4),
+                "high": round(float(values["High"]), 4),
+                "low": round(float(values["Low"]), 4),
+                "close": round(float(values["Close"]), 4),
+            }
+            if "Volume" in values and not pd.isna(values["Volume"]):
+                candle["volume"] = int(values["Volume"])
+            candles.append(candle)
+
+        payload = {
+            "symbol": symbol,
+            "name": row["n"],
+            "sector": row["s"],
+            "marketCap": row["c"],
+            "updated": updated_at,
+            "prices": candles,
+        }
+        (MARKET_DATA_DIR / f"{symbol}.json").write_text(
+            json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
+            encoding="utf-8",
+        )
+        index_rows.append(
+            {
+                "symbol": symbol,
+                "name": row["n"],
+                "sector": row["s"],
+                "marketCap": row["c"],
+            }
+        )
+
+    (MARKET_DATA_DIR / "index.json").write_text(
+        json.dumps({"updated": updated_at, "stocks": index_rows}, ensure_ascii=False, separators=(",", ":")),
+        encoding="utf-8",
+    )
 
 
 def update_rows(rows, series_map):
@@ -276,12 +391,14 @@ def main():
 
     static_data = {name: parse_static_rows(extract_array_source(text, name)) for name in ARRAYS}
     symbols = [row["t"] for rows in static_data.values() for row in rows]
-    series_map = get_close_series_map(symbols)
+    price_frames = get_price_frame_map(symbols)
+    series_map = {symbol: frame["Close"] for symbol, frame in price_frames.items() if "Close" in frame.columns}
 
     for name, rows in static_data.items():
         text = replace_array(text, name, update_rows(rows, series_map))
 
     today = latest_price_date(series_map)
+    write_chart_data(static_data, price_frames, today)
     text = ensure_daily_button(text)
     text = re.sub(r"更新于\s*\d{4}-\d{2}-\d{2}", f"更新于 {today}", text)
     text = re.sub(r"·\s*\d{4}-\d{2}-\d{2}更新", f"· {today}更新", text)

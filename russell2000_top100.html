@@ -46,6 +46,8 @@ tr:hover td{background:#1a2d3a}
 .rk{width:26px;text-align:center;font-weight:600;color:#556677;font-size:11px}
 .rk.t3{color:#ffd700}
 .tk{font-weight:700;color:#4fc3f7;font-family:"SF Mono","Fira Code",monospace;font-size:12px}
+.tk a,.cn a{color:inherit;text-decoration:none}
+.tk a:hover,.cn a:hover{text-decoration:underline;color:#fff}
 .cn{color:#c0c0d0;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}
 .gc{text-align:right}
 .g{font-weight:700;font-family:"SF Mono","Fira Code",monospace;font-size:12px}
@@ -457,6 +459,7 @@ function createApp(mountId, rawData, label) {
   });
   document.getElementById(mountId+'_srch').addEventListener('input',function(){window[mountId+'_filter']();});
   function getGain(d){var f=curTime==='y'?'y':curTime;return d[f]||0}
+  function chartUrl(d){return 'stock_chart.html?symbol='+encodeURIComponent(d.t)+'&name='+encodeURIComponent(d.n)}
   function render(){
     var arr=[].concat(data);
     var q=document.getElementById(mountId+'_srch').value.toLowerCase().trim();
@@ -476,7 +479,8 @@ function createApp(mountId, rawData, label) {
     document.getElementById(mountId+'_body').innerHTML=page.map(function(d,i){
       var pos=start+i+1,g=Number(getGain(d))||0,rc=pos<=3?'rk t3':'rk',ss=g>=0?'+':'';
       var gc=g>=300?'u':(g>=150?'h':(g>=0?'p':'n'));
-      return '<tr><td class="'+rc+'">'+pos+'</td><td class="tk">'+d.t+'</td><td class="cn" title="'+d.n+'">'+d.n+'</td><td class="gc"><span class="g '+gc+'">'+ss+g.toFixed(2)+'%</span></td><td class="pr"><span class="m">'+(d.p?Number(d.p).toFixed(2):'---')+'</span></td><td class="mc"><span class="m">'+(d.mn===0?'---':d.c)+'</span></td><td><span class="st">'+d.s+'</span></td></tr>';
+      var href=chartUrl(d);
+      return '<tr><td class="'+rc+'">'+pos+'</td><td class="tk"><a href="'+href+'">'+d.t+'</a></td><td class="cn" title="'+d.n+'"><a href="'+href+'">'+d.n+'</a></td><td class="gc"><span class="g '+gc+'">'+ss+g.toFixed(2)+'%</span></td><td class="pr"><span class="m">'+(d.p?Number(d.p).toFixed(2):'---')+'</span></td><td class="mc"><span class="m">'+(d.mn===0?'---':d.c)+'</span></td><td><span class="st">'+d.s+'</span></td></tr>';
     }).join('');
     var pg=document.getElementById(mountId+'_pg');
     if(tp<=1){pg.innerHTML='';return;}
