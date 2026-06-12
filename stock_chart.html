@@ -101,10 +101,10 @@ const canvas = document.getElementById('chart');
 const ctx = canvas.getContext('2d');
 const statusEl = document.getElementById('status');
 const MOVING_AVERAGES = [
-  { key:'ma10', label:'MA10', period:10, color:'#f6c85f' },
-  { key:'ma20', label:'MA20', period:20, color:'#4fc3f7' },
-  { key:'ma50', label:'MA50', period:50, color:'#b07cff' },
-  { key:'ma200', label:'MA200', period:200, color:'#ff8a65' }
+  { key:'ma10', label:'MA10', period:10, color:'#ffffff', alpha:0.2 },
+  { key:'ma20', label:'MA20', period:20, color:'#4fc3f7', alpha:0.95 },
+  { key:'ma50', label:'MA50', period:50, color:'#b07cff', alpha:0.5 },
+  { key:'ma200', label:'MA200', period:200, color:'#ff8a65', alpha:0.5 }
 ];
 const state = { candles: [], start: 0, end: 0, hover: -1, dragging: false, dragX: 0, dragStart: 0, dragEnd: 0 };
 
@@ -175,14 +175,14 @@ function renderMaLegend(candle){
   const target = document.getElementById('maLegend');
   target.innerHTML = MOVING_AVERAGES.map(ma => {
     const value = candle && candle[ma.key] ? fmt(candle[ma.key]) : '--';
-    return '<span class="ma-item" style="color:'+ma.color+'"><span class="ma-dot" style="background:'+ma.color+'"></span>'+ma.label+' '+value+'</span>';
+    return '<span class="ma-item" style="color:'+ma.color+';opacity:'+ma.alpha+'"><span class="ma-dot" style="background:'+ma.color+'"></span>'+ma.label+' '+value+'</span>';
   }).join('');
 }
 
 function drawMovingAverage(ma, candles, xFor, yFor){
   ctx.strokeStyle = ma.color;
   ctx.lineWidth = 1.4;
-  ctx.globalAlpha = 0.95;
+  ctx.globalAlpha = ma.alpha;
   ctx.beginPath();
   let started = false;
   candles.forEach((candle, index) => {
