@@ -29,7 +29,7 @@ def parse_static_rows(array_source):
         rf'\{{r:(?P<r>\d+),t:"(?P<t>[^"]+)",n:"(?P<n>[^"]*)",'
         rf'y:(?P<y>{number}),c:"(?P<c>[^"]*)",mn:(?P<mn>{number}),s:"(?P<s>[^"]*)",'
         rf"p:(?P<p>{number}),(?:d:(?P<d>{number}),)?w:(?P<w>{number}),m:(?P<m>{number}),"
-        rf"m2:(?P<m2>{number}),q:(?P<q>{number}),h:(?P<h>{number})",
+        rf"m2:(?P<m2>{number}),q:(?P<q>{number}),h:(?P<h>{number})(?:,split:(?P<split>true|false))?",
         flags=re.S,
     )
     for match in object_pattern.finditer(array_source):
@@ -50,6 +50,7 @@ def parse_static_rows(array_source):
                 "q": float(data["q"]),
                 "h": float(data["h"]),
                 "y": float(data["y"]),
+                "split": data["split"] == "true",
             }
         )
     if not rows:
@@ -179,12 +180,14 @@ def update_rows(rows, series_map):
             refreshed_count += 1
             if has_price_dislocation(series):
                 row["p"] = 0.0
+                row["split"] = True
                 for key in ("d", "w", "m", "m2", "q", "h", "y"):
                     row[key] = 0.0
                 print(f"Skipped anomalous price history for {row['t']}")
                 updated.append(row)
                 continue
 
+            row["split"] = False
             latest = series.iloc[-1]
             row["p"] = round(float(latest), 2)
             metrics = {
@@ -218,12 +221,13 @@ def js_string(value):
 
 
 def format_row(row):
+    split_flag = ",split:true" if row.get("split") else ""
     return (
         f'  {{r:{row["r"]},t:{js_string(row["t"])},n:{js_string(row["n"])},'
         f'y:{row["y"]:.2f},c:{js_string(row["c"])},mn:{row["mn"]:g},'
         f's:{js_string(row["s"])},p:{row["p"]:.2f},d:{row["d"]:.2f},'
         f'w:{row["w"]:.2f},m:{row["m"]:.2f},m2:{row["m2"]:.2f},'
-        f'q:{row["q"]:.2f},h:{row["h"]:.2f}}}'
+        f'q:{row["q"]:.2f},h:{row["h"]:.2f}{split_flag}}}'
     )
 
 
