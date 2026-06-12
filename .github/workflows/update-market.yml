@@ -1,0 +1,37 @@
+name: Update Market data
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Runs after the regular US market close.
+    # 22:30 UTC = 06:30 Beijing time on the next day.
+    - cron: "30 22 * * 1-5"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Update Market page
+        run: python update_market.py
+
+      - name: Commit updated Market page
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Update Market data"
+          file_pattern: "russell2000_top100.html"
