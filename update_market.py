@@ -112,46 +112,81 @@ def get_close_frame(symbols):
     return data
 
 
-def latest_price_date(data):
-    clean = data.dropna(how="all")
-    if clean.empty:
-        raise RuntimeError("No price data was downloaded")
-    latest = clean.index.max()
-    return pd.Timestamp(latest).strftime("%Y-%m-%d")
-
-
-def close_series(data, display_symbol):
+def series_from_download(data, display_symbol):
     symbol = yahoo_symbol(display_symbol)
     if data.empty:
         return pd.Series(dtype=float)
     if isinstance(data.columns, pd.MultiIndex):
-        if symbol not in data.columns.get_level_values(0):
-            return pd.Series(dtype=float)
-        frame = data[symbol]
-        if "Close" not in frame.columns:
-            return pd.Series(dtype=float)
-        return frame["Close"].dropna()
+        if symbol in data.columns.get_level_values(0):
+            frame = data[symbol]
+            if "Close" in frame.columns:
+                return frame["Close"].dropna()
+        if "Close" in data.columns.get_level_values(0):
+            close = data["Close"]
+            if isinstance(close, pd.DataFrame):
+                if symbol in close.columns:
+                    return close[symbol].dropna()
+                return close.iloc[:, 0].dropna()
+            return close.dropna()
+        return pd.Series(dtype=float)
     if "Close" in data.columns:
         return data["Close"].dropna()
     return pd.Series(dtype=float)
 
 
-def update_rows(rows, data):
+def get_close_series_map(symbols):
+    unique_symbols = sorted(set(symbols))
+    batch_data = get_close_frame(unique_symbols)
+    result = {}
+    missing = []
+    for symbol in unique_symbols:
+        series = series_from_download(batch_data, symbol)
+        if series.empty:
+            missing.append(symbol)
+        else:
+            result[symbol] = series
+
+    for symbol in missing:
+        data = yf.download(
+            yahoo_symbol(symbol),
+            period="1y",
+            interval="1d",
+            auto_adjust=False,
+            progress=False,
+            timeout=30,
+        )
+        series = series_from_download(data, symbol)
+        if not series.empty:
+            print(f"Retried {symbol} individually")
+            result[symbol] = series
+
+    return result
+
+
+def latest_price_date(series_map):
+    if not series_map:
+        raise RuntimeError("No price data was downloaded")
+    latest = max(series.index.max() for series in series_map.values() if not series.empty)
+    return pd.Timestamp(latest).strftime("%Y-%m-%d")
+
+
+def update_rows(rows, series_map):
     updated = []
     refreshed_count = 0
     for row in rows:
-        series = close_series(data, row["t"])
+        series = series_map.get(row["t"], pd.Series(dtype=float))
         if not series.empty:
             refreshed_count += 1
-            latest = series.iloc[-1]
-            row["p"] = round(float(latest), 2)
             if has_price_dislocation(series):
+                row["p"] = 0.0
                 for key in ("d", "w", "m", "m2", "q", "h", "y"):
                     row[key] = 0.0
                 print(f"Skipped anomalous price history for {row['t']}")
                 updated.append(row)
                 continue
 
+            latest = series.iloc[-1]
+            row["p"] = round(float(latest), 2)
             metrics = {
                 "d": pct_change(series, 1),
                 "w": pct_change(series, 5),
@@ -213,12 +248,12 @@ def main():
 
     static_data = {name: parse_static_rows(extract_array_source(text, name)) for name in ARRAYS}
     symbols = [row["t"] for rows in static_data.values() for row in rows]
-    price_data = get_close_frame(symbols)
+    series_map = get_close_series_map(symbols)
 
     for name, rows in static_data.items():
-        text = replace_array(text, name, update_rows(rows, price_data))
+        text = replace_array(text, name, update_rows(rows, series_map))
 
-    today = latest_price_date(price_data)
+    today = latest_price_date(series_map)
     text = ensure_daily_button(text)
     text = re.sub(r"更新于\s*\d{4}-\d{2}-\d{2}", f"更新于 {today}", text)
     text = re.sub(r"·\s*\d{4}-\d{2}-\d{2}更新", f"· {today}更新", text)
