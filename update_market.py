@@ -11,6 +11,7 @@ ARRAYS = {
     "spRaw": "S&P 500",
     "ndqRaw": "Nasdaq 100",
 }
+MAX_ABS_DAILY_CHANGE = 300
 
 
 def extract_array_source(text, name):
@@ -89,6 +90,13 @@ def ytd_change(series):
     return (latest / base - 1) * 100
 
 
+def has_price_dislocation(series):
+    changes = series.pct_change().dropna().abs() * 100
+    if changes.empty:
+        return False
+    return changes.max() > MAX_ABS_DAILY_CHANGE
+
+
 def get_close_frame(symbols):
     yf_symbols = sorted({yahoo_symbol(symbol) for symbol in symbols})
     data = yf.download(
@@ -137,6 +145,13 @@ def update_rows(rows, data):
             refreshed_count += 1
             latest = series.iloc[-1]
             row["p"] = round(float(latest), 2)
+            if has_price_dislocation(series):
+                for key in ("d", "w", "m", "m2", "q", "h", "y"):
+                    row[key] = 0.0
+                print(f"Skipped anomalous price history for {row['t']}")
+                updated.append(row)
+                continue
+
             metrics = {
                 "d": pct_change(series, 1),
                 "w": pct_change(series, 5),
