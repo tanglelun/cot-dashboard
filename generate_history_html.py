@@ -621,6 +621,10 @@ html = f'''<!DOCTYPE html>
     <style>
         * {{ box-sizing: border-box; }}
         body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a1a2e; color: #eee; padding: 20px; margin: 0; }}
+        .site-nav {{ display: flex; align-items: center; gap: 8px; margin: 0 0 16px 0; border-bottom: 1px solid #26385f; }}
+        .site-nav a {{ display: inline-flex; align-items: center; padding: 12px 18px; color: #9aa8c7; text-decoration: none; font-weight: 700; border-bottom: 3px solid transparent; }}
+        .site-nav a:hover {{ color: #fff; }}
+        .site-nav a.active {{ color: #4cc9f0; border-bottom-color: #4cc9f0; }}
         .container {{ max-width: 100%; overflow-x: auto; background: #16213e; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }}
         h1 {{ color: #fff; margin: 0 0 10px 0; font-size: 24px; }}
         .subtitle {{ color: #888; margin-bottom: 20px; font-size: 14px; }}
@@ -655,6 +659,10 @@ html = f'''<!DOCTYPE html>
     </style>
 </head>
 <body>
+    <nav class="site-nav" aria-label="Primary">
+        <a href="index.html" class="active">Non-Commercial</a>
+        <a href="russell2000_top100.html">Maket</a>
+    </nav>
     <div class="container">
         <h1>CFTC Non-Commercial Positions</h1>
         <p class="subtitle">Legacy COT Report | Full Available History | 📊 Click for Chart</p>

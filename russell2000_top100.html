@@ -1,0 +1,526 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美股三大指数 - 涨幅排行</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:#0f1923;color:#e0e0e0;padding:16px}
+.site-nav{display:flex;align-items:center;gap:8px;max-width:1320px;margin:0 auto 16px;border-bottom:1px solid #1e2d3a}
+.site-nav a{display:inline-flex;align-items:center;padding:12px 18px;color:#99aabb;text-decoration:none;font-weight:700;border-bottom:3px solid transparent}
+.site-nav a:hover{color:#fff}
+.site-nav a.active{color:#4fc3f7;border-bottom-color:#4fc3f7}
+.container{max-width:1320px;margin:0 auto}
+.tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid #1e2d3a}
+.tab{padding:12px 22px;font-size:14px;font-weight:600;color:#667788;cursor:pointer;border:none;background:transparent;position:relative;transition:all .15s}
+.tab:hover{color:#c0d0e0}
+.tab.active{color:#4fc3f7}
+.tab.active::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:2px;background:#4fc3f7;border-radius:2px}
+.tab .badge{display:inline-block;font-size:10px;padding:1px 6px;border-radius:8px;background:#1a2d3a;color:#667788;margin-left:6px;vertical-align:middle}
+.tab.active .badge{background:#1a3a4a;color:#4fc3f7}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+h1{font-size:20px;font-weight:700;color:#fff;margin-bottom:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+h1 .hl{font-size:13px;font-weight:400;color:#ff9800}
+.subtitle{font-size:12px;color:#667788;margin-bottom:14px}
+.subtitle span{color:#4fc3f7}
+.controls{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;align-items:center}
+.search-box{flex:1;min-width:140px;padding:7px 10px;border-radius:5px;border:1px solid #2a3a4a;background:#1a2a38;color:#e0e0e0;font-size:12px;outline:none}
+.search-box:focus{border-color:#4fc3f7}
+.cg{display:flex;gap:3px;align-items:center;flex-wrap:wrap}
+.cg label{font-size:10px;color:#556677;margin-right:2px;font-weight:600;text-transform:uppercase;letter-spacing:.2px}
+.cb{padding:5px 9px;border-radius:4px;border:1px solid #2a3a4a;background:#1a2a38;color:#99aabb;font-size:11px;cursor:pointer;transition:all .12s;white-space:nowrap}
+.cb:hover{background:#2a3a4a;border-color:#4fc3f7;color:#fff}
+.cb.active{background:#4fc3f7;color:#0f1923;border-color:#4fc3f7;font-weight:700}
+.stats{font-size:11px;color:#667788;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px}
+.stats strong{color:#4fc3f7}
+table{width:100%;border-collapse:collapse;background:#15202b;border-radius:8px;overflow:hidden;font-size:12px}
+th{background:#1a2d3a;color:#667788;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.3px;padding:8px 6px;text-align:left;white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{color:#4fc3f7}
+th .ar{margin-left:2px;font-size:8px}
+th.sa .ar::after{content:" ▲"}
+th.sd .ar::after{content:" ▼"}
+td{padding:6px;border-top:1px solid #1e2d3a;vertical-align:middle}
+tr:hover td{background:#1a2d3a}
+.rk{width:26px;text-align:center;font-weight:600;color:#556677;font-size:11px}
+.rk.t3{color:#ffd700}
+.tk{font-weight:700;color:#4fc3f7;font-family:"SF Mono","Fira Code",monospace;font-size:12px}
+.cn{color:#c0c0d0;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}
+.gc{text-align:right}
+.g{font-weight:700;font-family:"SF Mono","Fira Code",monospace;font-size:12px}
+.g.p{color:#4caf50}
+.g.h{color:#ff9800}
+.g.u{color:#f44336}
+.g.n{color:#f44336}
+.mc{text-align:right}
+.m{font-family:"SF Mono","Fira Code",monospace;color:#667788;font-size:10px}
+.st{display:inline-block;padding:1px 5px;border-radius:8px;background:#1a2d3a;color:#8899aa;font-size:10px}
+.pr{text-align:right;font-family:"SF Mono","Fira Code",monospace;font-weight:600;font-size:12px}
+.pg{display:flex;justify-content:center;gap:3px;margin-top:14px;flex-wrap:wrap}
+.pb{padding:4px 8px;border-radius:3px;border:1px solid #2a3a4a;background:#15202b;color:#667788;cursor:pointer;font-size:11px}
+.pb:hover{border-color:#4fc3f7;color:#fff}
+.pb.act{background:#4fc3f7;color:#0f1923;border-color:#4fc3f7}
+.ft{margin-top:18px;padding-top:10px;border-top:1px solid #1e2d3a;font-size:10px;color:#445566;text-align:center}
+@media(max-width:768px){
+  td,th{padding:4px 3px;font-size:10px}
+  .cn{max-width:80px}
+  .cn,.tk,.g{font-size:10px}
+  h1{font-size:15px}
+  .tab{padding:8px 12px;font-size:12px}
+  .cb{padding:4px 6px;font-size:10px}
+  .controls{gap:4px}
+}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="Primary">
+  <a href="index.html">Non-Commercial</a>
+  <a href="russell2000_top100.html" class="active">Maket</a>
+</nav>
+<div class="container">
+
+<div class="tabs" id="tabHeaders">
+  <button class="tab active" data-tab="r2000" onclick="switchTab('r2000')">Russell 2000 <span class="badge">100</span></button>
+  <button class="tab" data-tab="sp500" onclick="switchTab('sp500')">S&P 500 <span class="badge">100</span></button>
+  <button class="tab" data-tab="nasdaq" onclick="switchTab('nasdaq')">Nasdaq 100 <span class="badge">100</span></button>
+</div>
+
+<div class="tab-pane active" id="pane-r2000"><div id="app-r2000"></div></div>
+<div class="tab-pane" id="pane-sp500"><div id="app-sp500"></div></div>
+<div class="tab-pane" id="pane-nasdaq"><div id="app-nasdaq"></div></div>
+
+<div class="ft"><p>数据来源: Finviz · 2026-06-03更新 · 仅供参考，不构成投资建议</p></div>
+</div>
+
+<script>
+// ===== DATA =====
+// ----- Russell 2000 (100 stocks) -----
+const r2kRaw = [  {r:1,t:"VICR",n:"Vicor Corp",y:672.33,c:"$15.18B",mn:15180,s:"科技",p:0,w:24.07,m:64.85,m2:168.74,q:272.64,h:203.79},
+  {r:2,t:"AAOI",n:"Applied Optoelectronics Inc",y:480.52,c:"$16.24B",mn:16240,s:"通信",p:0,w:13.93,m:10.28,m2:61.27,q:112.26,h:655.68},
+  {r:3,t:"RXT",n:"Rackspace Technology Inc",y:461.33,c:"$1.36B",mn:1360,s:"科技",p:0,w:9.66,m:207.91,m2:164.72,q:121.54,h:414.15},
+  {r:4,t:"AEHR",n:"Aehr Test Systems",y:459.68,c:"$3.55B",mn:3550,s:"科技",p:0,w:2.80,m:21.41,m2:96.39,q:171.37,h:391.95},
+  {r:5,t:"MXL",n:"MaxLinear Inc",y:409.24,c:"$7.95B",mn:7950,s:"科技",p:0,w:-7.66,m:15.00,m2:214.18,q:413.36,h:470.07},
+  {r:6,t:"AGL",n:"Agilon Health Inc",y:403.85,c:"$1.45B",mn:1450,s:"医疗",p:0,w:1.74,m:193.27,m2:352.42,q:511.56,h:432.94},
+  {r:7,t:"SATL",n:"Satellogic Inc",y:364.17,c:"$1.29B",mn:1290,s:"工业",p:0,w:-19.18,m:20.89,m2:99.55,q:178.21,h:426.06},
+  {r:8,t:"ATOM",n:"Atomera Inc",y:345.70,c:"$381.36M",mn:381,s:"科技",p:0,w:-18.66,m:-11.18,m2:46.8,q:104.78,h:297.18},
+  {r:9,t:"BAND",n:"Bandwidth Inc",y:339.29,c:"$2.17B",mn:2170,s:"科技",p:0,w:10.93,m:51.29,m2:193.74,q:336.18,h:376.62},
+  {r:10,t:"VSH",n:"Vishay Intertechnology Inc",y:331.26,c:"$8.51B",mn:8510,s:"科技",p:0,w:24.06,m:111.26,m2:179.7,q:248.13,h:357.13},
+  {r:11,t:"ICHR",n:"Ichor Holdings Ltd",y:306.67,c:"$2.6B",mn:2600,s:"科技",p:0,w:3.05,m:16.35,m2:40.56,q:64.76,h:346.13},
+  {r:12,t:"HYLN",n:"Hyliion Holdings Corp",y:269.02,c:"$1.21B",mn:1210,s:"消费周期",p:0,w:2.88,m:232.84,m2:234.49,q:236.14,h:261.17},
+  {r:13,t:"IBRX",n:"ImmunityBio Inc",y:265.15,c:"$7.57B",mn:7570,s:"科技",p:0,w:-8.71,m:1.69,m2:-13,q:-27.70,h:206.36},
+  {r:14,t:"ERAS",n:"Erasca Inc",y:262.37,c:"$4.19B",mn:4190,s:"科技",p:0,w:17.22,m:34.40,m2:15,q:-4.40,h:325.24},
+  {r:15,t:"NVTS",n:"Navitas Semiconductor Corp",y:262.18,c:"$6.04B",mn:6040,s:"科技",p:0,w:-18.65,m:48.19,m2:119.38,q:190.56,h:195.88},
+  {r:16,t:"PENG",n:"Penguin Solutions Inc",y:261.20,c:"$3.59B",mn:3590,s:"科技",p:0,w:28.57,m:126.15,m2:199.48,q:272.82,h:249.23},
+  {r:17,t:"DOCN",n:"DigitalOcean Holdings Inc",y:259.66,c:"$18.06B",mn:18060,s:"科技",p:0,w:7.68,m:68.32,m2:140.36,q:212.40,h:288.75},
+  {r:18,t:"UCTT",n:"Ultra Clean Hldgs Inc",y:256.14,c:"$4.04B",mn:4040,s:"科技",p:0,w:3.14,m:20.91,m2:36.14,q:51.36,h:255.72},
+  {r:19,t:"BE",n:"Bloom Energy Corp",y:248.54,c:"$86.14B",mn:86140,s:"工业",p:0,w:0.15,m:4.24,m2:51.08,q:97.92,h:177.23},
+  {r:20,t:"VPG",n:"Vishay Precision Group Inc",y:245.27,c:"$1.77B",mn:1770,s:"科技",p:0,w:7.71,m:120.74,m2:150.06,q:179.38,h:289.37},
+  {r:21,t:"KOS",n:"Kosmos Energy Ltd",y:227.31,c:"$1.76B",mn:1760,s:"能源",p:0,w:4.21,m:-7.19,m2:4.19,q:15.56,h:165.18},
+  {r:22,t:"EVC",n:"Entravision Communications Corp",y:207.51,c:"$829.27M",mn:829,s:"通信",p:0,w:2.97,m:135.25,m2:165.82,q:196.38,h:224.10},
+  {r:23,t:"ATEX",n:"Anterix Inc",y:206.46,c:"$1.25B",mn:1250,s:"通信",p:0,w:4.97,m:34.91,m2:58.98,q:83.04,h:225.39},
+  {r:24,t:"SVCO",n:"Silvaco Group Inc",y:200.49,c:"$397.73M",mn:398,s:"科技",p:0,w:23.93,m:8.66,m2:137.62,q:266.57,h:167.47},
+  {r:25,t:"VIAV",n:"Viavi Solutions Inc",y:196.75,c:"$12.96B",mn:12960,s:"通信",p:0,w:-1.69,m:-4.43,m2:27.81,q:60.05,h:194.76},
+  {r:26,t:"AMBQ",n:"Ambiq Micro Inc",y:190.56,c:"$1.77B",mn:1770,s:"科技",p:0,w:-0.89,m:105.03,m2:143.83,q:182.63,h:237.86},
+  {r:27,t:"AMPX",n:"Amprius Technologies Inc",y:190.37,c:"$3.24B",mn:3240,s:"工业",p:0,w:28.49,m:9.77,m2:53.38,q:96.99,h:102.39},
+  {r:28,t:"HUT",n:"Hut 8 Corp",y:189.55,c:"$14.98B",mn:14980,s:"金融",p:0,w:18.20,m:72.80,m2:126.12,q:179.45,h:195.60},
+  {r:29,t:"HURA",n:"TuHURA Biosciences Inc",y:188.09,c:"$138.83M",mn:139,s:"科技",p:0,w:-11.02,m:-6.44,m2:17.1,q:40.65,h:9.00},
+  {r:30,t:"STRL",n:"Sterling Infrastructure Inc",y:185.90,c:"$26.87B",mn:26870,s:"工业",p:0,w:11.74,m:64.36,m2:87.54,q:110.71,h:154.28},
+  {r:31,t:"SPIR",n:"Spire Global Inc",y:184.67,c:"$858.67M",mn:859,s:"科技",p:0,w:-10.11,m:17.44,m2:77.86,q:138.28,h:160.68},
+  {r:32,t:"POWL",n:"Powell Industries Inc",y:181.45,c:"$10.9B",mn:10900,s:"工业",p:0,w:2.43,m:8.62,m2:42.08,q:75.54,h:177.58},
+  {r:33,t:"RDW",n:"Redwire Corp",y:170.79,c:"$4.09B",mn:4090,s:"工业",p:0,w:-6.62,m:120.34,m2:125.14,q:129.94,h:273.50},
+  {r:34,t:"AOSL",n:"Alpha &amp; Omega Semiconductor Ltd",y:169.16,c:"$1.6B",mn:1600,s:"科技",p:0,w:11.34,m:23.77,m2:92,q:160.22,h:162.92},
+  {r:35,t:"AIRS",n:"Airsculpt Technologies Inc",y:163.64,c:"$368.25M",mn:368,s:"医疗",p:0,w:-4.92,m:57.23,m2:129.05,q:200.86,h:47.88},
+  {r:36,t:"FATE",n:"Fate Therapeutics Inc",y:161.55,c:"$299.56M",mn:300,s:"科技",p:0,w:19.53,m:67.97,m2:77.78,q:87.59,h:125.44},
+  {r:37,t:"KOPN",n:"Kopin Corp",y:160.68,c:"$1.12B",mn:1120,s:"科技",p:0,w:8.73,m:41.86,m2:105.29,q:168.72,h:150.00},
+  {r:38,t:"TTMI",n:"TTM Technologies Inc",y:160.32,c:"$18.65B",mn:18650,s:"科技",p:0,w:-8.80,m:12.98,m2:42.8,q:72.63,h:155.94},
+  {r:39,t:"USAR",n:"USA Rare Earth Inc",y:157.98,c:"$6.85B",mn:6850,s:"基础材料",p:0,w:10.71,m:16.60,m2:37.34,q:58.08,h:128.25},
+  {r:40,t:"COHU",n:"Cohu Inc",y:147.49,c:"$2.72B",mn:2720,s:"科技",p:0,w:15.34,m:26.32,m2:60.6,q:94.89,h:136.80},
+  {r:41,t:"WTI",n:"W &amp; T Offshore Inc",y:146.63,c:"$598.09M",mn:598,s:"能源",p:0,w:-1.23,m:-2.66,m2:13.51,q:29.68,h:127.12},
+  {r:42,t:"AIP",n:"Arteris Inc",y:144.77,c:"$1.75B",mn:1750,s:"科技",p:0,w:0.08,m:31.05,m2:82.77,q:134.49,h:164.57},
+  {r:43,t:"PL",n:"Planet Labs PBC",y:143.86,c:"$17.14B",mn:17140,s:"工业",p:0,w:-0.48,m:30.33,m2:60.2,q:90.08,h:304.12},
+  {r:44,t:"LUNR",n:"Intuitive Machines Inc",y:143.81,c:"$8.59B",mn:8590,s:"工业",p:0,w:13.51,m:54.45,m2:85.94,q:117.42,h:316.53},
+  {r:45,t:"TNGX",n:"Tango Therapeutics Inc",y:142.66,c:"$3.11B",mn:3110,s:"科技",p:0,w:7.29,m:2.48,m2:44.72,q:86.96,h:97.07},
+  {r:46,t:"KLIC",n:"Kulicke &amp; Soffa Industries Inc",y:137.84,c:"$5.67B",mn:5670,s:"科技",p:0,w:-0.19,m:25.52,m2:44.58,q:63.64,h:140.21},
+  {r:47,t:"POWI",n:"Power Integrations Inc",y:136.89,c:"$4.69B",mn:4690,s:"科技",p:0,w:0.12,m:14.83,m2:45.12,q:75.40,h:150.57},
+  {r:48,t:"DMRC",n:"Digimarc Corp",y:135.82,c:"$344.08M",mn:344,s:"科技",p:0,w:20.20,m:100.39,m2:175.2,q:250.00,h:93.13},
+  {r:49,t:"BKSY",n:"BlackSky Technology Inc",y:134.19,c:"$1.63B",mn:1630,s:"科技",p:0,w:-9.97,m:23.52,m2:58.4,q:93.27,h:147.80},
+  {r:50,t:"ELDN",n:"Eledon Pharmaceuticals Inc",y:133.77,c:"$272.47M",mn:272,s:"科技",p:0,w:-9.25,m:-4.34,m2:18.43,q:41.20,h:116.56},
+  {r:51,t:"ACMR",n:"ACM Research Inc",y:133.00,c:"$6.09B",mn:6090,s:"科技",p:0,w:6.32,m:76.26,m2:77.31,q:78.35,h:175.13},
+  {r:52,t:"DIOD",n:"Diodes Inc",y:131.31,c:"$5.24B",mn:5240,s:"科技",p:0,w:5.44,m:5.44,m2:38.16,q:70.88,h:146.98},
+  {r:53,t:"ELVN",n:"Enliven Therapeutics Inc",y:130.65,c:"$2.16B",mn:2160,s:"科技",p:0,w:-16.48,m:-14.82,m2:4.36,q:23.55,h:64.44},
+  {r:54,t:"WULF",n:"TeraWulf Inc",y:130.55,c:"$13.13B",mn:13130,s:"金融",p:0,w:5.20,m:24.31,m2:52.02,q:79.72,h:70.79},
+  {r:55,t:"CEVA",n:"Ceva Inc",y:130.53,c:"$1.38B",mn:1380,s:"科技",p:0,w:18.71,m:53.69,m2:95.14,q:136.58,h:129.78},
+  {r:56,t:"MOD",n:"Modine Manufacturing Co",y:129.86,c:"$16.21B",mn:16210,s:"消费周期",p:0,w:3.72,m:15.01,m2:29.78,q:44.54,h:89.29},
+  {r:57,t:"CODI",n:"Compass Diversified Holdings",y:128.75,c:"$826.09M",mn:826,s:"科技",p:0,w:-5.26,m:-6.95,m2:24.96,q:56.86,h:49.18},
+  {r:58,t:"SMTC",n:"Semtech Corp",y:126.12,c:"$15.52B",mn:15520,s:"科技",p:0,w:1.32,m:54.56,m2:69.68,q:84.80,h:124.69},
+  {r:59,t:"FORM",n:"FormFactor Inc",y:124.29,c:"$9.75B",mn:9750,s:"科技",p:0,w:-8.33,m:-8.92,m2:12.96,q:34.85,h:127.39},
+  {r:60,t:"STRZ",n:"Starz Entertainment Corp",y:124.27,c:"$440.55M",mn:441,s:"通信",p:0,w:16.00,m:32.86,m2:74.5,q:116.14,h:139.20},
+  {r:61,t:"INOD",n:"Innodata Inc",y:124.18,c:"$3.73B",mn:3730,s:"科技",p:0,w:19.09,m:159.47,m2:160.36,q:161.25,h:98.75},
+  {r:62,t:"AVNS",n:"Avanos Medical Inc",y:122.53,c:"$1.17B",mn:1170,s:"医疗",p:0,w:0.97,m:1.34,m2:39.98,q:78.63,h:112.86},
+  {r:63,t:"TWST",n:"Twist Bioscience Corp",y:121.15,c:"$4.37B",mn:4370,s:"医疗",p:0,w:8.14,m:16.14,m2:33.26,q:50.38,h:119.15},
+  {r:64,t:"SLS",n:"SELLAS Life Sciences Group Inc",y:120.95,c:"$1.55B",mn:1550,s:"科技",p:0,w:2.59,m:68.97,m2:62.92,q:56.87,h:414.20},
+  {r:65,t:"ASPN",n:"Aspen Aerogels Inc",y:119.79,c:"$515.5M",mn:516,s:"工业",p:0,w:4.19,m:45.67,m2:65.95,q:86.23,h:93.17},
+  {r:66,t:"SKYT",n:"SkyWater Technology Inc",y:119.77,c:"$1.96B",mn:1960,s:"科技",p:0,w:6.80,m:24.76,m2:29.23,q:33.70,h:159.32},
+  {r:67,t:"DDD",n:"3D Systems Corp",y:119.21,c:"$570.15M",mn:570,s:"科技",p:0,w:11.17,m:63.71,m2:77.42,q:91.13,h:86.54},
+  {r:68,t:"RIOT",n:"Riot Platforms Inc",y:115.63,c:"$10.33B",mn:10330,s:"金融",p:0,w:4.75,m:47.68,m2:63.18,q:78.68,h:69.37},
+  {r:69,t:"VECO",n:"Veeco Instruments Inc",y:113.47,c:"$3.72B",mn:3720,s:"科技",p:0,w:-2.35,m:21.41,m2:54.66,q:87.90,h:108.72},
+  {r:70,t:"TSSI",n:"TSS Inc",y:113.44,c:"$423.64M",mn:424,s:"科技",p:0,w:16.26,m:0.67,m2:27.4,q:54.14,h:56.70},
+  {r:71,t:"RXO",n:"RXO Inc",y:113.21,c:"$4.44B",mn:4440,s:"科技",p:0,w:7.80,m:37.57,m2:50.75,q:63.93,h:103.86},
+  {r:72,t:"OUST",n:"Ouster Inc",y:112.71,c:"$2.93B",mn:2930,s:"科技",p:0,w:7.80,m:74.03,m2:92.98,q:111.92,h:100.48},
+  {r:73,t:"AGX",n:"Argan Inc",y:111.65,c:"$9.26B",mn:9260,s:"工业",p:0,w:-1.12,m:-5.57,m2:22.76,q:51.08,h:67.80},
+  {r:74,t:"TH",n:"Target Hospitality Corp",y:111.61,c:"$1.7B",mn:1700,s:"科技",p:0,w:-7.63,m:15.46,m2:68.95,q:122.44,h:117.31},
+  {r:75,t:"SYRE",n:"Spyre Therapeutics Inc",y:111.11,c:"$6.01B",mn:6010,s:"科技",p:0,w:-6.10,m:-0.37,m2:36.11,q:72.60,h:130.53},
+  {r:76,t:"VSAT",n:"Viasat Inc",y:110.71,c:"$9.92B",mn:9920,s:"通信",p:0,w:-10.80,m:11.50,m2:34.98,q:58.47,h:111.51},
+  {r:77,t:"ADTN",n:"ADTRAN Holdings Inc",y:110.13,c:"$1.48B",mn:1480,s:"通信",p:0,w:10.73,m:-1.03,m2:41.9,q:84.82,h:130.26},
+  {r:78,t:"AEVA",n:"Aeva Technologies Inc",y:109.04,c:"$1.75B",mn:1750,s:"科技",p:0,w:-1.32,m:68.45,m2:83.58,q:98.71,h:148.97},
+  {r:79,t:"PLUG",n:"Plug Power Inc",y:107.61,c:"$5.71B",mn:5710,s:"工业",p:0,w:6.51,m:31.51,m2:57.46,q:83.41,h:103.48},
+  {r:80,t:"BHE",n:"Benchmark Electronics Inc",y:106.13,c:"$3.16B",mn:3160,s:"科技",p:0,w:-0.98,m:4.31,m2:30.71,q:57.11,h:96.17},
+  {r:81,t:"MYRG",n:"MYR Group Inc",y:106.09,c:"$7.01B",mn:7010,s:"工业",p:0,w:-3.02,m:3.88,m2:35.42,q:66.95,h:100.74},
+  {r:82,t:"ALMS",n:"Alumis Inc",y:105.33,c:"$2.55B",mn:2550,s:"科技",p:0,w:-10.26,m:-20.41,m2:-24.61,q:-28.81,h:161.28},
+  {r:83,t:"TROX",n:"Tronox Holdings plc",y:104.32,c:"$1.36B",mn:1360,s:"基础材料",p:0,w:11.37,m:-17.52,m2:2.54,q:22.59,h:105.80},
+  {r:84,t:"FSLY",n:"Fastly Inc",y:104.03,c:"$3.25B",mn:3250,s:"科技",p:0,w:18.01,m:-26.01,m2:-13.87,q:-1.73,h:78.13},
+  {r:85,t:"LASR",n:"nLIGHT Inc",y:103.57,c:"$4.31B",mn:4310,s:"科技",p:0,w:-6.39,m:7.58,m2:14.32,q:21.07,h:116.75},
+  {r:86,t:"LINC",n:"Lincoln Educational Services Corp",y:103.15,c:"$1.56B",mn:1560,s:"科技",p:0,w:0.22,m:19.86,m2:26.19,q:32.52,h:138.39},
+  {r:87,t:"UAMY",n:"United States Antimony Corp",y:102.99,c:"$1.51B",mn:1510,s:"基础材料",p:0,w:15.66,m:-16.13,m2:-4.93,q:6.26,h:66.78},
+  {r:88,t:"PDYN",n:"Palladyne AI Corp",y:101.88,c:"$406.3M",mn:406,s:"科技",p:0,w:21.81,m:35.65,m2:27.38,q:19.11,h:50.88},
+  {r:89,t:"SAFX",n:"XCF Global Inc",y:100.62,c:"$182.15M",mn:182,s:"能源",p:0,w:21.90,m:9.47,m2:104.54,q:199.62,h:-25.99},
+  {r:90,t:"CORZ",n:"Core Scientific Inc",y:99.52,c:"$9.23B",mn:9230,s:"科技",p:0,w:10.16,m:42.75,m2:66.31,q:89.87,h:72.00},
+  {r:91,t:"LGN",n:"Legence Corp",y:98.75,c:"$9.24B",mn:9240,s:"工业",p:0,w:-1.63,m:-5.06,m2:26.44,q:57.94,h:86.04},
+  {r:92,t:"SITM",n:"SiTime Corp",y:98.50,c:"$18.51B",mn:18510,s:"科技",p:0,w:-5.66,m:25.50,m2:49,q:72.51,h:135.50},
+  {r:93,t:"DNTH",n:"Dianthus Therapeutics Inc",y:97.94,c:"$4.46B",mn:4460,s:"科技",p:0,w:-6.05,m:-6.69,m2:20.28,q:47.26,h:85.47},
+  {r:94,t:"ACLS",n:"Axcelis Technologies Inc",y:97.64,c:"$4.88B",mn:4880,s:"科技",p:0,w:-3.34,m:13.42,m2:49.16,q:84.89,h:91.83},
+  {r:95,t:"SYNA",n:"Synaptics Inc",y:97.30,c:"$5.64B",mn:5640,s:"科技",p:0,w:-1.04,m:51.34,m2:70.43,q:89.51,h:113.17},
+  {r:96,t:"CC",n:"Chemours Company",y:97.20,c:"$3.5B",mn:3500,s:"基础材料",p:0,w:5.20,m:-16.16,m2:11.24,q:38.64,h:81.78},
+  {r:97,t:"WEST",n:"Westrock Coffee Company",y:95.82,c:"$777.54M",mn:778,s:"消费防御",p:0,w:0.50,m:35.08,m2:64.26,q:93.45,h:83.22},
+  {r:98,t:"APLD",n:"Applied Digital Corp",y:95.19,c:"$13.68B",mn:13680,s:"科技",p:0,w:6.03,m:42.65,m2:62.83,q:83.02,h:76.61},
+  {r:99,t:"PDFS",n:"PDF Solutions Inc",y:94.46,c:"$2.21B",mn:2210,s:"科技",p:0,w:13.34,m:24.53,m2:46.96,q:69.40,h:104.72},
+  {r:100,t:"CDNL",n:"Cardinal Infrastructure Group Inc",y:0,c:"$2.43B",mn:2430,s:"工业",p:0,w:7.75,m:3.51,m2:41.42,q:79.32,h:134.12}
+];
+// ----- S&P 500 (100 stocks) -----
+const spRaw = [
+  {r:1,t:"SNDK",n:"Sandisk Corp",y:623.04,c:"$254.18B",mn:254180,s:"科技",p:0,w:7.98,m:44.60,m2:124.08,q:203.56,h:668.70},
+  {r:2,t:"MU",n:"Micron Technology Inc",y:272.83,c:"$1200.02B",mn:1200020,s:"科技",p:0,w:18.78,m:96.25,m2:138.26,q:180.26,h:349.97},
+  {r:3,t:"DELL",n:"Dell Technologies Inc",y:245.81,c:"$284.01B",mn:284010,s:"科技",p:0,w:42.69,m:107.12,m2:153.48,q:199.84,h:226.44},
+  {r:4,t:"STX",n:"Seagate Technology Holdings Plc",y:236.47,c:"$207.77B",mn:207770,s:"科技",p:0,w:9.56,m:27.47,m2:93.28,q:159.10,h:234.89},
+  {r:5,t:"WDC",n:"Western Digital Corp",y:226.87,c:"$194.09B",mn:194090,s:"科技",p:0,w:7.33,m:30.49,m2:77.59,q:124.69,h:244.76},
+  {r:6,t:"INTC",n:"Intel Corp",y:192.49,c:"$542.46B",mn:542460,s:"科技",p:0,w:-12.62,m:8.34,m2:79.38,q:150.42,h:166.10},
+  {r:7,t:"LITE",n:"Lumentum Holdings Inc",y:179.21,c:"$80.07B",mn:80070,s:"通信",p:0,w:12.99,m:8.34,m2:28.27,q:48.20,h:216.51},
+  {r:8,t:"CIEN",n:"CIENA Corp",y:168.10,c:"$88.66B",mn:88660,s:"通信",p:0,w:4.09,m:17.13,m2:52.69,q:88.25,h:207.04},
+  {r:9,t:"AMD",n:"Advanced Micro Devices Inc",y:143.53,c:"$850.42B",mn:850420,s:"科技",p:0,w:3.50,m:44.66,m2:108.9,q:173.13,h:139.76},
+  {r:10,t:"ON",n:"ON Semiconductor Corp",y:137.56,c:"$50.41B",mn:50410,s:"科技",p:0,w:1.29,m:24.86,m2:63.85,q:102.84,h:156.05},
+  {r:11,t:"HPE",n:"Hewlett Packard Enterprise Co",y:133.76,c:"$74.5B",mn:74500,s:"通信",p:0,w:47.53,m:96.53,m2:128,q:159.47,h:156.74},
+  {r:12,t:"COHR",n:"Coherent Corp",y:131.29,c:"$83.52B",mn:83520,s:"科技",p:0,w:11.94,m:29.56,m2:40.79,q:52.02,h:159.89},
+  {r:13,t:"GLW",n:"Corning Inc",y:128.87,c:"$172.47B",mn:172470,s:"科技",p:0,w:2.16,m:26.63,m2:31.21,q:35.80,h:138.00},
+  {r:14,t:"GNRC",n:"Generac Holdings Inc",y:108.68,c:"$16.75B",mn:16750,s:"工业",p:0,w:3.55,m:9.73,m2:19.19,q:28.65,h:87.68},
+  {r:15,t:"VRT",n:"Vertiv Holdings Co",y:106.46,c:"$128.48B",mn:128480,s:"工业",p:0,w:3.27,m:1.88,m2:19.36,q:36.84,h:86.11},
+  {r:16,t:"TER",n:"Teradyne Inc",y:102.84,c:"$61.46B",mn:61460,s:"科技",p:0,w:0.89,m:13.66,m2:21.36,q:29.06,h:115.86},
+  {r:17,t:"FIX",n:"Comfort Systems USA Inc",y:101.79,c:"$66.3B",mn:66300,s:"工业",p:0,w:-0.02,m:0.87,m2:18.12,q:35.37,h:92.77},
+  {r:18,t:"DDOG",n:"Datadog Inc",y:97.90,c:"$95.8B",mn:95800,s:"科技",p:0,w:20.34,m:91.51,m2:116.15,q:140.79,h:68.20},
+  {r:19,t:"LRCX",n:"Lam Research Corp",y:95.36,c:"$418.2B",mn:418200,s:"科技",p:0,w:3.64,m:30.26,m2:42.08,q:53.91,h:114.37},
+  {r:20,t:"Q",n:"Qnity Electronics Inc",y:90.74,c:"$32.6B",mn:32600,s:"科技",p:0,w:-5.37,m:8.66,m2:21.39,q:34.12,h:92.06},
+  {r:21,t:"AMAT",n:"Applied Materials Inc",y:90.69,c:"$389.08B",mn:389080,s:"科技",p:0,w:7.73,m:25.95,m2:32.72,q:39.49,h:94.27},
+  {r:22,t:"FTNT",n:"Fortinet Inc",y:87.46,c:"$109.06B",mn:109060,s:"科技",p:0,w:11.12,m:72.51,m2:78.03,q:83.55,h:83.48},
+  {r:23,t:"AKAM",n:"Akamai Technologies Inc",y:83.75,c:"$23.31B",mn:23310,s:"科技",p:0,w:8.17,m:54.35,m2:55.7,q:57.05,h:79.09},
+  {r:24,t:"MPWR",n:"Monolithic Power System Inc",y:79.29,c:"$79.84B",mn:79840,s:"科技",p:0,w:-2.28,m:2.62,m2:26.94,q:51.25,h:75.07},
+  {r:25,t:"TXN",n:"Texas Instruments Inc",y:77.60,c:"$280.42B",mn:280420,s:"科技",p:0,w:-5.16,m:9.64,m2:30.84,q:52.03,h:83.11},
+  {r:26,t:"SMCI",n:"Super Micro Computer Inc",y:71.40,c:"$30.17B",mn:30170,s:"科技",p:0,w:35.23,m:85.20,m2:74.37,q:63.53,h:48.21},
+  {r:27,t:"KEYS",n:"Keysight Technologies Inc",y:70.56,c:"$59.44B",mn:59440,s:"科技",p:0,w:-2.58,m:-1.66,m2:6.44,q:14.55,h:75.08},
+  {r:28,t:"KLAC",n:"KLA Corp",y:68.32,c:"$267.16B",mn:267160,s:"科技",p:0,w:1.68,m:18.48,m2:30.18,q:41.89,h:73.99},
+  {r:29,t:"PWR",n:"Quanta Services Inc",y:67.29,c:"$105.95B",mn:105950,s:"工业",p:0,w:-4.87,m:-4.87,m2:9.94,q:24.75,h:51.88},
+  {r:30,t:"CSCO",n:"Cisco Systems Inc",y:66.17,c:"$504.5B",mn:504500,s:"通信",p:0,w:8.17,m:39.36,m2:50.74,q:62.11,h:66.36},
+  {r:31,t:"DVA",n:"DaVita Inc",y:65.38,c:"$12.06B",mn:12060,s:"医疗",p:0,w:-3.93,m:23.90,m2:23.64,q:23.39,h:56.99},
+  {r:32,t:"CRWD",n:"Crowdstrike Holdings Inc",y:64.04,c:"$195.73B",mn:195730,s:"科技",p:0,w:14.50,m:68.76,m2:82.6,q:96.45,h:51.02},
+  {r:33,t:"NTAP",n:"Netapp Inc",y:64.01,c:"$34.66B",mn:34660,s:"科技",p:0,w:26.41,m:56.71,m2:67.25,q:77.79,h:57.44},
+  {r:34,t:"JBL",n:"Jabil Inc",y:63.65,c:"$39.37B",mn:39370,s:"科技",p:0,w:-1.86,m:8.96,m2:27.86,q:46.77,h:77.10},
+  {r:35,t:"MPC",n:"Marathon Petroleum Corp",y:61.75,c:"$76.8B",mn:76800,s:"能源",p:0,w:6.05,m:6.87,m2:15.49,q:24.10,h:35.79},
+  {r:36,t:"PANW",n:"Palo Alto Networks Inc",y:61.34,c:"$242.5B",mn:242500,s:"科技",p:0,w:15.75,m:64.12,m2:77.26,q:90.39,h:56.30},
+  {r:37,t:"FFIV",n:"F5 Inc",y:60.28,c:"$23.08B",mn:23080,s:"科技",p:0,w:3.06,m:26.59,m2:35.96,q:45.32,h:71.07},
+  {r:38,t:"STLD",n:"Steel Dynamics Inc",y:60.17,c:"$39.14B",mn:39140,s:"基础材料",p:0,w:8.35,m:18.38,m2:27.92,q:37.46,h:61.72},
+  {r:39,t:"CAT",n:"Caterpillar Inc",y:58.82,c:"$419.09B",mn:419090,s:"工业",p:0,w:0.14,m:2.26,m2:14.12,q:25.98,h:58.02},
+  {r:40,t:"VLO",n:"Valero Energy Corp",y:58.65,c:"$76.69B",mn:76690,s:"能源",p:0,w:6.96,m:4.61,m2:11.62,q:18.63,h:46.11},
+  {r:41,t:"NUE",n:"Nucor Corp",y:58.46,c:"$58.86B",mn:58860,s:"基础材料",p:0,w:7.56,m:14.34,m2:30.02,q:45.69,h:62.05},
+  {r:42,t:"ADI",n:"Analog Devices Inc",y:56.05,c:"$206.14B",mn:206140,s:"科技",p:0,w:0.78,m:6.41,m2:15.62,q:24.84,h:59.49},
+  {r:43,t:"LYB",n:"LyondellBasell Industries NV",y:55.45,c:"$21.73B",mn:21730,s:"基础材料",p:0,w:-2.46,m:-10.24,m2:2.7,q:15.63,h:37.40},
+  {r:44,t:"IRM",n:"Iron Mountain Inc",y:54.86,c:"$38.22B",mn:38220,s:"房地产",p:0,w:0.05,m:1.00,m2:10.1,q:19.19,h:48.77},
+  {r:45,t:"MRNA",n:"Moderna Inc",y:54.76,c:"$18.11B",mn:18110,s:"科技",p:0,w:-2.96,m:0.60,m2:-3.9,q:-8.41,h:75.67},
+  {r:46,t:"APA",n:"APA Corp",y:54.58,c:"$13.36B",mn:13360,s:"能源",p:0,w:0.83,m:-5.78,m2:6.46,q:18.71,h:51.42},
+  {r:47,t:"MCHP",n:"Microchip Technology Inc",y:52.17,c:"$52.56B",mn:52560,s:"科技",p:0,w:-1.11,m:3.20,m2:19.51,q:35.82,h:80.96},
+  {r:48,t:"NXPI",n:"NXP Semiconductors NV",y:49.09,c:"$81.7B",mn:81700,s:"科技",p:0,w:-2.72,m:9.61,m2:29.98,q:50.35,h:66.01},
+  {r:49,t:"DOW",n:"Dow Inc",y:48.50,c:"$25.02B",mn:25020,s:"基础材料",p:0,w:-1.59,m:-13.82,m2:-0.44,q:12.95,h:45.58},
+  {r:50,t:"GEV",n:"GE Vernova Inc",y:48.37,c:"$260.57B",mn:260570,s:"工业",p:0,w:-9.42,m:-8.78,m2:3.19,q:15.16,h:61.67},
+  {r:51,t:"SLB",n:"SLB Ltd",y:47.37,c:"$84.56B",mn:84560,s:"能源",p:0,w:-2.45,m:-0.63,m2:7.9,q:16.43,h:56.07},
+  {r:52,t:"CF",n:"CF Industries Holdings Inc",y:46.73,c:"$17.43B",mn:17430,s:"科技",p:0,w:-4.77,m:-7.51,m2:-0.38,q:6.75,h:44.19},
+  {r:53,t:"ODFL",n:"Old Dominion Freight Line Inc",y:46.10,c:"$47.64B",mn:47640,s:"科技",p:0,w:5.76,m:11.31,m2:10.74,q:10.17,h:69.33},
+  {r:54,t:"CNC",n:"Centene Corp",y:45.78,c:"$29.62B",mn:29620,s:"医疗",p:0,w:4.86,m:12.47,m2:24.68,q:36.90,h:52.49},
+  {r:55,t:"BG",n:"Bunge Global SA",y:44.96,c:"$25.05B",mn:25050,s:"科技",p:0,w:7.52,m:3.63,m2:7.18,q:10.73,h:34.41},
+  {r:56,t:"OXY",n:"Occidental Petroleum Corp",y:43.70,c:"$58.77B",mn:58770,s:"能源",p:0,w:2.84,m:0.65,m2:5.36,q:10.08,h:40.69},
+  {r:57,t:"ADM",n:"Archer Daniels Midland Co",y:43.43,c:"$39.74B",mn:39740,s:"科技",p:0,w:5.70,m:10.03,m2:15.66,q:21.28,h:35.76},
+  {r:58,t:"TRGP",n:"Targa Resources Corp",y:42.71,c:"$56.52B",mn:56520,s:"能源",p:0,w:-2.44,m:3.55,m2:5.72,q:7.89,h:50.19},
+  {r:59,t:"HAL",n:"Halliburton Co",y:42.00,c:"$33.52B",mn:33520,s:"能源",p:0,w:-2.31,m:-3.67,m2:5.07,q:13.81,h:53.05},
+  {r:60,t:"JBHT",n:"J.B. Hunt Transport Services Inc",y:41.81,c:"$25.99B",mn:25990,s:"工业",p:0,w:2.97,m:10.80,m2:15.08,q:19.37,h:58.42},
+  {r:61,t:"BKR",n:"Baker Hughes Co",y:41.72,c:"$64.03B",mn:64030,s:"能源",p:0,w:-3.28,m:-6.63,m2:-1.72,q:3.20,h:28.57},
+  {r:62,t:"FCX",n:"Freeport-McMoRan Inc",y:41.54,c:"$103.1B",mn:103100,s:"科技",p:0,w:11.44,m:26.83,m2:18.16,q:9.50,h:67.26},
+  {r:63,t:"PSX",n:"Phillips 66",y:41.48,c:"$73.19B",mn:73190,s:"能源",p:0,w:4.99,m:3.62,m2:8.94,q:14.26,h:33.29},
+  {r:64,t:"FDX",n:"Fedex Corp",y:41.44,c:"$78.5B",mn:78500,s:"工业",p:0,w:2.14,m:3.78,m2:5.3,q:6.81,h:48.20},
+  {r:65,t:"QCOM",n:"Qualcomm Inc",y:40.80,c:"$253.85B",mn:253850,s:"科技",p:0,w:-3.21,m:36.06,m2:55.21,q:74.36,h:43.28},
+  {r:66,t:"EQIX",n:"Equinix Inc",y:39.89,c:"$105.71B",mn:105710,s:"房地产",p:0,w:-0.54,m:-1.22,m2:4.52,q:10.27,h:42.28},
+  {r:67,t:"AVGO",n:"Broadcom Inc",y:39.14,c:"$2280.07B",mn:2280070,s:"科技",p:0,w:14.11,m:14.31,m2:33.88,q:53.44,h:19.51},
+  {r:68,t:"IBKR",n:"Interactive Brokers Group Inc",y:37.96,c:"$39.52B",mn:39520,s:"金融",p:0,w:7.03,m:10.27,m2:19.06,q:27.84,h:36.45},
+  {r:69,t:"CASY",n:"Casey&#39;s General Stores Inc",y:36.46,c:"$27.87B",mn:27870,s:"消费周期",p:0,w:-6.82,m:-9.77,m2:0.71,q:11.20,h:32.21},
+  {r:70,t:"EME",n:"Emcor Group Inc",y:35.22,c:"$36.76B",mn:36760,s:"工业",p:0,w:-3.96,m:-8.44,m2:1.96,q:12.36,h:34.50},
+  {r:71,t:"FANG",n:"Diamondback Energy Inc",y:34.64,c:"$56.94B",mn:56940,s:"能源",p:0,w:3.73,m:-2.53,m2:5.74,q:14.01,h:32.64},
+  {r:72,t:"ANET",n:"Arista Networks Inc",y:33.81,c:"$220.78B",mn:220780,s:"科技",p:0,w:10.96,m:1.52,m2:21.12,q:40.71,h:34.17},
+  {r:73,t:"HST",n:"Host Hotels &amp; Resorts Inc",y:33.39,c:"$16.2B",mn:16200,s:"房地产",p:0,w:2.34,m:11.93,m2:16.3,q:20.66,h:35.26},
+  {r:74,t:"CDNS",n:"Cadence Design Systems Inc",y:33.21,c:"$114.85B",mn:114850,s:"科技",p:0,w:9.07,m:22.13,m2:30.32,q:38.51,h:33.53},
+  {r:75,t:"MGM",n:"MGM Resorts International",y:32.53,c:"$12.37B",mn:12370,s:"科技",p:0,w:25.77,m:25.61,m2:30.26,q:34.90,h:37.04},
+  {r:76,t:"EOG",n:"EOG Resources Inc",y:31.97,c:"$73.81B",mn:73810,s:"能源",p:0,w:1.75,m:-0.27,m2:4,q:8.26,h:28.49},
+  {r:77,t:"CMI",n:"Cummins Inc",y:31.78,c:"$92.82B",mn:92820,s:"工业",p:0,w:0.59,m:2.32,m2:11.21,q:20.10,h:35.08},
+  {r:78,t:"ETN",n:"Eaton Corp Plc",y:31.12,c:"$162.16B",mn:162160,s:"工业",p:0,w:3.59,m:-1.86,m2:7.8,q:17.45,h:20.74},
+  {r:79,t:"BEN",n:"Franklin Resources Inc",y:30.26,c:"$16.17B",mn:16170,s:"金融",p:0,w:-1.74,m:4.29,m2:10.86,q:17.43,h:37.76},
+  {r:80,t:"TPL",n:"Texas Pacific Land Corp",y:29.11,c:"$25.58B",mn:25580,s:"能源",p:0,w:-7.32,m:-14.48,m2:-21.83,q:-29.18,h:28.71},
+  {r:81,t:"CSX",n:"CSX Corp",y:27.28,c:"$85.73B",mn:85730,s:"工业",p:0,w:-1.01,m:2.33,m2:5.24,q:8.16,h:30.49},
+  {r:82,t:"DVN",n:"Devon Energy Corp",y:26.18,c:"$53.31B",mn:53310,s:"能源",p:0,w:2.39,m:-8.58,m2:-1.76,q:5.05,h:24.72},
+  {r:83,t:"TGT",n:"Target Corp",y:26.02,c:"$55.95B",mn:55950,s:"科技",p:0,w:-1.79,m:-4.43,m2:-1.23,q:1.97,h:35.93},
+  {r:84,t:"VTRS",n:"Viatris Inc",y:26.02,c:"$18.27B",mn:18270,s:"医疗",p:0,w:-3.51,m:4.32,m2:4.85,q:5.37,h:46.77},
+  {r:85,t:"GWW",n:"W.W. Grainger Inc",y:25.70,c:"$59.88B",mn:59880,s:"工业",p:0,w:1.53,m:10.42,m2:10.29,q:10.16,h:33.70},
+  {r:86,t:"CARR",n:"Carrier Global Corp",y:25.70,c:"$55.17B",mn:55170,s:"工业",p:0,w:2.36,m:-1.77,m2:3.4,q:8.58,h:21.03},
+  {r:87,t:"ORCL",n:"Oracle Corp",y:25.48,c:"$703.42B",mn:703420,s:"科技",p:0,w:26.69,m:42.34,m2:53.24,q:64.14,h:21.11},
+  {r:88,t:"HUM",n:"Humana Inc",y:25.28,c:"$38.53B",mn:38530,s:"医疗",p:0,w:6.36,m:37.35,m2:57.04,q:76.72,h:30.56},
+  {r:89,t:"EBAY",n:"EBay Inc",y:25.01,c:"$48.34B",mn:48340,s:"消费周期",p:0,w:-5.58,m:4.62,m2:13.05,q:21.48,h:31.51},
+  {r:90,t:"COP",n:"Conoco Phillips",y:24.85,c:"$142.38B",mn:142380,s:"能源",p:0,w:0.26,m:-5.13,m2:-3.26,q:-1.39,h:31.77},
+  {r:91,t:"SWKS",n:"Skyworks Solutions Inc",y:24.78,c:"$11.9B",mn:11900,s:"科技",p:0,w:-5.15,m:14.01,m2:25.04,q:36.06,h:19.97},
+  {r:92,t:"DE",n:"Deere &amp; Co",y:24.42,c:"$156.36B",mn:156360,s:"工业",p:0,w:9.47,m:0.34,m2:-3.06,q:-6.45,h:24.71},
+  {r:93,t:"NTRS",n:"Northern Trust Corp",y:24.31,c:"$31.42B",mn:31420,s:"金融",p:0,w:-0.09,m:3.23,m2:11.3,q:19.37,h:29.28},
+  {r:94,t:"XOM",n:"Exxon Mobil Corp",y:24.28,c:"$619.92B",mn:619920,s:"能源",p:0,w:-0.17,m:-2.09,m2:-1.8,q:-1.50,h:29.02},
+  {r:95,t:"ROST",n:"Ross Stores Inc",y:24.25,c:"$72.1B",mn:72100,s:"消费周期",p:0,w:-4.63,m:-2.19,m2:5.53,q:13.25,h:26.91},
+  {r:96,t:"WAB",n:"Westinghouse Air Brake Technologies Corp",y:23.92,c:"$44.88B",mn:44880,s:"工业",p:0,w:1.16,m:-0.17,m2:0.62,q:1.41,h:26.83},
+  {r:97,t:"STT",n:"State Street Corp",y:23.85,c:"$44.22B",mn:44220,s:"金融",p:0,w:0.79,m:5.12,m2:16.01,q:26.90,h:34.25},
+  {r:98,t:"F",n:"Ford Motor Co",y:23.09,c:"$64.35B",mn:64350,s:"消费周期",p:0,w:5.42,m:35.94,m2:31.56,q:27.17,h:21.61},
+  {r:99,t:"CVX",n:"Chevron Corp",y:23.06,c:"$373.52B",mn:373520,s:"能源",p:0,w:1.54,m:-1.62,m2:-1.14,q:-0.65,h:24.10},
+  {r:100,t:"URI",n:"United Rentals Inc",y:22.92,c:"$62.32B",mn:62320,s:"科技",p:0,w:3.31,m:4.80,m2:12.08,q:19.36,h:22.04}
+];
+// ----- Nasdaq 100 (100 stocks) -----
+const ndqRaw = [
+  {r:1,t:"SNDK",n:"Sandisk Corp",y:623.04,c:"$254.18B",mn:254180,s:"科技",p:0,w:7.98,m:44.60,m2:124.08,q:203.56,h:668.70},
+  {r:2,t:"MU",n:"Micron Technology Inc",y:272.83,c:"$1200.02B",mn:1200020,s:"科技",p:0,w:18.78,m:96.25,m2:138.26,q:180.26,h:349.97},
+  {r:3,t:"ARM",n:"Arm Holdings Plc ADR",y:268.41,c:"$428.48B",mn:428480,s:"科技",p:0,w:25.37,m:90.70,m2:160.78,q:230.85,h:197.07},
+  {r:4,t:"MRVL",n:"Marvell Technology Inc",y:242.19,c:"$254.38B",mn:254380,s:"科技",p:0,w:39.63,m:76.29,m2:175.73,q:275.16,h:225.27},
+  {r:5,t:"STX",n:"Seagate Technology Holdings Plc",y:236.47,c:"$207.77B",mn:207770,s:"科技",p:0,w:9.56,m:27.47,m2:93.28,q:159.10,h:234.89},
+  {r:6,t:"WDC",n:"Western Digital Corp",y:226.87,c:"$194.09B",mn:194090,s:"科技",p:0,w:7.33,m:30.49,m2:77.59,q:124.69,h:244.76},
+  {r:7,t:"INTC",n:"Intel Corp",y:192.49,c:"$542.46B",mn:542460,s:"科技",p:0,w:-12.62,m:8.34,m2:79.38,q:150.42,h:166.10},
+  {r:8,t:"LITE",n:"Lumentum Holdings Inc",y:179.21,c:"$80.07B",mn:80070,s:"通信",p:0,w:12.99,m:8.34,m2:28.27,q:48.20,h:216.51},
+  {r:9,t:"AMD",n:"Advanced Micro Devices Inc",y:143.53,c:"$850.42B",mn:850420,s:"科技",p:0,w:3.50,m:44.66,m2:108.9,q:173.13,h:139.76},
+  {r:10,t:"DDOG",n:"Datadog Inc",y:97.90,c:"$95.8B",mn:95800,s:"科技",p:0,w:20.34,m:91.51,m2:116.15,q:140.79,h:68.20},
+  {r:11,t:"LRCX",n:"Lam Research Corp",y:95.36,c:"$418.2B",mn:418200,s:"科技",p:0,w:3.64,m:30.26,m2:42.08,q:53.91,h:114.37},
+  {r:12,t:"AMAT",n:"Applied Materials Inc",y:90.69,c:"$389.08B",mn:389080,s:"科技",p:0,w:7.73,m:25.95,m2:32.72,q:39.49,h:94.27},
+  {r:13,t:"FTNT",n:"Fortinet Inc",y:87.46,c:"$109.06B",mn:109060,s:"科技",p:0,w:11.12,m:72.51,m2:78.03,q:83.55,h:83.48},
+  {r:14,t:"MPWR",n:"Monolithic Power System Inc",y:79.29,c:"$79.84B",mn:79840,s:"科技",p:0,w:-2.28,m:2.62,m2:26.94,q:51.25,h:75.07},
+  {r:15,t:"TXN",n:"Texas Instruments Inc",y:77.60,c:"$280.42B",mn:280420,s:"科技",p:0,w:-5.16,m:9.64,m2:30.84,q:52.03,h:83.11},
+  {r:16,t:"KLAC",n:"KLA Corp",y:68.32,c:"$267.16B",mn:267160,s:"科技",p:0,w:1.68,m:18.48,m2:30.18,q:41.89,h:73.99},
+  {r:17,t:"CSCO",n:"Cisco Systems Inc",y:66.17,c:"$504.5B",mn:504500,s:"通信",p:0,w:8.17,m:39.36,m2:50.74,q:62.11,h:66.36},
+  {r:18,t:"CRWD",n:"Crowdstrike Holdings Inc",y:64.04,c:"$195.73B",mn:195730,s:"科技",p:0,w:14.50,m:68.76,m2:82.6,q:96.45,h:51.02},
+  {r:19,t:"PANW",n:"Palo Alto Networks Inc",y:61.34,c:"$242.5B",mn:242500,s:"科技",p:0,w:15.75,m:64.12,m2:77.26,q:90.39,h:56.30},
+  {r:20,t:"ASML",n:"ASML Holding NV",y:59.40,c:"$657.28B",mn:657280,s:"科技",p:0,w:4.49,m:19.51,m2:22.41,q:25.31,h:60.88},
+  {r:21,t:"ADI",n:"Analog Devices Inc",y:56.05,c:"$206.14B",mn:206140,s:"科技",p:0,w:0.78,m:6.41,m2:15.62,q:24.84,h:59.49},
+  {r:22,t:"MCHP",n:"Microchip Technology Inc",y:52.17,c:"$52.56B",mn:52560,s:"科技",p:0,w:-1.11,m:3.20,m2:19.51,q:35.82,h:80.96},
+  {r:23,t:"NXPI",n:"NXP Semiconductors NV",y:49.09,c:"$81.7B",mn:81700,s:"科技",p:0,w:-2.72,m:9.61,m2:29.98,q:50.35,h:66.01},
+  {r:24,t:"ODFL",n:"Old Dominion Freight Line Inc",y:46.10,c:"$47.64B",mn:47640,s:"科技",p:0,w:5.76,m:11.31,m2:10.74,q:10.17,h:69.33},
+  {r:25,t:"BKR",n:"Baker Hughes Co",y:41.72,c:"$64.03B",mn:64030,s:"能源",p:0,w:-3.28,m:-6.63,m2:-1.72,q:3.20,h:28.57},
+  {r:26,t:"QCOM",n:"Qualcomm Inc",y:40.80,c:"$253.85B",mn:253850,s:"科技",p:0,w:-3.21,m:36.06,m2:55.21,q:74.36,h:43.28},
+  {r:27,t:"AVGO",n:"Broadcom Inc",y:39.14,c:"$2280.07B",mn:2280070,s:"科技",p:0,w:14.11,m:14.31,m2:33.88,q:53.44,h:19.51},
+  {r:28,t:"FANG",n:"Diamondback Energy Inc",y:34.64,c:"$56.94B",mn:56940,s:"能源",p:0,w:3.73,m:-2.53,m2:5.74,q:14.01,h:32.64},
+  {r:29,t:"CDNS",n:"Cadence Design Systems Inc",y:33.21,c:"$114.85B",mn:114850,s:"科技",p:0,w:9.07,m:22.13,m2:30.32,q:38.51,h:33.53},
+  {r:30,t:"CSX",n:"CSX Corp",y:27.28,c:"$85.73B",mn:85730,s:"工业",p:0,w:-1.01,m:2.33,m2:5.24,q:8.16,h:30.49},
+  {r:31,t:"ROST",n:"Ross Stores Inc",y:24.25,c:"$72.1B",mn:72100,s:"消费周期",p:0,w:-4.63,m:-2.19,m2:5.53,q:13.25,h:26.91},
+  {r:32,t:"HON",n:"Honeywell International Inc",y:20.58,c:"$149.05B",mn:149050,s:"科技",p:0,w:1.51,m:10.70,m2:3.58,q:-3.53,h:22.39},
+  {r:33,t:"MAR",n:"Marriott International Inc",y:20.47,c:"$98.56B",mn:98560,s:"科技",p:0,w:-0.01,m:5.29,m2:8.28,q:11.27,h:22.63},
+  {r:34,t:"NVDA",n:"NVIDIA Corp",y:19.47,c:"$5392.24B",mn:5392240,s:"科技",p:0,w:3.70,m:12.28,m2:18.02,q:23.75,h:25.89},
+  {r:35,t:"LIN",n:"Linde Plc",y:16.30,c:"$229.41B",mn:229410,s:"基础材料",p:0,w:-3.70,m:-2.36,m2:-1.76,q:-1.15,h:20.86},
+  {r:36,t:"AAPL",n:"Apple Inc",y:15.94,c:"$4629.45B",mn:4629450,s:"消费防御",p:0,w:2.23,m:12.52,m2:16.02,q:19.51,h:13.04},
+  {r:37,t:"GOOGL",n:"Alphabet Inc",y:15.61,c:"$4365.34B",mn:4365340,s:"通信",p:0,w:-6.95,m:-6.18,m2:6.51,q:19.19,h:13.01},
+  {r:38,t:"MNST",n:"Monster Beverage Corp",y:15.09,c:"$86.3B",mn:86300,s:"消费防御",p:0,w:0.94,m:14.42,m2:13.07,q:11.71,h:17.67},
+  {r:39,t:"GOOG",n:"Alphabet Inc",y:14.21,c:"$4365.34B",mn:4365340,s:"通信",p:0,w:-6.87,m:-6.48,m2:5.79,q:18.06,h:11.95},
+  {r:40,t:"MDLZ",n:"Mondelez International Inc",y:13.45,c:"$78.39B",mn:78390,s:"科技",p:0,w:-0.28,m:-0.49,m2:1.71,q:3.91,h:6.08},
+  {r:41,t:"SBUX",n:"Starbucks Corp",y:13.42,c:"$108.85B",mn:108850,s:"消费周期",p:0,w:-5.83,m:-9.81,m2:-5.51,q:-1.21,h:9.64},
+  {r:42,t:"FAST",n:"Fastenal Co",y:11.46,c:"$51.35B",mn:51350,s:"工业",p:0,w:0.63,m:-0.40,m2:-1.82,q:-3.24,h:10.72},
+  {r:43,t:"AMZN",n:"Amazon.com Inc",y:11.13,c:"$2759.41B",mn:2759410,s:"消费周期",p:0,w:-3.31,m:-4.38,m2:9.26,q:22.90,h:9.99},
+  {r:44,t:"DXCM",n:"Dexcom Inc",y:10.67,c:"$28.34B",mn:28340,s:"医疗",p:0,w:2.00,m:19.72,m2:10.12,q:0.51,h:15.72},
+  {r:45,t:"COST",n:"Costco Wholesale Corp",y:10.66,c:"$423.36B",mn:423360,s:"科技",p:0,w:-4.85,m:-5.68,m2:-5.49,q:-5.31,h:4.45},
+  {r:46,t:"AEP",n:"American Electric Power Company Inc",y:10.23,c:"$69.16B",mn:69160,s:"公用事业",p:0,w:-2.90,m:-7.16,m2:-5.4,q:-3.65,h:2.70},
+  {r:47,t:"KDP",n:"Keurig Dr Pepper Inc",y:8.39,c:"$41.31B",mn:41310,s:"消费防御",p:0,w:2.74,m:4.37,m2:3.52,q:2.67,h:8.82},
+  {r:48,t:"SNPS",n:"Synopsys Inc",y:8.22,c:"$97.34B",mn:97340,s:"科技",p:0,w:-4.90,m:3.95,m2:11.88,q:19.80,h:21.61},
+  {r:49,t:"XEL",n:"Xcel Energy Inc",y:5.43,c:"$48.61B",mn:48610,s:"公用事业",p:0,w:-3.60,m:-5.70,m2:-6.04,q:-6.37,h:-5.16},
+  {r:50,t:"GILD",n:"Gilead Sciences Inc",y:3.94,c:"$158.39B",mn:158390,s:"医疗",p:0,w:-4.61,m:-3.10,m2:-8.4,q:-13.70,h:1.37},
+  {r:51,t:"EXC",n:"Exelon Corp",y:3.23,c:"$46.04B",mn:46040,s:"公用事业",p:0,w:-2.24,m:-3.23,m2:-5.66,q:-8.09,h:-4.50},
+  {r:52,t:"PCAR",n:"Paccar Inc",y:3.09,c:"$59.41B",mn:59410,s:"工业",p:0,w:0.79,m:-2.75,m2:-4.8,q:-6.85,h:8.45},
+  {r:53,t:"FER",n:"Ferrovial N. V",y:2.68,c:"$47.81B",mn:47810,s:"工业",p:0,w:-4.41,m:-3.83,m2:-3.72,q:-3.62,h:0.81},
+  {r:54,t:"WMT",n:"Walmart Inc",y:1.48,c:"$899.74B",mn:899740,s:"科技",p:0,w:-4.65,m:-14.09,m2:-12.85,q:-11.61,h:2.31},
+  {r:55,t:"CCEP",n:"Coca-Cola Europacific Partners Plc",y:0.33,c:"$40.33B",mn:40330,s:"消费防御",p:0,w:-2.58,m:-3.38,m2:-8.45,q:-13.52,h:-0.75},
+  {r:56,t:"AMGN",n:"AMGEN Inc",y:0.29,c:"$177.16B",mn:177160,s:"医疗",p:0,w:-2.29,m:-0.47,m2:-6.7,q:-12.93,h:-4.98},
+  {r:57,t:"ABNB",n:"Airbnb Inc",y:-1.01,c:"$80.97B",mn:80970,s:"消费周期",p:0,w:1.26,m:-5.16,m2:-2.09,q:0.98,h:14.84},
+  {r:58,t:"PEP",n:"PepsiCo Inc",y:-1.06,c:"$194.08B",mn:194080,s:"消费防御",p:0,w:-2.53,m:-9.79,m2:-11.84,q:-13.89,h:-4.53},
+  {r:59,t:"EA",n:"Electronic Arts Inc",y:-1.14,c:"$50.65B",mn:50650,s:"通信",p:0,w:0.44,m:-0.04,m2:0.18,q:0.39,h:-0.01},
+  {r:60,t:"KHC",n:"Kraft Heinz Co",y:-3.79,c:"$27.66B",mn:27660,s:"消费防御",p:0,w:-2.18,m:3.73,m2:0.03,q:-3.67,h:-8.55},
+  {r:61,t:"ORLY",n:"O&#39;Reilly Automotive Inc",y:-5.46,c:"$71.46B",mn:71460,s:"消费周期",p:0,w:-4.05,m:-10.80,m2:-9.47,q:-8.14,h:-15.21},
+  {r:62,t:"WBD",n:"Warner Bros. Discovery Inc",y:-5.69,c:"$68.14B",mn:68140,s:"通信",p:0,w:0.67,m:0.78,m2:-1.42,q:-3.62,h:13.25},
+  {r:63,t:"TSLA",n:"Tesla Inc",y:-5.78,c:"$1591.45B",mn:1591450,s:"消费周期",p:0,w:-2.27,m:8.42,m2:8.2,q:7.98,h:-1.49},
+  {r:64,t:"VRTX",n:"Vertex Pharmaceuticals Inc",y:-6.24,c:"$107.89B",mn:107890,s:"科技",p:0,w:-2.49,m:0.28,m2:-5.04,q:-10.37,h:-1.96},
+  {r:65,t:"TMUS",n:"T-Mobile US Inc",y:-7.00,c:"$204.35B",mn:204350,s:"通信",p:0,w:-1.19,m:-3.69,m2:-8.64,q:-13.59,h:-9.66},
+  {r:66,t:"CTAS",n:"Cintas Corp",y:-7.85,c:"$69.34B",mn:69340,s:"科技",p:0,w:1.30,m:2.18,m2:-5.92,q:-14.01,h:-6.83},
+  {r:67,t:"MSFT",n:"Microsoft Corp",y:-8.75,c:"$3278.24B",mn:3278240,s:"科技",p:0,w:6.08,m:6.48,m2:7.86,q:9.25,h:-10.30},
+  {r:68,t:"META",n:"Meta Platforms Inc",y:-9.46,c:"$1517.04B",mn:1517040,s:"通信",p:0,w:-2.40,m:-1.83,m2:-5.3,q:-8.77,h:-7.77},
+  {r:69,t:"APP",n:"Applovin Corp",y:-10.12,c:"$203.46B",mn:203460,s:"通信",p:0,w:17.77,m:31.66,m2:34.83,q:37.99,h:1.03},
+  {r:70,t:"ADP",n:"Automatic Data Processing Inc",y:-10.13,c:"$92.41B",mn:92410,s:"科技",p:0,w:5.88,m:7.92,m2:7.4,q:6.89,h:-9.45},
+  {r:71,t:"PAYX",n:"Paychex Inc",y:-10.15,c:"$36.11B",mn:36110,s:"科技",p:0,w:6.32,m:8.35,m2:6.91,q:5.47,h:-9.76},
+  {r:72,t:"MSTR",n:"Strategy Inc",y:-10.44,c:"$47.69B",mn:47690,s:"科技",p:0,w:-14.91,m:-23.19,m2:-10.32,q:2.56,h:-23.20},
+  {r:73,t:"NFLX",n:"Netflix Inc",y:-11.12,c:"$350.89B",mn:350890,s:"通信",p:0,w:-4.96,m:-9.48,m2:-12.1,q:-14.71,h:-22.54},
+  {r:74,t:"CMCSA",n:"Comcast Corp",y:-11.26,c:"$88.77B",mn:88770,s:"通信",p:0,w:-1.19,m:-8.61,m2:-14.24,q:-19.86,h:-0.62},
+  {r:75,t:"TTWO",n:"Take-Two Interactive Software Inc",y:-13.14,c:"$41.29B",mn:41290,s:"通信",p:0,w:0.77,m:2.94,m2:2.7,q:2.46,h:-9.63},
+  {r:76,t:"AXON",n:"Axon Enterprise Inc",y:-13.70,c:"$39.5B",mn:39500,s:"工业",p:0,w:27.20,m:21.83,m2:3.23,q:-15.36,h:-9.26},
+  {r:77,t:"PLTR",n:"Palantir Technologies Inc",y:-14.39,c:"$364.8B",mn:364800,s:"科技",p:0,w:11.40,m:5.62,m2:4.49,q:3.36,h:-9.66},
+  {r:78,t:"MELI",n:"MercadoLibre Inc",y:-16.95,c:"$84.81B",mn:84810,s:"消费周期",p:0,w:1.50,m:-9.58,m2:-5.99,q:-2.40,h:-19.26},
+  {r:79,t:"IDXX",n:"Idexx Laboratories Inc",y:-18.58,c:"$43.45B",mn:43450,s:"医疗",p:0,w:-1.15,m:-2.93,m2:-8.13,q:-13.33,h:-26.84},
+  {r:80,t:"VRSK",n:"Verisk Analytics Inc",y:-19.93,c:"$23.47B",mn:23470,s:"科技",p:0,w:4.38,m:-1.11,m2:-8.86,q:-16.60,h:-20.42},
+  {r:81,t:"ADSK",n:"Autodesk Inc",y:-20.05,c:"$49.94B",mn:49940,s:"科技",p:0,w:-0.66,m:-3.15,m2:-4.88,q:-6.61,h:-21.98},
+  {r:82,t:"CPRT",n:"Copart Inc",y:-21.17,c:"$28.57B",mn:28570,s:"科技",p:0,w:-7.16,m:-7.24,m2:-13.52,q:-19.80,h:-20.83},
+  {r:83,t:"REGN",n:"Regeneron Pharmaceuticals Inc",y:-21.89,c:"$63.21B",mn:63210,s:"科技",p:0,w:-5.00,m:-14.04,m2:-17.7,q:-21.36,h:-22.72},
+  {r:84,t:"BKNG",n:"Booking Holdings Inc",y:-21.94,c:"$129.57B",mn:129570,s:"消费周期",p:0,w:2.39,m:-1.43,m2:-0.39,q:0.64,h:-14.94},
+  {r:85,t:"PDD",n:"PDD Holdings Inc ADR",y:-22.23,c:"$125.52B",mn:125520,s:"消费周期",p:0,w:-8.75,m:-11.57,m2:-12,q:-12.44,h:-24.04},
+  {r:86,t:"CEG",n:"Constellation Energy Corp",y:-22.82,c:"$98.48B",mn:98480,s:"公用事业",p:0,w:-9.59,m:-11.42,m2:-13.74,q:-16.07,h:-25.17},
+  {r:87,t:"PYPL",n:"PayPal Holdings Inc",y:-23.72,c:"$39.28B",mn:39280,s:"科技",p:0,w:0.84,m:-11.72,m2:-7.86,q:-3.99,h:-28.97},
+  {r:88,t:"ROP",n:"Roper Technologies Inc",y:-24.40,c:"$33.96B",mn:33960,s:"科技",p:0,w:5.06,m:-6.06,m2:-5.77,q:-5.48,h:-24.59},
+  {r:89,t:"GEHC",n:"GE HealthCare Technologies Inc",y:-24.42,c:"$28.2B",mn:28200,s:"医疗",p:0,w:-3.41,m:1.57,m2:-9.54,q:-20.66,h:-22.50},
+  {r:90,t:"ADBE",n:"Adobe Inc",y:-25.11,c:"$105.94B",mn:105940,s:"科技",p:0,w:8.99,m:4.55,m2:0.64,q:-3.28,h:-18.12},
+  {r:91,t:"SHOP",n:"Shopify Inc",y:-27.31,c:"$151.84B",mn:151840,s:"科技",p:0,w:11.54,m:-8.35,m2:-6.17,q:-3.99,h:-26.24},
+  {r:92,t:"ALNY",n:"Alnylam Pharmaceuticals Inc",y:-28.05,c:"$38.2B",mn:38200,s:"科技",p:0,w:-3.17,m:-3.37,m2:-6.79,q:-10.21,h:-36.59},
+  {r:93,t:"ISRG",n:"Intuitive Surgical Inc",y:-28.97,c:"$142.48B",mn:142480,s:"医疗",p:0,w:-7.86,m:-12.12,m2:-15.62,q:-19.12,h:-29.85},
+  {r:94,t:"WDAY",n:"Workday Inc",y:-30.68,c:"$36.77B",mn:36770,s:"科技",p:0,w:20.05,m:17.27,m2:10.47,q:3.67,h:-30.95},
+  {r:95,t:"DASH",n:"DoorDash Inc",y:-30.70,c:"$68.39B",mn:68390,s:"消费周期",p:0,w:1.92,m:-10.74,m2:-10.64,q:-10.55,h:-20.88},
+  {r:96,t:"CHTR",n:"Charter Communications Inc",y:-32.80,c:"$19.43B",mn:19430,s:"通信",p:0,w:-2.59,m:-18.32,m2:-28.59,q:-38.86,h:-29.91},
+  {r:97,t:"CTSH",n:"Cognizant Technology Solutions Corp",y:-33.57,c:"$26.13B",mn:26130,s:"科技",p:0,w:6.43,m:5.17,m2:-4.57,q:-14.30,h:-29.04},
+  {r:98,t:"TRI",n:"Thomson-Reuters Corp",y:-34.54,c:"$38.24B",mn:38240,s:"科技",p:0,w:3.12,m:-8.56,m2:-13.35,q:-18.14,h:-36.25},
+  {r:99,t:"ZS",n:"Zscaler Inc",y:-35.91,c:"$23.31B",mn:23310,s:"科技",p:0,w:-21.91,m:3.10,m2:-1.85,q:-6.80,h:-42.68},
+  {r:100,t:"INSM",n:"Insmed Inc",y:-40.40,c:"$22.48B",mn:22480,s:"科技",p:0,w:-4.72,m:-22.16,m2:-25.8,q:-29.44,h:-50.07}
+];
+
+// ===== APP ENGINE =====
+function createApp(mountId, rawData, label) {
+  const data = rawData;
+  let curTime = 'w', curSort = {key:'gain',dir:'desc'}, curSector = 'all', curPage = 1;
+  const PP = 9999;
+  const container = document.getElementById(mountId);
+  container.innerHTML = '<div class="controls">' +
+    '<div class="cg"><label>周期</label>' +
+    '<button class="cb active" data-t="w">近1周</button>' +
+    '<button class="cb" data-t="m">近1月</button>' +
+    '<button class="cb" data-t="m2">近2月</button>' +
+    '<button class="cb" data-t="q">近3月</button>' +
+    '<button class="cb" data-t="h">近半年</button>' +
+    '<button class="cb" data-t="y">YTD</button></div>' +
+    '<div class="cg"><label>排序</label>' +
+    '<button class="cb active" data-s="gain">涨幅</button>' +
+    '<button class="cb" data-s="rank">排名</button>' +
+    '<button class="cb" data-s="price">股价</button>' +
+    '<button class="cb" data-s="mcapNum">市值</button></div>' +
+    '<div class="cg"><label>板块</label>' +
+    '<button class="cb active" data-f="all">全部</button>' +
+    '<button class="cb" data-f="科技">科技</button>' +
+    '<button class="cb" data-f="医疗">医疗</button>' +
+    '<button class="cb" data-f="工业">工业</button>' +
+    '<button class="cb" data-f="能源">能源</button>' +
+    '<button class="cb" data-f="金融">金融</button>' +
+    '<button class="cb" data-f="基础材料">基础材料</button>' +
+    '<button class="cb" data-f="通信">通信</button>' +
+    '<button class="cb" data-f="消费周期">消费周期</button>' +
+    '<button class="cb" data-f="消费防御">消费防御</button>' +
+    '<button class="cb" data-f="公用事业">公用事业</button>' +
+    '<button class="cb" data-f="房地产">房地产</button></div>' +
+    '<input class="search-box" id="'+mountId+'_srch" placeholder="搜索代码或名称..."></div>' +
+    '<div class="stats"><span>共 <strong id="'+mountId+'_cnt">0</strong> 只股票 | 更新于 2026-06-03</span></div>' +
+    '<div style="overflow-x:auto"><table><thead><tr>' +
+    '<th class="rk" data-sort="rank">#<span class="ar"></span></th>' +
+    '<th>代码</th><th>公司名称</th>' +
+    '<th class="gc" data-sort="gain">涨幅<span class="ar"></span></th>' +
+    '<th class="pr" data-sort="price">股价<span class="ar"></span></th>' +
+    '<th class="mc" data-sort="mcapNum">市值<span class="ar"></span></th>' +
+    '<th>板块</th></tr></thead>' +
+    '<tbody id="'+mountId+'_body"></tbody></table></div>' +
+    '<div class="pg" id="'+mountId+'_pg"></div>';
+  container.addEventListener('click',function(e){
+    var btn=e.target.closest('.cb[data-t]');if(btn){window[mountId+'_setTime'](btn.getAttribute('data-t'));return;}
+    btn=e.target.closest('.cb[data-s]');if(btn){window[mountId+'_setSort'](btn.getAttribute('data-s'));return;}
+    btn=e.target.closest('.cb[data-f]');if(btn){window[mountId+'_setSector'](btn.getAttribute('data-f'));return;}
+    btn=e.target.closest('th[data-sort]');if(btn){window[mountId+'_setSort'](btn.getAttribute('data-sort'));return;}
+    btn=e.target.closest('.pb[data-page]');if(btn){window[mountId+'_goPage'](Number(btn.getAttribute('data-page')));return;}
+  });
+  document.getElementById(mountId+'_srch').addEventListener('input',function(){window[mountId+'_filter']();});
+  function getGain(d){var f=curTime==='y'?'y':curTime;return d[f]||0}
+  function render(){
+    var arr=[].concat(data);
+    var q=document.getElementById(mountId+'_srch').value.toLowerCase().trim();
+    if(q)arr=arr.filter(function(d){return d.t.toLowerCase().includes(q)||d.n.toLowerCase().includes(q)});
+    if(curSector!=='all')arr=arr.filter(function(d){return d.s===curSector});
+    var k=curSort.key,dir=curSort.dir;
+    arr.sort(function(a,b){
+      if(k==='gain')return dir==='desc'?getGain(b)-getGain(a):getGain(a)-getGain(b);
+      if(k==='price')return dir==='desc'?(Number(b.p)||0)-(Number(a.p)||0):(Number(a.p)||0)-(Number(b.p)||0);
+      if(k==='mcapNum')return dir==='desc'?b.mn-a.mn:a.mn-b.mn;
+      return dir==='asc'?a.r-b.r:b.r-a.r;
+    });
+    document.getElementById(mountId+'_cnt').textContent=arr.length;
+    var tp=Math.ceil(arr.length/PP);
+    if(curPage>tp)curPage=tp||1;
+    var start=(curPage-1)*PP,page=arr.slice(start,start+PP);
+    document.getElementById(mountId+'_body').innerHTML=page.map(function(d,i){
+      var pos=start+i+1,g=Number(getGain(d))||0,rc=pos<=3?'rk t3':'rk',ss=g>=0?'+':'';
+      var gc=g>=300?'u':(g>=150?'h':(g>=0?'p':'n'));
+      return '<tr><td class="'+rc+'">'+pos+'</td><td class="tk">'+d.t+'</td><td class="cn" title="'+d.n+'">'+d.n+'</td><td class="gc"><span class="g '+gc+'">'+ss+g.toFixed(2)+'%</span></td><td class="pr"><span class="m">'+(d.p?Number(d.p).toFixed(2):'---')+'</span></td><td class="mc"><span class="m">'+(d.mn===0?'---':d.c)+'</span></td><td><span class="st">'+d.s+'</span></td></tr>';
+    }).join('');
+    var pg=document.getElementById(mountId+'_pg');
+    if(tp<=1){pg.innerHTML='';return;}
+    var hp='';
+    if(curPage>1)hp+='<button class="pb" data-page="'+(curPage-1)+'">&#8249;</button>';
+    for(var i=Math.max(1,curPage-2);i<=Math.min(tp,curPage+2);i++)
+      hp+='<button class="pb '+(i===curPage?'act':'')+'" data-page="'+i+'">'+i+'</button>';
+    if(curPage<tp)hp+='<button class="pb" data-page="'+(curPage+1)+'">&#8250;</button>';
+    pg.innerHTML=hp;
+  }
+  window[mountId+'_goPage']=function(n){curPage=n;render();};
+  window[mountId+'_setTime']=function(t){
+    curTime=t;curPage=1;
+    [].forEach.call(document.querySelectorAll('#'+mountId+' .cb[data-t]'),function(b){b.classList.remove('active')});
+    var btn=document.querySelector('#'+mountId+' .cb[data-t="'+t+'"]');
+    if(btn)btn.classList.add('active');
+    render();
+  };
+  window[mountId+'_setSort']=function(key){
+    var dir=(curSort.key===key&&curSort.dir==='desc')?'asc':'desc';
+    curSort={key:key,dir:dir};curPage=1;
+    [].forEach.call(document.querySelectorAll('#'+mountId+' .cb[data-s]'),function(b){b.classList.remove('active')});
+    var btn=document.querySelector('#'+mountId+' .cb[data-s="'+key+'"]');
+    if(btn)btn.classList.add('active');
+    render();
+  };
+  window[mountId+'_setSector']=function(s){
+    curSector=s;curPage=1;
+    [].forEach.call(document.querySelectorAll('#'+mountId+' .cb[data-f]'),function(b){b.classList.remove('active')});
+    var target=document.querySelector('#'+mountId+' .cb[data-f="'+s+'"]');
+    if(target)target.classList.add('active');
+    render();
+  };
+  window[mountId+'_filter']=function(){curPage=1;render();};
+  render();
+}
+function switchTab(id){
+  [].forEach.call(document.querySelectorAll('.tab'),function(t){t.classList.remove('active')});
+  document.querySelector('.tab[data-tab="'+id+'"]').classList.add('active');
+  [].forEach.call(document.querySelectorAll('.tab-pane'),function(p){p.classList.remove('active')});
+  document.getElementById('pane-'+id).classList.add('active');
+}
+createApp('app-r2000', r2kRaw, 'Russell 2000');
+createApp('app-sp500', spRaw, 'S&P 500');
+createApp('app-nasdaq', ndqRaw, 'Nasdaq 100');
+</script>
+</body>
+</html>
