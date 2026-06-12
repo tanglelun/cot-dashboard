@@ -12,6 +12,7 @@ ARRAYS = {
     "ndqRaw": "Nasdaq 100",
 }
 MAX_ABS_DAILY_CHANGE = 300
+SPLIT_FACTORS = (2, 3, 4, 5, 10, 20, 25, 50, 100)
 
 
 def extract_array_source(text, name):
@@ -91,11 +92,42 @@ def ytd_change(series):
     return (latest / base - 1) * 100
 
 
-def has_price_dislocation(series):
-    changes = series.pct_change().dropna().abs() * 100
-    if changes.empty:
-        return False
-    return changes.max() > MAX_ABS_DAILY_CHANGE
+def nearest_split_factor(ratio):
+    if ratio <= 0:
+        return None
+    factor = min(SPLIT_FACTORS, key=lambda item: abs(item - ratio))
+    if abs(ratio / factor - 1) <= 0.25:
+        return factor
+    return None
+
+
+def normalize_split_dislocations(series, symbol):
+    adjusted = series.astype(float).copy()
+    values = adjusted.dropna()
+    if len(values) < 2:
+        return adjusted
+
+    for index in range(1, len(values)):
+        previous = values.iloc[index - 1]
+        current = values.iloc[index]
+        if previous == 0 or pd.isna(previous) or pd.isna(current):
+            continue
+
+        ratio = current / previous
+        if ratio > 4:
+            factor = nearest_split_factor(ratio)
+            if factor:
+                adjusted.loc[: values.index[index - 1]] *= factor
+                values = adjusted.dropna()
+                print(f"Adjusted split history for {symbol} by x{factor}")
+        elif ratio < 0.25:
+            factor = nearest_split_factor(1 / ratio)
+            if factor:
+                adjusted.loc[: values.index[index - 1]] /= factor
+                values = adjusted.dropna()
+                print(f"Adjusted split history for {symbol} by /{factor}")
+
+    return adjusted
 
 
 def get_close_frame(symbols):
@@ -178,26 +210,18 @@ def update_rows(rows, series_map):
         series = series_map.get(row["t"], pd.Series(dtype=float))
         if not series.empty:
             refreshed_count += 1
-            if has_price_dislocation(series):
-                row["p"] = 0.0
-                row["split"] = True
-                for key in ("d", "w", "m", "m2", "q", "h", "y"):
-                    row[key] = 0.0
-                print(f"Skipped anomalous price history for {row['t']}")
-                updated.append(row)
-                continue
-
             row["split"] = False
+            metric_series = normalize_split_dislocations(series, row["t"])
             latest = series.iloc[-1]
             row["p"] = round(float(latest), 2)
             metrics = {
-                "d": pct_change(series, 1),
-                "w": pct_change(series, 5),
-                "m": pct_change(series, 21),
-                "m2": pct_change(series, 42),
-                "q": pct_change(series, 63),
-                "h": pct_change(series, 126),
-                "y": ytd_change(series),
+                "d": pct_change(metric_series, 1),
+                "w": pct_change(metric_series, 5),
+                "m": pct_change(metric_series, 21),
+                "m2": pct_change(metric_series, 42),
+                "q": pct_change(metric_series, 63),
+                "h": pct_change(metric_series, 126),
+                "y": ytd_change(metric_series),
             }
             for key, value in metrics.items():
                 if value is not None:
