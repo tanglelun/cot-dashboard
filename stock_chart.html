@@ -29,6 +29,10 @@ h1{font-size:24px;color:#fff;font-weight:800;letter-spacing:0}
 .btn.active{background:#4fc3f7;border-color:#4fc3f7;color:#0f1923}
 .chart-shell{background:#111d27;border:1px solid #1e2d3a;border-radius:8px;overflow:hidden}
 .chart-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #1e2d3a;flex-wrap:wrap}
+.toolbar-left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ma-legend{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:"SF Mono","Fira Code",monospace;font-size:11px;color:#8899aa}
+.ma-item{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.ma-dot{width:18px;height:2px;border-radius:2px;display:inline-block}
 .hint{font-size:11px;color:#556677}
 .chart-wrap{position:relative;height:68vh;min-height:420px}
 canvas{display:block;width:100%;height:100%;cursor:crosshair}
@@ -71,11 +75,14 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair}
 
   <section class="chart-shell">
     <div class="chart-toolbar">
-      <div class="actions" id="ranges">
-        <button class="btn" data-range="63">3M</button>
-        <button class="btn active" data-range="126">6M</button>
-        <button class="btn" data-range="252">1Y</button>
-        <button class="btn" data-range="all">All</button>
+      <div class="toolbar-left">
+        <div class="actions" id="ranges">
+          <button class="btn" data-range="63">3M</button>
+          <button class="btn active" data-range="126">6M</button>
+          <button class="btn" data-range="252">1Y</button>
+          <button class="btn" data-range="all">All</button>
+        </div>
+        <div class="ma-legend" id="maLegend"></div>
       </div>
       <div class="hint">Drag to pan · Mouse wheel to zoom · Move cursor for OHLC</div>
     </div>
@@ -93,6 +100,12 @@ const fallbackName = params.get('name') || symbol;
 const canvas = document.getElementById('chart');
 const ctx = canvas.getContext('2d');
 const statusEl = document.getElementById('status');
+const MOVING_AVERAGES = [
+  { key:'ma10', label:'MA10', period:10, color:'#f6c85f' },
+  { key:'ma20', label:'MA20', period:20, color:'#4fc3f7' },
+  { key:'ma50', label:'MA50', period:50, color:'#b07cff' },
+  { key:'ma200', label:'MA200', period:200, color:'#ff8a65' }
+];
 const state = { candles: [], start: 0, end: 0, hover: -1, dragging: false, dragX: 0, dragStart: 0, dragEnd: 0 };
 
 document.getElementById('symbol').textContent = symbol || 'UNKNOWN';
@@ -147,6 +160,50 @@ function visibleCandles(){
   return state.candles.slice(state.start, state.end);
 }
 
+function calculateMovingAverages(candles){
+  MOVING_AVERAGES.forEach(ma => {
+    let sum = 0;
+    candles.forEach((candle, index) => {
+      sum += candle.close;
+      if(index >= ma.period) sum -= candles[index - ma.period].close;
+      candle[ma.key] = index >= ma.period - 1 ? sum / ma.period : null;
+    });
+  });
+}
+
+function renderMaLegend(candle){
+  const target = document.getElementById('maLegend');
+  target.innerHTML = MOVING_AVERAGES.map(ma => {
+    const value = candle && candle[ma.key] ? fmt(candle[ma.key]) : '--';
+    return '<span class="ma-item" style="color:'+ma.color+'"><span class="ma-dot" style="background:'+ma.color+'"></span>'+ma.label+' '+value+'</span>';
+  }).join('');
+}
+
+function drawMovingAverage(ma, candles, xFor, yFor){
+  ctx.strokeStyle = ma.color;
+  ctx.lineWidth = 1.4;
+  ctx.globalAlpha = 0.95;
+  ctx.beginPath();
+  let started = false;
+  candles.forEach((candle, index) => {
+    const value = candle[ma.key];
+    if(!value){
+      started = false;
+      return;
+    }
+    const x = xFor(index);
+    const y = yFor(value);
+    if(!started){
+      ctx.moveTo(x, y);
+      started = true;
+    }else{
+      ctx.lineTo(x, y);
+    }
+  });
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+}
+
 function drawGrid(left, top, right, priceBottom, volumeTop, bottom, width, height, minPrice, maxPrice, maxVolume, candles, xFor, yFor){
   ctx.strokeStyle = '#1d3040';
   ctx.lineWidth = 1;
@@ -192,8 +249,10 @@ function draw(){
   const plotWidth = width - left - right;
   const step = plotWidth / candles.length;
   const bodyWidth = Math.max(2, Math.min(12, step * 0.62));
-  const highs = candles.map(c => c.high);
-  const lows = candles.map(c => c.low);
+  const maValues = [];
+  candles.forEach(c => MOVING_AVERAGES.forEach(ma => { if(c[ma.key]) maValues.push(c[ma.key]); }));
+  const highs = candles.map(c => c.high).concat(maValues);
+  const lows = candles.map(c => c.low).concat(maValues);
   let maxPrice = Math.max(...highs);
   let minPrice = Math.min(...lows);
   const pad = (maxPrice - minPrice || maxPrice || 1) * 0.06;
@@ -231,6 +290,8 @@ function draw(){
     }
   });
 
+  MOVING_AVERAGES.forEach(ma => drawMovingAverage(ma, candles, xFor, yFor));
+
   if(state.hover >= state.start && state.hover < state.end){
     const local = state.hover - state.start;
     const c = state.candles[state.hover];
@@ -250,9 +311,11 @@ function draw(){
       c.time + '  ' + symbol,
       'O ' + fmt(c.open) + '  H ' + fmt(c.high),
       'L ' + fmt(c.low) + '  C ' + fmt(c.close),
+      'MA10 ' + fmt(c.ma10) + '  MA20 ' + fmt(c.ma20),
+      'MA50 ' + fmt(c.ma50) + '  MA200 ' + fmt(c.ma200),
       'Vol ' + (c.volume ? Math.round(c.volume / 1000000) + 'M' : '--')
     ];
-    const boxW = 190, boxH = 78;
+    const boxW = 228, boxH = 112;
     const boxX = Math.min(width - right - boxW, Math.max(left, x + 12));
     const boxY = top + 8;
     ctx.fillStyle = 'rgba(15,25,35,0.92)';
@@ -265,6 +328,7 @@ function draw(){
     ctx.textBaseline = 'top';
     lines.forEach((line, i) => ctx.fillText(line, boxX + 10, boxY + 9 + i * 16));
   }
+  renderMaLegend(state.hover >= state.start && state.hover < state.end ? state.candles[state.hover] : state.candles[state.end - 1]);
 }
 
 function nearestIndex(clientX){
@@ -341,6 +405,7 @@ async function loadChart(){
     const data = await response.json();
     if(!data.prices || !data.prices.length) throw new Error('Chart data is empty for ' + symbol);
     state.candles = data.prices;
+    calculateMovingAverages(state.candles);
     renderHeader(data);
     setStatus('');
     setRange('126');
