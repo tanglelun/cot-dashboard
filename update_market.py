@@ -9,7 +9,7 @@ import yfinance as yf
 
 MARKET_FILE = "russell2000_top100.html"
 MARKET_DATA_DIR = Path("market_data")
-CHART_PERIOD = "2y"
+CHART_PERIOD = "max"
 ARRAYS = {
     "r2kRaw": "Russell 2000",
     "spRaw": "S&P 500",
@@ -265,6 +265,25 @@ def latest_price_date(series_map):
     return pd.Timestamp(latest).strftime("%Y-%m-%d")
 
 
+def index_row_from_market_row(row):
+    return {
+        "symbol": row["t"],
+        "name": row["n"],
+        "sector": row["s"],
+        "marketCap": row["c"],
+        "marketCapNum": row["mn"],
+        "rank": row["r"],
+        "price": row["p"],
+        "d": row["d"],
+        "w": row["w"],
+        "m": row["m"],
+        "m2": row["m2"],
+        "q": row["q"],
+        "h": row["h"],
+        "y": row["y"],
+    }
+
+
 def write_chart_data(static_data, price_frames, updated_at):
     MARKET_DATA_DIR.mkdir(exist_ok=True)
     rows_by_symbol = {}
@@ -309,11 +328,31 @@ def write_chart_data(static_data, price_frames, updated_at):
                 "name": row["n"],
                 "sector": row["s"],
                 "marketCap": row["c"],
+                "marketCapNum": row["mn"],
+                "price": row["p"],
+                "d": row["d"],
+                "w": row["w"],
+                "m": row["m"],
+                "m2": row["m2"],
+                "q": row["q"],
+                "h": row["h"],
+                "y": row["y"],
             }
         )
 
+    groups = {}
+    for array_name, label in ARRAYS.items():
+        groups[array_name] = {
+            "label": label,
+            "stocks": [index_row_from_market_row(row) for row in static_data.get(array_name, [])],
+        }
+
     (MARKET_DATA_DIR / "index.json").write_text(
-        json.dumps({"updated": updated_at, "stocks": index_rows}, ensure_ascii=False, separators=(",", ":")),
+        json.dumps(
+            {"updated": updated_at, "stocks": index_rows, "groups": groups},
+            ensure_ascii=False,
+            separators=(",", ":"),
+        ),
         encoding="utf-8",
     )
 

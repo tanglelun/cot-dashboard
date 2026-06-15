@@ -7,11 +7,37 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:#0f1923;color:#e0e0e0;padding:16px}
-.site-nav{display:flex;align-items:center;gap:8px;max-width:1320px;margin:0 auto 16px;border-bottom:1px solid #1e2d3a}
+.site-nav{display:flex;align-items:center;gap:8px;max-width:1600px;margin:0 auto 16px;border-bottom:1px solid #1e2d3a}
 .site-nav a{display:inline-flex;align-items:center;padding:12px 18px;color:#99aabb;text-decoration:none;font-weight:700;border-bottom:3px solid transparent}
 .site-nav a:hover{color:#fff}
 .site-nav a.active{color:#4fc3f7;border-bottom-color:#4fc3f7}
-.container{max-width:1320px;margin:0 auto}
+.container{max-width:1600px;margin:0 auto}
+.page-layout{display:grid;grid-template-columns:282px minmax(0,1fr);gap:14px;align-items:start}
+.page-layout.sidebar-collapsed{grid-template-columns:44px minmax(0,1fr)}
+.stock-panel{position:sticky;top:12px;height:calc(100vh - 44px);min-height:520px;background:#111d27;border:1px solid #1e2d3a;border-radius:8px;overflow:hidden;display:flex;flex-direction:column}
+.sidebar-collapsed .stock-panel{align-items:center}
+.stock-panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;border-bottom:1px solid #1e2d3a}
+.stock-panel-title{font-size:12px;font-weight:800;color:#d7e2ee;white-space:nowrap}
+.icon-btn{width:28px;height:28px;border:1px solid #2a3a4a;background:#1a2a38;color:#99aabb;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-weight:800}
+.icon-btn:hover{border-color:#4fc3f7;color:#fff}
+.stock-panel-body{padding:10px;display:flex;flex-direction:column;gap:8px;min-height:0;flex:1}
+.sidebar-collapsed .stock-panel-title,.sidebar-collapsed .stock-panel-body{display:none}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:10px;color:#667788;font-weight:800;text-transform:uppercase;letter-spacing:.2px}
+.select,.stock-search{width:100%;border:1px solid #2a3a4a;background:#172635;color:#dce8f4;border-radius:5px;padding:7px 8px;font-size:12px;outline:none}
+.select:focus,.stock-search:focus{border-color:#4fc3f7}
+.stock-nav{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.stock-list{min-height:0;overflow:auto;border:1px solid #1e2d3a;border-radius:6px;background:#0f1923}
+.stock-row{width:100%;display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:6px;align-items:center;border:none;border-bottom:1px solid #172635;background:transparent;color:#c7d2de;text-align:left;padding:7px 8px;cursor:pointer}
+.stock-row:hover{background:#172635}
+.stock-row.active{background:#14344a;color:#fff}
+.stock-rank{font-family:"SF Mono","Fira Code",monospace;font-size:10px;color:#667788}
+.stock-main{min-width:0}
+.stock-symbol{font-family:"SF Mono","Fira Code",monospace;font-size:12px;font-weight:800;color:#4fc3f7}
+.stock-name{font-size:10px;color:#7e8d9d;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stock-value{font-family:"SF Mono","Fira Code",monospace;font-size:11px;font-weight:800}
+.stock-value.up{color:#4caf50}.stock-value.down{color:#ff5252}
+.main-panel{min-width:0}
 .topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:12px;flex-wrap:wrap}
 .identity{display:flex;flex-direction:column;gap:4px}
 .symbol-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -27,6 +53,7 @@ h1{font-size:24px;color:#fff;font-weight:800;letter-spacing:0}
 .btn{border:1px solid #2a3a4a;background:#1a2a38;color:#99aabb;border-radius:5px;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none}
 .btn:hover{border-color:#4fc3f7;color:#fff}
 .btn.active{background:#4fc3f7;border-color:#4fc3f7;color:#0f1923}
+.mobile-switcher{display:none}
 .chart-shell{background:#111d27;border:1px solid #1e2d3a;border-radius:8px;overflow:hidden}
 .chart-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #1e2d3a;flex-wrap:wrap}
 .toolbar-left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
@@ -41,6 +68,14 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair}
 @media(max-width:768px){
   body{padding:10px}
   .site-nav a{padding:10px 12px}
+  .page-layout{display:block}
+  .stock-panel{position:fixed;left:10px;right:10px;top:62px;bottom:10px;height:auto;min-height:0;z-index:20;box-shadow:0 20px 60px rgba(0,0,0,.45);display:none}
+  .stock-panel.open{display:flex}
+  .sidebar-collapsed .stock-panel-title,.sidebar-collapsed .stock-panel-body{display:flex}
+  .sidebar-collapsed .stock-panel{align-items:stretch}
+  .stock-panel-body{display:flex}
+  .mobile-switcher{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:0 0 10px}
+  .mobile-switcher .select{flex:1;min-width:132px;width:auto}
   h1{font-size:19px}
   .last-price{font-size:18px}
   .chart-wrap{height:62vh;min-height:360px}
@@ -55,6 +90,69 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair}
 </nav>
 
 <main class="container">
+  <div class="page-layout" id="pageLayout">
+    <aside class="stock-panel" id="stockPanel" aria-label="Stock list">
+      <div class="stock-panel-head">
+        <span class="stock-panel-title">Stocks</span>
+        <button class="icon-btn" id="panelToggle" title="Toggle stock list" aria-label="Toggle stock list">‹</button>
+      </div>
+      <div class="stock-panel-body">
+        <div class="field">
+          <label for="universeSelect">Universe</label>
+          <select class="select" id="universeSelect"></select>
+        </div>
+        <div class="field">
+          <label for="sortSelect">Sort</label>
+          <select class="select" id="sortSelect">
+            <option value="gain">Gain</option>
+            <option value="rank">Rank</option>
+            <option value="price">Price</option>
+            <option value="marketCapNum">Market Cap</option>
+            <option value="symbol">Symbol</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="metricSelect">Period</label>
+          <select class="select" id="metricSelect">
+            <option value="d">1D</option>
+            <option value="w">1W</option>
+            <option value="m">1M</option>
+            <option value="m2">2M</option>
+            <option value="q">3M</option>
+            <option value="h">6M</option>
+            <option value="y">YTD</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="directionSelect">Direction</label>
+          <select class="select" id="directionSelect">
+            <option value="desc">High to low</option>
+            <option value="asc">Low to high</option>
+          </select>
+        </div>
+        <input class="stock-search" id="stockSearch" placeholder="Search symbol or name">
+        <div class="stock-nav">
+          <button class="btn" id="prevStock" type="button">Prev</button>
+          <button class="btn" id="nextStock" type="button">Next</button>
+        </div>
+        <div class="stock-list" id="stockList"></div>
+      </div>
+    </aside>
+
+    <section class="main-panel">
+      <div class="mobile-switcher">
+        <button class="btn" id="mobileListToggle" type="button">Stocks</button>
+        <select class="select" id="mobileSortSelect" aria-label="Mobile stock sort">
+          <option value="gain">Gain</option>
+          <option value="rank">Rank</option>
+          <option value="price">Price</option>
+          <option value="marketCapNum">Market Cap</option>
+          <option value="symbol">Symbol</option>
+        </select>
+        <button class="btn" id="mobilePrevStock" type="button">Prev</button>
+        <button class="btn" id="mobileNextStock" type="button">Next</button>
+      </div>
+
   <div class="topbar">
     <div class="identity">
       <div class="symbol-line">
@@ -78,9 +176,9 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair}
       <div class="toolbar-left">
         <div class="actions" id="ranges">
           <button class="btn" data-range="63">3M</button>
-          <button class="btn active" data-range="126">6M</button>
+          <button class="btn" data-range="126">6M</button>
           <button class="btn" data-range="252">1Y</button>
-          <button class="btn" data-range="all">All</button>
+          <button class="btn active" data-range="all">All</button>
         </div>
         <div class="ma-legend" id="maLegend"></div>
       </div>
@@ -91,30 +189,63 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair}
       <div class="status" id="status">Loading price data...</div>
     </div>
   </section>
+    </section>
+  </div>
 </main>
 
 <script>
 const params = new URLSearchParams(window.location.search);
-const symbol = (params.get('symbol') || '').trim().toUpperCase();
-const fallbackName = params.get('name') || symbol;
+let currentSymbol = (params.get('symbol') || '').trim().toUpperCase();
+let fallbackName = params.get('name') || currentSymbol;
 const canvas = document.getElementById('chart');
 const ctx = canvas.getContext('2d');
 const statusEl = document.getElementById('status');
+const pageLayout = document.getElementById('pageLayout');
+const stockPanel = document.getElementById('stockPanel');
+const stockListEl = document.getElementById('stockList');
+const universeSelect = document.getElementById('universeSelect');
+const sortSelect = document.getElementById('sortSelect');
+const mobileSortSelect = document.getElementById('mobileSortSelect');
+const metricSelect = document.getElementById('metricSelect');
+const directionSelect = document.getElementById('directionSelect');
+const stockSearch = document.getElementById('stockSearch');
 const MOVING_AVERAGES = [
   { key:'ma10', label:'MA10', period:10, color:'#ffffff', alpha:0.2 },
   { key:'ma20', label:'MA20', period:20, color:'#4fc3f7', alpha:0.95 },
   { key:'ma50', label:'MA50', period:50, color:'#b07cff', alpha:0.5 },
   { key:'ma200', label:'MA200', period:200, color:'#ff8a65', alpha:0.5 }
 ];
-const state = { candles: [], start: 0, end: 0, hover: -1, dragging: false, dragX: 0, dragStart: 0, dragEnd: 0 };
+const UNIVERSE_LABELS = { r2kRaw:'Russell 2000', spRaw:'S&P 500', ndqRaw:'Nasdaq 100', all:'All Stocks' };
+const SORT_LABELS = { gain:'Gain', rank:'Rank', price:'Price', marketCapNum:'Market Cap', symbol:'Symbol' };
+const DEFAULT_VISIBLE_CANDLES = 220;
+const state = {
+  candles: [], start: 0, end: 0, hover: -1, dragging: false, dragX: 0, dragStart: 0, dragEnd: 0,
+  marketIndex: null, stockRows: [], activeRange: 'all',
+  universe: params.get('universe') || 'r2kRaw',
+  metric: params.get('metric') || 'd',
+  sortKey: normalizeSortKey(params.get('sort') || 'gain'),
+  sortDir: params.get('dir') === 'asc' ? 'asc' : 'desc'
+};
 
-document.getElementById('symbol').textContent = symbol || 'UNKNOWN';
+document.getElementById('symbol').textContent = currentSymbol || 'UNKNOWN';
 document.getElementById('name').textContent = fallbackName || 'Stock chart';
-document.title = symbol ? symbol + ' Candlestick Chart' : 'Stock Chart';
+document.title = currentSymbol ? currentSymbol + ' Candlestick Chart' : 'Stock Chart';
+
+function normalizeSortKey(key){
+  if(key === 'mcapNum') return 'marketCapNum';
+  if(['gain','rank','price','marketCapNum','symbol'].includes(key)) return key;
+  return 'gain';
+}
 
 function fmt(value, digits=2){
   if(value === null || value === undefined || Number.isNaN(Number(value))) return '--';
   return Number(value).toFixed(digits);
+}
+
+function fmtPct(value){
+  if(value === null || value === undefined || Number.isNaN(Number(value))) return '--';
+  const numeric = Number(value);
+  return (numeric >= 0 ? '+' : '') + numeric.toFixed(2) + '%';
 }
 
 function setStatus(text){
@@ -124,10 +255,12 @@ function setStatus(text){
 
 function setRange(range){
   const total = state.candles.length;
-  const count = range === 'all' ? total : Math.min(total, Number(range));
+  const count = range === 'all' ? Math.min(total, DEFAULT_VISIBLE_CANDLES) : Math.min(total, Number(range));
+  state.activeRange = range;
   state.end = total;
   state.start = Math.max(0, total - count);
   state.hover = -1;
+  document.querySelectorAll('#ranges .btn').forEach(item => item.classList.toggle('active', item.dataset.range === range));
   draw();
 }
 
@@ -145,6 +278,7 @@ function renderHeader(data){
   document.getElementById('lastPrice').textContent = fmt(last.close);
   changeEl.textContent = (diff >= 0 ? '+' : '') + fmt(diff) + ' (' + (pct >= 0 ? '+' : '') + fmt(pct) + '%)';
   changeEl.className = 'change ' + (diff >= 0 ? 'up' : 'down');
+  document.title = data.symbol + ' Candlestick Chart';
 }
 
 function resizeCanvas(){
@@ -233,6 +367,18 @@ function drawGrid(left, top, right, priceBottom, volumeTop, bottom, width, heigh
   ctx.fillText(maxVolume ? Math.round(maxVolume / 1000000) + 'M' : '', width - 10, volumeTop + 8);
 }
 
+function updateHistoryMeta(){
+  if(!state.candles.length) return;
+  const first = state.candles[0].time;
+  const last = state.candles[state.candles.length - 1].time;
+  const visible = visibleCandles();
+  const shown = visible.length ? visible[0].time + ' to ' + visible[visible.length - 1].time : '--';
+  const hint = document.querySelector('.hint');
+  if(hint){
+    hint.textContent = 'History ' + first + ' to ' + last + ' · Showing ' + shown + ' · Drag to pan · Mouse wheel to zoom';
+  }
+}
+
 function draw(){
   const rect = canvas.getBoundingClientRect();
   const width = rect.width;
@@ -240,6 +386,7 @@ function draw(){
   ctx.clearRect(0, 0, width, height);
   const candles = visibleCandles();
   if(!candles.length) return;
+  updateHistoryMeta();
 
   const left = 58, right = 76, top = 22, bottom = 36;
   const volumeHeight = Math.max(64, Math.min(92, height * 0.18));
@@ -308,7 +455,7 @@ function draw(){
     ctx.setLineDash([]);
 
     const lines = [
-      c.time + '  ' + symbol,
+      c.time + '  ' + currentSymbol,
       'O ' + fmt(c.open) + '  H ' + fmt(c.high),
       'L ' + fmt(c.low) + '  C ' + fmt(c.close),
       'MA10 ' + fmt(c.ma10) + '  MA20 ' + fmt(c.ma20),
@@ -389,26 +536,199 @@ canvas.addEventListener('wheel', event => {
 document.getElementById('ranges').addEventListener('click', event => {
   const button = event.target.closest('button[data-range]');
   if(!button) return;
-  document.querySelectorAll('#ranges .btn').forEach(item => item.classList.remove('active'));
-  button.classList.add('active');
   setRange(button.dataset.range);
 });
 
+function rowSymbol(row){ return (row.symbol || row.t || '').toUpperCase(); }
+function rowName(row){ return row.name || row.n || rowSymbol(row); }
+function rowSector(row){ return row.sector || row.s || 'Sector'; }
+function rowMarketCap(row){ return row.marketCap || row.c || 'Market cap'; }
+function rowPrice(row){ return Number(row.price ?? row.p ?? 0); }
+function rowMarketCapNum(row){ return Number(row.marketCapNum ?? row.mn ?? 0); }
+function rowRank(row){ return Number(row.rank ?? row.r ?? 9999); }
+function rowMetric(row){ return Number(row[state.metric] ?? 0); }
+
+function groupEntries(){
+  const groups = state.marketIndex && state.marketIndex.groups ? state.marketIndex.groups : {};
+  const entries = Object.keys(groups).map(key => ({ key, label: groups[key].label || UNIVERSE_LABELS[key] || key }));
+  if(entries.length) entries.push({ key:'all', label:'All Stocks' });
+  return entries.length ? entries : [{ key:'all', label:'All Stocks' }];
+}
+
+function getBaseRows(){
+  const index = state.marketIndex || {};
+  const groups = index.groups || {};
+  if(state.universe !== 'all' && groups[state.universe] && groups[state.universe].stocks){
+    return groups[state.universe].stocks;
+  }
+  const source = Object.keys(groups).length
+    ? Object.values(groups).flatMap(group => group.stocks || [])
+    : (index.stocks || []);
+  const seen = new Set();
+  return source.filter(row => {
+    const symbol = rowSymbol(row);
+    if(!symbol || seen.has(symbol)) return false;
+    seen.add(symbol);
+    return true;
+  });
+}
+
+function getSortValue(row){
+  if(state.sortKey === 'gain') return rowMetric(row);
+  if(state.sortKey === 'rank') return rowRank(row);
+  if(state.sortKey === 'price') return rowPrice(row);
+  if(state.sortKey === 'marketCapNum') return rowMarketCapNum(row);
+  return rowSymbol(row);
+}
+
+function sortedRows(){
+  const query = stockSearch.value.trim().toLowerCase();
+  let rows = getBaseRows();
+  if(query){
+    rows = rows.filter(row => rowSymbol(row).toLowerCase().includes(query) || rowName(row).toLowerCase().includes(query));
+  }
+  rows = rows.slice().sort((a,b) => {
+    const av = getSortValue(a);
+    const bv = getSortValue(b);
+    if(typeof av === 'string' || typeof bv === 'string'){
+      return state.sortDir === 'asc' ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
+    }
+    return state.sortDir === 'asc' ? av - bv : bv - av;
+  });
+  return rows;
+}
+
+function valueLabel(row){
+  if(state.sortKey === 'gain') return fmtPct(rowMetric(row));
+  if(state.sortKey === 'rank') return '#' + rowRank(row);
+  if(state.sortKey === 'price') return fmt(rowPrice(row));
+  if(state.sortKey === 'marketCapNum') return rowMarketCap(row);
+  return rowSymbol(row);
+}
+
+function syncControls(){
+  const entries = groupEntries();
+  if(!entries.some(entry => entry.key === state.universe)) state.universe = entries[0].key;
+  universeSelect.innerHTML = entries.map(entry => '<option value="'+entry.key+'">'+entry.label+'</option>').join('');
+  universeSelect.value = state.universe;
+  sortSelect.value = state.sortKey;
+  mobileSortSelect.value = state.sortKey;
+  metricSelect.value = state.metric;
+  directionSelect.value = state.sortDir;
+}
+
+function renderStockList(){
+  syncControls();
+  state.stockRows = sortedRows();
+  const currentIndex = state.stockRows.findIndex(row => rowSymbol(row) === currentSymbol);
+  stockListEl.innerHTML = state.stockRows.map((row, index) => {
+    const symbol = rowSymbol(row);
+    const active = symbol === currentSymbol ? ' active' : '';
+    const value = valueLabel(row);
+    const numeric = state.sortKey === 'gain' ? rowMetric(row) : null;
+    const valueClass = numeric === null ? '' : (numeric >= 0 ? ' up' : ' down');
+    return '<button class="stock-row'+active+'" data-symbol="'+symbol+'" type="button">' +
+      '<span class="stock-rank">'+(index + 1)+'</span>' +
+      '<span class="stock-main"><span class="stock-symbol">'+symbol+'</span><span class="stock-name">'+rowName(row)+'</span></span>' +
+      '<span class="stock-value'+valueClass+'">'+value+'</span>' +
+      '</button>';
+  }).join('');
+  if(currentIndex >= 0){
+    const active = stockListEl.querySelector('.stock-row.active');
+    if(active) active.scrollIntoView({ block:'nearest' });
+  }
+}
+
+function currentRow(){
+  return state.stockRows.find(row => rowSymbol(row) === currentSymbol);
+}
+
+function updateUrl(row){
+  const next = new URLSearchParams();
+  next.set('symbol', currentSymbol);
+  next.set('name', rowName(row || currentRow() || { symbol: currentSymbol, name: fallbackName }));
+  next.set('universe', state.universe);
+  next.set('metric', state.metric);
+  next.set('sort', state.sortKey);
+  next.set('dir', state.sortDir);
+  window.history.replaceState(null, '', window.location.pathname + '?' + next.toString());
+}
+
+async function switchStock(symbol){
+  const row = state.stockRows.find(item => rowSymbol(item) === symbol);
+  currentSymbol = symbol;
+  fallbackName = row ? rowName(row) : symbol;
+  renderStockList();
+  updateUrl(row);
+  await loadChart();
+  stockPanel.classList.remove('open');
+}
+
+function moveStock(offset){
+  if(!state.stockRows.length) return;
+  let index = state.stockRows.findIndex(row => rowSymbol(row) === currentSymbol);
+  if(index < 0) index = 0;
+  const next = Math.max(0, Math.min(state.stockRows.length - 1, index + offset));
+  switchStock(rowSymbol(state.stockRows[next]));
+}
+
+function setupStockControls(){
+  document.getElementById('panelToggle').addEventListener('click', () => {
+    if(window.matchMedia('(max-width: 768px)').matches){
+      stockPanel.classList.toggle('open');
+    }else{
+      pageLayout.classList.toggle('sidebar-collapsed');
+      document.getElementById('panelToggle').textContent = pageLayout.classList.contains('sidebar-collapsed') ? '›' : '‹';
+      setTimeout(resizeCanvas, 80);
+    }
+  });
+  document.getElementById('mobileListToggle').addEventListener('click', () => stockPanel.classList.toggle('open'));
+  stockListEl.addEventListener('click', event => {
+    const button = event.target.closest('.stock-row[data-symbol]');
+    if(button) switchStock(button.dataset.symbol);
+  });
+  universeSelect.addEventListener('change', () => { state.universe = universeSelect.value; renderStockList(); updateUrl(currentRow()); });
+  sortSelect.addEventListener('change', () => { state.sortKey = normalizeSortKey(sortSelect.value); renderStockList(); updateUrl(currentRow()); });
+  mobileSortSelect.addEventListener('change', () => { state.sortKey = normalizeSortKey(mobileSortSelect.value); renderStockList(); updateUrl(currentRow()); });
+  metricSelect.addEventListener('change', () => { state.metric = metricSelect.value; renderStockList(); updateUrl(currentRow()); });
+  directionSelect.addEventListener('change', () => { state.sortDir = directionSelect.value === 'asc' ? 'asc' : 'desc'; renderStockList(); updateUrl(currentRow()); });
+  stockSearch.addEventListener('input', renderStockList);
+  document.getElementById('prevStock').addEventListener('click', () => moveStock(-1));
+  document.getElementById('nextStock').addEventListener('click', () => moveStock(1));
+  document.getElementById('mobilePrevStock').addEventListener('click', () => moveStock(-1));
+  document.getElementById('mobileNextStock').addEventListener('click', () => moveStock(1));
+}
+
+async function loadMarketIndex(){
+  try{
+    const response = await fetch('market_data/index.json', { cache:'no-store' });
+    if(!response.ok) throw new Error('No market index');
+    state.marketIndex = await response.json();
+  }catch(error){
+    state.marketIndex = { stocks: currentSymbol ? [{ symbol: currentSymbol, name: fallbackName }] : [] };
+  }
+  setupStockControls();
+  renderStockList();
+}
+
 async function loadChart(){
-  if(!symbol){
+  if(!currentSymbol){
     setStatus('Missing stock symbol.');
     return;
   }
   try{
-    const response = await fetch('market_data/' + encodeURIComponent(symbol) + '.json', { cache:'no-store' });
-    if(!response.ok) throw new Error('No chart data found for ' + symbol);
+    setStatus('Loading price data...');
+    const response = await fetch('market_data/' + encodeURIComponent(currentSymbol) + '.json', { cache:'no-store' });
+    if(!response.ok) throw new Error('No chart data found for ' + currentSymbol);
     const data = await response.json();
-    if(!data.prices || !data.prices.length) throw new Error('Chart data is empty for ' + symbol);
+    if(!data.prices || !data.prices.length) throw new Error('Chart data is empty for ' + currentSymbol);
+    currentSymbol = data.symbol;
+    fallbackName = data.name || fallbackName || currentSymbol;
     state.candles = data.prices;
     calculateMovingAverages(state.candles);
     renderHeader(data);
     setStatus('');
-    setRange('126');
+    setRange(state.activeRange || 'all');
   }catch(error){
     setStatus(error.message || 'Unable to load chart data.');
   }
@@ -416,6 +736,7 @@ async function loadChart(){
 
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
+loadMarketIndex();
 loadChart();
 </script>
 </body>
