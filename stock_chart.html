@@ -57,6 +57,12 @@ h1{font-size:24px;color:#fff;font-weight:800;letter-spacing:0}
 .chart-shell{background:#111d27;border:1px solid #1e2d3a;border-radius:8px;overflow:hidden}
 .chart-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #1e2d3a;flex-wrap:wrap}
 .toolbar-left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.candle-readout{display:flex;align-items:center;gap:10px;flex-wrap:wrap;width:100%;padding-top:2px;font-family:"SF Mono","Fira Code",monospace;font-size:12px;color:#9aaabd}
+.candle-readout strong{color:#e9f2fb}
+.candle-readout span{white-space:nowrap}
+.candle-readout .close-price,.candle-readout .price-change{font-weight:800}
+.candle-readout .up{color:#00c853}
+.candle-readout .down{color:#ff5252}
 .ma-legend{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:"SF Mono","Fira Code",monospace;font-size:11px;color:#8899aa}
 .ma-item{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
 .ma-dot{width:18px;height:2px;border-radius:2px;display:inline-block}
@@ -78,6 +84,7 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:none}
   .mobile-switcher .select{flex:1;min-width:132px;width:auto}
   h1{font-size:19px}
   .last-price{font-size:18px}
+  .candle-readout{font-size:11px;gap:7px;line-height:1.45}
   .chart-wrap{height:62vh;min-height:360px}
   .hint{display:none}
 }
@@ -183,6 +190,7 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:none}
         <div class="ma-legend" id="maLegend"></div>
       </div>
       <div class="hint">Drag to pan · Wheel or pinch to zoom · Move cursor for OHLC</div>
+      <div class="candle-readout" id="candleReadout">Select a candlestick</div>
     </div>
     <div class="chart-wrap">
       <canvas id="chart"></canvas>
@@ -200,6 +208,7 @@ let fallbackName = params.get('name') || currentSymbol;
 const canvas = document.getElementById('chart');
 const ctx = canvas.getContext('2d');
 const statusEl = document.getElementById('status');
+const candleReadout = document.getElementById('candleReadout');
 const pageLayout = document.getElementById('pageLayout');
 const stockPanel = document.getElementById('stockPanel');
 const stockListEl = document.getElementById('stockList');
@@ -312,6 +321,26 @@ function renderMaLegend(candle){
     const value = candle && candle[ma.key] ? fmt(candle[ma.key]) : '--';
     return '<span class="ma-item" style="color:'+ma.color+';opacity:'+ma.alpha+'"><span class="ma-dot" style="background:'+ma.color+'"></span>'+ma.label+' '+value+'</span>';
   }).join('');
+}
+
+function renderCandleReadout(candle, index){
+  if(!candle){
+    candleReadout.textContent = 'Select a candlestick';
+    return;
+  }
+  const prev = state.candles[Math.max(0, index - 1)] || candle;
+  const diff = candle.close - prev.close;
+  const pct = prev.close ? diff / prev.close * 100 : 0;
+  const direction = diff >= 0 ? 'up' : 'down';
+  const sign = diff >= 0 ? '+' : '';
+  candleReadout.innerHTML =
+    '<strong>'+candle.time+' '+currentSymbol+'</strong>' +
+    '<span>O '+fmt(candle.open)+'</span>' +
+    '<span>H '+fmt(candle.high)+'</span>' +
+    '<span>L '+fmt(candle.low)+'</span>' +
+    '<span>C <b class="close-price '+direction+'">'+fmt(candle.close)+'</b></span>' +
+    '<span class="price-change '+direction+'">'+sign+fmt(diff)+' ('+sign+fmt(pct)+'%)</span>' +
+    '<span>Vol '+(candle.volume ? Math.round(candle.volume / 1000000)+'M' : '--')+'</span>';
 }
 
 function drawMovingAverage(ma, candles, xFor, yFor){
@@ -440,6 +469,7 @@ function draw(){
 
   MOVING_AVERAGES.forEach(ma => drawMovingAverage(ma, candles, xFor, yFor));
 
+  const readoutIndex = state.hover >= state.start && state.hover < state.end ? state.hover : state.end - 1;
   if(state.hover >= state.start && state.hover < state.end){
     const local = state.hover - state.start;
     const c = state.candles[state.hover];
@@ -454,29 +484,9 @@ function draw(){
     ctx.lineTo(width - right, y);
     ctx.stroke();
     ctx.setLineDash([]);
-
-    const lines = [
-      c.time + '  ' + currentSymbol,
-      'O ' + fmt(c.open) + '  H ' + fmt(c.high),
-      'L ' + fmt(c.low) + '  C ' + fmt(c.close),
-      'MA10 ' + fmt(c.ma10) + '  MA20 ' + fmt(c.ma20),
-      'MA50 ' + fmt(c.ma50) + '  MA200 ' + fmt(c.ma200),
-      'Vol ' + (c.volume ? Math.round(c.volume / 1000000) + 'M' : '--')
-    ];
-    const boxW = 228, boxH = 112;
-    const boxX = Math.min(width - right - boxW, Math.max(left, x + 12));
-    const boxY = top + 8;
-    ctx.fillStyle = 'rgba(15,25,35,0.92)';
-    ctx.strokeStyle = '#2a3a4a';
-    ctx.fillRect(boxX, boxY, boxW, boxH);
-    ctx.strokeRect(boxX, boxY, boxW, boxH);
-    ctx.fillStyle = '#c0d0e0';
-    ctx.font = '11px SF Mono, Fira Code, monospace';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
-    lines.forEach((line, i) => ctx.fillText(line, boxX + 10, boxY + 9 + i * 16));
   }
-  renderMaLegend(state.hover >= state.start && state.hover < state.end ? state.candles[state.hover] : state.candles[state.end - 1]);
+  renderMaLegend(state.candles[readoutIndex]);
+  renderCandleReadout(state.candles[readoutIndex], readoutIndex);
 }
 
 function nearestIndex(clientX){
