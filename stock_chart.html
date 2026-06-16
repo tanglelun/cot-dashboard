@@ -573,6 +573,12 @@ function updateDrag(clientX){
   state.end = start + count;
 }
 
+function inspectTouch(clientX){
+  state.dragging = false;
+  state.pinching = false;
+  state.hover = nearestIndex(clientX);
+}
+
 function endGesture(){
   state.dragging = false;
   state.pinching = false;
@@ -636,11 +642,11 @@ window.addEventListener('mouseup', endGesture);
 
 canvas.addEventListener('touchstart', event => {
   if(event.touches.length === 1){
-    beginDrag(event.touches[0].clientX);
-    state.hover = nearestIndex(event.touches[0].clientX);
+    inspectTouch(event.touches[0].clientX);
   }else if(event.touches.length >= 2){
     beginPinch(event.touches);
   }
+  draw();
   event.preventDefault();
 }, { passive:false });
 
@@ -648,8 +654,7 @@ canvas.addEventListener('touchmove', event => {
   if(event.touches.length >= 2){
     updatePinch(event.touches);
   }else if(event.touches.length === 1){
-    updateDrag(event.touches[0].clientX);
-    state.hover = nearestIndex(event.touches[0].clientX);
+    inspectTouch(event.touches[0].clientX);
   }
   draw();
   event.preventDefault();
@@ -659,10 +664,11 @@ canvas.addEventListener('touchend', event => {
   if(event.touches.length >= 2){
     beginPinch(event.touches);
   }else if(event.touches.length === 1){
-    beginDrag(event.touches[0].clientX);
+    inspectTouch(event.touches[0].clientX);
   }else{
     endGesture();
   }
+  draw();
   event.preventDefault();
 }, { passive:false });
 
