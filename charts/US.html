@@ -5,45 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>30-Year T-Bond (US)</title>
     <style>
+        :root {
+            --tv-bg: #0b0f19;
+            --tv-panel: #131722;
+            --tv-panel-2: #0f131d;
+            --tv-border: #2a2e39;
+            --tv-border-soft: #1f2430;
+            --tv-text: #d1d4dc;
+            --tv-muted: #787b86;
+            --tv-faint: #5d606b;
+            --tv-blue: #2962ff;
+            --tv-green: #26a69a;
+            --tv-red: #ef5350;
+            --tv-hover: #1e222d;
+        }
         * { box-sizing: border-box; }
         html, body { height: 100%; }
-        body { margin: 0; background: #f7f8fb; color: #172033; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-        .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 20px 10px; }
-        h1 { margin: 0; font-size: 20px; font-weight: 700; }
-        .meta { color: #5e6a7d; font-size: 13px; white-space: nowrap; }
-        .legend-inline { display: flex; align-items: center; gap: 14px; margin-top: 4px; color: #5e6a7d; font-size: 12px; }
+        body { margin: 0; background: var(--tv-bg); color: var(--tv-text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; padding: 10px; }
+        .site-nav { display: flex; align-items: center; gap: 4px; max-width: 1600px; margin: 0 auto 10px; border: 1px solid var(--tv-border); background: var(--tv-panel); border-radius: 6px; height: 42px; padding: 0 6px; }
+        .site-nav a { display: inline-flex; align-items: center; height: 30px; padding: 0 12px; color: var(--tv-muted); text-decoration: none; font-weight: 700; border-radius: 4px; font-size: 13px; }
+        .site-nav a:hover { color: var(--tv-text); background: var(--tv-hover); }
+        .site-nav a.active { color: #fff; background: var(--tv-blue); }
+        .page { max-width: 1600px; height: calc(100vh - 62px); margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+        .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 58px; padding: 8px 12px; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; }
+        h1 { margin: 0; font-size: 20px; font-weight: 800; color: #fff; letter-spacing: 0; }
+        .meta { color: var(--tv-muted); font-size: 12px; white-space: nowrap; }
+        .legend-inline { display: flex; align-items: center; gap: 14px; margin-top: 4px; color: var(--tv-muted); font-size: 12px; }
         .legend-item { display: inline-flex; align-items: center; gap: 6px; }
         .legend-swatch { width: 18px; height: 3px; border-radius: 999px; display: inline-block; }
-        .legend-bar { background: #0a8f62; }
-        .legend-line { background: #2f7df6; }
-        .chart-wrap { position: relative; height: calc(100vh - 62px); min-height: 420px; padding: 0 14px 14px; }
-        canvas { display: block; width: 100%; height: 100%; background: #ffffff; border: 1px solid #dbe1ea; border-radius: 8px; }
-        .tooltip { position: fixed; pointer-events: none; display: none; background: rgba(23, 32, 51, 0.95); color: white; padding: 8px 10px; border-radius: 6px; font-size: 12px; line-height: 1.35; box-shadow: 0 8px 24px rgba(23, 32, 51, 0.22); }
-        .value-pos { color: #0a8f62; }
-        .value-neg { color: #c7354f; }
+        .legend-bar { background: var(--tv-green); }
+        .legend-line { background: var(--tv-blue); }
+        .chart-wrap { position: relative; flex: 1; min-height: 420px; }
+        canvas { display: block; width: 100%; height: 100%; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; }
+        .tooltip { position: fixed; pointer-events: none; display: none; background: rgba(19, 23, 34, 0.96); color: var(--tv-text); padding: 8px 10px; border-radius: 4px; border: 1px solid var(--tv-border); font-size: 12px; line-height: 1.35; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35); }
+        .value-pos { color: var(--tv-green); }
+        .value-neg { color: var(--tv-red); }
         .dragging { cursor: grabbing; }
         @media (max-width: 640px) {
             .toolbar { align-items: flex-start; flex-direction: column; gap: 4px; }
             .meta { white-space: normal; }
-            .chart-wrap { height: calc(100vh - 92px); min-height: 360px; }
+            .page { height: calc(100dvh - 62px); }
+            .chart-wrap { min-height: 360px; }
         }
     </style>
 </head>
 <body>
-    <div class="toolbar">
-        <div>
-            <h1>30-Year T-Bond (US)</h1>
-            <div class="legend-inline">
-                <span class="legend-item"><span class="legend-swatch legend-bar"></span>Non-Commercial Net</span>
-                <span class="legend-item"><span class="legend-swatch legend-line"></span>Futures Index (base=100)</span>
+    <nav class="site-nav" aria-label="Primary">
+        <a href="../index.html" class="active">Non-Commercial</a>
+        <a href="../russell2000_top100.html">Maket</a>
+    </nav>
+    <main class="page">
+        <div class="toolbar">
+            <div>
+                <h1>30-Year T-Bond (US)</h1>
+                <div class="legend-inline">
+                    <span class="legend-item"><span class="legend-swatch legend-bar"></span>Non-Commercial Net</span>
+                    <span class="legend-item"><span class="legend-swatch legend-line"></span>Futures Index (base=100)</span>
+                </div>
             </div>
+            <div id="meta" class="meta">Non-Commercial Net | Weekly bars | Last 227 reports</div>
         </div>
-        <div id="meta" class="meta">Non-Commercial Net | Weekly bars | Last 227 reports</div>
-    </div>
-    <div class="chart-wrap">
-        <canvas id="chart"></canvas>
-        <div id="tooltip" class="tooltip"></div>
-    </div>
+        <div class="chart-wrap">
+            <canvas id="chart"></canvas>
+            <div id="tooltip" class="tooltip"></div>
+        </div>
+    </main>
     <script>
         const points = [{"date": "2022-02-08", "value": -33025, "index": null}, {"date": "2022-02-15", "value": -24845, "index": null}, {"date": "2022-02-22", "value": -14738, "index": null}, {"date": "2022-03-01", "value": -4529, "index": null}, {"date": "2022-03-08", "value": 47368, "index": null}, {"date": "2022-03-15", "value": 44238, "index": null}, {"date": "2022-03-22", "value": 32551, "index": null}, {"date": "2022-03-29", "value": 16001, "index": null}, {"date": "2022-04-05", "value": 1203, "index": null}, {"date": "2022-04-12", "value": -5163, "index": null}, {"date": "2022-04-19", "value": -11238, "index": null}, {"date": "2022-04-26", "value": 20099, "index": null}, {"date": "2022-05-03", "value": 13511, "index": null}, {"date": "2022-05-10", "value": 15453, "index": null}, {"date": "2022-05-17", "value": 32007, "index": null}, {"date": "2022-05-24", "value": 28502, "index": null}, {"date": "2022-05-31", "value": 19761, "index": null}, {"date": "2022-06-07", "value": 4963, "index": null}, {"date": "2022-06-14", "value": -29400, "index": null}, {"date": "2022-06-21", "value": -19322, "index": null}, {"date": "2022-06-28", "value": -38253, "index": null}, {"date": "2022-07-05", "value": -27673, "index": null}, {"date": "2022-07-12", "value": -23218, "index": null}, {"date": "2022-07-19", "value": -42102, "index": null}, {"date": "2022-07-26", "value": -46645, "index": null}, {"date": "2022-08-02", "value": -56053, "index": null}, {"date": "2022-08-09", "value": -47586, "index": null}, {"date": "2022-08-16", "value": -47325, "index": null}, {"date": "2022-08-23", "value": -51131, "index": null}, {"date": "2022-08-30", "value": -68834, "index": null}, {"date": "2022-09-06", "value": -85217, "index": null}, {"date": "2022-09-13", "value": -94971, "index": null}, {"date": "2022-09-20", "value": -99539, "index": null}, {"date": "2022-09-27", "value": -96552, "index": null}, {"date": "2022-10-04", "value": -103523, "index": null}, {"date": "2022-10-11", "value": -83792, "index": null}, {"date": "2022-10-18", "value": -86339, "index": null}, {"date": "2022-10-25", "value": -76559, "index": null}, {"date": "2022-11-01", "value": -95305, "index": null}, {"date": "2022-11-08", "value": -90725, "index": null}, {"date": "2022-11-15", "value": -97681, "index": null}, {"date": "2022-11-22", "value": -90484, "index": null}, {"date": "2022-11-29", "value": -103917, "index": null}, {"date": "2022-12-06", "value": -115361, "index": null}, {"date": "2022-12-13", "value": -116738, "index": null}, {"date": "2022-12-20", "value": -141337, "index": null}, {"date": "2022-12-27", "value": -151064, "index": null}, {"date": "2023-01-03", "value": -169258, "index": null}, {"date": "2023-01-10", "value": -157385, "index": null}, {"date": "2023-01-17", "value": -192393, "index": null}, {"date": "2023-01-24", "value": -195816, "index": null}, {"date": "2023-01-31", "value": -199076, "index": null}, {"date": "2023-02-07", "value": -181003, "index": null}, {"date": "2023-02-14", "value": -185220, "index": null}, {"date": "2023-02-21", "value": -154816, "index": null}, {"date": "2023-02-28", "value": -176734, "index": null}, {"date": "2023-03-07", "value": -173187, "index": null}, {"date": "2023-03-14", "value": -149992, "index": null}, {"date": "2023-03-21", "value": -99413, "index": null}, {"date": "2023-03-28", "value": -91399, "index": null}, {"date": "2023-04-04", "value": -129646, "index": null}, {"date": "2023-04-11", "value": -132584, "index": null}, {"date": "2023-04-18", "value": -116928, "index": null}, {"date": "2023-04-25", "value": -97368, "index": null}, {"date": "2023-05-02", "value": -89414, "index": null}, {"date": "2023-05-09", "value": -73129, "index": null}, {"date": "2023-05-16", "value": -61581, "index": null}, {"date": "2023-05-23", "value": -43236, "index": null}, {"date": "2023-05-30", "value": -59913, "index": null}, {"date": "2023-06-06", "value": -82926, "index": null}, {"date": "2023-06-13", "value": -99747, "index": null}, {"date": "2023-06-20", "value": -102301, "index": null}, {"date": "2023-06-27", "value": -115248, "index": null}, {"date": "2023-07-03", "value": -139929, "index": null}, {"date": "2023-07-11", "value": -130984, "index": null}, {"date": "2023-07-18", "value": -143294, "index": null}, {"date": "2023-07-25", "value": -145844, "index": null}, {"date": "2023-08-01", "value": -186676, "index": null}, {"date": "2023-08-08", "value": -199555, "index": null}, {"date": "2023-08-15", "value": -176734, "index": null}, {"date": "2023-08-22", "value": -179461, "index": null}, {"date": "2023-08-29", "value": -190600, "index": null}, {"date": "2023-09-05", "value": -198292, "index": null}, {"date": "2023-09-12", "value": -192687, "index": null}, {"date": "2023-09-19", "value": -201107, "index": null}, {"date": "2023-09-26", "value": -232811, "index": null}, {"date": "2023-10-03", "value": -239646, "index": null}, {"date": "2023-10-10", "value": -206446, "index": null}, {"date": "2023-10-17", "value": -182456, "index": null}, {"date": "2023-10-24", "value": -136238, "index": null}, {"date": "2023-10-31", "value": -155381, "index": null}, {"date": "2023-11-07", "value": -130798, "index": null}, {"date": "2023-11-14", "value": -128739, "index": null}, {"date": "2023-11-21", "value": -99983, "index": null}, {"date": "2023-11-28", "value": -102176, "index": null}, {"date": "2023-12-05", "value": -130079, "index": null}, {"date": "2023-12-12", "value": -136259, "index": null}, {"date": "2023-12-19", "value": -138006, "index": null}, {"date": "2023-12-26", "value": -143543, "index": null}, {"date": "2024-01-02", "value": -140625, "index": null}, {"date": "2024-01-09", "value": -155752, "index": null}, {"date": "2024-01-16", "value": -127752, "index": null}, {"date": "2024-01-23", "value": -129011, "index": null}, {"date": "2024-01-30", "value": -137502, "index": null}, {"date": "2024-02-06", "value": -142786, "index": null}, {"date": "2024-02-13", "value": -113371, "index": null}, {"date": "2024-02-20", "value": -94794, "index": null}, {"date": "2024-02-27", "value": -14038, "index": null}, {"date": "2024-03-05", "value": -58036, "index": null}, {"date": "2024-03-12", "value": -54533, "index": null}, {"date": "2024-03-19", "value": -22454, "index": null}, {"date": "2024-03-26", "value": -20585, "index": null}, {"date": "2024-04-02", "value": -55690, "index": null}, {"date": "2024-04-09", "value": -75190, "index": null}, {"date": "2024-04-16", "value": -15764, "index": null}, {"date": "2024-04-23", "value": -21171, "index": null}, {"date": "2024-04-30", "value": -23114, "index": null}, {"date": "2024-05-07", "value": -24669, "index": null}, {"date": "2024-05-14", "value": 4287, "index": null}, {"date": "2024-05-21", "value": 14176, "index": null}, {"date": "2024-05-28", "value": 43836, "index": null}, {"date": "2024-06-04", "value": -15490, "index": null}, {"date": "2024-06-11", "value": -11911, "index": null}, {"date": "2024-06-18", "value": -33337, "index": null}, {"date": "2024-06-25", "value": -50998, "index": null}, {"date": "2024-07-02", "value": -21606, "index": null}, {"date": "2024-07-09", "value": -34421, "index": null}, {"date": "2024-07-16", "value": -47150, "index": null}, {"date": "2024-07-23", "value": -64159, "index": null}, {"date": "2024-07-30", "value": -45919, "index": null}, {"date": "2024-08-06", "value": -57855, "index": null}, {"date": "2024-08-13", "value": -26330, "index": null}, {"date": "2024-08-20", "value": -33495, "index": null}, {"date": "2024-08-27", "value": -14234, "index": null}, {"date": "2024-09-03", "value": -33044, "index": null}, {"date": "2024-09-10", "value": -64230, "index": null}, {"date": "2024-09-17", "value": -109711, "index": null}, {"date": "2024-09-24", "value": -152582, "index": null}, {"date": "2024-10-01", "value": -96578, "index": null}, {"date": "2024-10-08", "value": -76175, "index": null}, {"date": "2024-10-15", "value": -60178, "index": null}, {"date": "2024-10-22", "value": -73837, "index": null}, {"date": "2024-10-29", "value": -54817, "index": null}, {"date": "2024-11-05", "value": -37751, "index": null}, {"date": "2024-11-12", "value": -41768, "index": null}, {"date": "2024-11-19", "value": -35645, "index": null}, {"date": "2024-11-26", "value": -47414, "index": null}, {"date": "2024-12-03", "value": -58775, "index": null}, {"date": "2024-12-10", "value": -39493, "index": null}, {"date": "2024-12-17", "value": -46303, "index": null}, {"date": "2024-12-24", "value": -26342, "index": null}, {"date": "2024-12-31", "value": -34865, "index": null}, {"date": "2025-01-07", "value": -16827, "index": null}, {"date": "2025-01-14", "value": 52, "index": null}, {"date": "2025-01-21", "value": 24456, "index": null}, {"date": "2025-01-28", "value": 28584, "index": null}, {"date": "2025-02-04", "value": -4927, "index": null}, {"date": "2025-02-11", "value": 44001, "index": null}, {"date": "2025-02-18", "value": 47781, "index": null}, {"date": "2025-02-25", "value": 40912, "index": null}, {"date": "2025-03-04", "value": -17797, "index": null}, {"date": "2025-03-11", "value": -34204, "index": null}, {"date": "2025-03-18", "value": -13510, "index": null}, {"date": "2025-03-25", "value": -38275, "index": null}, {"date": "2025-04-01", "value": -32648, "index": null}, {"date": "2025-04-08", "value": -18154, "index": null}, {"date": "2025-04-15", "value": -100785, "index": null}, {"date": "2025-04-22", "value": -107687, "index": null}, {"date": "2025-04-29", "value": -85556, "index": null}, {"date": "2025-05-06", "value": -95789, "index": null}, {"date": "2025-05-13", "value": -77629, "index": null}, {"date": "2025-05-20", "value": -72033, "index": null}, {"date": "2025-05-27", "value": -53890, "index": null}, {"date": "2025-06-03", "value": -102373, "index": null}, {"date": "2025-06-10", "value": -79745, "index": null}, {"date": "2025-06-17", "value": -74175, "index": null}, {"date": "2025-06-24", "value": -101785, "index": null}, {"date": "2025-07-01", "value": -104457, "index": null}, {"date": "2025-07-08", "value": -108758, "index": null}, {"date": "2025-07-15", "value": -130144, "index": null}, {"date": "2025-07-22", "value": -82879, "index": null}, {"date": "2025-07-29", "value": -110803, "index": null}, {"date": "2025-08-05", "value": -110440, "index": null}, {"date": "2025-08-12", "value": -60794, "index": null}, {"date": "2025-08-19", "value": -51043, "index": null}, {"date": "2025-08-26", "value": -36013, "index": null}, {"date": "2025-09-02", "value": -77268, "index": null}, {"date": "2025-09-09", "value": -98608, "index": null}, {"date": "2025-09-16", "value": -94138, "index": null}, {"date": "2025-09-23", "value": -78791, "index": null}, {"date": "2025-09-30", "value": -78730, "index": null}, {"date": "2025-10-07", "value": -62352, "index": null}, {"date": "2025-10-14", "value": -58364, "index": null}, {"date": "2025-10-21", "value": -27781, "index": null}, {"date": "2025-10-28", "value": -15103, "index": null}, {"date": "2025-11-04", "value": -39325, "index": null}, {"date": "2025-11-10", "value": -56623, "index": null}, {"date": "2025-11-18", "value": -67511, "index": null}, {"date": "2025-11-25", "value": -31601, "index": null}, {"date": "2025-12-02", "value": -29417, "index": null}, {"date": "2025-12-09", "value": -40216, "index": null}, {"date": "2025-12-16", "value": -46626, "index": null}, {"date": "2025-12-23", "value": -8742, "index": null}, {"date": "2025-12-30", "value": 14222, "index": null}, {"date": "2026-01-06", "value": -6832, "index": null}, {"date": "2026-01-13", "value": 13835, "index": null}, {"date": "2026-01-20", "value": -23070, "index": null}, {"date": "2026-01-27", "value": -8167, "index": null}, {"date": "2026-02-03", "value": -13604, "index": null}, {"date": "2026-02-10", "value": -92, "index": null}, {"date": "2026-02-17", "value": 6425, "index": null}, {"date": "2026-02-24", "value": 5074, "index": null}, {"date": "2026-03-03", "value": 20265, "index": null}, {"date": "2026-03-10", "value": 42037, "index": null}, {"date": "2026-03-17", "value": 8764, "index": null}, {"date": "2026-03-24", "value": 6570, "index": null}, {"date": "2026-03-31", "value": -31633, "index": null}, {"date": "2026-04-07", "value": -58996, "index": null}, {"date": "2026-04-14", "value": -74116, "index": null}, {"date": "2026-04-21", "value": -83786, "index": null}, {"date": "2026-04-28", "value": -113655, "index": null}, {"date": "2026-05-05", "value": -172942, "index": null}, {"date": "2026-05-12", "value": -172854, "index": null}, {"date": "2026-05-19", "value": -178674, "index": null}, {"date": "2026-05-26", "value": -199251, "index": null}, {"date": "2026-06-02", "value": -159853, "index": null}, {"date": "2026-06-09", "value": -163305, "index": null}];
         const canvas = document.getElementById('chart');
@@ -61,7 +87,7 @@
         };
 
         const formatNumber = value => value.toLocaleString('en-US');
-        const getColor = value => value >= 0 ? '#0a8f62' : '#c7354f';
+        const getColor = value => value >= 0 ? '#26a69a' : '#ef5350';
         const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
         const minWindow = Math.min(4, points.length);
         let layout = null;
@@ -108,7 +134,7 @@
             ctx.clearRect(0, 0, width, height);
 
             if (!points.length) {
-                ctx.fillStyle = '#5e6a7d';
+                ctx.fillStyle = '#787b86';
                 ctx.font = '14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
                 ctx.fillText('No chart data available', 28, 38);
                 return;
@@ -149,12 +175,12 @@
             const step = plotW / visibleCount;
             const barW = Math.max(2, Math.min(22, step * 0.72));
 
-            ctx.fillStyle = '#ffffff';
+            ctx.fillStyle = '#131722';
             ctx.fillRect(0, 0, width, height);
 
-            ctx.strokeStyle = '#e3e8f0';
+            ctx.strokeStyle = '#2a2e39';
             ctx.lineWidth = 1;
-            ctx.fillStyle = '#5e6a7d';
+            ctx.fillStyle = '#787b86';
             ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
             ctx.textAlign = 'right';
             ctx.textBaseline = 'middle';
@@ -169,7 +195,7 @@
             }
 
             if (indexValues.length) {
-                ctx.fillStyle = '#2f7df6';
+                ctx.fillStyle = '#2962ff';
                 ctx.textAlign = 'left';
                 ctx.textBaseline = 'middle';
                 for (let tick = 0; tick <= 4; tick++) {
@@ -180,7 +206,7 @@
                 ctx.fillText('Index', width - pad.right + 10, pad.top - 10);
             }
 
-            ctx.strokeStyle = '#9aa6b6';
+            ctx.strokeStyle = '#5d606b';
             ctx.beginPath();
             ctx.moveTo(pad.left, zeroY);
             ctx.lineTo(width - pad.right, zeroY);
@@ -205,7 +231,7 @@
                 }))
                 .filter(point => point.y !== null);
             if (linePoints.length > 1) {
-                ctx.strokeStyle = '#2f7df6';
+                ctx.strokeStyle = '#2962ff';
                 ctx.lineWidth = 2.5;
                 ctx.beginPath();
                 linePoints.forEach((point, index) => {
@@ -219,8 +245,8 @@
                     if (point.index !== null) {
                         const x = pad.left + state.hoverIndex * step + step / 2;
                         const y = indexYFor(point.index);
-                        ctx.fillStyle = '#ffffff';
-                        ctx.strokeStyle = '#2f7df6';
+                        ctx.fillStyle = '#131722';
+                        ctx.strokeStyle = '#2962ff';
                         ctx.lineWidth = 2;
                         ctx.beginPath();
                         ctx.arc(x, y, 4, 0, Math.PI * 2);
@@ -230,7 +256,7 @@
                 }
             }
 
-            ctx.fillStyle = '#5e6a7d';
+            ctx.fillStyle = '#787b86';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
             const labelEvery = Math.max(1, Math.ceil(visibleCount / Math.max(4, Math.floor(plotW / 82))));
@@ -246,7 +272,7 @@
 
             if (state.hoverIndex >= 0) {
                 const x = pad.left + state.hoverIndex * step + step / 2;
-                ctx.strokeStyle = '#172033';
+                ctx.strokeStyle = '#d1d4dc';
                 ctx.globalAlpha = 0.26;
                 ctx.beginPath();
                 ctx.moveTo(x, pad.top);
@@ -272,9 +298,9 @@
             const startX = xForIndex(state.start);
             const endX = xForIndex(state.end);
 
-            ctx.fillStyle = '#f4f7fb';
+            ctx.fillStyle = '#0f131d';
             ctx.fillRect(slider.left, slider.top, trackW, slider.height);
-            ctx.strokeStyle = '#d8e0eb';
+            ctx.strokeStyle = '#2a2e39';
             ctx.strokeRect(slider.left, slider.top, trackW, slider.height);
 
             points.forEach((point, index) => {
@@ -290,25 +316,25 @@
             });
             ctx.globalAlpha = 1;
 
-            ctx.fillStyle = 'rgba(23, 32, 51, 0.10)';
+            ctx.fillStyle = 'rgba(11, 15, 25, 0.58)';
             ctx.fillRect(slider.left, slider.top, Math.max(0, startX - slider.left), slider.height);
             ctx.fillRect(endX, slider.top, Math.max(0, slider.right - endX), slider.height);
 
-            ctx.fillStyle = 'rgba(76, 139, 245, 0.16)';
+            ctx.fillStyle = 'rgba(41, 98, 255, 0.18)';
             ctx.fillRect(startX, slider.top, Math.max(2, endX - startX), slider.height);
-            ctx.strokeStyle = '#3b74d7';
+            ctx.strokeStyle = '#2962ff';
             ctx.lineWidth = 2;
             ctx.strokeRect(startX, slider.top, Math.max(2, endX - startX), slider.height);
 
             [startX, endX].forEach(x => {
-                ctx.fillStyle = '#ffffff';
-                ctx.strokeStyle = '#3b74d7';
+                ctx.fillStyle = '#131722';
+                ctx.strokeStyle = '#2962ff';
                 ctx.lineWidth = 2;
                 ctx.beginPath();
                 ctx.roundRect(x - 6, slider.top - 4, 12, slider.height + 8, 5);
                 ctx.fill();
                 ctx.stroke();
-                ctx.strokeStyle = '#9aa6b6';
+                ctx.strokeStyle = '#787b86';
                 ctx.lineWidth = 1;
                 ctx.beginPath();
                 ctx.moveTo(x - 2, yMid - 7);
@@ -318,7 +344,7 @@
                 ctx.stroke();
             });
 
-            ctx.fillStyle = '#5e6a7d';
+            ctx.fillStyle = '#787b86';
             ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'top';
@@ -348,7 +374,7 @@
 
             state.hoverIndex = index;
             const point = points[state.start + index];
-            const indexLine = point.index === null ? '' : `<br><span style="color:#72a8ff">Futures Index: ${point.index.toFixed(2)}</span>`;
+            const indexLine = point.index === null ? '' : `<br><span style="color:#82a6ff">Futures Index: ${point.index.toFixed(2)}</span>`;
             tooltip.innerHTML = `<strong>${point.date}</strong><br><span class="${point.value >= 0 ? 'value-pos' : 'value-neg'}">Net: ${formatNumber(point.value)}</span>${indexLine}`;
             tooltip.style.display = 'block';
             tooltip.style.left = `${Math.min(event.clientX + 12, window.innerWidth - tooltip.offsetWidth - 12)}px`;

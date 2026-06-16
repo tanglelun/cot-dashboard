@@ -92,45 +92,71 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{safe_title}</title>
     <style>
+        :root {{
+            --tv-bg: #0b0f19;
+            --tv-panel: #131722;
+            --tv-panel-2: #0f131d;
+            --tv-border: #2a2e39;
+            --tv-border-soft: #1f2430;
+            --tv-text: #d1d4dc;
+            --tv-muted: #787b86;
+            --tv-faint: #5d606b;
+            --tv-blue: #2962ff;
+            --tv-green: #26a69a;
+            --tv-red: #ef5350;
+            --tv-hover: #1e222d;
+        }}
         * {{ box-sizing: border-box; }}
         html, body {{ height: 100%; }}
-        body {{ margin: 0; background: #f7f8fb; color: #172033; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }}
-        .toolbar {{ display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 20px 10px; }}
-        h1 {{ margin: 0; font-size: 20px; font-weight: 700; }}
-        .meta {{ color: #5e6a7d; font-size: 13px; white-space: nowrap; }}
-        .legend-inline {{ display: flex; align-items: center; gap: 14px; margin-top: 4px; color: #5e6a7d; font-size: 12px; }}
+        body {{ margin: 0; background: var(--tv-bg); color: var(--tv-text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; padding: 10px; }}
+        .site-nav {{ display: flex; align-items: center; gap: 4px; max-width: 1600px; margin: 0 auto 10px; border: 1px solid var(--tv-border); background: var(--tv-panel); border-radius: 6px; height: 42px; padding: 0 6px; }}
+        .site-nav a {{ display: inline-flex; align-items: center; height: 30px; padding: 0 12px; color: var(--tv-muted); text-decoration: none; font-weight: 700; border-radius: 4px; font-size: 13px; }}
+        .site-nav a:hover {{ color: var(--tv-text); background: var(--tv-hover); }}
+        .site-nav a.active {{ color: #fff; background: var(--tv-blue); }}
+        .page {{ max-width: 1600px; height: calc(100vh - 62px); margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }}
+        .toolbar {{ display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 58px; padding: 8px 12px; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; }}
+        h1 {{ margin: 0; font-size: 20px; font-weight: 800; color: #fff; letter-spacing: 0; }}
+        .meta {{ color: var(--tv-muted); font-size: 12px; white-space: nowrap; }}
+        .legend-inline {{ display: flex; align-items: center; gap: 14px; margin-top: 4px; color: var(--tv-muted); font-size: 12px; }}
         .legend-item {{ display: inline-flex; align-items: center; gap: 6px; }}
         .legend-swatch {{ width: 18px; height: 3px; border-radius: 999px; display: inline-block; }}
-        .legend-bar {{ background: #0a8f62; }}
-        .legend-line {{ background: #2f7df6; }}
-        .chart-wrap {{ position: relative; height: calc(100vh - 62px); min-height: 420px; padding: 0 14px 14px; }}
-        canvas {{ display: block; width: 100%; height: 100%; background: #ffffff; border: 1px solid #dbe1ea; border-radius: 8px; }}
-        .tooltip {{ position: fixed; pointer-events: none; display: none; background: rgba(23, 32, 51, 0.95); color: white; padding: 8px 10px; border-radius: 6px; font-size: 12px; line-height: 1.35; box-shadow: 0 8px 24px rgba(23, 32, 51, 0.22); }}
-        .value-pos {{ color: #0a8f62; }}
-        .value-neg {{ color: #c7354f; }}
+        .legend-bar {{ background: var(--tv-green); }}
+        .legend-line {{ background: var(--tv-blue); }}
+        .chart-wrap {{ position: relative; flex: 1; min-height: 420px; }}
+        canvas {{ display: block; width: 100%; height: 100%; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; }}
+        .tooltip {{ position: fixed; pointer-events: none; display: none; background: rgba(19, 23, 34, 0.96); color: var(--tv-text); padding: 8px 10px; border-radius: 4px; border: 1px solid var(--tv-border); font-size: 12px; line-height: 1.35; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35); }}
+        .value-pos {{ color: var(--tv-green); }}
+        .value-neg {{ color: var(--tv-red); }}
         .dragging {{ cursor: grabbing; }}
         @media (max-width: 640px) {{
             .toolbar {{ align-items: flex-start; flex-direction: column; gap: 4px; }}
             .meta {{ white-space: normal; }}
-            .chart-wrap {{ height: calc(100vh - 92px); min-height: 360px; }}
+            .page {{ height: calc(100dvh - 62px); }}
+            .chart-wrap {{ min-height: 360px; }}
         }}
     </style>
 </head>
 <body>
-    <div class="toolbar">
-        <div>
-            <h1>{safe_title}</h1>
-            <div class="legend-inline">
-                <span class="legend-item"><span class="legend-swatch legend-bar"></span>Non-Commercial Net</span>
-                <span class="legend-item"><span class="legend-swatch legend-line"></span>Futures Index (base=100)</span>
+    <nav class="site-nav" aria-label="Primary">
+        <a href="../index.html" class="active">Non-Commercial</a>
+        <a href="../russell2000_top100.html">Maket</a>
+    </nav>
+    <main class="page">
+        <div class="toolbar">
+            <div>
+                <h1>{safe_title}</h1>
+                <div class="legend-inline">
+                    <span class="legend-item"><span class="legend-swatch legend-bar"></span>Non-Commercial Net</span>
+                    <span class="legend-item"><span class="legend-swatch legend-line"></span>Futures Index (base=100)</span>
+                </div>
             </div>
+            <div id="meta" class="meta">Non-Commercial Net | Weekly bars | Last {len(chart_points)} reports</div>
         </div>
-        <div id="meta" class="meta">Non-Commercial Net | Weekly bars | Last {len(chart_points)} reports</div>
-    </div>
-    <div class="chart-wrap">
-        <canvas id="chart"></canvas>
-        <div id="tooltip" class="tooltip"></div>
-    </div>
+        <div class="chart-wrap">
+            <canvas id="chart"></canvas>
+            <div id="tooltip" class="tooltip"></div>
+        </div>
+    </main>
     <script>
         const points = {json.dumps(chart_points, ensure_ascii=True)};
         const canvas = document.getElementById('chart');
@@ -148,7 +174,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         }};
 
         const formatNumber = value => value.toLocaleString('en-US');
-        const getColor = value => value >= 0 ? '#0a8f62' : '#c7354f';
+        const getColor = value => value >= 0 ? '#26a69a' : '#ef5350';
         const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
         const minWindow = Math.min(4, points.length);
         let layout = null;
@@ -195,7 +221,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             ctx.clearRect(0, 0, width, height);
 
             if (!points.length) {{
-                ctx.fillStyle = '#5e6a7d';
+                ctx.fillStyle = '#787b86';
                 ctx.font = '14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
                 ctx.fillText('No chart data available', 28, 38);
                 return;
@@ -236,12 +262,12 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             const step = plotW / visibleCount;
             const barW = Math.max(2, Math.min(22, step * 0.72));
 
-            ctx.fillStyle = '#ffffff';
+            ctx.fillStyle = '#131722';
             ctx.fillRect(0, 0, width, height);
 
-            ctx.strokeStyle = '#e3e8f0';
+            ctx.strokeStyle = '#2a2e39';
             ctx.lineWidth = 1;
-            ctx.fillStyle = '#5e6a7d';
+            ctx.fillStyle = '#787b86';
             ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
             ctx.textAlign = 'right';
             ctx.textBaseline = 'middle';
@@ -256,7 +282,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             }}
 
             if (indexValues.length) {{
-                ctx.fillStyle = '#2f7df6';
+                ctx.fillStyle = '#2962ff';
                 ctx.textAlign = 'left';
                 ctx.textBaseline = 'middle';
                 for (let tick = 0; tick <= 4; tick++) {{
@@ -267,7 +293,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
                 ctx.fillText('Index', width - pad.right + 10, pad.top - 10);
             }}
 
-            ctx.strokeStyle = '#9aa6b6';
+            ctx.strokeStyle = '#5d606b';
             ctx.beginPath();
             ctx.moveTo(pad.left, zeroY);
             ctx.lineTo(width - pad.right, zeroY);
@@ -292,7 +318,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
                 }}))
                 .filter(point => point.y !== null);
             if (linePoints.length > 1) {{
-                ctx.strokeStyle = '#2f7df6';
+                ctx.strokeStyle = '#2962ff';
                 ctx.lineWidth = 2.5;
                 ctx.beginPath();
                 linePoints.forEach((point, index) => {{
@@ -306,8 +332,8 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
                     if (point.index !== null) {{
                         const x = pad.left + state.hoverIndex * step + step / 2;
                         const y = indexYFor(point.index);
-                        ctx.fillStyle = '#ffffff';
-                        ctx.strokeStyle = '#2f7df6';
+                        ctx.fillStyle = '#131722';
+                        ctx.strokeStyle = '#2962ff';
                         ctx.lineWidth = 2;
                         ctx.beginPath();
                         ctx.arc(x, y, 4, 0, Math.PI * 2);
@@ -317,7 +343,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
                 }}
             }}
 
-            ctx.fillStyle = '#5e6a7d';
+            ctx.fillStyle = '#787b86';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
             const labelEvery = Math.max(1, Math.ceil(visibleCount / Math.max(4, Math.floor(plotW / 82))));
@@ -333,7 +359,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
 
             if (state.hoverIndex >= 0) {{
                 const x = pad.left + state.hoverIndex * step + step / 2;
-                ctx.strokeStyle = '#172033';
+                ctx.strokeStyle = '#d1d4dc';
                 ctx.globalAlpha = 0.26;
                 ctx.beginPath();
                 ctx.moveTo(x, pad.top);
@@ -359,9 +385,9 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             const startX = xForIndex(state.start);
             const endX = xForIndex(state.end);
 
-            ctx.fillStyle = '#f4f7fb';
+            ctx.fillStyle = '#0f131d';
             ctx.fillRect(slider.left, slider.top, trackW, slider.height);
-            ctx.strokeStyle = '#d8e0eb';
+            ctx.strokeStyle = '#2a2e39';
             ctx.strokeRect(slider.left, slider.top, trackW, slider.height);
 
             points.forEach((point, index) => {{
@@ -377,25 +403,25 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             }});
             ctx.globalAlpha = 1;
 
-            ctx.fillStyle = 'rgba(23, 32, 51, 0.10)';
+            ctx.fillStyle = 'rgba(11, 15, 25, 0.58)';
             ctx.fillRect(slider.left, slider.top, Math.max(0, startX - slider.left), slider.height);
             ctx.fillRect(endX, slider.top, Math.max(0, slider.right - endX), slider.height);
 
-            ctx.fillStyle = 'rgba(76, 139, 245, 0.16)';
+            ctx.fillStyle = 'rgba(41, 98, 255, 0.18)';
             ctx.fillRect(startX, slider.top, Math.max(2, endX - startX), slider.height);
-            ctx.strokeStyle = '#3b74d7';
+            ctx.strokeStyle = '#2962ff';
             ctx.lineWidth = 2;
             ctx.strokeRect(startX, slider.top, Math.max(2, endX - startX), slider.height);
 
             [startX, endX].forEach(x => {{
-                ctx.fillStyle = '#ffffff';
-                ctx.strokeStyle = '#3b74d7';
+                ctx.fillStyle = '#131722';
+                ctx.strokeStyle = '#2962ff';
                 ctx.lineWidth = 2;
                 ctx.beginPath();
                 ctx.roundRect(x - 6, slider.top - 4, 12, slider.height + 8, 5);
                 ctx.fill();
                 ctx.stroke();
-                ctx.strokeStyle = '#9aa6b6';
+                ctx.strokeStyle = '#787b86';
                 ctx.lineWidth = 1;
                 ctx.beginPath();
                 ctx.moveTo(x - 2, yMid - 7);
@@ -405,7 +431,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
                 ctx.stroke();
             }});
 
-            ctx.fillStyle = '#5e6a7d';
+            ctx.fillStyle = '#787b86';
             ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'top';
@@ -435,7 +461,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
 
             state.hoverIndex = index;
             const point = points[state.start + index];
-            const indexLine = point.index === null ? '' : `<br><span style="color:#72a8ff">Futures Index: ${{point.index.toFixed(2)}}</span>`;
+            const indexLine = point.index === null ? '' : `<br><span style="color:#82a6ff">Futures Index: ${{point.index.toFixed(2)}}</span>`;
             tooltip.innerHTML = `<strong>${{point.date}}</strong><br><span class="${{point.value >= 0 ? 'value-pos' : 'value-neg'}}">Net: ${{formatNumber(point.value)}}</span>${{indexLine}}`;
             tooltip.style.display = 'block';
             tooltip.style.left = `${{Math.min(event.clientX + 12, window.innerWidth - tooltip.offsetWidth - 12)}}px`;
@@ -619,43 +645,63 @@ html = f'''<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CFTC Non-Commercial Positions</title>
     <style>
+        :root {{
+            --tv-bg: #0b0f19;
+            --tv-panel: #131722;
+            --tv-panel-2: #0f131d;
+            --tv-border: #2a2e39;
+            --tv-border-soft: #1f2430;
+            --tv-text: #d1d4dc;
+            --tv-muted: #787b86;
+            --tv-faint: #5d606b;
+            --tv-blue: #2962ff;
+            --tv-green: #26a69a;
+            --tv-red: #ef5350;
+            --tv-hover: #1e222d;
+        }}
         * {{ box-sizing: border-box; }}
-        body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a1a2e; color: #eee; padding: 20px; margin: 0; }}
-        .site-nav {{ display: flex; align-items: center; gap: 8px; margin: 0 0 16px 0; border-bottom: 1px solid #26385f; }}
-        .site-nav a {{ display: inline-flex; align-items: center; padding: 12px 18px; color: #9aa8c7; text-decoration: none; font-weight: 700; border-bottom: 3px solid transparent; }}
-        .site-nav a:hover {{ color: #fff; }}
-        .site-nav a.active {{ color: #4cc9f0; border-bottom-color: #4cc9f0; }}
-        .container {{ max-width: 100%; overflow-x: auto; background: #16213e; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }}
-        h1 {{ color: #fff; margin: 0 0 10px 0; font-size: 24px; }}
-        .subtitle {{ color: #888; margin-bottom: 20px; font-size: 14px; }}
+        body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--tv-bg); color: var(--tv-text); padding: 10px; margin: 0; }}
+        .site-nav {{ display: flex; align-items: center; gap: 4px; max-width: 1600px; margin: 0 auto 10px; border: 1px solid var(--tv-border); background: var(--tv-panel); border-radius: 6px; height: 42px; padding: 0 6px; }}
+        .site-nav a {{ display: inline-flex; align-items: center; height: 30px; padding: 0 12px; color: var(--tv-muted); text-decoration: none; font-weight: 700; border-radius: 4px; font-size: 13px; }}
+        .site-nav a:hover {{ color: var(--tv-text); background: var(--tv-hover); }}
+        .site-nav a.active {{ color: #fff; background: var(--tv-blue); }}
+        .container {{ max-width: 1600px; margin: 0 auto; overflow-x: auto; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; padding: 12px; }}
+        h1 {{ color: #fff; margin: 0 0 4px 0; font-size: 22px; font-weight: 800; letter-spacing: 0; }}
+        .subtitle {{ color: var(--tv-muted); margin-bottom: 12px; font-size: 13px; }}
         
-        .tabs {{ display: flex; margin-bottom: 20px; border-bottom: 2px solid #0f3460; }}
-        .tab {{ padding: 12px 24px; cursor: pointer; background: transparent; border: none; color: #888; font-size: 16px; font-weight: 600; transition: 0.3s; }}
-        .tab:hover {{ color: #fff; }}
-        .tab.active {{ color: #4cc9f0; border-bottom: 3px solid #4cc9f0; }}
+        .tabs {{ display: flex; gap: 4px; margin-bottom: 10px; border: 1px solid var(--tv-border); background: var(--tv-panel-2); border-radius: 6px; padding: 5px; width: fit-content; }}
+        .tab {{ height: 30px; padding: 0 14px; cursor: pointer; background: transparent; border: none; border-radius: 4px; color: var(--tv-muted); font-size: 13px; font-weight: 700; transition: 0.15s; }}
+        .tab:hover {{ color: var(--tv-text); background: var(--tv-hover); }}
+        .tab.active {{ color: #fff; background: var(--tv-blue); }}
         
         .tab-content {{ display: none; }}
         .tab-content.active {{ display: block; }}
         
-        table {{ width: 100%; border-collapse: collapse; font-size: 11px; }}
-        th {{ background: #0f3460; color: #fff; padding: 8px 6px; text-align: center; font-weight: 600; position: sticky; top: 0; }}
-        th:first-child {{ text-align: left; position: sticky; left: 0; background: #0f3460; z-index: 10; }}
-        td {{ padding: 6px 6px; text-align: center; border-bottom: 1px solid #1a1a2e; font-family: 'SF Mono', Monaco, monospace; font-size: 10px; }}
-        td:first-child {{ text-align: left; position: sticky; left: 0; background: #16213e; font-weight: 600; z-index: 5; }}
-        tr.category {{ background: #e94560 !important; }}
-        tr.category th {{ background: #e94560; text-align: left; padding: 10px; font-size: 14px; }}
-        .comm {{ color: #4cc9f0; }}
-        .pos {{ color: #06d6a0; }}
-        .neg {{ color: #ef476f; }}
-        .neu {{ color: #666; }}
-        tr:hover td {{ background: #1f4068; }}
-        tr:hover td:first-child {{ background: #1f4068; }}
-        .chart-link {{ text-decoration: none; font-size: 16px; }}
-        .chart-link:hover {{ transform: scale(1.2); }}
-        .legend {{ margin-top: 20px; padding: 15px; background: #0f3460; border-radius: 8px; }}
-        .legend span {{ margin-right: 20px; }}
-        .legend .pos {{ color: #06d6a0; font-weight: bold; }}
-        .legend .neg {{ color: #ef476f; font-weight: bold; }}
+        table {{ width: 100%; border-collapse: collapse; font-size: 11px; background: var(--tv-panel); }}
+        th {{ background: var(--tv-panel-2); color: var(--tv-muted); padding: 8px 6px; text-align: center; font-weight: 800; position: sticky; top: 0; border-bottom: 1px solid var(--tv-border); }}
+        th:first-child {{ text-align: left; position: sticky; left: 0; background: var(--tv-panel-2); z-index: 10; }}
+        td {{ padding: 6px 6px; text-align: center; border-bottom: 1px solid var(--tv-border-soft); font-family: 'SF Mono', Monaco, monospace; font-size: 10px; }}
+        td:first-child {{ text-align: left; position: sticky; left: 0; background: var(--tv-panel); font-weight: 700; z-index: 5; }}
+        tr.category {{ background: var(--tv-blue) !important; }}
+        tr.category th {{ background: var(--tv-blue); color: #fff; text-align: left; padding: 9px 10px; font-size: 13px; }}
+        .comm {{ color: var(--tv-blue); }}
+        .pos {{ color: var(--tv-green); }}
+        .neg {{ color: var(--tv-red); }}
+        .neu {{ color: var(--tv-faint); }}
+        tr:hover td {{ background: var(--tv-hover); }}
+        tr:hover td:first-child {{ background: var(--tv-hover); }}
+        .chart-link {{ color: var(--tv-blue); text-decoration: none; font-size: 14px; }}
+        .chart-link:hover {{ color: #fff; }}
+        .legend {{ margin-top: 12px; padding: 10px 12px; background: var(--tv-panel-2); border: 1px solid var(--tv-border); border-radius: 6px; color: var(--tv-muted); font-size: 12px; }}
+        .legend span {{ margin-right: 18px; white-space: nowrap; }}
+        .legend .pos {{ color: var(--tv-green); font-weight: bold; }}
+        .legend .neg {{ color: var(--tv-red); font-weight: bold; }}
+        @media (max-width: 768px) {{
+            .container {{ padding: 8px; }}
+            h1 {{ font-size: 19px; }}
+            .tabs {{ width: 100%; }}
+            .tab {{ flex: 1; }}
+        }}
     </style>
 </head>
 <body>

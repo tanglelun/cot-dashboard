@@ -5,45 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mexican Peso (MP)</title>
     <style>
+        :root {
+            --tv-bg: #0b0f19;
+            --tv-panel: #131722;
+            --tv-panel-2: #0f131d;
+            --tv-border: #2a2e39;
+            --tv-border-soft: #1f2430;
+            --tv-text: #d1d4dc;
+            --tv-muted: #787b86;
+            --tv-faint: #5d606b;
+            --tv-blue: #2962ff;
+            --tv-green: #26a69a;
+            --tv-red: #ef5350;
+            --tv-hover: #1e222d;
+        }
         * { box-sizing: border-box; }
         html, body { height: 100%; }
-        body { margin: 0; background: #f7f8fb; color: #172033; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-        .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 20px 10px; }
-        h1 { margin: 0; font-size: 20px; font-weight: 700; }
-        .meta { color: #5e6a7d; font-size: 13px; white-space: nowrap; }
-        .legend-inline { display: flex; align-items: center; gap: 14px; margin-top: 4px; color: #5e6a7d; font-size: 12px; }
+        body { margin: 0; background: var(--tv-bg); color: var(--tv-text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; padding: 10px; }
+        .site-nav { display: flex; align-items: center; gap: 4px; max-width: 1600px; margin: 0 auto 10px; border: 1px solid var(--tv-border); background: var(--tv-panel); border-radius: 6px; height: 42px; padding: 0 6px; }
+        .site-nav a { display: inline-flex; align-items: center; height: 30px; padding: 0 12px; color: var(--tv-muted); text-decoration: none; font-weight: 700; border-radius: 4px; font-size: 13px; }
+        .site-nav a:hover { color: var(--tv-text); background: var(--tv-hover); }
+        .site-nav a.active { color: #fff; background: var(--tv-blue); }
+        .page { max-width: 1600px; height: calc(100vh - 62px); margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+        .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 58px; padding: 8px 12px; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; }
+        h1 { margin: 0; font-size: 20px; font-weight: 800; color: #fff; letter-spacing: 0; }
+        .meta { color: var(--tv-muted); font-size: 12px; white-space: nowrap; }
+        .legend-inline { display: flex; align-items: center; gap: 14px; margin-top: 4px; color: var(--tv-muted); font-size: 12px; }
         .legend-item { display: inline-flex; align-items: center; gap: 6px; }
         .legend-swatch { width: 18px; height: 3px; border-radius: 999px; display: inline-block; }
-        .legend-bar { background: #0a8f62; }
-        .legend-line { background: #2f7df6; }
-        .chart-wrap { position: relative; height: calc(100vh - 62px); min-height: 420px; padding: 0 14px 14px; }
-        canvas { display: block; width: 100%; height: 100%; background: #ffffff; border: 1px solid #dbe1ea; border-radius: 8px; }
-        .tooltip { position: fixed; pointer-events: none; display: none; background: rgba(23, 32, 51, 0.95); color: white; padding: 8px 10px; border-radius: 6px; font-size: 12px; line-height: 1.35; box-shadow: 0 8px 24px rgba(23, 32, 51, 0.22); }
-        .value-pos { color: #0a8f62; }
-        .value-neg { color: #c7354f; }
+        .legend-bar { background: var(--tv-green); }
+        .legend-line { background: var(--tv-blue); }
+        .chart-wrap { position: relative; flex: 1; min-height: 420px; }
+        canvas { display: block; width: 100%; height: 100%; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; }
+        .tooltip { position: fixed; pointer-events: none; display: none; background: rgba(19, 23, 34, 0.96); color: var(--tv-text); padding: 8px 10px; border-radius: 4px; border: 1px solid var(--tv-border); font-size: 12px; line-height: 1.35; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35); }
+        .value-pos { color: var(--tv-green); }
+        .value-neg { color: var(--tv-red); }
         .dragging { cursor: grabbing; }
         @media (max-width: 640px) {
             .toolbar { align-items: flex-start; flex-direction: column; gap: 4px; }
             .meta { white-space: normal; }
-            .chart-wrap { height: calc(100vh - 92px); min-height: 360px; }
+            .page { height: calc(100dvh - 62px); }
+            .chart-wrap { min-height: 360px; }
         }
     </style>
 </head>
 <body>
-    <div class="toolbar">
-        <div>
-            <h1>Mexican Peso (MP)</h1>
-            <div class="legend-inline">
-                <span class="legend-item"><span class="legend-swatch legend-bar"></span>Non-Commercial Net</span>
-                <span class="legend-item"><span class="legend-swatch legend-line"></span>Futures Index (base=100)</span>
+    <nav class="site-nav" aria-label="Primary">
+        <a href="../index.html" class="active">Non-Commercial</a>
+        <a href="../russell2000_top100.html">Maket</a>
+    </nav>
+    <main class="page">
+        <div class="toolbar">
+            <div>
+                <h1>Mexican Peso (MP)</h1>
+                <div class="legend-inline">
+                    <span class="legend-item"><span class="legend-swatch legend-bar"></span>Non-Commercial Net</span>
+                    <span class="legend-item"><span class="legend-swatch legend-line"></span>Futures Index (base=100)</span>
+                </div>
             </div>
+            <div id="meta" class="meta">Non-Commercial Net | Weekly bars | Last 523 reports</div>
         </div>
-        <div id="meta" class="meta">Non-Commercial Net | Weekly bars | Last 523 reports</div>
-    </div>
-    <div class="chart-wrap">
-        <canvas id="chart"></canvas>
-        <div id="tooltip" class="tooltip"></div>
-    </div>
+        <div class="chart-wrap">
+            <canvas id="chart"></canvas>
+            <div id="tooltip" class="tooltip"></div>
+        </div>
+    </main>
     <script>
         const points = [{"date": "2016-06-07", "value": -59309, "index": null}, {"date": "2016-06-14", "value": -65619, "index": null}, {"date": "2016-06-21", "value": -68880, "index": null}, {"date": "2016-06-28", "value": -65327, "index": null}, {"date": "2016-07-05", "value": -44857, "index": null}, {"date": "2016-07-12", "value": -37172, "index": null}, {"date": "2016-07-19", "value": -39366, "index": null}, {"date": "2016-07-26", "value": -46562, "index": null}, {"date": "2016-08-02", "value": -52123, "index": null}, {"date": "2016-08-09", "value": -54362, "index": null}, {"date": "2016-08-16", "value": -45723, "index": null}, {"date": "2016-08-23", "value": -28541, "index": null}, {"date": "2016-08-30", "value": -33234, "index": null}, {"date": "2016-09-06", "value": -58399, "index": null}, {"date": "2016-09-13", "value": -65747, "index": null}, {"date": "2016-09-20", "value": -89342, "index": null}, {"date": "2016-09-27", "value": -85873, "index": null}, {"date": "2016-10-04", "value": -85892, "index": null}, {"date": "2016-10-11", "value": -51792, "index": null}, {"date": "2016-10-18", "value": -30719, "index": null}, {"date": "2016-10-25", "value": -25343, "index": null}, {"date": "2016-11-01", "value": -36472, "index": null}, {"date": "2016-11-08", "value": -32996, "index": null}, {"date": "2016-11-15", "value": -45153, "index": null}, {"date": "2016-11-22", "value": -48314, "index": null}, {"date": "2016-11-29", "value": -54500, "index": null}, {"date": "2016-12-06", "value": -54066, "index": null}, {"date": "2016-12-13", "value": -57659, "index": null}, {"date": "2016-12-20", "value": -66681, "index": null}, {"date": "2016-12-27", "value": -61657, "index": null}, {"date": "2017-01-03", "value": -65636, "index": null}, {"date": "2017-01-10", "value": -71776, "index": null}, {"date": "2017-01-17", "value": -73321, "index": null}, {"date": "2017-01-24", "value": -64654, "index": null}, {"date": "2017-01-31", "value": -63208, "index": null}, {"date": "2017-02-07", "value": -58488, "index": null}, {"date": "2017-02-14", "value": -60213, "index": null}, {"date": "2017-02-21", "value": -56481, "index": null}, {"date": "2017-02-28", "value": -45783, "index": null}, {"date": "2017-03-07", "value": -42758, "index": null}, {"date": "2017-03-14", "value": -5467, "index": null}, {"date": "2017-03-21", "value": -3281, "index": null}, {"date": "2017-03-28", "value": -4737, "index": null}, {"date": "2017-04-04", "value": -9688, "index": null}, {"date": "2017-04-11", "value": -12675, "index": null}, {"date": "2017-04-18", "value": 14244, "index": null}, {"date": "2017-04-25", "value": 16038, "index": null}, {"date": "2017-05-02", "value": 15115, "index": null}, {"date": "2017-05-09", "value": 69903, "index": null}, {"date": "2017-05-16", "value": 70054, "index": null}, {"date": "2017-05-23", "value": 54298, "index": null}, {"date": "2017-05-30", "value": 75002, "index": null}, {"date": "2017-06-06", "value": 84821, "index": null}, {"date": "2017-06-13", "value": 95814, "index": null}, {"date": "2017-06-20", "value": 48985, "index": null}, {"date": "2017-06-27", "value": 81007, "index": null}, {"date": "2017-07-03", "value": 84859, "index": null}, {"date": "2017-07-11", "value": 97859, "index": null}, {"date": "2017-07-18", "value": 112539, "index": null}, {"date": "2017-07-25", "value": 112890, "index": null}, {"date": "2017-08-01", "value": 113549, "index": null}, {"date": "2017-08-08", "value": 106437, "index": null}, {"date": "2017-08-15", "value": 94849, "index": null}, {"date": "2017-08-22", "value": 97618, "index": null}, {"date": "2017-08-29", "value": 97010, "index": null}, {"date": "2017-09-05", "value": 113612, "index": null}, {"date": "2017-09-12", "value": 116998, "index": null}, {"date": "2017-09-19", "value": 76952, "index": null}, {"date": "2017-09-26", "value": 83727, "index": null}, {"date": "2017-10-03", "value": 89116, "index": null}, {"date": "2017-10-10", "value": 82749, "index": null}, {"date": "2017-10-17", "value": 71067, "index": null}, {"date": "2017-10-24", "value": 55701, "index": null}, {"date": "2017-10-31", "value": 55246, "index": null}, {"date": "2017-11-07", "value": 56975, "index": null}, {"date": "2017-11-14", "value": 62533, "index": null}, {"date": "2017-11-21", "value": 80386, "index": null}, {"date": "2017-11-28", "value": 89566, "index": null}, {"date": "2017-12-05", "value": 96523, "index": null}, {"date": "2017-12-12", "value": 86176, "index": null}, {"date": "2017-12-19", "value": 53894, "index": null}, {"date": "2017-12-26", "value": 36384, "index": null}, {"date": "2018-01-02", "value": 35058, "index": null}, {"date": "2018-01-09", "value": 29797, "index": null}, {"date": "2018-01-16", "value": 46795, "index": null}, {"date": "2018-01-23", "value": 61155, "index": null}, {"date": "2018-01-30", "value": 80045, "index": null}, {"date": "2018-02-06", "value": 92855, "index": null}, {"date": "2018-02-13", "value": 96778, "index": null}, {"date": "2018-02-20", "value": 94821, "index": null}, {"date": "2018-02-27", "value": 92507, "index": null}, {"date": "2018-03-06", "value": 83295, "index": null}, {"date": "2018-03-13", "value": 86940, "index": null}, {"date": "2018-03-20", "value": 66845, "index": null}, {"date": "2018-03-27", "value": 89787, "index": null}, {"date": "2018-04-03", "value": 99080, "index": null}, {"date": "2018-04-10", "value": 102218, "index": null}, {"date": "2018-04-17", "value": 101841, "index": null}, {"date": "2018-04-24", "value": 88783, "index": null}, {"date": "2018-05-01", "value": 86041, "index": null}, {"date": "2018-05-08", "value": 76188, "index": null}, {"date": "2018-05-15", "value": 52778, "index": null}, {"date": "2018-05-22", "value": 31540, "index": null}, {"date": "2018-05-29", "value": 18336, "index": null}, {"date": "2018-06-05", "value": -11110, "index": null}, {"date": "2018-06-12", "value": -21700, "index": null}, {"date": "2018-06-19", "value": -11265, "index": null}, {"date": "2018-06-26", "value": -12510, "index": null}, {"date": "2018-07-03", "value": 5915, "index": null}, {"date": "2018-07-10", "value": 28132, "index": null}, {"date": "2018-07-17", "value": 29078, "index": null}, {"date": "2018-07-24", "value": 19584, "index": null}, {"date": "2018-07-31", "value": 26515, "index": null}, {"date": "2018-08-07", "value": 33260, "index": null}, {"date": "2018-08-14", "value": 31074, "index": null}, {"date": "2018-08-21", "value": 25670, "index": null}, {"date": "2018-08-28", "value": 19337, "index": null}, {"date": "2018-09-04", "value": 12519, "index": null}, {"date": "2018-09-11", "value": 14536, "index": null}, {"date": "2018-09-18", "value": 40513, "index": null}, {"date": "2018-09-25", "value": 51398, "index": null}, {"date": "2018-10-02", "value": 73829, "index": null}, {"date": "2018-10-09", "value": 74449, "index": null}, {"date": "2018-10-16", "value": 68575, "index": null}, {"date": "2018-10-23", "value": 58027, "index": null}, {"date": "2018-10-30", "value": 33809, "index": null}, {"date": "2018-11-06", "value": 7036, "index": null}, {"date": "2018-11-13", "value": 7287, "index": null}, {"date": "2018-11-20", "value": 14083, "index": null}, {"date": "2018-11-27", "value": 15327, "index": null}, {"date": "2018-12-04", "value": 4523, "index": null}, {"date": "2018-12-11", "value": 11442, "index": null}, {"date": "2018-12-18", "value": -769, "index": null}, {"date": "2018-12-24", "value": 3429, "index": null}, {"date": "2018-12-31", "value": 9772, "index": null}, {"date": "2019-01-08", "value": 30982, "index": null}, {"date": "2019-01-15", "value": 57265, "index": null}, {"date": "2019-01-22", "value": 63519, "index": null}, {"date": "2019-01-29", "value": 69443, "index": null}, {"date": "2019-02-05", "value": 71467, "index": null}, {"date": "2019-02-12", "value": 76411, "index": null}, {"date": "2019-02-19", "value": 95095, "index": null}, {"date": "2019-02-26", "value": 91947, "index": null}, {"date": "2019-03-05", "value": 88418, "index": null}, {"date": "2019-03-12", "value": 75096, "index": null}, {"date": "2019-03-19", "value": 122887, "index": null}, {"date": "2019-03-26", "value": 146334, "index": null}, {"date": "2019-04-02", "value": 142723, "index": null}, {"date": "2019-04-09", "value": 155437, "index": null}, {"date": "2019-04-16", "value": 156030, "index": null}, {"date": "2019-04-23", "value": 150705, "index": null}, {"date": "2019-04-30", "value": 144739, "index": null}, {"date": "2019-05-07", "value": 144689, "index": null}, {"date": "2019-05-14", "value": 148207, "index": null}, {"date": "2019-05-21", "value": 146485, "index": null}, {"date": "2019-05-28", "value": 142467, "index": null}, {"date": "2019-06-04", "value": 124229, "index": null}, {"date": "2019-06-11", "value": 101315, "index": null}, {"date": "2019-06-18", "value": 116806, "index": null}, {"date": "2019-06-25", "value": 115035, "index": null}, {"date": "2019-07-02", "value": 108267, "index": null}, {"date": "2019-07-09", "value": 126382, "index": null}, {"date": "2019-07-16", "value": 128121, "index": null}, {"date": "2019-07-23", "value": 124755, "index": null}, {"date": "2019-07-30", "value": 128268, "index": null}, {"date": "2019-08-06", "value": 122069, "index": null}, {"date": "2019-08-13", "value": 117562, "index": null}, {"date": "2019-08-20", "value": 110359, "index": null}, {"date": "2019-08-27", "value": 93314, "index": null}, {"date": "2019-09-03", "value": 91791, "index": null}, {"date": "2019-09-10", "value": 95637, "index": null}, {"date": "2019-09-17", "value": 81626, "index": null}, {"date": "2019-09-24", "value": 92414, "index": null}, {"date": "2019-10-01", "value": 115812, "index": null}, {"date": "2019-10-08", "value": 115396, "index": null}, {"date": "2019-10-15", "value": 113042, "index": null}, {"date": "2019-10-22", "value": 112950, "index": null}, {"date": "2019-10-29", "value": 128907, "index": null}, {"date": "2019-11-05", "value": 140402, "index": null}, {"date": "2019-11-12", "value": 142037, "index": null}, {"date": "2019-11-19", "value": 139821, "index": null}, {"date": "2019-11-26", "value": 135649, "index": null}, {"date": "2019-12-03", "value": 130127, "index": null}, {"date": "2019-12-10", "value": 130641, "index": null}, {"date": "2019-12-17", "value": 152260, "index": null}, {"date": "2019-12-24", "value": 158216, "index": null}, {"date": "2019-12-31", "value": 150266, "index": null}, {"date": "2020-01-07", "value": 157318, "index": null}, {"date": "2020-01-14", "value": 165640, "index": null}, {"date": "2020-01-21", "value": 169971, "index": null}, {"date": "2020-01-28", "value": 170366, "index": null}, {"date": "2020-02-04", "value": 165172, "index": null}, {"date": "2020-02-11", "value": 156326, "index": null}, {"date": "2020-02-18", "value": 153282, "index": null}, {"date": "2020-02-25", "value": 150601, "index": null}, {"date": "2020-03-03", "value": 131181, "index": null}, {"date": "2020-03-10", "value": 112547, "index": null}, {"date": "2020-03-17", "value": 33845, "index": null}, {"date": "2020-03-24", "value": 21979, "index": null}, {"date": "2020-03-31", "value": 7665, "index": null}, {"date": "2020-04-07", "value": 5756, "index": null}, {"date": "2020-04-14", "value": 3333, "index": null}, {"date": "2020-04-21", "value": 1240, "index": null}, {"date": "2020-04-28", "value": 8481, "index": null}, {"date": "2020-05-05", "value": 7109, "index": null}, {"date": "2020-05-12", "value": -5120, "index": null}, {"date": "2020-05-19", "value": -5984, "index": null}, {"date": "2020-05-26", "value": 4691, "index": null}, {"date": "2020-06-02", "value": 8317, "index": null}, {"date": "2020-06-09", "value": -846, "index": null}, {"date": "2020-06-16", "value": 22106, "index": null}, {"date": "2020-06-23", "value": 23178, "index": null}, {"date": "2020-06-30", "value": 20956, "index": null}, {"date": "2020-07-07", "value": 14980, "index": null}, {"date": "2020-07-14", "value": 11871, "index": null}, {"date": "2020-07-21", "value": 9848, "index": null}, {"date": "2020-07-28", "value": 10864, "index": null}, {"date": "2020-08-04", "value": 2999, "index": null}, {"date": "2020-08-11", "value": 6507, "index": null}, {"date": "2020-08-18", "value": 4338, "index": null}, {"date": "2020-08-25", "value": 3862, "index": null}, {"date": "2020-09-01", "value": 5969, "index": null}, {"date": "2020-09-08", "value": 8373, "index": null}, {"date": "2020-09-15", "value": 26471, "index": null}, {"date": "2020-09-22", "value": 26650, "index": null}, {"date": "2020-09-29", "value": 12636, "index": null}, {"date": "2020-10-06", "value": 21342, "index": null}, {"date": "2020-10-13", "value": 22478, "index": null}, {"date": "2020-10-20", "value": 19842, "index": null}, {"date": "2020-10-27", "value": 27946, "index": null}, {"date": "2020-11-03", "value": 24097, "index": null}, {"date": "2020-11-10", "value": 18322, "index": null}, {"date": "2020-11-17", "value": 20409, "index": null}, {"date": "2020-11-24", "value": 23795, "index": null}, {"date": "2020-12-01", "value": 29041, "index": null}, {"date": "2020-12-08", "value": 26522, "index": null}, {"date": "2020-12-15", "value": -3227, "index": null}, {"date": "2020-12-21", "value": -8249, "index": null}, {"date": "2020-12-29", "value": -5258, "index": null}, {"date": "2021-01-05", "value": -7723, "index": null}, {"date": "2021-01-12", "value": -5452, "index": null}, {"date": "2021-01-19", "value": -7687, "index": null}, {"date": "2021-01-26", "value": -950, "index": null}, {"date": "2021-02-02", "value": 2868, "index": null}, {"date": "2021-02-09", "value": 1483, "index": null}, {"date": "2021-02-16", "value": 1412, "index": null}, {"date": "2021-02-23", "value": 3025, "index": null}, {"date": "2021-03-02", "value": 4431, "index": null}, {"date": "2021-03-09", "value": 1852, "index": null}, {"date": "2021-03-16", "value": -29457, "index": null}, {"date": "2021-03-23", "value": -20894, "index": null}, {"date": "2021-03-30", "value": -15113, "index": null}, {"date": "2021-04-06", "value": -13142, "index": null}, {"date": "2021-04-13", "value": -11978, "index": null}, {"date": "2021-04-20", "value": -3554, "index": null}, {"date": "2021-04-27", "value": 960, "index": null}, {"date": "2021-05-04", "value": -4446, "index": null}, {"date": "2021-05-11", "value": -8480, "index": null}, {"date": "2021-05-18", "value": -10118, "index": null}, {"date": "2021-05-25", "value": -8498, "index": null}, {"date": "2021-06-01", "value": -3646, "index": null}, {"date": "2021-06-08", "value": -6561, "index": null}, {"date": "2021-06-15", "value": -23930, "index": null}, {"date": "2021-06-22", "value": -28591, "index": null}, {"date": "2021-06-29", "value": -19454, "index": null}, {"date": "2021-07-06", "value": -22333, "index": null}, {"date": "2021-07-13", "value": -27432, "index": null}, {"date": "2021-07-20", "value": -28421, "index": null}, {"date": "2021-07-27", "value": -26407, "index": null}, {"date": "2021-08-03", "value": -21297, "index": null}, {"date": "2021-08-10", "value": -23887, "index": null}, {"date": "2021-08-17", "value": -19117, "index": null}, {"date": "2021-08-24", "value": -23830, "index": null}, {"date": "2021-08-31", "value": -21043, "index": null}, {"date": "2021-09-07", "value": -17517, "index": null}, {"date": "2021-09-14", "value": -15852, "index": null}, {"date": "2021-09-21", "value": -19015, "index": null}, {"date": "2021-09-28", "value": -19595, "index": null}, {"date": "2021-10-05", "value": -35579, "index": null}, {"date": "2021-10-12", "value": -39634, "index": null}, {"date": "2021-10-19", "value": -38571, "index": null}, {"date": "2021-10-26", "value": -43289, "index": null}, {"date": "2021-11-02", "value": -51018, "index": null}, {"date": "2021-11-09", "value": -48407, "index": null}, {"date": "2021-11-16", "value": -47655, "index": null}, {"date": "2021-11-23", "value": -49461, "index": null}, {"date": "2021-11-30", "value": -59747, "index": null}, {"date": "2021-12-07", "value": -64126, "index": null}, {"date": "2021-12-14", "value": -10673, "index": null}, {"date": "2021-12-21", "value": -4792, "index": null}, {"date": "2021-12-28", "value": -9008, "index": null}, {"date": "2022-01-04", "value": -9490, "index": null}, {"date": "2022-01-11", "value": -4451, "index": null}, {"date": "2022-01-18", "value": 4920, "index": null}, {"date": "2022-01-25", "value": -790, "index": null}, {"date": "2022-02-01", "value": 730, "index": null}, {"date": "2022-02-08", "value": 1244, "index": null}, {"date": "2022-02-15", "value": 8974, "index": null}, {"date": "2022-02-22", "value": 16825, "index": null}, {"date": "2022-03-01", "value": 42378, "index": null}, {"date": "2022-03-08", "value": 53017, "index": null}, {"date": "2022-03-15", "value": -10576, "index": null}, {"date": "2022-03-22", "value": -18051, "index": null}, {"date": "2022-03-29", "value": -8247, "index": null}, {"date": "2022-04-05", "value": 910, "index": null}, {"date": "2022-04-12", "value": 14960, "index": null}, {"date": "2022-04-19", "value": 21664, "index": null}, {"date": "2022-04-26", "value": 20126, "index": null}, {"date": "2022-05-03", "value": 14623, "index": null}, {"date": "2022-05-10", "value": 16725, "index": null}, {"date": "2022-05-17", "value": 28215, "index": null}, {"date": "2022-05-24", "value": 29792, "index": null}, {"date": "2022-05-31", "value": 35449, "index": null}, {"date": "2022-06-07", "value": 32726, "index": null}, {"date": "2022-06-14", "value": -26381, "index": null}, {"date": "2022-06-21", "value": -26870, "index": null}, {"date": "2022-06-28", "value": -13980, "index": null}, {"date": "2022-07-05", "value": -14418, "index": null}, {"date": "2022-07-12", "value": -23238, "index": null}, {"date": "2022-07-19", "value": -30760, "index": null}, {"date": "2022-07-26", "value": -29898, "index": null}, {"date": "2022-08-02", "value": -23053, "index": null}, {"date": "2022-08-09", "value": -27621, "index": null}, {"date": "2022-08-16", "value": -21371, "index": null}, {"date": "2022-08-23", "value": -31316, "index": null}, {"date": "2022-08-30", "value": -29030, "index": null}, {"date": "2022-09-06", "value": -29460, "index": null}, {"date": "2022-09-13", "value": -25381, "index": null}, {"date": "2022-09-20", "value": -28033, "index": null}, {"date": "2022-09-27", "value": -41322, "index": null}, {"date": "2022-10-04", "value": -37321, "index": null}, {"date": "2022-10-11", "value": -33654, "index": null}, {"date": "2022-10-18", "value": -22294, "index": null}, {"date": "2022-10-25", "value": 12574, "index": null}, {"date": "2022-11-01", "value": 44045, "index": null}, {"date": "2022-11-08", "value": 59614, "index": null}, {"date": "2022-11-15", "value": 67851, "index": null}, {"date": "2022-11-22", "value": 63319, "index": null}, {"date": "2022-11-29", "value": 66086, "index": null}, {"date": "2022-12-06", "value": 47952, "index": null}, {"date": "2022-12-13", "value": 44364, "index": null}, {"date": "2022-12-20", "value": -55096, "index": null}, {"date": "2022-12-27", "value": -51726, "index": null}, {"date": "2023-01-03", "value": -56376, "index": null}, {"date": "2023-01-10", "value": -53381, "index": null}, {"date": "2023-01-17", "value": -48639, "index": null}, {"date": "2023-01-24", "value": -48740, "index": null}, {"date": "2023-01-31", "value": -45270, "index": null}, {"date": "2023-02-07", "value": -44278, "index": null}, {"date": "2023-02-14", "value": -39667, "index": null}, {"date": "2023-02-21", "value": -36873, "index": null}, {"date": "2023-02-28", "value": -35145, "index": null}, {"date": "2023-03-07", "value": -31252, "index": null}, {"date": "2023-03-14", "value": 66127, "index": null}, {"date": "2023-03-21", "value": 51530, "index": null}, {"date": "2023-03-28", "value": 49279, "index": null}, {"date": "2023-04-04", "value": 57913, "index": null}, {"date": "2023-04-11", "value": 60477, "index": null}, {"date": "2023-04-18", "value": 56171, "index": null}, {"date": "2023-04-25", "value": 54128, "index": null}, {"date": "2023-05-02", "value": 57710, "index": null}, {"date": "2023-05-09", "value": 70032, "index": null}, {"date": "2023-05-16", "value": 73635, "index": null}, {"date": "2023-05-23", "value": 76943, "index": null}, {"date": "2023-05-30", "value": 78005, "index": null}, {"date": "2023-06-06", "value": 81670, "index": null}, {"date": "2023-06-13", "value": 78835, "index": null}, {"date": "2023-06-20", "value": 99718, "index": null}, {"date": "2023-06-27", "value": 96349, "index": null}, {"date": "2023-07-03", "value": 95240, "index": null}, {"date": "2023-07-11", "value": 96166, "index": null}, {"date": "2023-07-18", "value": 94492, "index": null}, {"date": "2023-07-25", "value": 87841, "index": null}, {"date": "2023-08-01", "value": 88548, "index": null}, {"date": "2023-08-08", "value": 83651, "index": null}, {"date": "2023-08-15", "value": 82023, "index": null}, {"date": "2023-08-22", "value": 73659, "index": null}, {"date": "2023-08-29", "value": 73863, "index": null}, {"date": "2023-09-05", "value": 67521, "index": null}, {"date": "2023-09-12", "value": 66871, "index": null}, {"date": "2023-09-19", "value": 63650, "index": null}, {"date": "2023-09-26", "value": 60633, "index": null}, {"date": "2023-10-03", "value": 64514, "index": null}, {"date": "2023-10-10", "value": 52233, "index": null}, {"date": "2023-10-17", "value": 44305, "index": null}, {"date": "2023-10-24", "value": 37861, "index": null}, {"date": "2023-10-31", "value": 31297, "index": null}, {"date": "2023-11-07", "value": 36740, "index": null}, {"date": "2023-11-14", "value": 43382, "index": null}, {"date": "2023-11-21", "value": 58931, "index": null}, {"date": "2023-11-28", "value": 65485, "index": null}, {"date": "2023-12-05", "value": 73456, "index": null}, {"date": "2023-12-12", "value": 74125, "index": null}, {"date": "2023-12-19", "value": 84001, "index": null}, {"date": "2023-12-26", "value": 87749, "index": null}, {"date": "2024-01-02", "value": 89098, "index": null}, {"date": "2024-01-09", "value": 88439, "index": null}, {"date": "2024-01-16", "value": 81602, "index": null}, {"date": "2024-01-23", "value": 75099, "index": null}, {"date": "2024-01-30", "value": 80393, "index": null}, {"date": "2024-02-06", "value": 86829, "index": null}, {"date": "2024-02-13", "value": 100444, "index": null}, {"date": "2024-02-20", "value": 95995, "index": null}, {"date": "2024-02-27", "value": 93814, "index": null}, {"date": "2024-03-05", "value": 106586, "index": null}, {"date": "2024-03-12", "value": 104292, "index": null}, {"date": "2024-03-19", "value": 128670, "index": null}, {"date": "2024-03-26", "value": 132068, "index": null}, {"date": "2024-04-02", "value": 133730, "index": null}, {"date": "2024-04-09", "value": 139691, "index": null}, {"date": "2024-04-16", "value": 127731, "index": null}, {"date": "2024-04-23", "value": 123655, "index": null}, {"date": "2024-04-30", "value": 119045, "index": null}, {"date": "2024-05-07", "value": 112312, "index": null}, {"date": "2024-05-14", "value": 112961, "index": null}, {"date": "2024-05-21", "value": 117892, "index": null}, {"date": "2024-05-28", "value": 120919, "index": null}, {"date": "2024-06-04", "value": 124671, "index": null}, {"date": "2024-06-11", "value": 118993, "index": null}, {"date": "2024-06-18", "value": 50254, "index": null}, {"date": "2024-06-25", "value": 57806, "index": null}, {"date": "2024-07-02", "value": 63627, "index": null}, {"date": "2024-07-09", "value": 63323, "index": null}, {"date": "2024-07-16", "value": 61710, "index": null}, {"date": "2024-07-23", "value": 69317, "index": null}, {"date": "2024-07-30", "value": 67660, "index": null}, {"date": "2024-08-06", "value": 65336, "index": null}, {"date": "2024-08-13", "value": 50094, "index": null}, {"date": "2024-08-20", "value": 34646, "index": null}, {"date": "2024-08-27", "value": 30720, "index": null}, {"date": "2024-09-03", "value": 30479, "index": null}, {"date": "2024-09-10", "value": 27026, "index": null}, {"date": "2024-09-17", "value": 7723, "index": null}, {"date": "2024-09-24", "value": 12426, "index": null}, {"date": "2024-10-01", "value": 26299, "index": null}, {"date": "2024-10-08", "value": 29193, "index": null}, {"date": "2024-10-15", "value": 25246, "index": null}, {"date": "2024-10-22", "value": 23897, "index": null}, {"date": "2024-10-29", "value": 35045, "index": null}, {"date": "2024-11-05", "value": 31095, "index": null}, {"date": "2024-11-12", "value": 20193, "index": null}, {"date": "2024-11-19", "value": 14014, "index": null}, {"date": "2024-11-26", "value": 3458, "index": null}, {"date": "2024-12-03", "value": 4184, "index": null}, {"date": "2024-12-10", "value": 7928, "index": null}, {"date": "2024-12-17", "value": 14614, "index": null}, {"date": "2024-12-24", "value": 18843, "index": null}, {"date": "2024-12-31", "value": 20671, "index": null}, {"date": "2025-01-07", "value": 12391, "index": null}, {"date": "2025-01-14", "value": 5997, "index": null}, {"date": "2025-01-21", "value": -1544, "index": null}, {"date": "2025-01-28", "value": 5224, "index": null}, {"date": "2025-02-04", "value": 12262, "index": null}, {"date": "2025-02-11", "value": 15850, "index": null}, {"date": "2025-02-18", "value": 14673, "index": null}, {"date": "2025-02-25", "value": 28730, "index": null}, {"date": "2025-03-04", "value": 19456, "index": null}, {"date": "2025-03-11", "value": 30086, "index": null}, {"date": "2025-03-18", "value": 55952, "index": null}, {"date": "2025-03-25", "value": 59039, "index": null}, {"date": "2025-04-01", "value": 51080, "index": null}, {"date": "2025-04-08", "value": 39082, "index": null}, {"date": "2025-04-15", "value": 33269, "index": null}, {"date": "2025-04-22", "value": 41165, "index": null}, {"date": "2025-04-29", "value": 59512, "index": null}, {"date": "2025-05-06", "value": 68555, "index": null}, {"date": "2025-05-13", "value": 65706, "index": null}, {"date": "2025-05-20", "value": 62532, "index": null}, {"date": "2025-05-27", "value": 61402, "index": null}, {"date": "2025-06-03", "value": 64449, "index": null}, {"date": "2025-06-10", "value": 62726, "index": null}, {"date": "2025-06-17", "value": 58027, "index": null}, {"date": "2025-06-24", "value": 51311, "index": null}, {"date": "2025-07-01", "value": 54512, "index": null}, {"date": "2025-07-08", "value": 55078, "index": null}, {"date": "2025-07-15", "value": 50122, "index": null}, {"date": "2025-07-22", "value": 56064, "index": null}, {"date": "2025-07-29", "value": 56678, "index": null}, {"date": "2025-08-05", "value": 68055, "index": null}, {"date": "2025-08-12", "value": 61239, "index": null}, {"date": "2025-08-19", "value": 64525, "index": null}, {"date": "2025-08-26", "value": 68998, "index": null}, {"date": "2025-09-02", "value": 73013, "index": null}, {"date": "2025-09-09", "value": 73732, "index": null}, {"date": "2025-09-16", "value": 77993, "index": null}, {"date": "2025-09-23", "value": 83433, "index": null}, {"date": "2025-09-30", "value": 91883, "index": null}, {"date": "2025-10-07", "value": 87667, "index": null}, {"date": "2025-10-14", "value": 67561, "index": null}, {"date": "2025-10-21", "value": 73342, "index": null}, {"date": "2025-10-28", "value": 81504, "index": null}, {"date": "2025-11-04", "value": 86176, "index": null}, {"date": "2025-11-10", "value": 85181, "index": null}, {"date": "2025-11-18", "value": 95828, "index": null}, {"date": "2025-11-25", "value": 95187, "index": null}, {"date": "2025-12-02", "value": 98940, "index": null}, {"date": "2025-12-09", "value": 106976, "index": null}, {"date": "2025-12-16", "value": 87112, "index": null}, {"date": "2025-12-23", "value": 101176, "index": null}, {"date": "2025-12-30", "value": 106366, "index": null}, {"date": "2026-01-06", "value": 109301, "index": null}, {"date": "2026-01-13", "value": 103558, "index": null}, {"date": "2026-01-20", "value": 107153, "index": null}, {"date": "2026-01-27", "value": 103114, "index": null}, {"date": "2026-02-03", "value": 90592, "index": null}, {"date": "2026-02-10", "value": 84951, "index": null}, {"date": "2026-02-17", "value": 84122, "index": null}, {"date": "2026-02-24", "value": 82880, "index": null}, {"date": "2026-03-03", "value": 77043, "index": null}, {"date": "2026-03-10", "value": 73811, "index": null}, {"date": "2026-03-17", "value": 68460, "index": null}, {"date": "2026-03-24", "value": 74076, "index": null}, {"date": "2026-03-31", "value": 57684, "index": null}, {"date": "2026-04-07", "value": 57471, "index": null}, {"date": "2026-04-14", "value": 58954, "index": null}, {"date": "2026-04-21", "value": 67701, "index": null}, {"date": "2026-04-28", "value": 67823, "index": null}, {"date": "2026-05-05", "value": 62127, "index": null}, {"date": "2026-05-12", "value": 64090, "index": null}, {"date": "2026-05-19", "value": 62249, "index": null}, {"date": "2026-05-26", "value": 58154, "index": null}, {"date": "2026-06-02", "value": 54657, "index": null}, {"date": "2026-06-09", "value": 63801, "index": null}];
         const canvas = document.getElementById('chart');
@@ -61,7 +87,7 @@
         };
 
         const formatNumber = value => value.toLocaleString('en-US');
-        const getColor = value => value >= 0 ? '#0a8f62' : '#c7354f';
+        const getColor = value => value >= 0 ? '#26a69a' : '#ef5350';
         const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
         const minWindow = Math.min(4, points.length);
         let layout = null;
@@ -108,7 +134,7 @@
             ctx.clearRect(0, 0, width, height);
 
             if (!points.length) {
-                ctx.fillStyle = '#5e6a7d';
+                ctx.fillStyle = '#787b86';
                 ctx.font = '14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
                 ctx.fillText('No chart data available', 28, 38);
                 return;
@@ -149,12 +175,12 @@
             const step = plotW / visibleCount;
             const barW = Math.max(2, Math.min(22, step * 0.72));
 
-            ctx.fillStyle = '#ffffff';
+            ctx.fillStyle = '#131722';
             ctx.fillRect(0, 0, width, height);
 
-            ctx.strokeStyle = '#e3e8f0';
+            ctx.strokeStyle = '#2a2e39';
             ctx.lineWidth = 1;
-            ctx.fillStyle = '#5e6a7d';
+            ctx.fillStyle = '#787b86';
             ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
             ctx.textAlign = 'right';
             ctx.textBaseline = 'middle';
@@ -169,7 +195,7 @@
             }
 
             if (indexValues.length) {
-                ctx.fillStyle = '#2f7df6';
+                ctx.fillStyle = '#2962ff';
                 ctx.textAlign = 'left';
                 ctx.textBaseline = 'middle';
                 for (let tick = 0; tick <= 4; tick++) {
@@ -180,7 +206,7 @@
                 ctx.fillText('Index', width - pad.right + 10, pad.top - 10);
             }
 
-            ctx.strokeStyle = '#9aa6b6';
+            ctx.strokeStyle = '#5d606b';
             ctx.beginPath();
             ctx.moveTo(pad.left, zeroY);
             ctx.lineTo(width - pad.right, zeroY);
@@ -205,7 +231,7 @@
                 }))
                 .filter(point => point.y !== null);
             if (linePoints.length > 1) {
-                ctx.strokeStyle = '#2f7df6';
+                ctx.strokeStyle = '#2962ff';
                 ctx.lineWidth = 2.5;
                 ctx.beginPath();
                 linePoints.forEach((point, index) => {
@@ -219,8 +245,8 @@
                     if (point.index !== null) {
                         const x = pad.left + state.hoverIndex * step + step / 2;
                         const y = indexYFor(point.index);
-                        ctx.fillStyle = '#ffffff';
-                        ctx.strokeStyle = '#2f7df6';
+                        ctx.fillStyle = '#131722';
+                        ctx.strokeStyle = '#2962ff';
                         ctx.lineWidth = 2;
                         ctx.beginPath();
                         ctx.arc(x, y, 4, 0, Math.PI * 2);
@@ -230,7 +256,7 @@
                 }
             }
 
-            ctx.fillStyle = '#5e6a7d';
+            ctx.fillStyle = '#787b86';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
             const labelEvery = Math.max(1, Math.ceil(visibleCount / Math.max(4, Math.floor(plotW / 82))));
@@ -246,7 +272,7 @@
 
             if (state.hoverIndex >= 0) {
                 const x = pad.left + state.hoverIndex * step + step / 2;
-                ctx.strokeStyle = '#172033';
+                ctx.strokeStyle = '#d1d4dc';
                 ctx.globalAlpha = 0.26;
                 ctx.beginPath();
                 ctx.moveTo(x, pad.top);
@@ -272,9 +298,9 @@
             const startX = xForIndex(state.start);
             const endX = xForIndex(state.end);
 
-            ctx.fillStyle = '#f4f7fb';
+            ctx.fillStyle = '#0f131d';
             ctx.fillRect(slider.left, slider.top, trackW, slider.height);
-            ctx.strokeStyle = '#d8e0eb';
+            ctx.strokeStyle = '#2a2e39';
             ctx.strokeRect(slider.left, slider.top, trackW, slider.height);
 
             points.forEach((point, index) => {
@@ -290,25 +316,25 @@
             });
             ctx.globalAlpha = 1;
 
-            ctx.fillStyle = 'rgba(23, 32, 51, 0.10)';
+            ctx.fillStyle = 'rgba(11, 15, 25, 0.58)';
             ctx.fillRect(slider.left, slider.top, Math.max(0, startX - slider.left), slider.height);
             ctx.fillRect(endX, slider.top, Math.max(0, slider.right - endX), slider.height);
 
-            ctx.fillStyle = 'rgba(76, 139, 245, 0.16)';
+            ctx.fillStyle = 'rgba(41, 98, 255, 0.18)';
             ctx.fillRect(startX, slider.top, Math.max(2, endX - startX), slider.height);
-            ctx.strokeStyle = '#3b74d7';
+            ctx.strokeStyle = '#2962ff';
             ctx.lineWidth = 2;
             ctx.strokeRect(startX, slider.top, Math.max(2, endX - startX), slider.height);
 
             [startX, endX].forEach(x => {
-                ctx.fillStyle = '#ffffff';
-                ctx.strokeStyle = '#3b74d7';
+                ctx.fillStyle = '#131722';
+                ctx.strokeStyle = '#2962ff';
                 ctx.lineWidth = 2;
                 ctx.beginPath();
                 ctx.roundRect(x - 6, slider.top - 4, 12, slider.height + 8, 5);
                 ctx.fill();
                 ctx.stroke();
-                ctx.strokeStyle = '#9aa6b6';
+                ctx.strokeStyle = '#787b86';
                 ctx.lineWidth = 1;
                 ctx.beginPath();
                 ctx.moveTo(x - 2, yMid - 7);
@@ -318,7 +344,7 @@
                 ctx.stroke();
             });
 
-            ctx.fillStyle = '#5e6a7d';
+            ctx.fillStyle = '#787b86';
             ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'top';
@@ -348,7 +374,7 @@
 
             state.hoverIndex = index;
             const point = points[state.start + index];
-            const indexLine = point.index === null ? '' : `<br><span style="color:#72a8ff">Futures Index: ${point.index.toFixed(2)}</span>`;
+            const indexLine = point.index === null ? '' : `<br><span style="color:#82a6ff">Futures Index: ${point.index.toFixed(2)}</span>`;
             tooltip.innerHTML = `<strong>${point.date}</strong><br><span class="${point.value >= 0 ? 'value-pos' : 'value-neg'}">Net: ${formatNumber(point.value)}</span>${indexLine}`;
             tooltip.style.display = 'block';
             tooltip.style.left = `${Math.min(event.clientX + 12, window.innerWidth - tooltip.offsetWidth - 12)}px`;

@@ -5,45 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spring Wheat Mpls (MWE)</title>
     <style>
+        :root {
+            --tv-bg: #0b0f19;
+            --tv-panel: #131722;
+            --tv-panel-2: #0f131d;
+            --tv-border: #2a2e39;
+            --tv-border-soft: #1f2430;
+            --tv-text: #d1d4dc;
+            --tv-muted: #787b86;
+            --tv-faint: #5d606b;
+            --tv-blue: #2962ff;
+            --tv-green: #26a69a;
+            --tv-red: #ef5350;
+            --tv-hover: #1e222d;
+        }
         * { box-sizing: border-box; }
         html, body { height: 100%; }
-        body { margin: 0; background: #f7f8fb; color: #172033; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-        .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 20px 10px; }
-        h1 { margin: 0; font-size: 20px; font-weight: 700; }
-        .meta { color: #5e6a7d; font-size: 13px; white-space: nowrap; }
-        .legend-inline { display: flex; align-items: center; gap: 14px; margin-top: 4px; color: #5e6a7d; font-size: 12px; }
+        body { margin: 0; background: var(--tv-bg); color: var(--tv-text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; padding: 10px; }
+        .site-nav { display: flex; align-items: center; gap: 4px; max-width: 1600px; margin: 0 auto 10px; border: 1px solid var(--tv-border); background: var(--tv-panel); border-radius: 6px; height: 42px; padding: 0 6px; }
+        .site-nav a { display: inline-flex; align-items: center; height: 30px; padding: 0 12px; color: var(--tv-muted); text-decoration: none; font-weight: 700; border-radius: 4px; font-size: 13px; }
+        .site-nav a:hover { color: var(--tv-text); background: var(--tv-hover); }
+        .site-nav a.active { color: #fff; background: var(--tv-blue); }
+        .page { max-width: 1600px; height: calc(100vh - 62px); margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+        .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 58px; padding: 8px 12px; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; }
+        h1 { margin: 0; font-size: 20px; font-weight: 800; color: #fff; letter-spacing: 0; }
+        .meta { color: var(--tv-muted); font-size: 12px; white-space: nowrap; }
+        .legend-inline { display: flex; align-items: center; gap: 14px; margin-top: 4px; color: var(--tv-muted); font-size: 12px; }
         .legend-item { display: inline-flex; align-items: center; gap: 6px; }
         .legend-swatch { width: 18px; height: 3px; border-radius: 999px; display: inline-block; }
-        .legend-bar { background: #0a8f62; }
-        .legend-line { background: #2f7df6; }
-        .chart-wrap { position: relative; height: calc(100vh - 62px); min-height: 420px; padding: 0 14px 14px; }
-        canvas { display: block; width: 100%; height: 100%; background: #ffffff; border: 1px solid #dbe1ea; border-radius: 8px; }
-        .tooltip { position: fixed; pointer-events: none; display: none; background: rgba(23, 32, 51, 0.95); color: white; padding: 8px 10px; border-radius: 6px; font-size: 12px; line-height: 1.35; box-shadow: 0 8px 24px rgba(23, 32, 51, 0.22); }
-        .value-pos { color: #0a8f62; }
-        .value-neg { color: #c7354f; }
+        .legend-bar { background: var(--tv-green); }
+        .legend-line { background: var(--tv-blue); }
+        .chart-wrap { position: relative; flex: 1; min-height: 420px; }
+        canvas { display: block; width: 100%; height: 100%; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; }
+        .tooltip { position: fixed; pointer-events: none; display: none; background: rgba(19, 23, 34, 0.96); color: var(--tv-text); padding: 8px 10px; border-radius: 4px; border: 1px solid var(--tv-border); font-size: 12px; line-height: 1.35; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35); }
+        .value-pos { color: var(--tv-green); }
+        .value-neg { color: var(--tv-red); }
         .dragging { cursor: grabbing; }
         @media (max-width: 640px) {
             .toolbar { align-items: flex-start; flex-direction: column; gap: 4px; }
             .meta { white-space: normal; }
-            .chart-wrap { height: calc(100vh - 92px); min-height: 360px; }
+            .page { height: calc(100dvh - 62px); }
+            .chart-wrap { min-height: 360px; }
         }
     </style>
 </head>
 <body>
-    <div class="toolbar">
-        <div>
-            <h1>Spring Wheat Mpls (MWE)</h1>
-            <div class="legend-inline">
-                <span class="legend-item"><span class="legend-swatch legend-bar"></span>Non-Commercial Net</span>
-                <span class="legend-item"><span class="legend-swatch legend-line"></span>Futures Index (base=100)</span>
+    <nav class="site-nav" aria-label="Primary">
+        <a href="../index.html" class="active">Non-Commercial</a>
+        <a href="../russell2000_top100.html">Maket</a>
+    </nav>
+    <main class="page">
+        <div class="toolbar">
+            <div>
+                <h1>Spring Wheat Mpls (MWE)</h1>
+                <div class="legend-inline">
+                    <span class="legend-item"><span class="legend-swatch legend-bar"></span>Non-Commercial Net</span>
+                    <span class="legend-item"><span class="legend-swatch legend-line"></span>Futures Index (base=100)</span>
+                </div>
             </div>
+            <div id="meta" class="meta">Non-Commercial Net | Weekly bars | Last 71 reports</div>
         </div>
-        <div id="meta" class="meta">Non-Commercial Net | Weekly bars | Last 71 reports</div>
-    </div>
-    <div class="chart-wrap">
-        <canvas id="chart"></canvas>
-        <div id="tooltip" class="tooltip"></div>
-    </div>
+        <div class="chart-wrap">
+            <canvas id="chart"></canvas>
+            <div id="tooltip" class="tooltip"></div>
+        </div>
+    </main>
     <script>
         const points = [{"date": "2024-11-26", "value": -25313, "index": null}, {"date": "2024-12-03", "value": -27397, "index": null}, {"date": "2024-12-10", "value": -25861, "index": null}, {"date": "2024-12-17", "value": -23147, "index": null}, {"date": "2024-12-24", "value": -25653, "index": null}, {"date": "2024-12-31", "value": -25185, "index": null}, {"date": "2025-01-07", "value": -28093, "index": null}, {"date": "2025-01-14", "value": -27101, "index": null}, {"date": "2025-01-21", "value": -23428, "index": null}, {"date": "2025-01-28", "value": -18776, "index": null}, {"date": "2025-02-04", "value": -12038, "index": null}, {"date": "2025-02-11", "value": -9093, "index": null}, {"date": "2025-02-18", "value": -5153, "index": null}, {"date": "2025-02-25", "value": -3339, "index": null}, {"date": "2025-03-04", "value": -16285, "index": null}, {"date": "2025-03-11", "value": -23119, "index": null}, {"date": "2025-03-18", "value": -17772, "index": null}, {"date": "2025-03-25", "value": -19387, "index": null}, {"date": "2025-04-01", "value": -24364, "index": null}, {"date": "2025-04-08", "value": -25115, "index": null}, {"date": "2025-04-15", "value": 0, "index": null}, {"date": "2025-04-22", "value": 0, "index": null}, {"date": "2025-04-29", "value": 0, "index": null}, {"date": "2025-05-06", "value": 0, "index": null}, {"date": "2025-05-13", "value": 0, "index": null}, {"date": "2025-05-20", "value": 0, "index": null}, {"date": "2025-05-27", "value": 0, "index": null}, {"date": "2025-06-03", "value": 0, "index": null}, {"date": "2025-06-10", "value": 0, "index": null}, {"date": "2025-06-17", "value": 0, "index": null}, {"date": "2025-06-24", "value": 0, "index": null}, {"date": "2025-07-01", "value": 0, "index": null}, {"date": "2025-07-08", "value": 0, "index": null}, {"date": "2025-07-15", "value": 0, "index": null}, {"date": "2025-07-22", "value": 0, "index": null}, {"date": "2025-07-29", "value": 0, "index": null}, {"date": "2025-08-05", "value": 0, "index": null}, {"date": "2025-08-12", "value": 0, "index": null}, {"date": "2025-08-19", "value": 0, "index": null}, {"date": "2025-08-26", "value": 0, "index": null}, {"date": "2025-09-02", "value": 0, "index": null}, {"date": "2025-09-09", "value": 0, "index": null}, {"date": "2025-09-16", "value": 0, "index": null}, {"date": "2025-09-23", "value": 0, "index": null}, {"date": "2025-09-30", "value": 0, "index": null}, {"date": "2025-10-07", "value": 0, "index": null}, {"date": "2025-10-14", "value": 0, "index": null}, {"date": "2025-10-21", "value": 0, "index": null}, {"date": "2025-10-28", "value": 0, "index": null}, {"date": "2025-11-04", "value": 0, "index": null}, {"date": "2025-11-10", "value": 0, "index": null}, {"date": "2025-11-18", "value": 0, "index": null}, {"date": "2025-11-25", "value": 0, "index": null}, {"date": "2025-12-02", "value": 0, "index": null}, {"date": "2025-12-09", "value": 0, "index": null}, {"date": "2025-12-16", "value": 0, "index": null}, {"date": "2025-12-23", "value": 0, "index": null}, {"date": "2025-12-30", "value": 0, "index": null}, {"date": "2026-01-06", "value": 0, "index": null}, {"date": "2026-01-13", "value": 0, "index": null}, {"date": "2026-01-20", "value": 0, "index": null}, {"date": "2026-01-27", "value": 0, "index": null}, {"date": "2026-02-03", "value": 0, "index": null}, {"date": "2026-02-10", "value": 0, "index": null}, {"date": "2026-02-17", "value": 0, "index": null}, {"date": "2026-02-24", "value": 0, "index": null}, {"date": "2026-03-03", "value": 0, "index": null}, {"date": "2026-03-10", "value": 0, "index": null}, {"date": "2026-03-17", "value": 0, "index": null}, {"date": "2026-03-24", "value": 0, "index": null}, {"date": "2026-03-31", "value": 0, "index": null}];
         const canvas = document.getElementById('chart');
@@ -61,7 +87,7 @@
         };
 
         const formatNumber = value => value.toLocaleString('en-US');
-        const getColor = value => value >= 0 ? '#0a8f62' : '#c7354f';
+        const getColor = value => value >= 0 ? '#26a69a' : '#ef5350';
         const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
         const minWindow = Math.min(4, points.length);
         let layout = null;
@@ -108,7 +134,7 @@
             ctx.clearRect(0, 0, width, height);
 
             if (!points.length) {
-                ctx.fillStyle = '#5e6a7d';
+                ctx.fillStyle = '#787b86';
                 ctx.font = '14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
                 ctx.fillText('No chart data available', 28, 38);
                 return;
@@ -149,12 +175,12 @@
             const step = plotW / visibleCount;
             const barW = Math.max(2, Math.min(22, step * 0.72));
 
-            ctx.fillStyle = '#ffffff';
+            ctx.fillStyle = '#131722';
             ctx.fillRect(0, 0, width, height);
 
-            ctx.strokeStyle = '#e3e8f0';
+            ctx.strokeStyle = '#2a2e39';
             ctx.lineWidth = 1;
-            ctx.fillStyle = '#5e6a7d';
+            ctx.fillStyle = '#787b86';
             ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
             ctx.textAlign = 'right';
             ctx.textBaseline = 'middle';
@@ -169,7 +195,7 @@
             }
 
             if (indexValues.length) {
-                ctx.fillStyle = '#2f7df6';
+                ctx.fillStyle = '#2962ff';
                 ctx.textAlign = 'left';
                 ctx.textBaseline = 'middle';
                 for (let tick = 0; tick <= 4; tick++) {
@@ -180,7 +206,7 @@
                 ctx.fillText('Index', width - pad.right + 10, pad.top - 10);
             }
 
-            ctx.strokeStyle = '#9aa6b6';
+            ctx.strokeStyle = '#5d606b';
             ctx.beginPath();
             ctx.moveTo(pad.left, zeroY);
             ctx.lineTo(width - pad.right, zeroY);
@@ -205,7 +231,7 @@
                 }))
                 .filter(point => point.y !== null);
             if (linePoints.length > 1) {
-                ctx.strokeStyle = '#2f7df6';
+                ctx.strokeStyle = '#2962ff';
                 ctx.lineWidth = 2.5;
                 ctx.beginPath();
                 linePoints.forEach((point, index) => {
@@ -219,8 +245,8 @@
                     if (point.index !== null) {
                         const x = pad.left + state.hoverIndex * step + step / 2;
                         const y = indexYFor(point.index);
-                        ctx.fillStyle = '#ffffff';
-                        ctx.strokeStyle = '#2f7df6';
+                        ctx.fillStyle = '#131722';
+                        ctx.strokeStyle = '#2962ff';
                         ctx.lineWidth = 2;
                         ctx.beginPath();
                         ctx.arc(x, y, 4, 0, Math.PI * 2);
@@ -230,7 +256,7 @@
                 }
             }
 
-            ctx.fillStyle = '#5e6a7d';
+            ctx.fillStyle = '#787b86';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
             const labelEvery = Math.max(1, Math.ceil(visibleCount / Math.max(4, Math.floor(plotW / 82))));
@@ -246,7 +272,7 @@
 
             if (state.hoverIndex >= 0) {
                 const x = pad.left + state.hoverIndex * step + step / 2;
-                ctx.strokeStyle = '#172033';
+                ctx.strokeStyle = '#d1d4dc';
                 ctx.globalAlpha = 0.26;
                 ctx.beginPath();
                 ctx.moveTo(x, pad.top);
@@ -272,9 +298,9 @@
             const startX = xForIndex(state.start);
             const endX = xForIndex(state.end);
 
-            ctx.fillStyle = '#f4f7fb';
+            ctx.fillStyle = '#0f131d';
             ctx.fillRect(slider.left, slider.top, trackW, slider.height);
-            ctx.strokeStyle = '#d8e0eb';
+            ctx.strokeStyle = '#2a2e39';
             ctx.strokeRect(slider.left, slider.top, trackW, slider.height);
 
             points.forEach((point, index) => {
@@ -290,25 +316,25 @@
             });
             ctx.globalAlpha = 1;
 
-            ctx.fillStyle = 'rgba(23, 32, 51, 0.10)';
+            ctx.fillStyle = 'rgba(11, 15, 25, 0.58)';
             ctx.fillRect(slider.left, slider.top, Math.max(0, startX - slider.left), slider.height);
             ctx.fillRect(endX, slider.top, Math.max(0, slider.right - endX), slider.height);
 
-            ctx.fillStyle = 'rgba(76, 139, 245, 0.16)';
+            ctx.fillStyle = 'rgba(41, 98, 255, 0.18)';
             ctx.fillRect(startX, slider.top, Math.max(2, endX - startX), slider.height);
-            ctx.strokeStyle = '#3b74d7';
+            ctx.strokeStyle = '#2962ff';
             ctx.lineWidth = 2;
             ctx.strokeRect(startX, slider.top, Math.max(2, endX - startX), slider.height);
 
             [startX, endX].forEach(x => {
-                ctx.fillStyle = '#ffffff';
-                ctx.strokeStyle = '#3b74d7';
+                ctx.fillStyle = '#131722';
+                ctx.strokeStyle = '#2962ff';
                 ctx.lineWidth = 2;
                 ctx.beginPath();
                 ctx.roundRect(x - 6, slider.top - 4, 12, slider.height + 8, 5);
                 ctx.fill();
                 ctx.stroke();
-                ctx.strokeStyle = '#9aa6b6';
+                ctx.strokeStyle = '#787b86';
                 ctx.lineWidth = 1;
                 ctx.beginPath();
                 ctx.moveTo(x - 2, yMid - 7);
@@ -318,7 +344,7 @@
                 ctx.stroke();
             });
 
-            ctx.fillStyle = '#5e6a7d';
+            ctx.fillStyle = '#787b86';
             ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'top';
@@ -348,7 +374,7 @@
 
             state.hoverIndex = index;
             const point = points[state.start + index];
-            const indexLine = point.index === null ? '' : `<br><span style="color:#72a8ff">Futures Index: ${point.index.toFixed(2)}</span>`;
+            const indexLine = point.index === null ? '' : `<br><span style="color:#82a6ff">Futures Index: ${point.index.toFixed(2)}</span>`;
             tooltip.innerHTML = `<strong>${point.date}</strong><br><span class="${point.value >= 0 ? 'value-pos' : 'value-neg'}">Net: ${formatNumber(point.value)}</span>${indexLine}`;
             tooltip.style.display = 'block';
             tooltip.style.left = `${Math.min(event.clientX + 12, window.innerWidth - tooltip.offsetWidth - 12)}px`;
