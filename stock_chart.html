@@ -21,12 +21,26 @@
   --tv-hover:#1e222d;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--tv-bg);color:var(--tv-text);padding:10px}
-.site-nav{display:flex;align-items:center;gap:4px;max-width:1600px;margin:0 auto 10px;border:1px solid var(--tv-border);background:var(--tv-panel);border-radius:6px;height:42px;padding:0 6px}
-.site-nav a{display:inline-flex;align-items:center;height:30px;padding:0 12px;color:var(--tv-muted);text-decoration:none;font-weight:700;border-radius:4px;font-size:13px}
-.site-nav a:hover{color:var(--tv-text);background:var(--tv-hover)}
-.site-nav a.active{color:#fff;background:var(--tv-blue)}
-.container{max-width:1600px;margin:0 auto}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--tv-bg);color:var(--tv-text);padding:0}
+.site-nav{min-height:64px;display:flex;align-items:center;gap:28px;padding:0 24px;background:#000;border-bottom:1px solid #1b1f2a;position:relative;z-index:30}
+.site-brand{display:inline-flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-size:25px;font-weight:800;letter-spacing:0;white-space:nowrap}
+.brand-mark{position:relative;width:22px;height:26px;display:inline-block}
+.brand-mark::before{content:"";position:absolute;left:7px;top:1px;width:10px;height:24px;background:#fff;border-radius:10px 10px 10px 1px;transform:skew(-18deg) rotate(22deg);transform-origin:center}
+.brand-mark::after{content:"";position:absolute;left:2px;bottom:2px;width:13px;height:3px;background:#fff;border-radius:999px;transform:rotate(-34deg)}
+.nav-check{position:absolute;opacity:0;pointer-events:none}
+.nav-toggle{display:none;width:38px;height:38px;border:1px solid #2a2e39;border-radius:999px;align-items:center;justify-content:center;flex-direction:column;gap:4px;cursor:pointer;margin-left:auto}
+.nav-toggle span{width:16px;height:2px;background:#fff;border-radius:999px}
+.nav-links{display:flex;align-items:center;gap:28px;flex:1}
+.nav-link{position:relative;color:#f3f4f6;text-decoration:none;font-size:15px;font-weight:650;white-space:nowrap}
+.nav-link:hover{color:#b8ff00}
+.nav-link.active{color:#b8ff00}
+.nav-link.active::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:2px;background:#b8ff00;border-radius:999px}
+.nav-actions{display:flex;align-items:center;gap:12px;margin-left:auto}
+.nav-locale{display:inline-flex;align-items:center;gap:6px;color:#f3f4f6;font-size:14px;font-weight:650;white-space:nowrap}
+.nav-action{height:42px;display:inline-flex;align-items:center;justify-content:center;padding:0 28px;border-radius:999px;text-decoration:none;font-size:15px;font-weight:750;white-space:nowrap}
+.nav-action.outline{color:#b8ff00;border:1px solid #b8ff00;background:transparent}
+.nav-action.fill{color:#050505;border:1px solid #b8ff00;background:#b8ff00}
+.container{max-width:1600px;margin:0 auto;padding:10px}
 .page-layout{display:grid;grid-template-columns:292px minmax(0,1fr);gap:8px;align-items:start}
 .page-layout.sidebar-collapsed{grid-template-columns:44px minmax(0,1fr)}
 .stock-panel{position:sticky;top:10px;height:calc(100vh - 62px);min-height:520px;background:var(--tv-panel);border:1px solid var(--tv-border);border-radius:6px;overflow:hidden;display:flex;flex-direction:column}
@@ -91,11 +105,22 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
 .status{padding:28px;text-align:center;color:var(--tv-muted);font-size:13px}
 .status strong{color:var(--tv-blue)}
 @media(max-width:768px){
-  body{padding:10px}
-  .site-nav a{padding:10px 12px}
+  .site-nav{min-height:58px;padding:10px 14px;gap:10px;flex-wrap:wrap}
+  .site-brand{font-size:21px}
+  .brand-mark{width:20px;height:24px}
+  .nav-toggle{display:flex}
+  .nav-links,.nav-actions{display:none;flex:0 0 100%;width:100%}
+  .nav-check:checked ~ .nav-links,.nav-check:checked ~ .nav-actions{display:flex}
+  .nav-links{order:3;flex-direction:column;align-items:stretch;gap:4px;padding-top:8px}
+  .nav-link{height:40px;display:flex;align-items:center;padding:0 4px;font-size:14px}
+  .nav-link.active::after{left:0;right:auto;bottom:4px;width:32px}
+  .nav-actions{order:4;gap:8px;padding-top:8px}
+  .nav-locale{display:none}
+  .nav-action{flex:1;height:40px;padding:0 12px;font-size:14px}
+  .container{padding:10px}
   .page-layout{display:block}
-  .main-panel{min-height:calc(100dvh - 58px)}
-  .stock-panel{position:fixed;left:10px;right:10px;top:62px;bottom:10px;height:auto;min-height:0;z-index:20;box-shadow:0 20px 60px rgba(0,0,0,.45);display:none}
+  .main-panel{min-height:calc(100dvh - 78px)}
+  .stock-panel{position:fixed;left:10px;right:10px;top:78px;bottom:10px;height:auto;min-height:0;z-index:20;box-shadow:0 20px 60px rgba(0,0,0,.45);display:none}
   .stock-panel.open{display:flex}
   .sidebar-collapsed .stock-panel-title,.sidebar-collapsed .stock-panel-body{display:flex}
   .sidebar-collapsed .stock-panel{align-items:stretch}
@@ -113,8 +138,18 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
 </head>
 <body>
 <nav class="site-nav" aria-label="Primary">
-  <a href="index.html">Non-Commercial</a>
-  <a href="russell2000_top100.html" class="active">Maket</a>
+  <a class="site-brand" href="index.html" aria-label="Net Data home"><span class="brand-mark" aria-hidden="true"></span><span>Net Data</span></a>
+  <input class="nav-check" type="checkbox" id="navMenu">
+  <label class="nav-toggle" for="navMenu" aria-label="Toggle navigation"><span></span><span></span><span></span></label>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Non-Commercial</a>
+    <a class="nav-link active" href="russell2000_top100.html">Market</a>
+  </div>
+  <div class="nav-actions">
+    <span class="nav-locale">◎ US</span>
+    <a class="nav-action outline" href="index.html">COT</a>
+    <a class="nav-action fill" href="russell2000_top100.html">Market</a>
+  </div>
 </nav>
 
 <main class="container">
@@ -195,7 +230,7 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
       </div>
     </div>
     <div class="actions">
-      <a class="btn" href="russell2000_top100.html">Back to Maket</a>
+      <a class="btn" href="russell2000_top100.html">Back to Market</a>
     </div>
   </div>
 
