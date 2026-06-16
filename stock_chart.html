@@ -253,6 +253,7 @@ const state = {
   sortKey: normalizeSortKey(params.get('sort') || 'gain'),
   sortDir: params.get('dir') === 'asc' ? 'asc' : 'desc'
 };
+let pendingLayoutRedraw = false;
 
 document.getElementById('symbol').textContent = currentSymbol || 'UNKNOWN';
 document.getElementById('name').textContent = fallbackName || 'Stock chart';
@@ -309,12 +310,35 @@ function renderHeader(data){
 }
 
 function resizeCanvas(){
-  const rect = canvas.getBoundingClientRect();
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = Math.max(1, Math.floor(rect.width * dpr));
-  canvas.height = Math.max(1, Math.floor(rect.height * dpr));
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   draw();
+}
+
+function syncCanvasSize(rect){
+  const dpr = window.devicePixelRatio || 1;
+  const nextWidth = Math.max(1, Math.floor(rect.width * dpr));
+  const nextHeight = Math.max(1, Math.floor(rect.height * dpr));
+  if(canvas.width !== nextWidth || canvas.height !== nextHeight){
+    canvas.width = nextWidth;
+    canvas.height = nextHeight;
+  }
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+function queueLayoutRedraw(width, height){
+  if(pendingLayoutRedraw) return;
+  pendingLayoutRedraw = true;
+  requestAnimationFrame(() => {
+    pendingLayoutRedraw = false;
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    const bitmapWidth = Math.max(1, Math.floor(rect.width * dpr));
+    const bitmapHeight = Math.max(1, Math.floor(rect.height * dpr));
+    const cssChanged = Math.abs(rect.width - width) > 0.5 || Math.abs(rect.height - height) > 0.5;
+    const bitmapChanged = canvas.width !== bitmapWidth || canvas.height !== bitmapHeight;
+    if(cssChanged || bitmapChanged) draw();
+  });
 }
 
 function visibleCandles(){
@@ -437,10 +461,14 @@ function plotWidthFor(width){
 }
 
 function draw(){
+  const readoutIndex = state.hover >= state.start && state.hover < state.end ? state.hover : state.end - 1;
+  renderMaLegend(state.candles[readoutIndex]);
+  renderCandleReadout(state.candles[readoutIndex], readoutIndex);
+
   const rect = canvas.getBoundingClientRect();
   const width = rect.width;
   const height = rect.height;
-  ctx.clearRect(0, 0, width, height);
+  syncCanvasSize(rect);
   const candles = visibleCandles();
   if(!candles.length) return;
   updateHistoryMeta();
@@ -497,7 +525,6 @@ function draw(){
 
   MOVING_AVERAGES.forEach(ma => drawMovingAverage(ma, candles, xFor, yFor));
 
-  const readoutIndex = state.hover >= state.start && state.hover < state.end ? state.hover : state.end - 1;
   if(state.hover >= state.start && state.hover < state.end){
     const local = state.hover - state.start;
     const c = state.candles[state.hover];
@@ -507,14 +534,13 @@ function draw(){
     ctx.setLineDash([4, 4]);
     ctx.beginPath();
     ctx.moveTo(x, top);
-    ctx.lineTo(x, height - bottom);
+    ctx.lineTo(x, priceBottom);
     ctx.moveTo(0, y);
     ctx.lineTo(width, y);
     ctx.stroke();
     ctx.setLineDash([]);
   }
-  renderMaLegend(state.candles[readoutIndex]);
-  renderCandleReadout(state.candles[readoutIndex], readoutIndex);
+  queueLayoutRedraw(width, height);
 }
 
 function nearestIndex(clientX){
