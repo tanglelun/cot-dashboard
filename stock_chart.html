@@ -78,7 +78,11 @@ h1{font-size:22px;color:#fff;font-weight:800;letter-spacing:0}
 .candle-readout .close-price,.candle-readout .price-change{font-weight:800}
 .candle-readout .up{color:var(--tv-green)}
 .candle-readout .down{color:var(--tv-red)}
+.ma-group{display:flex;align-items:center;gap:6px;min-height:22px}
+.ma-toggle{width:22px;height:22px;border:1px solid transparent;background:transparent;color:var(--tv-muted);border-radius:4px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-family:"SF Mono","Fira Code",monospace;font-size:13px;font-weight:800;line-height:1}
+.ma-toggle:hover{background:var(--tv-hover);color:var(--tv-text)}
 .ma-legend{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:"SF Mono","Fira Code",monospace;font-size:11px;color:var(--tv-muted)}
+.ma-group.collapsed .ma-legend{display:none}
 .ma-item{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
 .ma-dot{width:18px;height:2px;border-radius:2px;display:inline-block}
 .hint{font-size:11px;color:var(--tv-faint)}
@@ -204,7 +208,10 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
           <button class="btn" data-range="252">1Y</button>
           <button class="btn active" data-range="all">All</button>
         </div>
-        <div class="ma-legend" id="maLegend"></div>
+        <div class="ma-group" id="maGroup">
+          <button class="ma-toggle" id="maToggle" type="button" aria-label="Collapse moving averages" aria-expanded="true" title="Collapse moving averages">-</button>
+          <div class="ma-legend" id="maLegend"></div>
+        </div>
       </div>
       <div class="hint">Drag to pan · Wheel or pinch to zoom · Move cursor for OHLC</div>
       <div class="candle-readout" id="candleReadout">Select a candlestick</div>
@@ -226,6 +233,8 @@ const canvas = document.getElementById('chart');
 const ctx = canvas.getContext('2d');
 const statusEl = document.getElementById('status');
 const candleReadout = document.getElementById('candleReadout');
+const maGroup = document.getElementById('maGroup');
+const maToggle = document.getElementById('maToggle');
 const pageLayout = document.getElementById('pageLayout');
 const stockPanel = document.getElementById('stockPanel');
 const stockListEl = document.getElementById('stockList');
@@ -250,6 +259,7 @@ const state = {
   candles: [], start: 0, end: 0, hover: -1, dragging: false, dragX: 0, dragStart: 0, dragEnd: 0,
   pinching: false, pinchDistance: 0, pinchStart: 0, pinchEnd: 0, pinchRatio: 0.5,
   touchMode: 'idle', touchTimer: null, touchStartX: 0, touchStartY: 0,
+  maCollapsed: false,
   marketIndex: null, stockRows: [], activeRange: 'all',
   universe: params.get('universe') || 'r2kRaw',
   metric: params.get('metric') || 'd',
@@ -361,6 +371,15 @@ function calculateMovingAverages(candles){
 
 function renderMaLegend(candle){
   const target = document.getElementById('maLegend');
+  maGroup.classList.toggle('collapsed', state.maCollapsed);
+  maToggle.textContent = state.maCollapsed ? '+' : '-';
+  maToggle.setAttribute('aria-expanded', String(!state.maCollapsed));
+  maToggle.setAttribute('aria-label', state.maCollapsed ? 'Expand moving averages' : 'Collapse moving averages');
+  maToggle.title = state.maCollapsed ? 'Expand moving averages' : 'Collapse moving averages';
+  if(state.maCollapsed){
+    target.innerHTML = '';
+    return;
+  }
   target.innerHTML = MOVING_AVERAGES.map(ma => {
     const value = candle && candle[ma.key] ? fmt(candle[ma.key]) : '--';
     return '<span class="ma-item" style="color:'+ma.color+';opacity:'+ma.alpha+'"><span class="ma-dot" style="background:'+ma.color+'"></span>'+ma.label+' '+value+'</span>';
@@ -742,6 +761,11 @@ document.getElementById('ranges').addEventListener('click', event => {
   const button = event.target.closest('button[data-range]');
   if(!button) return;
   setRange(button.dataset.range);
+});
+
+maToggle.addEventListener('click', () => {
+  state.maCollapsed = !state.maCollapsed;
+  draw();
 });
 
 function rowSymbol(row){ return (row.symbol || row.t || '').toUpperCase(); }
