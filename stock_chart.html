@@ -244,9 +244,12 @@ const MOVING_AVERAGES = [
 const UNIVERSE_LABELS = { r2kRaw:'Russell 2000', spRaw:'S&P 500', ndqRaw:'Nasdaq 100', all:'All Stocks' };
 const SORT_LABELS = { gain:'Gain', rank:'Rank', price:'Price', marketCapNum:'Market Cap', symbol:'Symbol' };
 const DEFAULT_VISIBLE_CANDLES = 220;
+const TOUCH_INSPECT_DELAY = 350;
+const TOUCH_PAN_THRESHOLD = 7;
 const state = {
   candles: [], start: 0, end: 0, hover: -1, dragging: false, dragX: 0, dragStart: 0, dragEnd: 0,
   pinching: false, pinchDistance: 0, pinchStart: 0, pinchEnd: 0, pinchRatio: 0.5,
+  touchMode: 'idle', touchTimer: null, touchStartX: 0, touchStartY: 0,
   marketIndex: null, stockRows: [], activeRange: 'all',
   universe: params.get('universe') || 'r2kRaw',
   metric: params.get('metric') || 'd',
@@ -579,7 +582,55 @@ function inspectTouch(clientX){
   state.hover = nearestIndex(clientX);
 }
 
+function clearTouchTimer(){
+  if(state.touchTimer){
+    clearTimeout(state.touchTimer);
+    state.touchTimer = null;
+  }
+}
+
+function beginTouchInspect(touch){
+  clearTouchTimer();
+  state.touchMode = 'pending';
+  state.touchStartX = touch.clientX;
+  state.touchStartY = touch.clientY;
+  state.dragging = false;
+  state.pinching = false;
+  state.touchTimer = setTimeout(() => {
+    state.touchTimer = null;
+    if(state.touchMode !== 'pending') return;
+    state.touchMode = 'inspect';
+    inspectTouch(state.touchStartX);
+    draw();
+  }, TOUCH_INSPECT_DELAY);
+}
+
+function updateTouchInspect(touch){
+  if(state.touchMode === 'inspect'){
+    inspectTouch(touch.clientX);
+    return;
+  }
+  if(state.touchMode === 'pan'){
+    updateDrag(touch.clientX);
+    state.hover = -1;
+    return;
+  }
+  if(state.touchMode !== 'pending') return;
+
+  const dx = touch.clientX - state.touchStartX;
+  const dy = touch.clientY - state.touchStartY;
+  if(Math.hypot(dx, dy) < TOUCH_PAN_THRESHOLD) return;
+
+  clearTouchTimer();
+  state.touchMode = 'pan';
+  state.hover = -1;
+  beginDrag(state.touchStartX);
+  updateDrag(touch.clientX);
+}
+
 function endGesture(){
+  clearTouchTimer();
+  state.touchMode = 'idle';
   state.dragging = false;
   state.pinching = false;
 }
@@ -595,8 +646,10 @@ function touchMidX(touches){
 }
 
 function beginPinch(touches){
+  clearTouchTimer();
   const rect = canvas.getBoundingClientRect();
   const padBox = chartPadding(rect.width);
+  state.touchMode = 'pinch';
   state.pinching = true;
   state.dragging = false;
   state.pinchDistance = touchDistance(touches);
@@ -642,7 +695,7 @@ window.addEventListener('mouseup', endGesture);
 
 canvas.addEventListener('touchstart', event => {
   if(event.touches.length === 1){
-    inspectTouch(event.touches[0].clientX);
+    beginTouchInspect(event.touches[0]);
   }else if(event.touches.length >= 2){
     beginPinch(event.touches);
   }
@@ -654,7 +707,7 @@ canvas.addEventListener('touchmove', event => {
   if(event.touches.length >= 2){
     updatePinch(event.touches);
   }else if(event.touches.length === 1){
-    inspectTouch(event.touches[0].clientX);
+    updateTouchInspect(event.touches[0]);
   }
   draw();
   event.preventDefault();
@@ -664,7 +717,7 @@ canvas.addEventListener('touchend', event => {
   if(event.touches.length >= 2){
     beginPinch(event.touches);
   }else if(event.touches.length === 1){
-    inspectTouch(event.touches[0].clientX);
+    beginTouchInspect(event.touches[0]);
   }else{
     endGesture();
   }
