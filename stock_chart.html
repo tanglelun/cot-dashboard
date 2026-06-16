@@ -378,10 +378,7 @@ function renderCandleReadout(candle, index){
   const direction = diff >= 0 ? 'up' : 'down';
   const sign = diff >= 0 ? '+' : '';
   candleReadout.innerHTML =
-    '<strong>'+candle.time+' '+currentSymbol+'</strong>' +
-    '<span>O '+fmt(candle.open)+'</span>' +
-    '<span>H '+fmt(candle.high)+'</span>' +
-    '<span>L '+fmt(candle.low)+'</span>' +
+    '<strong>'+candle.time+'</strong>' +
     '<span>C <b class="close-price '+direction+'">'+fmt(candle.close)+'</b></span>' +
     '<span class="price-change '+direction+'">'+sign+fmt(diff)+' ('+sign+fmt(pct)+'%)</span>';
 }
