@@ -5,72 +5,87 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stock Chart</title>
 <style>
+:root{
+  --tv-bg:#0b0f19;
+  --tv-panel:#131722;
+  --tv-panel-2:#0f131d;
+  --tv-border:#2a2e39;
+  --tv-border-soft:#1f2430;
+  --tv-text:#d1d4dc;
+  --tv-muted:#787b86;
+  --tv-faint:#5d606b;
+  --tv-blue:#2962ff;
+  --tv-blue-soft:#1e3a8a;
+  --tv-green:#26a69a;
+  --tv-red:#ef5350;
+  --tv-hover:#1e222d;
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:#0f1923;color:#e0e0e0;padding:16px}
-.site-nav{display:flex;align-items:center;gap:8px;max-width:1600px;margin:0 auto 16px;border-bottom:1px solid #1e2d3a}
-.site-nav a{display:inline-flex;align-items:center;padding:12px 18px;color:#99aabb;text-decoration:none;font-weight:700;border-bottom:3px solid transparent}
-.site-nav a:hover{color:#fff}
-.site-nav a.active{color:#4fc3f7;border-bottom-color:#4fc3f7}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--tv-bg);color:var(--tv-text);padding:10px}
+.site-nav{display:flex;align-items:center;gap:4px;max-width:1600px;margin:0 auto 10px;border:1px solid var(--tv-border);background:var(--tv-panel);border-radius:6px;height:42px;padding:0 6px}
+.site-nav a{display:inline-flex;align-items:center;height:30px;padding:0 12px;color:var(--tv-muted);text-decoration:none;font-weight:700;border-radius:4px;font-size:13px}
+.site-nav a:hover{color:var(--tv-text);background:var(--tv-hover)}
+.site-nav a.active{color:#fff;background:var(--tv-blue)}
 .container{max-width:1600px;margin:0 auto}
-.page-layout{display:grid;grid-template-columns:282px minmax(0,1fr);gap:14px;align-items:start}
+.page-layout{display:grid;grid-template-columns:292px minmax(0,1fr);gap:8px;align-items:start}
 .page-layout.sidebar-collapsed{grid-template-columns:44px minmax(0,1fr)}
-.stock-panel{position:sticky;top:12px;height:calc(100vh - 44px);min-height:520px;background:#111d27;border:1px solid #1e2d3a;border-radius:8px;overflow:hidden;display:flex;flex-direction:column}
+.stock-panel{position:sticky;top:10px;height:calc(100vh - 62px);min-height:520px;background:var(--tv-panel);border:1px solid var(--tv-border);border-radius:6px;overflow:hidden;display:flex;flex-direction:column}
 .sidebar-collapsed .stock-panel{align-items:center}
-.stock-panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;border-bottom:1px solid #1e2d3a}
-.stock-panel-title{font-size:12px;font-weight:800;color:#d7e2ee;white-space:nowrap}
-.icon-btn{width:28px;height:28px;border:1px solid #2a3a4a;background:#1a2a38;color:#99aabb;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-weight:800}
-.icon-btn:hover{border-color:#4fc3f7;color:#fff}
-.stock-panel-body{padding:10px;display:flex;flex-direction:column;gap:8px;min-height:0;flex:1}
+.stock-panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px;height:38px;padding:0 10px;border-bottom:1px solid var(--tv-border)}
+.stock-panel-title{font-size:12px;font-weight:800;color:var(--tv-text);white-space:nowrap}
+.icon-btn{width:26px;height:26px;border:1px solid transparent;background:transparent;color:var(--tv-muted);border-radius:4px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-weight:800}
+.icon-btn:hover{background:var(--tv-hover);color:var(--tv-text)}
+.stock-panel-body{padding:8px;display:flex;flex-direction:column;gap:8px;min-height:0;flex:1}
 .sidebar-collapsed .stock-panel-title,.sidebar-collapsed .stock-panel-body{display:none}
 .field{display:flex;flex-direction:column;gap:4px}
-.field label{font-size:10px;color:#667788;font-weight:800;text-transform:uppercase;letter-spacing:.2px}
-.select,.stock-search{width:100%;border:1px solid #2a3a4a;background:#172635;color:#dce8f4;border-radius:5px;padding:7px 8px;font-size:12px;outline:none}
-.select:focus,.stock-search:focus{border-color:#4fc3f7}
+.field label{font-size:10px;color:var(--tv-muted);font-weight:800;text-transform:uppercase;letter-spacing:.2px}
+.select,.stock-search{width:100%;border:1px solid var(--tv-border);background:var(--tv-panel-2);color:var(--tv-text);border-radius:4px;padding:7px 8px;font-size:12px;outline:none}
+.select:focus,.stock-search:focus{border-color:var(--tv-blue)}
 .stock-nav{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.stock-list{min-height:0;overflow:auto;border:1px solid #1e2d3a;border-radius:6px;background:#0f1923}
-.stock-row{width:100%;display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:6px;align-items:center;border:none;border-bottom:1px solid #172635;background:transparent;color:#c7d2de;text-align:left;padding:7px 8px;cursor:pointer}
-.stock-row:hover{background:#172635}
-.stock-row.active{background:#14344a;color:#fff}
-.stock-rank{font-family:"SF Mono","Fira Code",monospace;font-size:10px;color:#667788}
+.stock-list{min-height:0;overflow:auto;border:1px solid var(--tv-border);border-radius:4px;background:var(--tv-panel-2)}
+.stock-row{width:100%;display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:6px;align-items:center;border:none;border-bottom:1px solid var(--tv-border-soft);background:transparent;color:var(--tv-text);text-align:left;padding:7px 8px;cursor:pointer}
+.stock-row:hover{background:var(--tv-hover)}
+.stock-row.active{background:#1b2b55;color:#fff;box-shadow:inset 2px 0 0 var(--tv-blue)}
+.stock-rank{font-family:"SF Mono","Fira Code",monospace;font-size:10px;color:var(--tv-muted)}
 .stock-main{min-width:0}
-.stock-symbol{font-family:"SF Mono","Fira Code",monospace;font-size:12px;font-weight:800;color:#4fc3f7}
-.stock-name{font-size:10px;color:#7e8d9d;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stock-symbol{font-family:"SF Mono","Fira Code",monospace;font-size:12px;font-weight:800;color:var(--tv-text)}
+.stock-name{font-size:10px;color:var(--tv-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .stock-value{font-family:"SF Mono","Fira Code",monospace;font-size:11px;font-weight:800}
-.stock-value.up{color:#4caf50}.stock-value.down{color:#ff5252}
+.stock-value.up{color:var(--tv-green)}.stock-value.down{color:var(--tv-red)}
 .main-panel{min-width:0;min-height:calc(100vh - 76px);display:flex;flex-direction:column}
-.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:12px;flex-wrap:wrap}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:8px;min-height:58px;padding:8px 12px;background:var(--tv-panel);border:1px solid var(--tv-border);border-radius:6px;flex-wrap:wrap}
 .identity{display:flex;flex-direction:column;gap:4px}
 .symbol-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-h1{font-size:24px;color:#fff;font-weight:800;letter-spacing:0}
-.name{font-size:13px;color:#99aabb}
-.meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;color:#667788}
-.badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:999px;background:#1a2d3a;color:#99aabb;font-size:11px}
+h1{font-size:22px;color:#fff;font-weight:800;letter-spacing:0}
+.name{font-size:13px;color:var(--tv-muted)}
+.meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--tv-muted)}
+.badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:4px;background:var(--tv-panel-2);border:1px solid var(--tv-border);color:var(--tv-muted);font-size:11px}
 .price-line{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
-.last-price{font-family:"SF Mono","Fira Code",monospace;font-size:22px;font-weight:800;color:#e0e0e0}
+.last-price{font-family:"SF Mono","Fira Code",monospace;font-size:22px;font-weight:800;color:var(--tv-text)}
 .change{font-family:"SF Mono","Fira Code",monospace;font-size:14px;font-weight:800}
-.change.up{color:#00c853}.change.down{color:#ff5252}
+.change.up{color:var(--tv-green)}.change.down{color:var(--tv-red)}
 .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.btn{border:1px solid #2a3a4a;background:#1a2a38;color:#99aabb;border-radius:5px;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none}
-.btn:hover{border-color:#4fc3f7;color:#fff}
-.btn.active{background:#4fc3f7;border-color:#4fc3f7;color:#0f1923}
+.btn{border:1px solid var(--tv-border);background:var(--tv-panel-2);color:var(--tv-muted);border-radius:4px;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--tv-hover);color:var(--tv-text)}
+.btn.active{background:var(--tv-blue);border-color:var(--tv-blue);color:#fff}
 .mobile-switcher{display:none}
-.chart-shell{background:#111d27;border:1px solid #1e2d3a;border-radius:8px;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:520px}
-.chart-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #1e2d3a;flex-wrap:wrap}
+.chart-shell{background:var(--tv-panel);border:1px solid var(--tv-border);border-radius:6px;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:520px}
+.chart-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 10px;border-bottom:1px solid var(--tv-border);flex-wrap:wrap}
 .toolbar-left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.candle-readout{display:flex;align-items:center;gap:10px;flex-wrap:wrap;width:100%;padding-top:2px;font-family:"SF Mono","Fira Code",monospace;font-size:12px;color:#9aaabd}
-.candle-readout strong{color:#e9f2fb}
+.candle-readout{display:flex;align-items:center;gap:10px;flex-wrap:wrap;width:100%;padding-top:2px;font-family:"SF Mono","Fira Code",monospace;font-size:12px;color:var(--tv-muted)}
+.candle-readout strong{color:var(--tv-text)}
 .candle-readout span{white-space:nowrap}
 .candle-readout .close-price,.candle-readout .price-change{font-weight:800}
-.candle-readout .up{color:#00c853}
-.candle-readout .down{color:#ff5252}
-.ma-legend{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:"SF Mono","Fira Code",monospace;font-size:11px;color:#8899aa}
+.candle-readout .up{color:var(--tv-green)}
+.candle-readout .down{color:var(--tv-red)}
+.ma-legend{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:"SF Mono","Fira Code",monospace;font-size:11px;color:var(--tv-muted)}
 .ma-item{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
 .ma-dot{width:18px;height:2px;border-radius:2px;display:inline-block}
-.hint{font-size:11px;color:#556677}
+.hint{font-size:11px;color:var(--tv-faint)}
 .chart-wrap{position:relative;flex:1;min-height:0}
 canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:crosshair;touch-action:none}
-.status{padding:28px;text-align:center;color:#8899aa;font-size:13px}
-.status strong{color:#4fc3f7}
+.status{padding:28px;text-align:center;color:var(--tv-muted);font-size:13px}
+.status strong{color:var(--tv-blue)}
 @media(max-width:768px){
   body{padding:10px}
   .site-nav a{padding:10px 12px}
@@ -222,9 +237,9 @@ const directionSelect = document.getElementById('directionSelect');
 const stockSearch = document.getElementById('stockSearch');
 const MOVING_AVERAGES = [
   { key:'ma10', label:'MA10', period:10, color:'#ffffff', alpha:0.2 },
-  { key:'ma20', label:'MA20', period:20, color:'#4fc3f7', alpha:0.95 },
-  { key:'ma50', label:'MA50', period:50, color:'#b07cff', alpha:0.5 },
-  { key:'ma200', label:'MA200', period:200, color:'#ff8a65', alpha:0.5 }
+  { key:'ma20', label:'MA20', period:20, color:'#2962ff', alpha:0.95 },
+  { key:'ma50', label:'MA50', period:50, color:'#7b61ff', alpha:0.5 },
+  { key:'ma200', label:'MA200', period:200, color:'#ff9800', alpha:0.5 }
 ];
 const UNIVERSE_LABELS = { r2kRaw:'Russell 2000', spRaw:'S&P 500', ndqRaw:'Nasdaq 100', all:'All Stocks' };
 const SORT_LABELS = { gain:'Gain', rank:'Rank', price:'Price', marketCapNum:'Market Cap', symbol:'Symbol' };
@@ -370,9 +385,9 @@ function drawMovingAverage(ma, candles, xFor, yFor){
 }
 
 function drawGrid(left, top, right, priceBottom, volumeTop, bottom, width, height, minPrice, maxPrice, maxVolume, candles, xFor, yFor){
-  ctx.strokeStyle = '#1d3040';
+  ctx.strokeStyle = '#2a2e39';
   ctx.lineWidth = 1;
-  ctx.fillStyle = '#607d8b';
+  ctx.fillStyle = '#787b86';
   ctx.font = '11px SF Mono, Fira Code, monospace';
   ctx.textAlign = 'right';
   ctx.textBaseline = 'middle';
@@ -457,7 +472,7 @@ function draw(){
   candles.forEach((c, i) => {
     const x = xFor(i);
     const up = c.close >= c.open;
-    const color = up ? '#00c853' : '#ff5252';
+    const color = up ? '#26a69a' : '#ef5350';
     const yOpen = yFor(c.open), yClose = yFor(c.close), yHigh = yFor(c.high), yLow = yFor(c.low);
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
@@ -488,7 +503,7 @@ function draw(){
     const c = state.candles[state.hover];
     const x = xFor(local);
     const y = yFor(c.close);
-    ctx.strokeStyle = '#4fc3f7';
+    ctx.strokeStyle = '#2962ff';
     ctx.setLineDash([4, 4]);
     ctx.beginPath();
     ctx.moveTo(x, top);
