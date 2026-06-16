@@ -388,17 +388,17 @@ function drawGrid(left, top, right, priceBottom, volumeTop, bottom, width, heigh
   ctx.strokeStyle = '#2a2e39';
   ctx.lineWidth = 1;
   ctx.fillStyle = '#787b86';
-  ctx.font = '11px SF Mono, Fira Code, monospace';
-  ctx.textAlign = 'right';
+  ctx.font = '12px SF Mono, Fira Code, monospace';
+  ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
   for(let i=0;i<=5;i++){
     const y = top + (priceBottom - top) * i / 5;
     ctx.beginPath();
-    ctx.moveTo(left, y);
-    ctx.lineTo(width - right, y);
+    ctx.moveTo(0, y);
+    ctx.lineTo(width, y);
     ctx.stroke();
     const price = maxPrice - (maxPrice - minPrice) * i / 5;
-    ctx.fillText(fmt(price), width - 10, y);
+    ctx.fillText(fmt(price), 8, y);
   }
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
@@ -408,9 +408,9 @@ function drawGrid(left, top, right, priceBottom, volumeTop, bottom, width, heigh
     const x = xFor(idx);
     ctx.fillText(candles[idx].time.slice(5), x, height - bottom + 8);
   }
-  ctx.textAlign = 'right';
+  ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  ctx.fillText(maxVolume ? Math.round(maxVolume / 1000000) + 'M' : '', width - 10, volumeTop + 8);
+  ctx.fillText(maxVolume ? Math.round(maxVolume / 1000000) + 'M' : '', 8, volumeTop + 8);
 }
 
 function updateHistoryMeta(){
@@ -426,9 +426,9 @@ function updateHistoryMeta(){
 }
 
 function chartPadding(width){
-  if(width <= 380) return { left: 30, right: 34, top: 18, bottom: 28 };
-  if(width <= 520) return { left: 38, right: 44, top: 18, bottom: 30 };
-  return { left: 58, right: 76, top: 22, bottom: 36 };
+  if(width <= 380) return { left: 4, right: 4, top: 18, bottom: 28 };
+  if(width <= 520) return { left: 5, right: 5, top: 18, bottom: 30 };
+  return { left: 6, right: 6, top: 22, bottom: 36 };
 }
 
 function plotWidthFor(width){
@@ -508,8 +508,8 @@ function draw(){
     ctx.beginPath();
     ctx.moveTo(x, top);
     ctx.lineTo(x, height - bottom);
-    ctx.moveTo(left, y);
-    ctx.lineTo(width - right, y);
+    ctx.moveTo(0, y);
+    ctx.lineTo(width, y);
     ctx.stroke();
     ctx.setLineDash([]);
   }
