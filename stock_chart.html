@@ -341,8 +341,7 @@ function renderCandleReadout(candle, index){
     '<span>H '+fmt(candle.high)+'</span>' +
     '<span>L '+fmt(candle.low)+'</span>' +
     '<span>C <b class="close-price '+direction+'">'+fmt(candle.close)+'</b></span>' +
-    '<span class="price-change '+direction+'">'+sign+fmt(diff)+' ('+sign+fmt(pct)+'%)</span>' +
-    '<span>Vol '+(candle.volume ? Math.round(candle.volume / 1000000)+'M' : '--')+'</span>';
+    '<span class="price-change '+direction+'">'+sign+fmt(diff)+' ('+sign+fmt(pct)+'%)</span>';
 }
 
 function drawMovingAverage(ma, candles, xFor, yFor){
@@ -411,6 +410,17 @@ function updateHistoryMeta(){
   }
 }
 
+function chartPadding(width){
+  if(width <= 380) return { left: 30, right: 34, top: 18, bottom: 28 };
+  if(width <= 520) return { left: 38, right: 44, top: 18, bottom: 30 };
+  return { left: 58, right: 76, top: 22, bottom: 36 };
+}
+
+function plotWidthFor(width){
+  const pad = chartPadding(width);
+  return Math.max(1, width - pad.left - pad.right);
+}
+
 function draw(){
   const rect = canvas.getBoundingClientRect();
   const width = rect.width;
@@ -420,7 +430,8 @@ function draw(){
   if(!candles.length) return;
   updateHistoryMeta();
 
-  const left = 58, right = 76, top = 22, bottom = 36;
+  const padBox = chartPadding(width);
+  const left = padBox.left, right = padBox.right, top = padBox.top, bottom = padBox.bottom;
   const volumeHeight = Math.max(64, Math.min(92, height * 0.18));
   const gap = 16;
   const priceBottom = height - bottom - volumeHeight - gap;
@@ -493,9 +504,10 @@ function draw(){
 
 function nearestIndex(clientX){
   const rect = canvas.getBoundingClientRect();
-  const left = 58, right = 76;
+  const padBox = chartPadding(rect.width);
+  const left = padBox.left;
   const candles = visibleCandles();
-  const step = (rect.width - left - right) / Math.max(1, candles.length);
+  const step = plotWidthFor(rect.width) / Math.max(1, candles.length);
   const local = Math.max(0, Math.min(candles.length - 1, Math.floor((clientX - rect.left - left) / step)));
   return state.start + local;
 }
@@ -512,7 +524,7 @@ function updateDrag(clientX){
   if(!state.dragging) return;
   const rect = canvas.getBoundingClientRect();
   const count = state.dragEnd - state.dragStart;
-  const step = (rect.width - 58 - 76) / Math.max(1, count);
+  const step = plotWidthFor(rect.width) / Math.max(1, count);
   const shift = Math.round((state.dragX - clientX) / step);
   let start = state.dragStart + shift;
   start = Math.max(0, Math.min(state.candles.length - count, start));
@@ -537,12 +549,13 @@ function touchMidX(touches){
 
 function beginPinch(touches){
   const rect = canvas.getBoundingClientRect();
+  const padBox = chartPadding(rect.width);
   state.pinching = true;
   state.dragging = false;
   state.pinchDistance = touchDistance(touches);
   state.pinchStart = state.start;
   state.pinchEnd = state.end;
-  state.pinchRatio = Math.max(0, Math.min(1, (touchMidX(touches) - rect.left - 58) / Math.max(1, rect.width - 58 - 76)));
+  state.pinchRatio = Math.max(0, Math.min(1, (touchMidX(touches) - rect.left - padBox.left) / plotWidthFor(rect.width)));
 }
 
 function updatePinch(touches){
@@ -617,7 +630,8 @@ canvas.addEventListener('wheel', event => {
   const total = state.candles.length;
   const current = state.end - state.start;
   const rect = canvas.getBoundingClientRect();
-  const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left - 58) / Math.max(1, rect.width - 58 - 76)));
+  const padBox = chartPadding(rect.width);
+  const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left - padBox.left) / plotWidthFor(rect.width)));
   const center = state.start + current * ratio;
   const next = Math.max(20, Math.min(total, Math.round(current * (event.deltaY > 0 ? 1.18 : 0.84))));
   let start = Math.round(center - next * ratio);
