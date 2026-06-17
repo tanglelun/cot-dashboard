@@ -1,0 +1,36 @@
+name: Update Economic data
+
+on:
+  workflow_dispatch:
+  schedule:
+    # World Bank macro data is annual and updates irregularly; refresh weekly.
+    - cron: "15 8 * * 1"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Update Economic page
+        run: python generate_economic_html.py
+
+      - name: Commit updated Economic page
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Update Economic data"
+          file_pattern: "economic.html economic_data.json"

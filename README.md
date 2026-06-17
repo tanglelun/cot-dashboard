@@ -38,6 +38,18 @@ It updates:
 - `index.html`
 - `charts/*.html`
 
+The workflow in `.github/workflows/update-market.yml` runs after the regular US
+market close on weekdays and updates:
+
+- `russell2000_top100.html`
+- `market_data/*.json`
+
+The workflow in `.github/workflows/update-economic.yml` refreshes the G20
+Economic dashboard weekly from the World Bank API and updates:
+
+- `economic.html`
+- `economic_data.json`
+
 You can also run it manually in GitHub:
 
 `Actions` -> `Update COT data` -> `Run workflow`
