@@ -30,16 +30,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 .nav-check{position:absolute;opacity:0;pointer-events:none}
 .nav-toggle{display:none;width:38px;height:38px;border:1px solid #2a2e39;border-radius:999px;align-items:center;justify-content:center;flex-direction:column;gap:4px;cursor:pointer;margin-left:auto}
 .nav-toggle span{width:16px;height:2px;background:#fff;border-radius:999px}
-.nav-links{display:flex;align-items:center;gap:28px;flex:1}
+.nav-links{display:flex;align-items:center;gap:28px;flex:0 1 auto}
 .nav-link{position:relative;color:#f3f4f6;text-decoration:none;font-size:15px;font-weight:650;white-space:nowrap}
 .nav-link:hover{color:#b8ff00}
 .nav-link.active{color:#b8ff00}
 .nav-link.active::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:2px;background:#b8ff00;border-radius:999px}
-.nav-actions{display:flex;align-items:center;gap:12px;margin-left:auto}
-.nav-locale{display:inline-flex;align-items:center;gap:6px;color:#f3f4f6;font-size:14px;font-weight:650;white-space:nowrap}
-.nav-action{height:42px;display:inline-flex;align-items:center;justify-content:center;padding:0 28px;border-radius:999px;text-decoration:none;font-size:15px;font-weight:750;white-space:nowrap}
-.nav-action.outline{color:#b8ff00;border:1px solid #b8ff00;background:transparent}
-.nav-action.fill{color:#050505;border:1px solid #b8ff00;background:#b8ff00}
+.nav-search{position:relative;flex:0 1 360px;min-width:220px;margin-left:auto}
+.nav-search input{width:100%;height:42px;border:1px solid #2a2e39;border-radius:999px;background:#090c12;color:#fff;padding:0 16px 0 42px;font-size:15px;font-weight:650;outline:none}
+.nav-search input::placeholder{color:#787b86}
+.nav-search input:focus{border-color:#b8ff00;box-shadow:0 0 0 1px rgba(184,255,0,.24)}
+.nav-search-mark{position:absolute;left:16px;top:50%;width:13px;height:13px;border:2px solid #b8ff00;border-radius:50%;transform:translateY(-50%);pointer-events:none}
+.nav-search-mark::after{content:"";position:absolute;width:7px;height:2px;background:#b8ff00;border-radius:999px;right:-6px;bottom:-4px;transform:rotate(45deg)}
 .container{max-width:1600px;margin:0 auto;padding:10px}
 .tabs{display:flex;gap:4px;margin-bottom:8px;border:1px solid var(--tv-border);background:var(--tv-panel);border-radius:6px;padding:5px;overflow:auto}
 .tab{height:30px;padding:0 12px;font-size:13px;font-weight:700;color:var(--tv-muted);cursor:pointer;border:none;background:transparent;border-radius:4px;position:relative;transition:all .15s;white-space:nowrap}
@@ -98,14 +99,14 @@ tr:hover td{background:var(--tv-hover)}
   .site-brand{font-size:21px}
   .brand-mark{width:20px;height:24px}
   .nav-toggle{display:flex}
-  .nav-links,.nav-actions{display:none;flex:0 0 100%;width:100%}
-  .nav-check:checked ~ .nav-links,.nav-check:checked ~ .nav-actions{display:flex}
+  .nav-links,.nav-search{display:none;flex:0 0 100%;width:100%}
+  .nav-check:checked ~ .nav-links{display:flex}
+  .nav-check:checked ~ .nav-search{display:block}
   .nav-links{order:3;flex-direction:column;align-items:stretch;gap:4px;padding-top:8px}
   .nav-link{height:40px;display:flex;align-items:center;padding:0 4px;font-size:14px}
   .nav-link.active::after{left:0;right:auto;bottom:4px;width:32px}
-  .nav-actions{order:4;gap:8px;padding-top:8px}
-  .nav-locale{display:none}
-  .nav-action{flex:1;height:40px;padding:0 12px;font-size:14px}
+  .nav-search{order:4;min-width:0;margin-left:0;padding-top:8px}
+  .nav-search input{height:40px;font-size:14px}
   .container{padding:10px}
   td,th{padding:4px 3px;font-size:10px}
   .cn{max-width:80px}
@@ -126,11 +127,10 @@ tr:hover td{background:var(--tv-hover)}
     <a class="nav-link" href="index.html">Non-Commercial</a>
     <a class="nav-link active" href="russell2000_top100.html">Market</a>
   </div>
-  <div class="nav-actions">
-    <span class="nav-locale">◎ US</span>
-    <a class="nav-action outline" href="index.html">COT</a>
-    <a class="nav-action fill" href="russell2000_top100.html">Market</a>
-  </div>
+  <form class="nav-search" role="search" data-root="">
+    <span class="nav-search-mark" aria-hidden="true"></span>
+    <input type="search" name="q" placeholder="Search stocks" autocomplete="off" aria-label="Search stocks">
+  </form>
 </nav>
 <div class="container">
 
@@ -582,6 +582,40 @@ function switchTab(id){
   [].forEach.call(document.querySelectorAll('.tab-pane'),function(p){p.classList.remove('active')});
   document.getElementById('pane-'+id).classList.add('active');
 }
+function setupNavSearch(){
+  var form=document.querySelector('.nav-search');
+  if(!form)return;
+  var input=form.querySelector('input[name="q"]');
+  function runSearch(){
+    var query=(input.value||'').trim();
+    if(!query)return;
+    var normalized=query.toLowerCase();
+    var rows=[].concat(r2kRaw,spRaw,ndqRaw);
+    var seen={};
+    rows=rows.filter(function(row){
+      if(seen[row.t])return false;
+      seen[row.t]=true;
+      return true;
+    });
+    var match=rows.find(function(row){return String(row.t||'').toLowerCase()===normalized;})||
+      rows.find(function(row){return String(row.n||'').toLowerCase().includes(normalized);});
+    var target=match||{t:query.toUpperCase(),n:query};
+    var params=new URLSearchParams();
+    params.set('symbol',target.t);
+    params.set('name',target.n||target.t);
+    window.location.href='stock_chart.html?'+params.toString();
+  }
+  form.addEventListener('submit',function(event){
+    event.preventDefault();
+    runSearch();
+  });
+  input.addEventListener('keydown',function(event){
+    if(event.key!=='Enter')return;
+    event.preventDefault();
+    runSearch();
+  });
+}
+setupNavSearch();
 createApp('app-r2000', r2kRaw, 'Russell 2000', 'r2kRaw');
 createApp('app-sp500', spRaw, 'S&P 500', 'spRaw');
 createApp('app-nasdaq', ndqRaw, 'Nasdaq 100', 'ndqRaw');

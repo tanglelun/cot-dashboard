@@ -30,16 +30,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 .nav-check{position:absolute;opacity:0;pointer-events:none}
 .nav-toggle{display:none;width:38px;height:38px;border:1px solid #2a2e39;border-radius:999px;align-items:center;justify-content:center;flex-direction:column;gap:4px;cursor:pointer;margin-left:auto}
 .nav-toggle span{width:16px;height:2px;background:#fff;border-radius:999px}
-.nav-links{display:flex;align-items:center;gap:28px;flex:1}
+.nav-links{display:flex;align-items:center;gap:28px;flex:0 1 auto}
 .nav-link{position:relative;color:#f3f4f6;text-decoration:none;font-size:15px;font-weight:650;white-space:nowrap}
 .nav-link:hover{color:#b8ff00}
 .nav-link.active{color:#b8ff00}
 .nav-link.active::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:2px;background:#b8ff00;border-radius:999px}
-.nav-actions{display:flex;align-items:center;gap:12px;margin-left:auto}
-.nav-locale{display:inline-flex;align-items:center;gap:6px;color:#f3f4f6;font-size:14px;font-weight:650;white-space:nowrap}
-.nav-action{height:42px;display:inline-flex;align-items:center;justify-content:center;padding:0 28px;border-radius:999px;text-decoration:none;font-size:15px;font-weight:750;white-space:nowrap}
-.nav-action.outline{color:#b8ff00;border:1px solid #b8ff00;background:transparent}
-.nav-action.fill{color:#050505;border:1px solid #b8ff00;background:#b8ff00}
+.nav-search{position:relative;flex:0 1 360px;min-width:220px;margin-left:auto}
+.nav-search input{width:100%;height:42px;border:1px solid #2a2e39;border-radius:999px;background:#090c12;color:#fff;padding:0 16px 0 42px;font-size:15px;font-weight:650;outline:none}
+.nav-search input::placeholder{color:#787b86}
+.nav-search input:focus{border-color:#b8ff00;box-shadow:0 0 0 1px rgba(184,255,0,.24)}
+.nav-search-mark{position:absolute;left:16px;top:50%;width:13px;height:13px;border:2px solid #b8ff00;border-radius:50%;transform:translateY(-50%);pointer-events:none}
+.nav-search-mark::after{content:"";position:absolute;width:7px;height:2px;background:#b8ff00;border-radius:999px;right:-6px;bottom:-4px;transform:rotate(45deg)}
 .container{max-width:1600px;margin:0 auto;padding:10px}
 .page-layout{display:grid;grid-template-columns:292px minmax(0,1fr);gap:8px;align-items:start}
 .page-layout.sidebar-collapsed{grid-template-columns:44px minmax(0,1fr)}
@@ -109,14 +110,14 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
   .site-brand{font-size:21px}
   .brand-mark{width:20px;height:24px}
   .nav-toggle{display:flex}
-  .nav-links,.nav-actions{display:none;flex:0 0 100%;width:100%}
-  .nav-check:checked ~ .nav-links,.nav-check:checked ~ .nav-actions{display:flex}
+  .nav-links,.nav-search{display:none;flex:0 0 100%;width:100%}
+  .nav-check:checked ~ .nav-links{display:flex}
+  .nav-check:checked ~ .nav-search{display:block}
   .nav-links{order:3;flex-direction:column;align-items:stretch;gap:4px;padding-top:8px}
   .nav-link{height:40px;display:flex;align-items:center;padding:0 4px;font-size:14px}
   .nav-link.active::after{left:0;right:auto;bottom:4px;width:32px}
-  .nav-actions{order:4;gap:8px;padding-top:8px}
-  .nav-locale{display:none}
-  .nav-action{flex:1;height:40px;padding:0 12px;font-size:14px}
+  .nav-search{order:4;min-width:0;margin-left:0;padding-top:8px}
+  .nav-search input{height:40px;font-size:14px}
   .container{padding:10px}
   .page-layout{display:block}
   .main-panel{min-height:calc(100dvh - 78px)}
@@ -145,11 +146,10 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
     <a class="nav-link" href="index.html">Non-Commercial</a>
     <a class="nav-link active" href="russell2000_top100.html">Market</a>
   </div>
-  <div class="nav-actions">
-    <span class="nav-locale">◎ US</span>
-    <a class="nav-action outline" href="index.html">COT</a>
-    <a class="nav-action fill" href="russell2000_top100.html">Market</a>
-  </div>
+  <form class="nav-search" role="search" data-root="">
+    <span class="nav-search-mark" aria-hidden="true"></span>
+    <input type="search" name="q" placeholder="Search stocks" autocomplete="off" aria-label="Search stocks">
+  </form>
 </nav>
 
 <main class="container">
@@ -803,6 +803,45 @@ maToggle.addEventListener('click', () => {
   draw();
 });
 
+function setupNavSearch(){
+  const form = document.querySelector('.nav-search');
+  if(!form) return;
+  const input = form.querySelector('input[name="q"]');
+  const runSearch = async () => {
+    const query = (input.value || '').trim();
+    if(!query) return;
+    const root = form.dataset.root || '';
+    let target = { symbol: query.toUpperCase(), name: query };
+    try{
+      const response = await fetch(root + 'market_data/index.json', { cache:'no-store' });
+      if(response.ok){
+        const index = await response.json();
+        const groups = index.groups || {};
+        const rows = Object.keys(groups).length
+          ? Object.values(groups).flatMap(group => group.stocks || [])
+          : (index.stocks || []);
+        const normalized = query.toLowerCase();
+        const match = rows.find(row => String(row.symbol || '').toLowerCase() === normalized)
+          || rows.find(row => String(row.name || '').toLowerCase().includes(normalized));
+        if(match) target = { symbol: match.symbol, name: match.name || match.symbol };
+      }
+    }catch(error){}
+    const params = new URLSearchParams();
+    params.set('symbol', target.symbol);
+    params.set('name', target.name);
+    window.location.href = root + 'stock_chart.html?' + params.toString();
+  };
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    runSearch();
+  });
+  input.addEventListener('keydown', event => {
+    if(event.key !== 'Enter') return;
+    event.preventDefault();
+    runSearch();
+  });
+}
+
 function rowSymbol(row){ return (row.symbol || row.t || '').toUpperCase(); }
 function rowName(row){ return row.name || row.n || rowSymbol(row); }
 function rowSector(row){ return row.sector || row.s || 'Sector'; }
@@ -1000,6 +1039,7 @@ async function loadChart(){
 
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
+setupNavSearch();
 loadMarketIndex();
 loadChart();
 </script>
