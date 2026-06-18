@@ -1,4 +1,4 @@
-name: Update Economic data
+name: Update Economy data
 
 on:
   workflow_dispatch:
@@ -26,11 +26,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Update Economic page
+      - name: Update Economy page
         run: python generate_economic_html.py
 
-      - name: Commit updated Economic page
+      - name: Commit updated Economy page
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Update Economic data"
-          file_pattern: "economic.html economic_data.json"
+          commit_message: "Update Economy data"
+          file_pattern: "economy.html economic.html economic_data.json"

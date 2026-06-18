@@ -34,7 +34,7 @@
         .nav-link { position: relative; color: #f3f4f6; text-decoration: none; font-size: 15px; font-weight: 650; white-space: nowrap; }
         .nav-link:hover { color: #b8ff00; }
         .nav-link.active { color: #b8ff00; }
-        .nav-link.active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -10px; height: 2px; background: #b8ff00; border-radius: 999px; }
+        .nav-link.active::after { display: none; }
         .nav-search { position: relative; flex: 0 1 360px; min-width: 220px; margin-left: auto; }
         .nav-search input { width: 100%; height: 42px; border: 1px solid #2a2e39; border-radius: 999px; background: #090c12; color: #fff; padding: 0 16px 0 42px; font-size: 15px; font-weight: 650; outline: none; }
         .nav-search input::placeholder { color: #787b86; }
@@ -66,7 +66,7 @@
             .nav-check:checked ~ .nav-search { display: block; }
             .nav-links { order: 3; flex-direction: column; align-items: stretch; gap: 4px; padding-top: 8px; }
             .nav-link { height: 40px; display: flex; align-items: center; padding: 0 4px; font-size: 14px; }
-            .nav-link.active::after { left: 0; right: auto; bottom: 4px; width: 32px; }
+            .nav-link.active::after { display: none; }
             .nav-search { order: 4; min-width: 0; margin-left: 0; padding-top: 8px; }
             .nav-search input { height: 40px; font-size: 14px; }
             .toolbar { align-items: flex-start; flex-direction: column; gap: 4px; }
@@ -84,7 +84,7 @@
         <div class="nav-links">
             <a class="nav-link active" href="../index.html">Non-Commercial</a>
             <a class="nav-link" href="../russell2000_top100.html">Market</a>
-            <a class="nav-link" href="../economic.html">Economic</a>
+            <a class="nav-link" href="../economy.html">Economy</a>
         </div>
         <form class="nav-search" role="search" data-root="../">
             <span class="nav-search-mark" aria-hidden="true"></span>

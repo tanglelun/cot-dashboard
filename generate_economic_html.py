@@ -308,25 +308,23 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Economic - G20 Macro Dashboard</title>
+<title>Economy - G20 Indicators</title>
 <style>
 :root{
-  --tv-bg:#0b0f19;
-  --tv-panel:#131722;
-  --tv-panel-2:#0f131d;
-  --tv-border:#2a2e39;
-  --tv-border-soft:#1f2430;
-  --tv-text:#d1d4dc;
-  --tv-muted:#787b86;
-  --tv-faint:#5d606b;
-  --tv-blue:#2962ff;
-  --tv-green:#26a69a;
-  --tv-red:#ef5350;
-  --tv-amber:#f6a821;
-  --tv-hover:#1e222d;
+  --bg:#fff;
+  --ink:#111;
+  --muted:#858585;
+  --line:#e7e7e7;
+  --line-strong:#d8d8d8;
+  --blue:#0f67ff;
+  --teal:#079b86;
+  --red:#e44f55;
+  --soft:#f5f5f5;
+  --nav-active:#b8ff00;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--tv-bg);color:var(--tv-text);padding:0}
+html,body{min-height:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--ink);padding:0}
 .site-nav{min-height:64px;display:flex;align-items:center;gap:28px;padding:0 24px;background:#000;border-bottom:1px solid #1b1f2a;position:relative;z-index:30}
 .site-brand{display:inline-flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-size:25px;font-weight:800;letter-spacing:0;white-space:nowrap}
 .brand-mark{position:relative;width:22px;height:26px;display:inline-block}
@@ -337,61 +335,62 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 .nav-toggle span{width:16px;height:2px;background:#fff;border-radius:999px}
 .nav-links{display:flex;align-items:center;gap:28px;flex:0 1 auto}
 .nav-link{position:relative;color:#f3f4f6;text-decoration:none;font-size:15px;font-weight:650;white-space:nowrap}
-.nav-link:hover{color:#b8ff00}
-.nav-link.active{color:#b8ff00}
-.nav-link.active::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:2px;background:#b8ff00;border-radius:999px}
+.nav-link:hover,.nav-link.active{color:var(--nav-active)}
+.nav-link.active::after{display:none}
 .nav-search{position:relative;flex:0 1 360px;min-width:220px;margin-left:auto}
 .nav-search input{width:100%;height:42px;border:1px solid #2a2e39;border-radius:999px;background:#090c12;color:#fff;padding:0 16px 0 42px;font-size:15px;font-weight:650;outline:none}
 .nav-search input::placeholder{color:#787b86}
-.nav-search input:focus{border-color:#b8ff00;box-shadow:0 0 0 1px rgba(184,255,0,.24)}
-.nav-search-mark{position:absolute;left:16px;top:50%;width:13px;height:13px;border:2px solid #b8ff00;border-radius:50%;transform:translateY(-50%);pointer-events:none}
-.nav-search-mark::after{content:"";position:absolute;width:7px;height:2px;background:#b8ff00;border-radius:999px;right:-6px;bottom:-4px;transform:rotate(45deg)}
-.container{max-width:1600px;margin:0 auto;padding:10px}
-.dashboard-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;padding:10px 12px;background:var(--tv-panel);border:1px solid var(--tv-border);border-radius:6px;flex-wrap:wrap}
-.title-block{display:flex;flex-direction:column;gap:3px;min-width:220px}
-h1{font-size:22px;color:#fff;font-weight:800;letter-spacing:0}
-.subtitle{font-size:12px;color:var(--tv-muted)}
-.source-link{color:var(--tv-blue);text-decoration:none}
-.source-link:hover{text-decoration:underline;color:#fff}
-.controls{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.control{height:32px;border:1px solid var(--tv-border);background:var(--tv-panel-2);color:var(--tv-text);border-radius:4px;padding:0 10px;font-size:12px;outline:none}
-.control:focus{border-color:var(--tv-blue)}
-.tabs{display:flex;gap:4px;margin-bottom:8px;border:1px solid var(--tv-border);background:var(--tv-panel);border-radius:6px;padding:5px;overflow:auto}
-.tab{height:30px;padding:0 12px;border:none;border-radius:4px;background:transparent;color:var(--tv-muted);font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap}
-.tab:hover{background:var(--tv-hover);color:var(--tv-text)}
-.tab.active{background:var(--tv-blue);color:#fff}
-.metric-strip{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;margin-bottom:8px;padding:9px 12px;background:var(--tv-panel);border:1px solid var(--tv-border);border-radius:6px}
-.metric-title{font-size:15px;font-weight:800;color:#fff}
-.metric-note{margin-top:2px;color:var(--tv-muted);font-size:12px;line-height:1.4}
-.metric-count{font-family:"SF Mono","Fira Code",monospace;font-size:11px;color:var(--tv-muted);white-space:nowrap}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.country-card{min-width:0;background:var(--tv-panel);border:1px solid var(--tv-border);border-radius:6px;overflow:hidden}
-.country-card:hover{border-color:#3a4050;background:#161b27}
-.card-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;padding:9px 10px 0}
-.country-name{font-size:13px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.country-code{font-family:"SF Mono","Fira Code",monospace;font-size:10px;color:var(--tv-muted)}
-.latest-year{font-family:"SF Mono","Fira Code",monospace;font-size:10px;color:var(--tv-faint);padding-top:2px}
-.value-line{display:flex;align-items:baseline;gap:8px;padding:4px 10px 0}
-.latest-value{font-family:"SF Mono","Fira Code",monospace;font-size:20px;font-weight:800;color:var(--tv-text)}
-.latest-value.up{color:var(--tv-green)}
-.latest-value.down{color:var(--tv-red)}
-.delta{font-family:"SF Mono","Fira Code",monospace;font-size:11px;font-weight:800}
-.delta.up{color:var(--tv-green)}
-.delta.down{color:var(--tv-red)}
-.chart-box{height:112px;padding:2px 8px 6px}
-.spark{width:100%;height:100%;display:block}
-.axis{display:flex;justify-content:space-between;padding:0 10px 8px;color:var(--tv-faint);font-family:"SF Mono","Fira Code",monospace;font-size:10px}
-.empty{padding:42px 12px;color:var(--tv-muted);font-size:12px;text-align:center}
-.rating-pill{display:inline-flex;align-items:center;justify-content:center;min-width:72px;height:34px;border-radius:4px;border:1px solid var(--tv-border);background:var(--tv-panel-2);font-family:"SF Mono","Fira Code",monospace;font-size:18px;font-weight:800;color:#fff}
-.rating-meter{height:112px;padding:12px 10px 10px;display:flex;align-items:flex-end}
-.rating-track{position:relative;width:100%;height:10px;background:var(--tv-panel-2);border:1px solid var(--tv-border);border-radius:999px}
-.rating-fill{position:absolute;left:0;top:0;bottom:0;background:var(--tv-blue);border-radius:999px}
-.rating-dot{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;background:#fff;border:2px solid var(--tv-blue);transform:translate(-50%,-50%)}
-@media(max-width:1100px){
-  .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-}
-@media(max-width:820px){
-  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.nav-search input:focus{border-color:var(--nav-active);box-shadow:0 0 0 1px rgba(184,255,0,.24)}
+.nav-search-mark{position:absolute;left:16px;top:50%;width:13px;height:13px;border:2px solid var(--nav-active);border-radius:50%;transform:translateY(-50%);pointer-events:none}
+.nav-search-mark::after{content:"";position:absolute;width:7px;height:2px;background:var(--nav-active);border-radius:999px;right:-6px;bottom:-4px;transform:rotate(45deg)}
+.page{width:100%;max-width:2048px;margin:0 auto;padding:42px 40px 34px}
+.home-head{text-align:center;padding:6px 0 78px}
+.eyebrow{font-size:28px;font-weight:800;letter-spacing:0;margin-bottom:22px}
+.country-picker{display:inline-flex;align-items:center;gap:14px;position:relative}
+.flag{display:inline-flex;align-items:center;justify-content:center;width:70px;height:70px;border-radius:50%;background:#f5f5f5;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05);font-size:50px;line-height:1;overflow:hidden}
+.title-select{appearance:none;border:none;background:transparent;color:var(--ink);font-size:66px;font-weight:900;letter-spacing:0;line-height:1;padding:0 46px 0 0;outline:none;cursor:pointer;max-width:min(900px,calc(100vw - 180px))}
+.picker-caret{position:absolute;right:4px;top:50%;width:24px;height:24px;border-right:6px solid var(--ink);border-bottom:6px solid var(--ink);transform:translateY(-66%) rotate(45deg);pointer-events:none}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px}
+.indicator-card{height:232px;border:1px solid var(--line);border-radius:20px;background:#fff;padding:22px;display:flex;flex-direction:column;text-decoration:none;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.02);transition:border-color .15s,box-shadow .15s,transform .15s}
+.indicator-card:hover{border-color:var(--line-strong);box-shadow:0 12px 30px rgba(0,0,0,.08);transform:translateY(-1px)}
+.card-title{font-size:24px;font-weight:850;letter-spacing:0;margin-bottom:18px}
+.card-label{font-size:17px;font-weight:850;margin-bottom:7px}
+.card-value{font-size:18px;color:#222;display:flex;align-items:baseline;gap:6px}
+.card-unit{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#333}
+.mini-wrap{height:92px;margin-top:auto;position:relative}
+.mini-chart{display:block;width:100%;height:100%}
+.mini-caption{position:absolute;left:0;right:0;bottom:0;text-align:center;color:#777;font-size:15px}
+.rating-box{height:92px;margin-top:auto;display:flex;align-items:center;gap:14px}
+.rating-pill{min-width:82px;height:42px;border:1px solid #ddd;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;background:#fafafa}
+.rating-note{color:#777;font-size:15px}
+.detail{display:none}
+.detail-head{display:grid;grid-template-columns:224px minmax(0,1fr);gap:28px;align-items:center;padding-bottom:34px}
+.detail-flag{width:212px;height:212px;border-radius:50%;font-size:150px}
+.detail-title{font-size:60px;font-weight:900;line-height:1.06;letter-spacing:0;margin-bottom:14px}
+.meta-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.chip{height:42px;display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:7px;background:#fff;padding:0 14px;color:#1f1f1f;font-size:22px}
+.big-value{font-size:66px;font-weight:900;line-height:1;display:flex;align-items:baseline;gap:10px}
+.big-unit{font-size:21px;font-weight:500}
+.asof{margin-top:12px;color:#858585;font-size:21px}
+.subtabs{display:flex;align-items:flex-end;gap:30px;border-bottom:4px solid #f0f0f0;margin-bottom:18px}
+.subtab{height:56px;border:none;background:transparent;font-size:20px;font-weight:850;color:#111;cursor:pointer;padding:0}
+.subtab.active{border-bottom:5px solid #333}
+.chart-actions{display:flex;justify-content:flex-end;gap:10px;margin:0 0 8px}
+.tool-btn{height:42px;border:1px solid var(--line);background:#fff;color:#111;border-radius:7px;padding:0 14px;font-size:18px;cursor:pointer}
+.chart-panel{position:relative;height:500px}
+.chart{width:100%;height:100%;display:block;touch-action:none}
+.tooltip{position:fixed;display:none;pointer-events:none;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.14);padding:8px 10px;font-size:13px;line-height:1.4;color:#111;z-index:50}
+.range-panel{height:108px;margin-top:10px}
+.range{width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.range.dragging{cursor:grabbing}
+.quick-ranges{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:18px auto 0;max-width:1500px}
+.range-btn{height:58px;border:none;background:#fff;border-radius:14px;font-size:20px;font-weight:500;cursor:pointer}
+.range-btn.active{background:#f1f1f1}
+.back-link{display:inline-flex;margin-bottom:20px;color:#111;text-decoration:none;font-size:16px;font-weight:750}
+.empty{display:flex;align-items:center;justify-content:center;height:100%;color:#777;font-size:18px}
+@media(max-width:1200px){
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .title-select{font-size:52px}
 }
 @media(max-width:768px){
   .site-nav{min-height:58px;padding:10px 14px;gap:10px;flex-wrap:wrap}
@@ -403,22 +402,30 @@ h1{font-size:22px;color:#fff;font-weight:800;letter-spacing:0}
   .nav-check:checked ~ .nav-search{display:block}
   .nav-links{order:3;flex-direction:column;align-items:stretch;gap:4px;padding-top:8px}
   .nav-link{height:40px;display:flex;align-items:center;padding:0 4px;font-size:14px}
-  .nav-link.active::after{left:0;right:auto;bottom:4px;width:32px}
   .nav-search{order:4;min-width:0;margin-left:0;padding-top:8px}
   .nav-search input{height:40px;font-size:14px}
-  .container{padding:10px}
-  .dashboard-head{align-items:stretch}
-  .title-block,.controls{width:100%}
-  .control{flex:1;min-width:132px}
-  .metric-strip{grid-template-columns:1fr}
-  .metric-count{white-space:normal}
-}
-@media(max-width:520px){
-  .grid{grid-template-columns:1fr}
-  h1{font-size:20px}
-  .tabs{scrollbar-width:none}
-  .latest-value{font-size:19px}
-  .chart-box{height:118px}
+  .page{padding:24px 14px 28px}
+  .home-head{padding-bottom:34px}
+  .eyebrow{font-size:22px;margin-bottom:14px}
+  .flag{width:46px;height:46px;font-size:32px}
+  .title-select{font-size:36px;max-width:calc(100vw - 94px);padding-right:28px}
+  .picker-caret{width:14px;height:14px;border-width:4px}
+  .cards{grid-template-columns:1fr;gap:14px}
+  .indicator-card{height:218px;border-radius:14px;padding:18px}
+  .card-title{font-size:21px}
+  .detail-head{grid-template-columns:80px minmax(0,1fr);gap:14px;padding-bottom:20px}
+  .detail-flag{width:76px;height:76px;font-size:54px}
+  .detail-title{font-size:34px}
+  .chip{height:34px;font-size:15px}
+  .big-value{font-size:48px}
+  .asof{font-size:16px}
+  .subtabs{gap:18px;overflow:auto;margin-bottom:12px}
+  .subtab{height:48px;font-size:17px;white-space:nowrap}
+  .chart-actions{display:none}
+  .chart-panel{height:420px}
+  .range-panel{height:92px}
+  .quick-ranges{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .range-btn{height:48px;font-size:16px}
 }
 </style>
 </head>
@@ -430,7 +437,7 @@ h1{font-size:22px;color:#fff;font-weight:800;letter-spacing:0}
   <div class="nav-links">
     <a class="nav-link" href="index.html">Non-Commercial</a>
     <a class="nav-link" href="russell2000_top100.html">Market</a>
-    <a class="nav-link active" href="economic.html">Economic</a>
+    <a class="nav-link active" href="economy.html">Economy</a>
   </div>
   <form class="nav-search" role="search" data-root="">
     <span class="nav-search-mark" aria-hidden="true"></span>
@@ -438,45 +445,108 @@ h1{font-size:22px;color:#fff;font-weight:800;letter-spacing:0}
   </form>
 </nav>
 
-<main class="container">
-  <section class="dashboard-head">
-    <div class="title-block">
-      <h1>Economic</h1>
-      <p class="subtitle">G20 macro dashboard · Updated __UPDATED__ · <a class="source-link" href="https://api.worldbank.org/v2/" target="_blank" rel="noopener">World Bank API</a></p>
+<main class="page">
+  <section class="home" id="homeView">
+    <header class="home-head">
+      <div class="eyebrow">Economy</div>
+      <div class="country-picker">
+        <span class="flag" id="homeFlag" aria-hidden="true"></span>
+        <select class="title-select" id="countrySelect" aria-label="Country"></select>
+        <span class="picker-caret" aria-hidden="true"></span>
+      </div>
+    </header>
+    <section class="cards" id="indicatorCards"></section>
+  </section>
+
+  <section class="detail" id="detailView">
+    <a class="back-link" id="backLink" href="economy.html">Back to Economy</a>
+    <header class="detail-head">
+      <span class="flag detail-flag" id="detailFlag" aria-hidden="true"></span>
+      <div>
+        <h1 class="detail-title" id="detailTitle"></h1>
+        <div class="meta-row">
+          <span class="chip" id="detailCode"></span>
+          <span class="chip" id="detailSource"></span>
+        </div>
+        <div class="big-value"><span id="detailValue"></span><span class="big-unit" id="detailUnit"></span></div>
+        <div class="asof" id="detailAsof"></div>
+      </div>
+    </header>
+    <nav class="subtabs" aria-label="Indicator sections">
+      <button class="subtab active" type="button">Overview</button>
+      <button class="subtab" type="button">History</button>
+      <button class="subtab" type="button">News</button>
+      <button class="subtab" type="button">Community</button>
+    </nav>
+    <div class="chart-actions">
+      <button class="tool-btn" type="button" title="Snapshot">□</button>
+      <button class="tool-btn" type="button" title="Embed">&lt;/&gt;</button>
+      <button class="tool-btn" type="button" id="fullChart">Full chart</button>
     </div>
-    <div class="controls">
-      <input class="control" id="countrySearch" type="search" placeholder="Search country" autocomplete="off">
-      <select class="control" id="sortSelect" aria-label="Sort countries">
-        <option value="name">Country</option>
-        <option value="latest-desc">Latest high to low</option>
-        <option value="latest-asc">Latest low to high</option>
-        <option value="change-desc">10Y change high to low</option>
-        <option value="change-asc">10Y change low to high</option>
-      </select>
+    <section class="chart-panel"><canvas class="chart" id="barChart"></canvas><div class="tooltip" id="tooltip"></div></section>
+    <section class="range-panel"><canvas class="range" id="rangeChart"></canvas></section>
+    <div class="quick-ranges">
+      <button class="range-btn" data-range="1">1 year</button>
+      <button class="range-btn" data-range="5">5 years</button>
+      <button class="range-btn active" data-range="10">10 years</button>
+      <button class="range-btn" data-range="all">All time</button>
     </div>
   </section>
-  <div class="tabs" id="indicatorTabs"></div>
-  <section class="metric-strip">
-    <div>
-      <div class="metric-title" id="metricTitle"></div>
-      <div class="metric-note" id="metricNote"></div>
-    </div>
-    <div class="metric-count" id="metricCount"></div>
-  </section>
-  <section class="grid" id="countryGrid"></section>
 </main>
 
 <script>
 const ECONOMIC_DATA = __DATA__;
-const state = { indicator: ECONOMIC_DATA.indicators[0].key, query: '', sort: 'name' };
-const tabs = document.getElementById('indicatorTabs');
-const grid = document.getElementById('countryGrid');
-const metricTitle = document.getElementById('metricTitle');
-const metricNote = document.getElementById('metricNote');
-const metricCount = document.getElementById('metricCount');
-const countrySearch = document.getElementById('countrySearch');
-const sortSelect = document.getElementById('sortSelect');
+const params = new URLSearchParams(window.location.search);
+const homeView = document.getElementById('homeView');
+const detailView = document.getElementById('detailView');
+const countrySelect = document.getElementById('countrySelect');
+const homeFlag = document.getElementById('homeFlag');
+const indicatorCards = document.getElementById('indicatorCards');
+const detailFlag = document.getElementById('detailFlag');
+const detailTitle = document.getElementById('detailTitle');
+const detailCode = document.getElementById('detailCode');
+const detailSource = document.getElementById('detailSource');
+const detailValue = document.getElementById('detailValue');
+const detailUnit = document.getElementById('detailUnit');
+const detailAsof = document.getElementById('detailAsof');
+const barCanvas = document.getElementById('barChart');
+const rangeCanvas = document.getElementById('rangeChart');
+const tooltip = document.getElementById('tooltip');
+const chartState = { start: 0, end: 0, hover: null, drag: null, dragOffset: 0 };
 
+function countryByCode(code){ return ECONOMIC_DATA.countries.find(country => country.code === code) || ECONOMIC_DATA.countries.find(country => country.code === 'US') || ECONOMIC_DATA.countries[0]; }
+function indicatorByKey(key){ return ECONOMIC_DATA.indicators.find(indicator => indicator.key === key) || ECONOMIC_DATA.indicators[0]; }
+function countryFlag(code){
+  if(code === 'EU') return 'EU';
+  const base = 127397;
+  return String.fromCodePoint(...code.slice(0,2).toUpperCase().split('').map(char => char.charCodeAt(0) + base));
+}
+function indicatorSlug(indicator){ return indicator.label.toLowerCase().replace(/\\s+/g,' '); }
+function displayUnit(indicator){
+  if(indicator.key === 'government_debt') return 'PCTGDP';
+  if(indicator.key === 'balance_trade') return 'B USD';
+  return indicator.unit === '%' ? 'PCT' : indicator.unit;
+}
+function valueText(value, indicator, withUnit = true){
+  if(value === null || value === undefined || value === '') return 'No data';
+  if(indicator.kind === 'rating') return value;
+  const number = Number(value);
+  const formatted = number.toLocaleString(undefined,{minimumFractionDigits:indicator.decimals,maximumFractionDigits:indicator.decimals});
+  return withUnit ? `${formatted} ${displayUnit(indicator)}` : formatted;
+}
+function latestPoint(country, indicator){
+  if(indicator.kind === 'rating') return { year:'Current', value:indicator.values[country.code] || 'NR' };
+  const values = indicator.series[country.code] || [];
+  const years = indicator.years || [];
+  for(let index = values.length - 1; index >= 0; index -= 1){
+    if(values[index] !== null && values[index] !== undefined) return { year: years[index], value: values[index] };
+  }
+  return { year:null, value:null };
+}
+function seriesFor(country, indicator){
+  if(indicator.kind === 'rating') return [];
+  return (indicator.years || []).map((year, index) => ({ year, value:(indicator.series[country.code] || [])[index] ?? null }));
+}
 function setupNavSearch(){
   const form = document.querySelector('.nav-search');
   if(!form) return;
@@ -484,228 +554,339 @@ function setupNavSearch(){
   const runSearch = async () => {
     const query = (input.value || '').trim();
     if(!query) return;
-    const root = form.dataset.root || '';
     let target = { symbol: query.toUpperCase(), name: query };
     try{
-      const response = await fetch(root + 'market_data/index.json', { cache: 'no-store' });
+      const response = await fetch('market_data/index.json', { cache:'no-store' });
       if(response.ok){
         const index = await response.json();
         const groups = index.groups || {};
-        const rows = Object.keys(groups).length
-          ? Object.values(groups).flatMap(group => group.stocks || [])
-          : (index.stocks || []);
+        const rows = Object.keys(groups).length ? Object.values(groups).flatMap(group => group.stocks || []) : (index.stocks || []);
         const normalized = query.toLowerCase();
-        const match = rows.find(row => String(row.symbol || '').toLowerCase() === normalized)
-          || rows.find(row => String(row.name || '').toLowerCase().includes(normalized));
+        const match = rows.find(row => String(row.symbol || '').toLowerCase() === normalized) || rows.find(row => String(row.name || '').toLowerCase().includes(normalized));
         if(match) target = { symbol: match.symbol, name: match.name || match.symbol };
       }
     }catch(error){}
-    const params = new URLSearchParams();
-    params.set('symbol', target.symbol);
-    params.set('name', target.name);
-    window.location.href = root + 'stock_chart.html?' + params.toString();
+    const next = new URLSearchParams();
+    next.set('symbol', target.symbol);
+    next.set('name', target.name);
+    window.location.href = 'stock_chart.html?' + next.toString();
   };
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-    runSearch();
-  });
-  input.addEventListener('keydown', event => {
-    if(event.key !== 'Enter') return;
-    event.preventDefault();
-    runSearch();
-  });
+  form.addEventListener('submit', event => { event.preventDefault(); runSearch(); });
+  input.addEventListener('keydown', event => { if(event.key === 'Enter'){ event.preventDefault(); runSearch(); } });
 }
-
-function currentIndicator(){
-  return ECONOMIC_DATA.indicators.find(item => item.key === state.indicator) || ECONOMIC_DATA.indicators[0];
+function populateCountrySelect(activeCode){
+  countrySelect.innerHTML = ECONOMIC_DATA.countries.map(country => `<option value="${country.code}">${country.code} indicators</option>`).join('');
+  countrySelect.value = activeCode;
 }
-
-function formatValue(value, indicator){
-  if(value === null || value === undefined || value === '') return 'No data';
-  if(indicator.kind === 'rating') return value;
-  const number = Number(value);
-  const suffix = indicator.unit || '';
-  return `${number.toLocaleString(undefined, {maximumFractionDigits: indicator.decimals, minimumFractionDigits: indicator.decimals})}${suffix}`;
-}
-
-function seriesStats(country, indicator){
-  if(indicator.kind === 'rating'){
-    const rating = indicator.values[country.code] || 'NR';
-    return { latest: rating, latestYear: 'Current', first: null, change: null, score: indicator.scores[rating] };
-  }
-  const values = indicator.series[country.code] || [];
-  const years = indicator.years || [];
-  let latest = null;
-  let latestYear = null;
-  let first = null;
-  for(let i = 0; i < values.length; i += 1){
-    if(values[i] === null) continue;
-    if(first === null) first = values[i];
-    latest = values[i];
-    latestYear = years[i];
-  }
-  return { latest, latestYear, first, change: latest !== null && first !== null ? latest - first : null };
-}
-
-function sortCountries(countries, indicator){
-  return [...countries].sort((a, b) => {
-    const aStats = seriesStats(a, indicator);
-    const bStats = seriesStats(b, indicator);
-    if(state.sort === 'name') return a.name.localeCompare(b.name);
-    const key = indicator.kind === 'rating' ? 'score' : state.sort.startsWith('change') ? 'change' : 'latest';
-    const direction = state.sort.endsWith('asc') ? 1 : -1;
-    const av = aStats[key];
-    const bv = bStats[key];
-    if(av === null || av === undefined) return 1;
-    if(bv === null || bv === undefined) return -1;
-    return (av - bv) * direction;
-  });
-}
-
-function classForNumber(value){
-  if(value === null || value === undefined || Number.isNaN(Number(value))) return '';
-  return Number(value) >= 0 ? 'up' : 'down';
-}
-
-function drawSpark(canvas, values){
+function drawMini(canvas, points){
+  const width = canvas.clientWidth || 360;
+  const height = canvas.clientHeight || 92;
   const dpr = window.devicePixelRatio || 1;
-  const width = canvas.clientWidth || 260;
-  const height = canvas.clientHeight || 112;
   canvas.width = Math.floor(width * dpr);
   canvas.height = Math.floor(height * dpr);
   const ctx = canvas.getContext('2d');
   ctx.setTransform(dpr,0,0,dpr,0,0);
   ctx.clearRect(0,0,width,height);
-  ctx.strokeStyle = '#1f2430';
-  ctx.lineWidth = 1;
-  for(let i = 1; i <= 3; i += 1){
-    const y = Math.round((height / 4) * i) + .5;
-    ctx.beginPath();
-    ctx.moveTo(0,y);
-    ctx.lineTo(width,y);
-    ctx.stroke();
-  }
-  const points = values.map((value, index) => ({ value, index })).filter(item => item.value !== null);
-  if(points.length < 2){
-    ctx.fillStyle = '#787b86';
-    ctx.font = '12px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif';
+  const values = points.filter(point => point.value !== null);
+  if(values.length < 2){
+    ctx.fillStyle = '#777';
+    ctx.font = '13px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('No 10Y series', width / 2, height / 2);
+    ctx.fillText('No 10 years history', width / 2, height / 2);
     return;
   }
-  const min = Math.min(...points.map(item => item.value));
-  const max = Math.max(...points.map(item => item.value));
+  const min = Math.min(...values.map(point => point.value));
+  const max = Math.max(...values.map(point => point.value));
   const spread = max - min || Math.abs(max) || 1;
-  const xStep = width / Math.max(values.length - 1, 1);
-  const yFor = value => height - 12 - ((value - min) / spread) * (height - 24);
-  const gradient = ctx.createLinearGradient(0,0,width,0);
-  gradient.addColorStop(0,'#2962ff');
-  gradient.addColorStop(1,'#26a69a');
-  ctx.strokeStyle = gradient;
-  ctx.lineWidth = 2;
+  const xStep = width / Math.max(points.length - 1, 1);
+  const yFor = value => height - 20 - ((value - min) / spread) * (height - 30);
+  ctx.strokeStyle = '#0f67ff';
+  ctx.lineWidth = 4;
+  ctx.lineJoin = 'round';
   ctx.beginPath();
-  points.forEach((point, index) => {
+  values.forEach((point, index) => {
     const x = point.index * xStep;
     const y = yFor(point.value);
     if(index === 0) ctx.moveTo(x,y);
     else ctx.lineTo(x,y);
   });
   ctx.stroke();
-  const last = points[points.length - 1];
-  ctx.fillStyle = '#fff';
+  const last = values[values.length - 1];
+  ctx.fillStyle = '#0f67ff';
   ctx.beginPath();
-  ctx.arc(last.index * xStep, yFor(last.value), 3, 0, Math.PI * 2);
+  ctx.arc(last.index * xStep, yFor(last.value), 6, 0, Math.PI * 2);
   ctx.fill();
 }
-
-function renderTabs(){
-  tabs.innerHTML = ECONOMIC_DATA.indicators.map(indicator => (
-    `<button class="tab ${indicator.key === state.indicator ? 'active' : ''}" data-key="${indicator.key}">${indicator.label}</button>`
-  )).join('');
-  tabs.querySelectorAll('.tab').forEach(button => {
-    button.addEventListener('click', () => {
-      state.indicator = button.dataset.key;
-      render();
-    });
+function renderHome(country){
+  homeView.style.display = 'block';
+  detailView.style.display = 'none';
+  homeFlag.textContent = countryFlag(country.code);
+  populateCountrySelect(country.code);
+  indicatorCards.innerHTML = ECONOMIC_DATA.indicators.map(indicator => {
+    const latest = latestPoint(country, indicator);
+    const url = `economy.html?country=${encodeURIComponent(country.code)}&indicator=${encodeURIComponent(indicator.key)}`;
+    if(indicator.kind === 'rating'){
+      return `<a class="indicator-card" href="${url}" data-indicator="${indicator.key}">
+        <div class="card-title">${indicator.label}</div>
+        <div class="card-label">Last</div>
+        <div class="card-value"><span class="rating-pill">${latest.value}</span><span class="rating-note">Current rating</span></div>
+        <div class="rating-box"><span class="rating-note">${indicator.note}</span></div>
+      </a>`;
+    }
+    return `<a class="indicator-card" href="${url}" data-indicator="${indicator.key}">
+      <div class="card-title">${indicator.label}</div>
+      <div class="card-label">Last</div>
+      <div class="card-value">${valueText(latest.value, indicator)}</div>
+      <div class="mini-wrap"><canvas class="mini-chart"></canvas><div class="mini-caption">10 years history</div></div>
+    </a>`;
+  }).join('');
+  indicatorCards.querySelectorAll('.indicator-card').forEach(card => {
+    const indicator = indicatorByKey(card.dataset.indicator);
+    const canvas = card.querySelector('canvas');
+    if(canvas) drawMini(canvas, seriesFor(country, indicator).map((point, index) => ({...point, index})));
   });
 }
-
-function renderMetric(indicator, countries){
-  metricTitle.textContent = indicator.label;
-  metricNote.textContent = `${indicator.source}. ${indicator.note}`;
-  metricCount.textContent = indicator.kind === 'rating'
-    ? `${countries.length} G20 members · latest snapshot`
-    : `${countries.length} G20 members · ${indicator.years[0]}-${indicator.years[indicator.years.length - 1]}`;
+function resizeCanvas(canvas){
+  const width = canvas.clientWidth || 1000;
+  const height = canvas.clientHeight || 400;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = Math.floor(width * dpr);
+  canvas.height = Math.floor(height * dpr);
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return { ctx, width, height };
 }
-
-function renderRatingMeter(score){
-  if(score === null || score === undefined) return '<div class="empty">No rating</div>';
-  const pct = Math.max(0, Math.min(100, score / 22 * 100));
-  return `<div class="rating-meter"><div class="rating-track"><span class="rating-fill" style="width:${pct}%"></span><span class="rating-dot" style="left:${pct}%"></span></div></div>`;
+function visiblePoints(points){ return points.slice(chartState.start, chartState.end + 1); }
+function chartScale(points, height, top, bottom){
+  const present = points.filter(point => point.value !== null);
+  if(!present.length) return { min:0, max:1, yFor:() => height / 2 };
+  let min = Math.min(...present.map(point => point.value));
+  let max = Math.max(...present.map(point => point.value));
+  if(min > 0) min = Math.min(0, min);
+  if(max < 0) max = Math.max(0, max);
+  const spread = max - min || Math.abs(max) || 1;
+  return { min, max, yFor:value => top + (max - value) / spread * (height - top - bottom) };
 }
-
-function renderGrid(indicator){
-  const normalized = state.query.trim().toLowerCase();
-  const filtered = ECONOMIC_DATA.countries.filter(country => (
-    !normalized || country.name.toLowerCase().includes(normalized) || country.code.toLowerCase().includes(normalized)
-  ));
-  const countries = sortCountries(filtered, indicator);
-  renderMetric(indicator, countries);
-  if(!countries.length){
-    grid.innerHTML = '<div class="empty">No matching country</div>';
+function drawBarChart(country, indicator){
+  const points = seriesFor(country, indicator);
+  const { ctx, width, height } = resizeCanvas(barCanvas);
+  ctx.clearRect(0,0,width,height);
+  if(indicator.kind === 'rating' || !points.length){
+    ctx.fillStyle = '#777';
+    ctx.font = '18px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('No chart series', width / 2, height / 2);
     return;
   }
-  grid.innerHTML = countries.map(country => {
-    const stats = seriesStats(country, indicator);
-    const latestClass = indicator.kind === 'rating' ? '' : classForNumber(stats.latest);
-    const deltaClass = classForNumber(stats.change);
-    const delta = indicator.kind === 'rating'
-      ? 'S&P snapshot'
-      : stats.change === null ? 'No 10Y change' : `${stats.change >= 0 ? '+' : ''}${stats.change.toFixed(indicator.decimals)}${indicator.unit}`;
-    const chart = indicator.kind === 'rating'
-      ? renderRatingMeter(stats.score)
-      : '<div class="chart-box"><canvas class="spark"></canvas></div>';
-    const axis = indicator.kind === 'rating'
-      ? '<div class="axis"><span>Lowest</span><span>Highest</span></div>'
-      : `<div class="axis"><span>${indicator.years[0]}</span><span>${indicator.years[indicator.years.length - 1]}</span></div>`;
-    return `<article class="country-card" data-code="${country.code}">
-      <div class="card-head">
-        <div><div class="country-name">${country.name}</div><div class="country-code">${country.code}</div></div>
-        <div class="latest-year">${stats.latestYear || '--'}</div>
-      </div>
-      <div class="value-line">
-        ${indicator.kind === 'rating' ? `<span class="rating-pill">${formatValue(stats.latest, indicator)}</span>` : `<span class="latest-value ${latestClass}">${formatValue(stats.latest, indicator)}</span>`}
-        <span class="delta ${deltaClass}">${delta}</span>
-      </div>
-      ${chart}
-      ${axis}
-    </article>`;
-  }).join('');
-  if(indicator.kind !== 'rating'){
-    grid.querySelectorAll('.country-card').forEach(card => {
-      const countryCode = card.dataset.code;
-      const canvas = card.querySelector('canvas');
-      drawSpark(canvas, indicator.series[countryCode] || []);
-    });
+  const top = 44, bottom = 54, left = 12, right = 82;
+  const shown = visiblePoints(points);
+  const scale = chartScale(shown, height, top, bottom);
+  ctx.strokeStyle = '#ededed';
+  ctx.lineWidth = 1;
+  for(let i = 0; i <= 4; i += 1){
+    const y = top + (height - top - bottom) * i / 4;
+    ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(width - right, y); ctx.stroke();
+  }
+  const zeroY = scale.yFor(0);
+  ctx.strokeStyle = '#cfcfcf';
+  ctx.beginPath(); ctx.moveTo(left, zeroY); ctx.lineTo(width - right, zeroY); ctx.stroke();
+  const slot = (width - left - right) / Math.max(shown.length, 1);
+  const barWidth = Math.max(10, Math.min(46, slot * .58));
+  shown.forEach((point, index) => {
+    const x = left + slot * index + slot / 2;
+    if(point.value !== null){
+      const y = scale.yFor(point.value);
+      ctx.fillStyle = point.value >= 0 ? '#079b86' : '#e44f55';
+      const yTop = Math.min(y, zeroY);
+      const barHeight = Math.max(2, Math.abs(zeroY - y));
+      ctx.fillRect(x - barWidth / 2, yTop, barWidth, barHeight);
+    }
+    ctx.fillStyle = '#111';
+    ctx.font = '16px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(String(point.year), x, height - 18);
+  });
+  ctx.fillStyle = '#111';
+  ctx.font = '14px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText(String(shown[0]?.year || ''), left, height - 18);
+  const latest = shown.filter(point => point.value !== null).at(-1);
+  if(latest){
+    const y = scale.yFor(latest.value);
+    ctx.fillStyle = latest.value >= 0 ? '#079b86' : '#e44f55';
+    ctx.fillRect(width - right + 18, y - 12, 50, 24);
+    ctx.fillStyle = '#fff';
+    ctx.font = '14px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(valueText(latest.value, indicator, false), width - right + 43, y + 5);
+  }
+  if(chartState.hover !== null && chartState.hover >= chartState.start && chartState.hover <= chartState.end){
+    const index = chartState.hover - chartState.start;
+    const point = points[chartState.hover];
+    const x = left + slot * index + slot / 2;
+    ctx.strokeStyle = 'rgba(0,0,0,.25)';
+    ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, height - bottom); ctx.stroke();
+    if(point.value !== null){
+      tooltip.style.display = 'block';
+      tooltip.innerHTML = `<strong>${point.year}</strong><br>${valueText(point.value, indicator)}`;
+      const rect = barCanvas.getBoundingClientRect();
+      tooltip.style.left = `${Math.min(window.innerWidth - 150, rect.left + x + 12)}px`;
+      tooltip.style.top = `${Math.max(80, rect.top + scale.yFor(point.value) - 40)}px`;
+    }
+  }else{
+    tooltip.style.display = 'none';
   }
 }
-
-function render(){
-  renderTabs();
-  renderGrid(currentIndicator());
+function drawRange(country, indicator){
+  const points = seriesFor(country, indicator);
+  const { ctx, width, height } = resizeCanvas(rangeCanvas);
+  ctx.clearRect(0,0,width,height);
+  if(indicator.kind === 'rating' || !points.length) return;
+  const left = 24, right = 24, top = 18, bottom = 20;
+  const scale = chartScale(points, height, top, bottom);
+  const slot = (width - left - right) / Math.max(points.length, 1);
+  const zeroY = scale.yFor(0);
+  const barWidth = Math.max(6, Math.min(22, slot * .52));
+  points.forEach((point, index) => {
+    const x = left + slot * index + slot / 2;
+    if(point.value === null) return;
+    const y = scale.yFor(point.value);
+    ctx.fillStyle = '#b8c7e8';
+    ctx.fillRect(x - barWidth / 2, Math.min(y, zeroY), barWidth, Math.max(2, Math.abs(zeroY - y)));
+  });
+  const startX = left + slot * chartState.start;
+  const endX = left + slot * (chartState.end + 1);
+  ctx.fillStyle = 'rgba(15,103,255,.14)';
+  ctx.fillRect(startX, 0, endX - startX, height);
+  ctx.strokeStyle = '#0f67ff';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(startX, 1, endX - startX, height - 2);
+  ctx.fillStyle = '#0f67ff';
+  ctx.fillRect(startX - 3, 0, 6, height);
+  ctx.fillRect(endX - 3, 0, 6, height);
 }
-
-countrySearch.addEventListener('input', () => {
-  state.query = countrySearch.value;
-  renderGrid(currentIndicator());
+function setRangeByYears(years, points){
+  if(years === 'all'){ chartState.start = 0; chartState.end = points.length - 1; return; }
+  const count = Math.max(1, Math.min(points.length, Number(years)));
+  chartState.start = Math.max(0, points.length - count);
+  chartState.end = points.length - 1;
+}
+function drawDetail(country, indicator){
+  if(indicator.kind === 'rating'){
+    detailTitle.textContent = `${country.code} credit rating`;
+    detailValue.textContent = indicator.values[country.code] || 'NR';
+    detailUnit.textContent = '';
+    detailAsof.textContent = 'Current snapshot';
+    detailCode.textContent = `${country.code}RATE`;
+  detailSource.textContent = 'S&P';
+    drawBarChart(country, indicator);
+    drawRange(country, indicator);
+    return;
+  }
+  const points = seriesFor(country, indicator);
+  if(chartState.end <= 0){ chartState.start = Math.max(0, points.length - 10); chartState.end = points.length - 1; }
+  const latest = latestPoint(country, indicator);
+  detailTitle.textContent = `${country.code} ${indicatorSlug(indicator)}`;
+  detailValue.textContent = valueText(latest.value, indicator, false);
+  detailUnit.textContent = indicator.unit === '%' ? '%' : displayUnit(indicator);
+  detailAsof.textContent = latest.year ? `As of ${latest.year}` : 'No data';
+  detailCode.textContent = `${country.code}${indicator.short.toUpperCase()}`;
+  detailSource.textContent = 'World Bank';
+  drawBarChart(country, indicator);
+  drawRange(country, indicator);
+}
+function renderDetail(country, indicator){
+  homeView.style.display = 'none';
+  detailView.style.display = 'block';
+  detailFlag.textContent = countryFlag(country.code);
+  document.getElementById('backLink').href = `economy.html?country=${encodeURIComponent(country.code)}`;
+  chartState.start = 0;
+  chartState.end = Math.max(0, seriesFor(country, indicator).length - 1);
+  setRangeByYears('10', seriesFor(country, indicator));
+  drawDetail(country, indicator);
+  document.querySelectorAll('.range-btn').forEach(button => {
+    button.onclick = () => {
+      document.querySelectorAll('.range-btn').forEach(item => item.classList.remove('active'));
+      button.classList.add('active');
+      setRangeByYears(button.dataset.range, seriesFor(country, indicator));
+      drawDetail(country, indicator);
+    };
+  });
+}
+function pointerIndex(canvas, event, points){
+  const rect = canvas.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const left = canvas === rangeCanvas ? 24 : 12;
+  const right = canvas === rangeCanvas ? 24 : 82;
+  const count = canvas === rangeCanvas ? points.length : chartState.end - chartState.start + 1;
+  const slot = (rect.width - left - right) / Math.max(count, 1);
+  return Math.max(0, Math.min(count - 1, Math.floor((x - left) / slot)));
+}
+function installChartEvents(country, indicator){
+  const points = seriesFor(country, indicator);
+  barCanvas.onpointermove = event => {
+    if(!points.length) return;
+    chartState.hover = chartState.start + pointerIndex(barCanvas, event, points);
+    drawDetail(country, indicator);
+  };
+  barCanvas.onpointerleave = () => { chartState.hover = null; tooltip.style.display = 'none'; drawDetail(country, indicator); };
+  rangeCanvas.onpointerdown = event => {
+    if(!points.length) return;
+    const rect = rangeCanvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const slot = (rect.width - 48) / Math.max(points.length, 1);
+    const startX = 24 + slot * chartState.start;
+    const endX = 24 + slot * (chartState.end + 1);
+    chartState.drag = Math.abs(x - startX) < 18 ? 'start' : Math.abs(x - endX) < 18 ? 'end' : x > startX && x < endX ? 'move' : 'move';
+    chartState.dragOffset = pointerIndex(rangeCanvas, event, points) - chartState.start;
+    rangeCanvas.classList.add('dragging');
+    rangeCanvas.setPointerCapture(event.pointerId);
+  };
+  rangeCanvas.onpointermove = event => {
+    if(!chartState.drag || !points.length) return;
+    let index = pointerIndex(rangeCanvas, event, points);
+    const length = chartState.end - chartState.start;
+    if(chartState.drag === 'start') chartState.start = Math.min(index, chartState.end);
+    if(chartState.drag === 'end') chartState.end = Math.max(index, chartState.start);
+    if(chartState.drag === 'move'){
+      let nextStart = index - chartState.dragOffset;
+      nextStart = Math.max(0, Math.min(points.length - length - 1, nextStart));
+      chartState.start = nextStart;
+      chartState.end = nextStart + length;
+    }
+    drawDetail(country, indicator);
+  };
+  rangeCanvas.onpointerup = event => {
+    chartState.drag = null;
+    rangeCanvas.classList.remove('dragging');
+    try{ rangeCanvas.releasePointerCapture(event.pointerId); }catch(error){}
+  };
+}
+function boot(){
+  setupNavSearch();
+  const country = countryByCode(params.get('country') || localStorage.getItem('economyCountry') || 'US');
+  const indicatorParam = params.get('indicator');
+  if(indicatorParam){
+    const indicator = indicatorByKey(indicatorParam);
+    renderDetail(country, indicator);
+    installChartEvents(country, indicator);
+  }else{
+    renderHome(country);
+    countrySelect.onchange = () => {
+      const next = countryByCode(countrySelect.value);
+      localStorage.setItem('economyCountry', next.code);
+      history.replaceState(null, '', `economy.html?country=${encodeURIComponent(next.code)}`);
+      renderHome(next);
+    };
+  }
+}
+window.addEventListener('resize', () => {
+  const country = countryByCode(params.get('country') || countrySelect.value || 'US');
+  const indicatorParam = params.get('indicator');
+  if(indicatorParam) drawDetail(country, indicatorByKey(indicatorParam));
+  else renderHome(country);
 });
-sortSelect.addEventListener('change', () => {
-  state.sort = sortSelect.value;
-  renderGrid(currentIndicator());
-});
-window.addEventListener('resize', () => renderGrid(currentIndicator()));
-setupNavSearch();
-render();
+boot();
 </script>
 </body>
 </html>
@@ -716,13 +897,14 @@ def write_outputs(payload):
     data_json = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
     Path("economic_data.json").write_text(data_json, encoding="utf-8")
     html = HTML_TEMPLATE.replace("__DATA__", data_json).replace("__UPDATED__", payload["updated"])
+    Path("economy.html").write_text(html, encoding="utf-8")
     Path("economic.html").write_text(html, encoding="utf-8")
 
 
 def main():
     payload = build_payload()
     write_outputs(payload)
-    print(f"Generated economic.html with {len(payload['countries'])} countries")
+    print(f"Generated economy.html with {len(payload['countries'])} countries")
 
 
 if __name__ == "__main__":
