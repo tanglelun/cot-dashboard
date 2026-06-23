@@ -580,12 +580,15 @@ function draw(){
     const yOpen = yFor(c.open), yClose = yFor(c.close), yHigh = yFor(c.high), yLow = yFor(c.low);
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.moveTo(x, yHigh);
-    ctx.lineTo(x, yLow);
-    ctx.stroke();
     const bodyTop = Math.min(yOpen, yClose);
     const bodyHeight = Math.max(1, Math.abs(yOpen - yClose));
+    const bodyBottom = bodyTop + bodyHeight;
+    ctx.beginPath();
+    ctx.moveTo(x, yHigh);
+    ctx.lineTo(x, bodyTop);
+    ctx.moveTo(x, bodyBottom);
+    ctx.lineTo(x, yLow);
+    ctx.stroke();
     if(up){
       ctx.strokeRect(x - bodyWidth / 2, bodyTop, bodyWidth, bodyHeight);
     }else{
