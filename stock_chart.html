@@ -6,11 +6,11 @@
 <title>Stock Chart</title>
 <style>
 :root{
-  --tv-bg:#0b0f19;
-  --tv-panel:#131722;
-  --tv-panel-2:#0f131d;
-  --tv-border:#2a2e39;
-  --tv-border-soft:#1f2430;
+  --tv-bg:#000;
+  --tv-panel:#050709;
+  --tv-panel-2:#090d12;
+  --tv-border:#202932;
+  --tv-border-soft:#111820;
   --tv-text:#d1d4dc;
   --tv-muted:#787b86;
   --tv-faint:#5d606b;
@@ -18,7 +18,8 @@
   --tv-blue-soft:#1e3a8a;
   --tv-green:#26a69a;
   --tv-red:#ef5350;
-  --tv-hover:#1e222d;
+  --tv-hover:#101820;
+  --tv-accent:#00d109;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--tv-bg);color:var(--tv-text);padding:0}
@@ -42,9 +43,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 .nav-search-mark{position:absolute;left:16px;top:50%;width:13px;height:13px;border:2px solid #b8ff00;border-radius:50%;transform:translateY(-50%);pointer-events:none}
 .nav-search-mark::after{content:"";position:absolute;width:7px;height:2px;background:#b8ff00;border-radius:999px;right:-6px;bottom:-4px;transform:rotate(45deg)}
 .container{width:100%;max-width:none;margin:0;padding:10px clamp(10px,1vw,24px)}
-.page-layout{display:grid;grid-template-columns:clamp(292px,16vw,360px) minmax(0,1fr);gap:8px;align-items:start}
-.page-layout.sidebar-collapsed{grid-template-columns:44px minmax(0,1fr)}
-.stock-panel{position:sticky;top:10px;height:calc(100vh - 62px);min-height:520px;background:var(--tv-panel);border:1px solid var(--tv-border);border-radius:6px;overflow:hidden;display:flex;flex-direction:column}
+.page-layout{display:grid;grid-template-columns:clamp(292px,16vw,360px) minmax(0,1fr) clamp(190px,11vw,240px);gap:0;align-items:stretch;border:1px solid var(--tv-border);background:#000}
+.page-layout.sidebar-collapsed{grid-template-columns:44px minmax(0,1fr) clamp(190px,11vw,240px)}
+.stock-panel{position:sticky;top:10px;height:calc(100vh - 84px);min-height:520px;background:#050709;border:none;border-right:1px solid var(--tv-border);border-radius:0;overflow:hidden;display:flex;flex-direction:column}
 .sidebar-collapsed .stock-panel{align-items:center}
 .stock-panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px;height:38px;padding:0 10px;border-bottom:1px solid var(--tv-border)}
 .stock-panel-title{font-size:12px;font-weight:800;color:var(--tv-text);white-space:nowrap}
@@ -67,8 +68,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 .stock-name{font-size:10px;color:var(--tv-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .stock-value{font-family:"SF Mono","Fira Code",monospace;font-size:11px;font-weight:800}
 .stock-value.up{color:var(--tv-green)}.stock-value.down{color:var(--tv-red)}
-.main-panel{min-width:0;min-height:calc(100vh - 76px);display:flex;flex-direction:column}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:8px;min-height:58px;padding:8px 12px;background:var(--tv-panel);border:1px solid var(--tv-border);border-radius:6px;flex-wrap:wrap}
+.main-panel{min-width:0;min-height:calc(100vh - 86px);display:flex;flex-direction:column;background:#000}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:0;min-height:58px;padding:8px 12px;background:#000;border:none;border-bottom:1px solid var(--tv-border);border-radius:0;flex-wrap:wrap}
 .identity{display:flex;flex-direction:column;gap:4px}
 .symbol-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 h1{font-size:22px;color:#fff;font-weight:800;letter-spacing:0}
@@ -82,9 +83,9 @@ h1{font-size:22px;color:#fff;font-weight:800;letter-spacing:0}
 .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .btn{border:1px solid var(--tv-border);background:var(--tv-panel-2);color:var(--tv-muted);border-radius:4px;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none}
 .btn:hover{background:var(--tv-hover);color:var(--tv-text)}
-.btn.active{background:var(--tv-blue);border-color:var(--tv-blue);color:#fff}
+.btn.active{background:var(--tv-accent);border-color:var(--tv-accent);color:#001b03}
 .mobile-switcher{display:none}
-.chart-shell{background:var(--tv-panel);border:1px solid var(--tv-border);border-radius:6px;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:520px}
+.chart-shell{background:#000;border:none;border-radius:0;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:520px}
 .chart-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 10px;border-bottom:1px solid var(--tv-border);flex-wrap:wrap}
 .toolbar-left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .candle-readout{display:flex;align-items:center;gap:10px;flex-wrap:wrap;width:100%;padding-top:2px;font-family:"SF Mono","Fira Code",monospace;font-size:12px;color:var(--tv-muted)}
@@ -105,6 +106,12 @@ h1{font-size:22px;color:#fff;font-weight:800;letter-spacing:0}
 canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:crosshair;touch-action:none}
 .status{padding:28px;text-align:center;color:var(--tv-muted);font-size:13px}
 .status strong{color:var(--tv-blue)}
+.indicator-panel{position:sticky;top:10px;height:calc(100vh - 84px);min-height:520px;background:#050709;border-left:1px solid var(--tv-border);display:flex;flex-direction:column}
+.indicator-head{height:52px;display:flex;align-items:center;padding:0 14px;border-bottom:1px solid var(--tv-border);font-size:14px;font-weight:850;color:#fff}
+.indicator-list{padding:14px 14px 8px;display:flex;flex-direction:column;gap:16px}
+.indicator-item{display:grid;grid-template-columns:12px minmax(0,1fr);gap:8px;align-items:center;color:var(--tv-text);font-size:12px;font-weight:800}
+.indicator-dot{width:7px;height:7px;border-radius:50%;background:var(--tv-muted)}
+.indicator-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(max-width:768px){
   .site-nav{min-height:58px;padding:10px 14px;gap:10px;flex-wrap:wrap}
   .site-brand{font-size:21px}
@@ -133,6 +140,7 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
   .candle-readout{font-size:11px;gap:7px;line-height:1.45}
   .chart-shell{min-height:calc(100dvh - 168px)}
   .chart-wrap{min-height:0}
+  .indicator-panel{display:none}
   .hint{display:none}
 }
 </style>
@@ -258,6 +266,17 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
     </div>
   </section>
     </section>
+    <aside class="indicator-panel" aria-label="Indicators">
+      <div class="indicator-head">Indicators</div>
+      <div class="indicator-list">
+        <div class="indicator-item"><span class="indicator-dot" style="background:#5d606b"></span><span class="indicator-name">Price</span></div>
+        <div class="indicator-item"><span class="indicator-dot" style="background:#ffffff"></span><span class="indicator-name">MA(10)</span></div>
+        <div class="indicator-item"><span class="indicator-dot" style="background:#2962ff"></span><span class="indicator-name">MA(20)</span></div>
+        <div class="indicator-item"><span class="indicator-dot" style="background:#7b61ff"></span><span class="indicator-name">MA(50)</span></div>
+        <div class="indicator-item"><span class="indicator-dot" style="background:#ff9800"></span><span class="indicator-name">MA(200)</span></div>
+        <div class="indicator-item"><span class="indicator-dot" style="background:#26a69a"></span><span class="indicator-name">Volume</span></div>
+      </div>
+    </aside>
   </div>
 </main>
 
@@ -464,8 +483,9 @@ function drawMovingAverage(ma, candles, xFor, yFor){
 }
 
 function drawGrid(left, top, right, priceBottom, volumeTop, bottom, width, height, minPrice, maxPrice, maxVolume, candles, xFor, yFor){
-  ctx.strokeStyle = '#2a2e39';
+  ctx.strokeStyle = '#26323b';
   ctx.lineWidth = 1;
+  ctx.setLineDash([1, 9]);
   ctx.fillStyle = '#787b86';
   ctx.font = '12px SF Mono, Fira Code, monospace';
   ctx.textAlign = 'left';
@@ -479,6 +499,7 @@ function drawGrid(left, top, right, priceBottom, volumeTop, bottom, width, heigh
     const price = maxPrice - (maxPrice - minPrice) * i / 5;
     ctx.fillText(fmt(price), 8, y);
   }
+  ctx.setLineDash([]);
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
   const ticks = Math.min(6, candles.length);
