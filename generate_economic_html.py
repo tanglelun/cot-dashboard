@@ -1,36 +1,41 @@
 import json
+import csv
+import io
+import time
 from datetime import date, datetime, timezone
+from functools import lru_cache
 from pathlib import Path
 
 import requests
 
 
 COUNTRIES = [
-    {"code": "AR", "api": "AR", "name": "Argentina"},
-    {"code": "AU", "api": "AU", "name": "Australia"},
-    {"code": "BR", "api": "BR", "name": "Brazil"},
-    {"code": "CA", "api": "CA", "name": "Canada"},
-    {"code": "CN", "api": "CN", "name": "China"},
-    {"code": "FR", "api": "FR", "name": "France"},
-    {"code": "DE", "api": "DE", "name": "Germany"},
-    {"code": "IN", "api": "IN", "name": "India"},
-    {"code": "ID", "api": "ID", "name": "Indonesia"},
-    {"code": "IT", "api": "IT", "name": "Italy"},
-    {"code": "JP", "api": "JP", "name": "Japan"},
-    {"code": "MX", "api": "MX", "name": "Mexico"},
-    {"code": "RU", "api": "RU", "name": "Russia"},
-    {"code": "SA", "api": "SA", "name": "Saudi Arabia"},
-    {"code": "ZA", "api": "ZA", "name": "South Africa"},
-    {"code": "KR", "api": "KR", "name": "South Korea"},
-    {"code": "TR", "api": "TR", "name": "Turkiye"},
-    {"code": "GB", "api": "GB", "name": "United Kingdom"},
-    {"code": "US", "api": "US", "name": "United States"},
-    {"code": "EU", "api": "EUU", "name": "European Union"},
+    {"code": "AR", "api": "AR", "oecd": "ARG", "name": "Argentina"},
+    {"code": "AU", "api": "AU", "oecd": "AUS", "name": "Australia"},
+    {"code": "BR", "api": "BR", "oecd": "BRA", "name": "Brazil"},
+    {"code": "CA", "api": "CA", "oecd": "CAN", "name": "Canada"},
+    {"code": "CN", "api": "CN", "oecd": "CHN", "name": "China"},
+    {"code": "FR", "api": "FR", "oecd": "FRA", "name": "France"},
+    {"code": "DE", "api": "DE", "oecd": "DEU", "name": "Germany"},
+    {"code": "IN", "api": "IN", "oecd": "IND", "name": "India"},
+    {"code": "ID", "api": "ID", "oecd": "IDN", "name": "Indonesia"},
+    {"code": "IT", "api": "IT", "oecd": "ITA", "name": "Italy"},
+    {"code": "JP", "api": "JP", "oecd": "JPN", "name": "Japan"},
+    {"code": "MX", "api": "MX", "oecd": "MEX", "name": "Mexico"},
+    {"code": "RU", "api": "RU", "oecd": "RUS", "name": "Russia"},
+    {"code": "SA", "api": "SA", "oecd": "SAU", "name": "Saudi Arabia"},
+    {"code": "ZA", "api": "ZA", "oecd": "ZAF", "name": "South Africa"},
+    {"code": "KR", "api": "KR", "oecd": "KOR", "name": "South Korea"},
+    {"code": "TR", "api": "TR", "oecd": "TUR", "name": "Turkiye"},
+    {"code": "GB", "api": "GB", "oecd": "GBR", "name": "United Kingdom"},
+    {"code": "US", "api": "US", "oecd": "USA", "name": "United States"},
+    {"code": "EU", "api": "EUU", "oecd": "EA", "name": "European Union"},
 ]
 
 COUNTRY_BY_API_ID = {country["code"]: country["code"] for country in COUNTRIES}
 COUNTRY_BY_API_ID.update({country["api"]: country["code"] for country in COUNTRIES})
 COUNTRY_BY_API_ID["EUU"] = "EU"
+COUNTRY_BY_OECD = {country["oecd"]: country["code"] for country in COUNTRIES}
 
 INDICATORS = [
     {
@@ -39,9 +44,10 @@ INDICATORS = [
         "short": "GDP",
         "unit": "%",
         "decimals": 2,
+        "oecd": ["{area}.Q.B1GQ_Q.GR._T.Y.GY", "{area}.Q.B1GQ_Q.GR._T.Y.G1"],
         "world_bank": "NY.GDP.MKTP.KD.ZG",
-        "source": "GDP growth (annual %)",
-        "note": "Annual real GDP growth.",
+        "source": "OECD KEI quarterly GDP growth; World Bank annual fallback",
+        "note": "Quarterly where available; annual World Bank points are used only when OECD history is unavailable.",
     },
     {
         "key": "interest_rate",
@@ -49,9 +55,10 @@ INDICATORS = [
         "short": "Rate",
         "unit": "%",
         "decimals": 2,
+        "oecd": ["{area}.M.IRSTCI.PA._Z._Z._Z", "{area}.M.IR3TIB.PA._Z._Z._Z", "{area}.M.IRLT.PA._Z._Z._Z"],
         "world_bank": "FR.INR.LEND",
-        "source": "Lending interest rate (%)",
-        "note": "World Bank lending interest rate proxy; policy-rate coverage differs by country.",
+        "source": "OECD KEI monthly interest rates; World Bank annual fallback",
+        "note": "Monthly short-term or policy-rate series where available; coverage differs by country.",
     },
     {
         "key": "inflation",
@@ -59,9 +66,10 @@ INDICATORS = [
         "short": "CPI",
         "unit": "%",
         "decimals": 2,
+        "oecd": ["{area}.M.CP.GR._Z._Z.GY"],
         "world_bank": "FP.CPI.TOTL.ZG",
-        "source": "Inflation, consumer prices (annual %)",
-        "note": "Annual consumer price inflation.",
+        "source": "OECD KEI monthly CPI inflation; World Bank annual fallback",
+        "note": "Monthly year-over-year consumer price inflation where available.",
     },
     {
         "key": "unemployment",
@@ -69,9 +77,10 @@ INDICATORS = [
         "short": "Jobs",
         "unit": "%",
         "decimals": 2,
+        "oecd": ["{area}.M.UNEMP.PT_LF._T.Y._Z"],
         "world_bank": "SL.UEM.TOTL.ZS",
-        "source": "Unemployment, total (% of total labor force)",
-        "note": "Modeled ILO estimate.",
+        "source": "OECD KEI monthly unemployment rate; World Bank annual fallback",
+        "note": "Monthly seasonally adjusted unemployment rate where available.",
     },
     {
         "key": "government_debt",
@@ -81,7 +90,7 @@ INDICATORS = [
         "decimals": 2,
         "world_bank": "GC.DOD.TOTL.GD.ZS",
         "source": "Central government debt, total (% of GDP)",
-        "note": "Central government debt series; some G20 members have sparse coverage.",
+        "note": "World Bank annual series; many countries do not publish this as a monthly comparable G20 series.",
     },
     {
         "key": "balance_trade",
@@ -89,9 +98,10 @@ INDICATORS = [
         "short": "Trade",
         "unit": "$B",
         "decimals": 1,
-        "derived": "exports_minus_imports",
-        "source": "Exports of goods and services minus imports of goods and services",
-        "note": "Annual goods and services balance, current US dollars.",
+        "derived": "oecd_exports_minus_imports",
+        "world_bank_derived": "exports_minus_imports",
+        "source": "OECD KEI monthly exports minus imports; World Bank annual fallback",
+        "note": "Monthly goods and services balance in billions of US dollars where available.",
     },
     {
         "key": "current_account",
@@ -99,9 +109,10 @@ INDICATORS = [
         "short": "Account",
         "unit": "%",
         "decimals": 2,
+        "oecd": ["{area}.Q.CA_GDP.PT_B1GQ._T.Y._Z"],
         "world_bank": "BN.CAB.XOKA.GD.ZS",
-        "source": "Current account balance (% of GDP)",
-        "note": "Annual current account balance as a share of GDP.",
+        "source": "OECD KEI quarterly current account to GDP; World Bank annual fallback",
+        "note": "Quarterly current account balance as a share of GDP where available.",
     },
 ]
 
@@ -155,20 +166,34 @@ RATING_SCORE = {
 }
 
 WORLD_BANK_API = "https://api.worldbank.org/v2/country/{countries}/indicator/{indicator}"
+OECD_KEI_API = "https://sdmx.oecd.org/public/rest/v1/data/OECD.SDD.STES,DSD_KEI@DF_KEI/{key}"
 
 
 def fetch_world_bank_indicator(indicator, start_year, end_year):
     country_list = ";".join(country["api"] for country in COUNTRIES)
-    response = requests.get(
-        WORLD_BANK_API.format(countries=country_list, indicator=indicator),
-        params={
-            "format": "json",
-            "date": f"{start_year}:{end_year}",
-            "per_page": 20000,
-        },
-        timeout=30,
-    )
-    response.raise_for_status()
+    for attempt in range(3):
+        try:
+            response = requests.get(
+                WORLD_BANK_API.format(countries=country_list, indicator=indicator),
+                params={
+                    "format": "json",
+                    "date": f"{start_year}:{end_year}",
+                    "per_page": 20000,
+                },
+                timeout=60,
+            )
+            if response.status_code == 429 and attempt < 2:
+                time.sleep(2 + attempt)
+                continue
+            response.raise_for_status()
+            break
+        except requests.RequestException as error:
+            if attempt < 2:
+                time.sleep(1 + attempt)
+                continue
+            print(f"Skipped World Bank series {indicator}: {error}")
+            return {country["code"]: {} for country in COUNTRIES}
+
     payload = response.json()
     if len(payload) < 2 or payload[1] is None:
         return {country["code"]: {} for country in COUNTRIES}
@@ -188,43 +213,173 @@ def fetch_world_bank_indicator(indicator, start_year, end_year):
     return result
 
 
-def select_years(values_by_country, fallback_start, fallback_end):
-    years = sorted(
+def period_sort_key(period):
+    parts = str(period).split("-")
+    try:
+        year = int(parts[0])
+        month = 0
+        if len(parts) > 1:
+            if parts[1].startswith("Q"):
+                month = (int(parts[1][1:]) - 1) * 3 + 1
+            else:
+                month = int(parts[1])
+        return (year, month, str(period))
+    except (TypeError, ValueError):
+        return (9999, 99, str(period))
+
+
+@lru_cache(maxsize=None)
+def fetch_oecd_kei_rows(key):
+    for attempt in range(2):
+        try:
+            response = requests.get(
+                OECD_KEI_API.format(key=key),
+                headers={"Accept": "text/csv"},
+                timeout=30,
+            )
+            if response.status_code == 429 and attempt == 0:
+                time.sleep(2)
+                continue
+            if response.status_code == 404 or response.text.strip() == "NoRecordsFound":
+                return []
+            response.raise_for_status()
+            break
+        except requests.RequestException as error:
+            if attempt == 0:
+                time.sleep(1)
+                continue
+            print(f"Skipped OECD series {key}: {error}")
+            return []
+    return list(csv.DictReader(io.StringIO(response.text)))
+
+
+def fetch_oecd_kei_key(key):
+    rows = {}
+    for row in fetch_oecd_kei_rows(key):
+        value = row.get("OBS_VALUE")
+        period = row.get("TIME_PERIOD")
+        if not value or not period:
+            continue
+        try:
+            rows[str(period)] = float(value)
+        except ValueError:
+            continue
+    return rows
+
+
+def fetch_oecd_kei_grouped(key):
+    result = {country["code"]: {} for country in COUNTRIES}
+    for row in fetch_oecd_kei_rows(key):
+        code = COUNTRY_BY_OECD.get(row.get("REF_AREA"))
+        if not code:
+            continue
+        value = row.get("OBS_VALUE")
+        period = row.get("TIME_PERIOD")
+        if not value or not period:
+            continue
+        try:
+            result[code][str(period)] = float(value)
+        except ValueError:
+            continue
+    return result
+
+
+def fetch_world_bank_series(indicator, start_year=1960, end_year=None):
+    end_year = end_year or date.today().year
+    rows_by_country = fetch_world_bank_indicator(indicator, start_year, end_year)
+    result = {country["code"]: {} for country in COUNTRIES}
+    for country in COUNTRIES:
+        for year, value in rows_by_country.get(country["code"], {}).items():
+            result[country["code"]][str(year)] = value
+    return result
+
+
+def build_world_bank_trade_balance(start_year=1960, end_year=None):
+    end_year = end_year or date.today().year
+    exports = fetch_world_bank_indicator("NE.EXP.GNFS.CD", start_year, end_year)
+    imports = fetch_world_bank_indicator("NE.IMP.GNFS.CD", start_year, end_year)
+    result = {country["code"]: {} for country in COUNTRIES}
+    for country in COUNTRIES:
+        code = country["code"]
+        years = set(exports.get(code, {})) | set(imports.get(code, {}))
+        for year in years:
+            export_value = exports.get(code, {}).get(year)
+            import_value = imports.get(code, {}).get(year)
+            result[code][str(year)] = (
+                None
+                if export_value is None or import_value is None
+                else (export_value - import_value) / 1_000_000_000
+            )
+    return result
+
+
+def build_oecd_trade_balance():
+    exports_by_country = fetch_oecd_kei_grouped(".M.EX.USD._T.Y._Z")
+    imports_by_country = fetch_oecd_kei_grouped(".M.IM.USD._T.Y._Z")
+    result = {}
+    for country in COUNTRIES:
+        code = country["code"]
+        exports = exports_by_country.get(code, {})
+        imports = imports_by_country.get(code, {})
+        result[code] = {}
+        for period in set(exports) | set(imports):
+            export_value = exports.get(period)
+            import_value = imports.get(period)
+            if export_value is not None and import_value is not None:
+                result[code][period] = export_value - import_value
+    return result
+
+
+def merge_with_fallback(primary, fallback):
+    result = {}
+    for country in COUNTRIES:
+        code = country["code"]
+        result[code] = primary.get(code) or fallback.get(code, {})
+    return result
+
+
+def sorted_periods(values_by_country):
+    periods = sorted(
         {
-            year
+            period
             for rows in values_by_country.values()
-            for year, value in rows.items()
+            for period, value in rows.items()
             if value is not None
-        }
+        },
+        key=period_sort_key,
     )
-    if not years:
-        return list(range(fallback_start, fallback_end + 1))[-10:]
-    return years[-10:]
+    return periods
 
 
-def build_series(values_by_country, years, decimals):
+def build_series(values_by_country, periods, decimals):
     series = {}
     for country in COUNTRIES:
         country_values = values_by_country.get(country["code"], {})
         series[country["code"]] = [
-            None if country_values.get(year) is None else round(country_values[year], decimals)
-            for year in years
+            None if country_values.get(period) is None else round(country_values[period], decimals)
+            for period in periods
         ]
     return series
 
 
-def latest_non_null(values, years):
+def latest_non_null(values, periods):
     for index in range(len(values) - 1, -1, -1):
         if values[index] is not None:
-            return {"year": years[index], "value": values[index]}
-    return {"year": None, "value": None}
+            return {"date": periods[index], "year": periods[index], "value": values[index]}
+    return {"date": None, "year": None, "value": None}
 
 
-def build_indicator_payload(config, values_by_country, start_year, end_year):
-    years = select_years(values_by_country, start_year, end_year)
-    series = build_series(values_by_country, years, config["decimals"])
+def infer_frequency(periods):
+    if any("-" in str(period) for period in periods):
+        return "Monthly/quarterly"
+    return "Annual"
+
+
+def build_indicator_payload(config, values_by_country):
+    periods = sorted_periods(values_by_country)
+    series = build_series(values_by_country, periods, config["decimals"])
     latest = {
-        country["code"]: latest_non_null(series[country["code"]], years)
+        country["code"]: latest_non_null(series[country["code"]], periods)
         for country in COUNTRIES
     }
     return {
@@ -235,27 +390,24 @@ def build_indicator_payload(config, values_by_country, start_year, end_year):
         "decimals": config["decimals"],
         "source": config["source"],
         "note": config["note"],
-        "years": years,
+        "years": periods,
+        "dates": periods,
+        "frequency": infer_frequency(periods),
         "series": series,
         "latest": latest,
     }
 
 
-def build_trade_balance(start_year, end_year):
-    exports = fetch_world_bank_indicator("NE.EXP.GNFS.CD", start_year, end_year)
-    imports = fetch_world_bank_indicator("NE.IMP.GNFS.CD", start_year, end_year)
+def build_oecd_indicator_values(config):
+    if not config.get("oecd"):
+        return {country["code"]: {} for country in COUNTRIES}
     result = {country["code"]: {} for country in COUNTRIES}
-    for country in COUNTRIES:
-        code = country["code"]
-        years = set(exports.get(code, {})) | set(imports.get(code, {}))
-        for year in years:
-            export_value = exports.get(code, {}).get(year)
-            import_value = imports.get(code, {}).get(year)
-            result[code][year] = (
-                None
-                if export_value is None or import_value is None
-                else (export_value - import_value) / 1_000_000_000
-            )
+    for pattern in config["oecd"]:
+        grouped = fetch_oecd_kei_grouped(pattern.format(area=""))
+        for country in COUNTRIES:
+            code = country["code"]
+            if not result[code] and grouped.get(code):
+                result[code] = grouped[code]
     return result
 
 
@@ -283,23 +435,49 @@ def build_credit_payload():
 
 
 def build_payload():
-    end_year = date.today().year - 1
-    start_year = end_year - 10
+    previous_indicators = load_previous_indicators()
     indicators = []
     for config in INDICATORS:
-        if config.get("derived") == "exports_minus_imports":
-            values = build_trade_balance(start_year, end_year)
+        if config.get("derived") == "oecd_exports_minus_imports":
+            primary = build_oecd_trade_balance()
+            fallback = build_world_bank_trade_balance()
+            values = merge_with_fallback(primary, fallback)
+        elif config.get("world_bank_derived") == "exports_minus_imports":
+            values = build_world_bank_trade_balance()
         else:
-            values = fetch_world_bank_indicator(config["world_bank"], start_year, end_year)
-        indicators.append(build_indicator_payload(config, values, start_year, end_year))
+            primary = build_oecd_indicator_values(config)
+            fallback = fetch_world_bank_series(config["world_bank"])
+            values = merge_with_fallback(primary, fallback)
+        payload = build_indicator_payload(config, values)
+        if not payload["dates"]:
+            previous = previous_indicators.get(config["key"])
+            if previous:
+                print(f"Reused cached indicator {config['key']} because no fresh rows were available")
+                payload = previous
+        indicators.append(payload)
 
     indicators.append(build_credit_payload())
     return {
         "updated": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
-        "source": "World Bank WDI API",
-        "sourceUrl": "https://api.worldbank.org/v2/",
+        "source": "OECD SDMX and World Bank WDI APIs",
+        "sourceUrl": "https://sdmx.oecd.org/",
         "countries": [{"code": item["code"], "name": item["name"]} for item in COUNTRIES],
         "indicators": indicators,
+    }
+
+
+def load_previous_indicators():
+    path = Path("economic_data.json")
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return {
+        indicator.get("key"): indicator
+        for indicator in payload.get("indicators", [])
+        if indicator.get("key") and indicator.get("kind") != "rating"
     }
 
 
@@ -537,7 +715,7 @@ function valueText(value, indicator, withUnit = true){
 function latestPoint(country, indicator){
   if(indicator.kind === 'rating') return { year:'Current', value:indicator.values[country.code] || 'NR' };
   const values = indicator.series[country.code] || [];
-  const years = indicator.years || [];
+  const years = indicator.dates || indicator.years || [];
   for(let index = values.length - 1; index >= 0; index -= 1){
     if(values[index] !== null && values[index] !== undefined) return { year: years[index], value: values[index] };
   }
@@ -545,7 +723,7 @@ function latestPoint(country, indicator){
 }
 function seriesFor(country, indicator){
   if(indicator.kind === 'rating') return [];
-  return (indicator.years || []).map((year, index) => ({ year, value:(indicator.series[country.code] || [])[index] ?? null }));
+  return (indicator.dates || indicator.years || []).map((year, index) => ({ year, value:(indicator.series[country.code] || [])[index] ?? null }));
 }
 function setupNavSearch(){
   const form = document.querySelector('.nav-search');
@@ -592,7 +770,7 @@ function drawMini(canvas, points){
     ctx.fillStyle = '#777';
     ctx.font = '13px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('No 10 years history', width / 2, height / 2);
+    ctx.fillText('No history', width / 2, height / 2);
     return;
   }
   const min = Math.min(...values.map(point => point.value));
@@ -637,7 +815,7 @@ function renderHome(country){
       <div class="card-title">${indicator.label}</div>
       <div class="card-label">Last</div>
       <div class="card-value">${valueText(latest.value, indicator)}</div>
-      <div class="mini-wrap"><canvas class="mini-chart"></canvas><div class="mini-caption">10 years history</div></div>
+      <div class="mini-wrap"><canvas class="mini-chart"></canvas><div class="mini-caption">All history</div></div>
     </a>`;
   }).join('');
   indicatorCards.querySelectorAll('.indicator-card').forEach(card => {
@@ -691,7 +869,7 @@ function drawBarChart(country, indicator){
   ctx.strokeStyle = '#cfcfcf';
   ctx.beginPath(); ctx.moveTo(left, zeroY); ctx.lineTo(width - right, zeroY); ctx.stroke();
   const slot = (width - left - right) / Math.max(shown.length, 1);
-  const barWidth = Math.max(10, Math.min(46, slot * .58));
+  const barWidth = Math.max(1, Math.min(46, slot * .58));
   shown.forEach((point, index) => {
     const x = left + slot * index + slot / 2;
     if(point.value !== null){
@@ -701,10 +879,16 @@ function drawBarChart(country, indicator){
       const barHeight = Math.max(2, Math.abs(zeroY - y));
       ctx.fillRect(x - barWidth / 2, yTop, barWidth, barHeight);
     }
-    ctx.fillStyle = '#111';
-    ctx.font = '16px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(String(point.year), x, height - 18);
+    const previous = shown[index - 1];
+    const label = String(point.year);
+    const yearText = label.slice(0, 4);
+    const shouldLabel = shown.length <= 18 || index === 0 || index === shown.length - 1 || (label.endsWith('-01') && previous && String(previous.year).slice(0, 4) !== yearText);
+    if(shouldLabel){
+      ctx.fillStyle = '#111';
+      ctx.font = '14px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(yearText, x, height - 18);
+    }
   });
   ctx.fillStyle = '#111';
   ctx.font = '14px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif';
@@ -765,11 +949,26 @@ function drawRange(country, indicator){
   ctx.fillRect(startX - 3, 0, 6, height);
   ctx.fillRect(endX - 3, 0, 6, height);
 }
+function periodYear(period){
+  const year = Number(String(period || '').slice(0, 4));
+  return Number.isFinite(year) ? year : null;
+}
 function setRangeByYears(years, points){
-  if(years === 'all'){ chartState.start = 0; chartState.end = points.length - 1; return; }
-  const count = Math.max(1, Math.min(points.length, Number(years)));
-  chartState.start = Math.max(0, points.length - count);
-  chartState.end = points.length - 1;
+  if(years === 'all' || points.length <= 1){ chartState.start = 0; chartState.end = Math.max(0, points.length - 1); return; }
+  const present = points.map((point, index) => ({...point, index})).filter(point => point.value !== null);
+  if(!present.length){ chartState.start = 0; chartState.end = Math.max(0, points.length - 1); return; }
+  const latest = present[present.length - 1];
+  const latestYear = periodYear(latest.year);
+  if(latestYear === null){
+    const count = Math.max(1, Math.min(points.length, Number(years)));
+    chartState.start = Math.max(0, points.length - count);
+    chartState.end = points.length - 1;
+    return;
+  }
+  const startYear = latestYear - Number(years);
+  const first = present.find(point => periodYear(point.year) !== null && periodYear(point.year) > startYear) || present[0];
+  chartState.start = first.index;
+  chartState.end = latest.index;
 }
 function drawDetail(country, indicator){
   if(indicator.kind === 'rating'){
@@ -789,9 +988,9 @@ function drawDetail(country, indicator){
   detailTitle.textContent = `${country.code} ${indicatorSlug(indicator)}`;
   detailValue.textContent = valueText(latest.value, indicator, false);
   detailUnit.textContent = indicator.unit === '%' ? '%' : displayUnit(indicator);
-  detailAsof.textContent = latest.year ? `As of ${latest.year}` : 'No data';
+  detailAsof.textContent = latest.year ? `As of ${latest.year} · ${indicator.frequency || 'All available history'}` : 'No data';
   detailCode.textContent = `${country.code}${indicator.short.toUpperCase()}`;
-  detailSource.textContent = 'World Bank';
+  detailSource.textContent = 'OECD / World Bank';
   drawBarChart(country, indicator);
   drawRange(country, indicator);
 }

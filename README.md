@@ -45,7 +45,7 @@ market close on weekdays and updates:
 - `market_data/*.json`
 
 The workflow in `.github/workflows/update-economic.yml` refreshes the G20
-Economy dashboard weekly from the World Bank API and updates:
+Economy dashboard weekly from OECD SDMX and World Bank WDI APIs and updates:
 
 - `economy.html`
 - `economic.html`
