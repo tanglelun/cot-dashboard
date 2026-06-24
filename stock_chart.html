@@ -53,19 +53,30 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 .icon-btn:hover{background:var(--tv-hover);color:var(--tv-text)}
 .stock-panel-body{padding:8px;display:flex;flex-direction:column;gap:8px;min-height:0;flex:1}
 .sidebar-collapsed .stock-panel-title,.sidebar-collapsed .stock-panel-body{display:none}
+.filter-drawer{border:1px solid var(--tv-border);border-radius:4px;background:var(--tv-panel-2);overflow:hidden}
+.filter-drawer summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;cursor:pointer;color:var(--tv-text);font-size:12px;font-weight:800}
+.filter-drawer summary::-webkit-details-marker{display:none}
+.filter-summary{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tv-muted);font-weight:750}
+.filter-caret{color:var(--tv-muted);font-size:14px;line-height:1;transition:transform .18s ease}
+.filter-drawer[open] .filter-caret{transform:rotate(180deg)}
+.filter-fields{display:grid;gap:8px;padding:0 8px 8px;border-top:1px solid var(--tv-border-soft)}
 .field{display:flex;flex-direction:column;gap:4px}
 .field label{font-size:10px;color:var(--tv-muted);font-weight:800;text-transform:uppercase;letter-spacing:.2px}
 .select,.stock-search{width:100%;border:1px solid var(--tv-border);background:var(--tv-panel-2);color:var(--tv-text);border-radius:4px;padding:7px 8px;font-size:12px;outline:none}
 .select:focus,.stock-search:focus{border-color:var(--tv-blue)}
 .stock-nav{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.stock-list{min-height:0;overflow:auto;border:1px solid var(--tv-border);border-radius:4px;background:var(--tv-panel-2)}
+.stock-list{min-height:0;overflow:auto;border:1px solid var(--tv-border);border-radius:4px;background:var(--tv-panel-2);scrollbar-color:#2a3440 #080c12;scrollbar-width:thin}
+.stock-list::-webkit-scrollbar{width:8px;height:8px}
+.stock-list::-webkit-scrollbar-track{background:#080c12}
+.stock-list::-webkit-scrollbar-thumb{background:#2a3440;border-radius:999px;border:2px solid #080c12}
+.stock-list::-webkit-scrollbar-thumb:hover{background:#3a4654}
 .stock-row{width:100%;display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:6px;align-items:center;border:none;border-bottom:1px solid var(--tv-border-soft);background:transparent;color:var(--tv-text);text-align:left;padding:7px 8px;cursor:pointer}
 .stock-row:hover{background:var(--tv-hover)}
 .stock-row.active{background:#1b2b55;color:#fff;box-shadow:inset 2px 0 0 var(--tv-blue)}
 .stock-rank{font-family:"SF Mono","Fira Code",monospace;font-size:10px;color:var(--tv-muted)}
-.stock-main{min-width:0}
+.stock-main{min-width:0;display:flex;align-items:baseline;gap:2px;overflow:hidden}
 .stock-symbol{font-family:"SF Mono","Fira Code",monospace;font-size:12px;font-weight:800;color:var(--tv-text)}
-.stock-name{font-size:10px;color:var(--tv-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stock-name{font-size:10px;color:var(--tv-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .stock-value{font-family:"SF Mono","Fira Code",monospace;font-size:11px;font-weight:800}
 .stock-value.up{color:var(--tv-green)}.stock-value.down{color:var(--tv-red)}
 .main-panel{min-width:0;min-height:calc(100vh - 86px);display:flex;flex-direction:column;background:#000}
@@ -175,39 +186,47 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
         <button class="icon-btn" id="panelToggle" title="Toggle stock list" aria-label="Toggle stock list">‹</button>
       </div>
       <div class="stock-panel-body">
-        <div class="field">
-          <label for="universeSelect">Universe</label>
-          <select class="select" id="universeSelect"></select>
-        </div>
-        <div class="field">
-          <label for="sortSelect">Sort</label>
-          <select class="select" id="sortSelect">
-            <option value="gain">Gain</option>
-            <option value="rank">Rank</option>
-            <option value="price">Price</option>
-            <option value="marketCapNum">Market Cap</option>
-            <option value="symbol">Symbol</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="metricSelect">Period</label>
-          <select class="select" id="metricSelect">
-            <option value="d">1D</option>
-            <option value="w">1W</option>
-            <option value="m">1M</option>
-            <option value="m2">2M</option>
-            <option value="q">3M</option>
-            <option value="h">6M</option>
-            <option value="y">YTD</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="directionSelect">Direction</label>
-          <select class="select" id="directionSelect">
-            <option value="desc">High to low</option>
-            <option value="asc">Low to high</option>
-          </select>
-        </div>
+        <details class="filter-drawer" id="filterDrawer">
+          <summary>
+            <span class="filter-summary" id="filterSummary">Filters</span>
+            <span class="filter-caret" aria-hidden="true">⌄</span>
+          </summary>
+          <div class="filter-fields">
+            <div class="field">
+              <label for="universeSelect">Universe</label>
+              <select class="select" id="universeSelect"></select>
+            </div>
+            <div class="field">
+              <label for="sortSelect">Sort</label>
+              <select class="select" id="sortSelect">
+                <option value="gain">Gain</option>
+                <option value="rank">Rank</option>
+                <option value="price">Price</option>
+                <option value="marketCapNum">Market Cap</option>
+                <option value="symbol">Symbol</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="metricSelect">Period</label>
+              <select class="select" id="metricSelect">
+                <option value="d">1D</option>
+                <option value="w">1W</option>
+                <option value="m">1M</option>
+                <option value="m2">2M</option>
+                <option value="q">3M</option>
+                <option value="h">6M</option>
+                <option value="y">YTD</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="directionSelect">Direction</label>
+              <select class="select" id="directionSelect">
+                <option value="desc">High to low</option>
+                <option value="asc">Low to high</option>
+              </select>
+            </div>
+          </div>
+        </details>
         <input class="stock-search" id="stockSearch" placeholder="Search symbol or name">
         <div class="stock-nav">
           <button class="btn" id="prevStock" type="button">Prev</button>
@@ -311,6 +330,7 @@ const mobileSortSelect = document.getElementById('mobileSortSelect');
 const metricSelect = document.getElementById('metricSelect');
 const directionSelect = document.getElementById('directionSelect');
 const stockSearch = document.getElementById('stockSearch');
+const filterSummary = document.getElementById('filterSummary');
 const MOVING_AVERAGES = [
   { key:'ma10', label:'MA10', period:10, color:'#ffffff', alpha:0.2 },
   { key:'ma20', label:'MA20', period:20, color:'#2962ff', alpha:0.95 },
@@ -319,6 +339,8 @@ const MOVING_AVERAGES = [
 ];
 const UNIVERSE_LABELS = { r2kRaw:'Russell 2000', spRaw:'S&P 500', ndqRaw:'Nasdaq 100', all:'All Stocks' };
 const SORT_LABELS = { gain:'Gain', rank:'Rank', price:'Price', marketCapNum:'Market Cap', symbol:'Symbol' };
+const METRIC_LABELS = { d:'1D', w:'1W', m:'1M', m2:'2M', q:'3M', h:'6M', y:'YTD' };
+const DIRECTION_LABELS = { desc:'High to low', asc:'Low to high' };
 const DEFAULT_VISIBLE_CANDLES = 220;
 const TOUCH_INSPECT_DELAY = 350;
 const TOUCH_PAN_THRESHOLD = 7;
@@ -1108,6 +1130,8 @@ function syncControls(){
   mobileSortSelect.value = state.sortKey;
   metricSelect.value = state.metric;
   directionSelect.value = state.sortDir;
+  const universeLabel = entries.find(entry => entry.key === state.universe)?.label || UNIVERSE_LABELS[state.universe] || state.universe;
+  filterSummary.textContent = [universeLabel, SORT_LABELS[state.sortKey], METRIC_LABELS[state.metric], DIRECTION_LABELS[state.sortDir]].filter(Boolean).join(' · ');
 }
 
 function renderStockList(){
