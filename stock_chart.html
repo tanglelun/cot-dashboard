@@ -568,12 +568,17 @@ function drawGrid(left, top, right, priceBottom, bottom, width, height, minPrice
     ctx.stroke();
     ctx.fillText(fmt(price), width - 8, y);
   }
+  ctx.strokeStyle = 'rgba(83, 118, 130, 0.18)';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
   const ticks = Math.min(6, candles.length);
   for(let i=0;i<ticks;i++){
     const idx = Math.floor(i * (candles.length - 1) / Math.max(1, ticks - 1));
     const x = xFor(idx);
+    ctx.beginPath();
+    ctx.moveTo(Math.round(x) + 0.5, top);
+    ctx.lineTo(Math.round(x) + 0.5, priceBottom);
+    ctx.stroke();
     ctx.fillText(candles[idx].time.slice(5), x, height - bottom + 8);
   }
   ctx.textAlign = 'left';
