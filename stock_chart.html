@@ -350,6 +350,20 @@ function fmtPct(value){
   return (numeric >= 0 ? '+' : '') + numeric.toFixed(2) + '%';
 }
 
+function chartRegions(width, height){
+  const padBox = chartPadding(width);
+  const bottom = padBox.bottom;
+  const volumeHeight = state.showVolume ? Math.max(54, Math.min(82, height * 0.14)) : 0;
+  const macdHeight = state.showMacd ? Math.max(72, Math.min(108, height * 0.17)) : 0;
+  const lowerGap = state.showVolume && state.showMacd ? 12 : 0;
+  const panelGap = (state.showVolume || state.showMacd) ? 16 : 0;
+  const lowerHeight = volumeHeight + macdHeight + lowerGap;
+  return {
+    indicatorTop: height - bottom - lowerHeight,
+    priceBottom: height - bottom - lowerHeight - panelGap
+  };
+}
+
 function setStatus(text){
   statusEl.style.display = text ? 'block' : 'none';
   statusEl.textContent = text || '';
@@ -683,12 +697,12 @@ function draw(){
 
   const padBox = chartPadding(width);
   const left = padBox.left, right = padBox.right, top = padBox.top, bottom = padBox.bottom;
+  const regions = chartRegions(width, height);
   const volumeHeight = state.showVolume ? Math.max(54, Math.min(82, height * 0.14)) : 0;
   const macdHeight = state.showMacd ? Math.max(72, Math.min(108, height * 0.17)) : 0;
   const lowerGap = state.showVolume && state.showMacd ? 12 : 0;
   const panelGap = (state.showVolume || state.showMacd) ? 16 : 0;
-  const lowerHeight = volumeHeight + macdHeight + lowerGap;
-  const priceBottom = height - bottom - lowerHeight - panelGap;
+  const priceBottom = regions.priceBottom;
   let panelTop = priceBottom + panelGap;
   const volumeTop = state.showVolume ? panelTop : 0;
   const volumeBottom = state.showVolume ? volumeTop + volumeHeight : 0;
@@ -837,6 +851,10 @@ function updateTouchInspect(touch){
   if(state.touchMode === 'stockSwipe'){
     return;
   }
+  if(state.touchMode === 'indicatorSwipe'){
+    if(shouldSwitchStockOnSwipe()) state.touchMode = 'stockSwipe';
+    return;
+  }
   if(state.touchMode === 'inspect'){
     inspectTouch(touch.clientX, touch.clientY);
     return;
@@ -854,8 +872,8 @@ function updateTouchInspect(touch){
   if(Math.hypot(dx, dy) < TOUCH_PAN_THRESHOLD) return;
 
   clearTouchTimer();
-  if(isMobileViewport() && Math.abs(dx) >= STOCK_SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.35){
-    state.touchMode = 'stockSwipe';
+  if(isMobileViewport() && touchStartsInIndicatorRegion() && Math.abs(dx) > Math.abs(dy) * 1.35){
+    state.touchMode = shouldSwitchStockOnSwipe() ? 'stockSwipe' : 'indicatorSwipe';
     state.dragging = false;
     state.hover = -1;
     state.hoverY = null;
@@ -879,8 +897,15 @@ function isMobileViewport(){
   return window.matchMedia('(max-width: 768px)').matches;
 }
 
+function touchStartsInIndicatorRegion(){
+  const rect = canvas.getBoundingClientRect();
+  const localY = state.touchStartY - rect.top;
+  return localY >= chartRegions(rect.width, rect.height).indicatorTop;
+}
+
 function shouldSwitchStockOnSwipe(){
   if(!isMobileViewport() || state.touchMode === 'pinch' || state.pinching) return false;
+  if(!touchStartsInIndicatorRegion()) return false;
   const dx = state.touchCurrentX - state.touchStartX;
   const dy = state.touchCurrentY - state.touchStartY;
   return Math.abs(dx) >= STOCK_SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.35;
