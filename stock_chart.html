@@ -553,32 +553,23 @@ function drawMovingAverage(ma, candles, xFor, yFor){
 }
 
 function drawGrid(left, top, right, priceBottom, bottom, width, height, minPrice, maxPrice, candles, xFor){
-  ctx.strokeStyle = 'rgba(83, 118, 130, 0.58)';
-  ctx.lineWidth = 1;
-  ctx.setLineDash([1, 12]);
+  ctx.fillStyle = 'rgba(83, 118, 130, 0.68)';
+  const dotGap = 18;
+  const dotSize = 1.15;
+  for(let y = top + 8; y <= priceBottom; y += dotGap){
+    for(let x = 0; x <= width - right; x += dotGap){
+      ctx.fillRect(Math.round(x), Math.round(y), dotSize, dotSize);
+    }
+  }
   ctx.fillStyle = '#d7d9df';
   ctx.font = '13px SF Mono, Fira Code, monospace';
   ctx.textAlign = 'right';
   ctx.textBaseline = 'middle';
   for(let i=0;i<=5;i++){
     const y = top + (priceBottom - top) * i / 5;
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(width, y);
-    ctx.stroke();
     const price = maxPrice - (maxPrice - minPrice) * i / 5;
     ctx.fillText(fmt(price), width - 8, y);
   }
-  const verticalTicks = Math.min(8, candles.length);
-  for(let i=0;i<verticalTicks;i++){
-    const idx = Math.floor(i * (candles.length - 1) / Math.max(1, verticalTicks - 1));
-    const x = xFor(idx);
-    ctx.beginPath();
-    ctx.moveTo(x, top);
-    ctx.lineTo(x, height - bottom);
-    ctx.stroke();
-  }
-  ctx.setLineDash([]);
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
   const ticks = Math.min(6, candles.length);
