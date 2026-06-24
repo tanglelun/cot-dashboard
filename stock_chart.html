@@ -43,8 +43,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 .nav-search-mark{position:absolute;left:16px;top:50%;width:13px;height:13px;border:2px solid #b8ff00;border-radius:50%;transform:translateY(-50%);pointer-events:none}
 .nav-search-mark::after{content:"";position:absolute;width:7px;height:2px;background:#b8ff00;border-radius:999px;right:-6px;bottom:-4px;transform:rotate(45deg)}
 .container{width:100%;max-width:none;margin:0;padding:0}
-.page-layout{display:grid;grid-template-columns:clamp(292px,16vw,360px) minmax(0,1fr) clamp(190px,11vw,240px);gap:0;align-items:stretch;border:none;background:#000}
-.page-layout.sidebar-collapsed{grid-template-columns:44px minmax(0,1fr) clamp(190px,11vw,240px)}
+.page-layout{display:grid;grid-template-columns:clamp(292px,16vw,360px) minmax(0,1fr);gap:0;align-items:stretch;border:none;background:#000}
+.page-layout.sidebar-collapsed{grid-template-columns:44px minmax(0,1fr)}
 .stock-panel{position:sticky;top:0;height:calc(100vh - 64px);min-height:520px;background:#050709;border:none;border-right:1px solid var(--tv-border);border-radius:0;overflow:hidden;display:flex;flex-direction:column}
 .sidebar-collapsed .stock-panel{align-items:center}
 .stock-panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px;height:38px;padding:0 10px;border-bottom:1px solid var(--tv-border)}
@@ -122,12 +122,6 @@ h1{font-size:22px;color:#fff;font-weight:800;letter-spacing:0}
 canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:crosshair;touch-action:none}
 .status{padding:28px;text-align:center;color:var(--tv-muted);font-size:13px}
 .status strong{color:var(--tv-blue)}
-.indicator-panel{position:sticky;top:0;height:calc(100vh - 64px);min-height:520px;background:#050709;border-left:1px solid var(--tv-border);display:flex;flex-direction:column}
-.indicator-head{height:52px;display:flex;align-items:center;padding:0 14px;border-bottom:1px solid var(--tv-border);font-size:14px;font-weight:850;color:#fff}
-.indicator-list{padding:14px 14px 8px;display:flex;flex-direction:column;gap:16px}
-.indicator-item{display:grid;grid-template-columns:12px minmax(0,1fr);gap:8px;align-items:center;color:var(--tv-text);font-size:12px;font-weight:800}
-.indicator-dot{width:7px;height:7px;border-radius:50%;background:var(--tv-muted)}
-.indicator-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(max-width:768px){
   .site-nav{min-height:58px;padding:10px 14px;gap:10px;flex-wrap:wrap}
   .site-brand{font-size:21px}
@@ -159,7 +153,6 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
   .chart-toolbar{border-bottom:none;padding:8px 10px}
   .topbar{border-bottom:none}
   .indicator-controls{order:3;width:100%}
-  .indicator-panel{display:none}
   .hint{display:none}
 }
 </style>
@@ -300,18 +293,6 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
     </div>
   </section>
     </section>
-    <aside class="indicator-panel" aria-label="Indicators">
-      <div class="indicator-head">Indicators</div>
-      <div class="indicator-list">
-        <div class="indicator-item"><span class="indicator-dot" style="background:#5d606b"></span><span class="indicator-name">Price</span></div>
-        <div class="indicator-item"><span class="indicator-dot" style="background:#ffffff"></span><span class="indicator-name">MA(10)</span></div>
-        <div class="indicator-item"><span class="indicator-dot" style="background:#2962ff"></span><span class="indicator-name">MA(20)</span></div>
-        <div class="indicator-item"><span class="indicator-dot" style="background:#7b61ff"></span><span class="indicator-name">MA(50)</span></div>
-        <div class="indicator-item"><span class="indicator-dot" style="background:#ff9800"></span><span class="indicator-name">MA(200)</span></div>
-        <div class="indicator-item"><span class="indicator-dot" style="background:#26a69a"></span><span class="indicator-name">Volume</span></div>
-        <div class="indicator-item"><span class="indicator-dot" style="background:#00bcd4"></span><span class="indicator-name">MACD</span></div>
-      </div>
-    </aside>
   </div>
 </main>
 
