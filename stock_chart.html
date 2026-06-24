@@ -99,11 +99,13 @@ h1{font-size:22px;color:#fff;font-weight:800;letter-spacing:0}
 .btn.active{background:var(--tv-accent);border-color:var(--tv-accent);color:#001b03}
 .mobile-switcher{display:none}
 .chart-shell{background:#000;border:none;border-radius:0;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:520px}
-.chart-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 10px;border-bottom:1px solid var(--tv-border);flex-wrap:wrap}
+.chart-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 10px;border-bottom:none;flex-wrap:wrap}
 .toolbar-left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .ma-group{display:flex;align-items:center;gap:8px;min-height:24px}
-.ma-toggle{border:1px solid var(--tv-border);background:var(--tv-panel-2);color:var(--tv-muted);border-radius:4px;padding:4px 8px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;font-weight:850;line-height:1}
+.ma-toggle{height:30px;border:1px solid var(--tv-border);background:var(--tv-panel-2);color:var(--tv-muted);border-radius:4px;padding:7px 10px;display:inline-flex;align-items:center;gap:7px;cursor:pointer;font-size:12px;font-weight:700;line-height:1}
 .ma-toggle:hover{background:var(--tv-hover);color:var(--tv-text)}
+.ma-chevron{width:12px;height:12px;stroke:currentColor;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round;transition:transform .16s ease}
+.ma-group:not(.collapsed) .ma-chevron{transform:rotate(180deg)}
 .ma-legend{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:"SF Mono","Fira Code",monospace;font-size:11px;color:var(--tv-muted)}
 .ma-group.collapsed .ma-legend{display:none}
 .ma-item{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
@@ -266,7 +268,10 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
         </div>
         <div class="ma-group" id="maGroup">
           <button class="ma-toggle" id="maToggle" type="button" aria-label="Expand moving averages" aria-expanded="false" title="Expand moving averages">
-            <span>MA</span><span id="maToggleIcon" aria-hidden="true">⌄</span>
+            <span>MA</span>
+            <svg class="ma-chevron" aria-hidden="true" viewBox="0 0 16 16">
+              <path d="M3 6l5 5 5-5"></path>
+            </svg>
           </button>
           <div class="ma-legend" id="maLegend"></div>
         </div>
@@ -291,7 +296,6 @@ const ctx = canvas.getContext('2d');
 const statusEl = document.getElementById('status');
 const maGroup = document.getElementById('maGroup');
 const maToggle = document.getElementById('maToggle');
-const maToggleIcon = document.getElementById('maToggleIcon');
 const pageLayout = document.getElementById('pageLayout');
 const stockPanel = document.getElementById('stockPanel');
 const stockListEl = document.getElementById('stockList');
@@ -467,7 +471,6 @@ function calculateMacd(candles){
 function renderMaLegend(candle){
   const target = document.getElementById('maLegend');
   maGroup.classList.toggle('collapsed', state.maCollapsed);
-  maToggleIcon.textContent = state.maCollapsed ? '⌄' : '⌃';
   maToggle.setAttribute('aria-expanded', String(!state.maCollapsed));
   maToggle.setAttribute('aria-label', state.maCollapsed ? 'Expand moving averages' : 'Collapse moving averages');
   maToggle.title = state.maCollapsed ? 'Expand moving averages' : 'Collapse moving averages';
