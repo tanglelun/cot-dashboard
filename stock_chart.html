@@ -101,12 +101,6 @@ h1{font-size:22px;color:#fff;font-weight:800;letter-spacing:0}
 .chart-shell{background:#000;border:none;border-radius:0;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:520px}
 .chart-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 10px;border-bottom:1px solid var(--tv-border);flex-wrap:wrap}
 .toolbar-left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.candle-readout{display:flex;align-items:center;gap:10px;flex-wrap:wrap;width:100%;padding-top:2px;font-family:"SF Mono","Fira Code",monospace;font-size:12px;color:var(--tv-muted)}
-.candle-readout strong{color:var(--tv-text)}
-.candle-readout span{white-space:nowrap}
-.candle-readout .close-price,.candle-readout .price-change{font-weight:800}
-.candle-readout .up{color:var(--tv-green)}
-.candle-readout .down{color:var(--tv-red)}
 .ma-group{display:flex;align-items:center;gap:8px;min-height:24px}
 .ma-toggle{border:1px solid var(--tv-border);background:var(--tv-panel-2);color:var(--tv-muted);border-radius:4px;padding:4px 8px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;font-weight:850;line-height:1}
 .ma-toggle:hover{background:var(--tv-hover);color:var(--tv-text)}
@@ -144,7 +138,6 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
   .mobile-switcher .select{flex:1;min-width:132px;width:auto}
   h1{font-size:19px}
   .last-price{font-size:18px}
-  .candle-readout{font-size:11px;gap:7px;line-height:1.45}
   .chart-shell{min-height:calc(100dvh - 260px)}
   .chart-wrap{min-height:0}
   .chart-toolbar{border-bottom:none;padding:8px 10px}
@@ -279,7 +272,6 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
         </div>
       </div>
       <div class="hint">Drag to pan · Wheel or pinch to zoom · Move cursor for OHLC</div>
-      <div class="candle-readout" id="candleReadout">Select a candlestick</div>
     </div>
     <div class="chart-wrap">
       <canvas id="chart"></canvas>
@@ -297,7 +289,6 @@ let fallbackName = params.get('name') || currentSymbol;
 const canvas = document.getElementById('chart');
 const ctx = canvas.getContext('2d');
 const statusEl = document.getElementById('status');
-const candleReadout = document.getElementById('candleReadout');
 const maGroup = document.getElementById('maGroup');
 const maToggle = document.getElementById('maToggle');
 const maToggleIcon = document.getElementById('maToggleIcon');
@@ -476,22 +467,6 @@ function renderMaLegend(candle){
   }).join('');
 }
 
-function renderCandleReadout(candle, index){
-  if(!candle){
-    candleReadout.textContent = 'Select a candlestick';
-    return;
-  }
-  const prev = state.candles[Math.max(0, index - 1)] || candle;
-  const diff = candle.close - prev.close;
-  const pct = prev.close ? diff / prev.close * 100 : 0;
-  const direction = diff >= 0 ? 'up' : 'down';
-  const sign = diff >= 0 ? '+' : '';
-  candleReadout.innerHTML =
-    '<strong>'+candle.time+'</strong>' +
-    '<span>C <b class="close-price '+direction+'">'+fmt(candle.close)+'</b></span>' +
-    '<span class="price-change '+direction+'">'+sign+fmt(diff)+' ('+sign+fmt(pct)+'%)</span>';
-}
-
 function drawMovingAverage(ma, candles, xFor, yFor){
   ctx.strokeStyle = ma.color;
   ctx.lineWidth = 1.4;
@@ -633,6 +608,44 @@ function drawMacdPanel(candles, xFor, bodyWidth, top, bottom, width){
   });
 }
 
+function roundedRectPath(x, y, width, height, radius){
+  const r = Math.min(radius, width / 2, height / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + width - r, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+  ctx.lineTo(x + width, y + height - r);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+  ctx.lineTo(x + r, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+}
+
+function drawAxisLabel(text, x, y, options={}){
+  const paddingX = options.paddingX ?? 8;
+  const height = options.height ?? 22;
+  const radius = options.radius ?? 4;
+  ctx.font = options.font || '12px SF Mono, Fira Code, monospace';
+  const width = Math.ceil(ctx.measureText(text).width) + paddingX * 2;
+  const desiredLeft = options.align === 'right' ? x - width : x;
+  const maxLeft = options.maxRight ? options.maxRight - width : (options.maxLeft ?? desiredLeft);
+  const left = Math.max(2, Math.min(desiredLeft, maxLeft));
+  const top = Math.max(2, Math.min(y - height / 2, options.maxTop ?? y - height / 2));
+  ctx.fillStyle = options.background || '#1d2430';
+  roundedRectPath(left, top, width, height, radius);
+  ctx.fill();
+  if(options.border){
+    ctx.strokeStyle = options.border;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+  ctx.fillStyle = options.color || '#d7d9df';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, left + width / 2, top + height / 2);
+}
+
 function updateHistoryMeta(){
   if(!state.candles.length) return;
   const first = state.candles[0].time;
@@ -659,7 +672,6 @@ function plotWidthFor(width){
 function draw(){
   const readoutIndex = state.hover >= state.start && state.hover < state.end ? state.hover : state.end - 1;
   renderMaLegend(state.candles[readoutIndex]);
-  renderCandleReadout(state.candles[readoutIndex], readoutIndex);
 
   const rect = canvas.getBoundingClientRect();
   const width = rect.width;
@@ -733,6 +745,26 @@ function draw(){
     ctx.lineTo(width, y);
     ctx.stroke();
     ctx.setLineDash([]);
+    const hoverPrice = maxPrice - ((y - top) / Math.max(1, priceBottom - top)) * (maxPrice - minPrice);
+    const priceText = fmt(hoverPrice);
+    drawAxisLabel(priceText, width - 4, y, {
+      align:'right',
+      background:'#202735',
+      border:'rgba(215,217,223,.18)',
+      color:'#f3f4f6',
+      maxRight:width - 4,
+      maxTop:height - bottom - 22
+    });
+    const dateText = c.time;
+    ctx.font = '12px SF Mono, Fira Code, monospace';
+    const dateWidth = Math.ceil(ctx.measureText(dateText).width) + 18;
+    drawAxisLabel(dateText, x - dateWidth / 2, height - bottom + 12, {
+      background:'#202735',
+      border:'rgba(215,217,223,.18)',
+      color:'#f3f4f6',
+      maxLeft:width - dateWidth - 4,
+      maxTop:height - 24
+    });
   }
   queueLayoutRedraw(width, height);
 }
