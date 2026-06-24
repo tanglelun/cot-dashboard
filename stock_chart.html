@@ -387,19 +387,27 @@ function setRange(range){
 
 function renderHeader(data){
   const candles = data.prices;
-  const last = candles[candles.length - 1];
-  const prev = candles[candles.length - 2] || last;
-  const diff = last.close - prev.close;
-  const pct = prev.close ? diff / prev.close * 100 : 0;
-  const changeEl = document.getElementById('change');
   document.getElementById('symbol').textContent = data.symbol;
   document.getElementById('name').textContent = data.name || fallbackName || data.symbol;
   document.getElementById('sector').textContent = data.sector || 'Sector';
   document.getElementById('mcap').textContent = data.marketCap || 'Market cap';
-  document.getElementById('lastPrice').textContent = fmt(last.close);
+  updateHeaderPrice(candles.length - 1);
+  document.title = data.symbol + ' Candlestick Chart';
+}
+
+function updateHeaderPrice(index){
+  if(!state.candles.length) return;
+  const safeIndex = Math.max(0, Math.min(state.candles.length - 1, index));
+  const candle = state.candles[safeIndex];
+  const prev = state.candles[safeIndex - 1] || candle;
+  const close = Number(candle.close);
+  const prevClose = Number(prev.close);
+  const diff = close - prevClose;
+  const pct = prevClose ? diff / prevClose * 100 : 0;
+  const changeEl = document.getElementById('change');
+  document.getElementById('lastPrice').textContent = fmt(close);
   changeEl.textContent = (diff >= 0 ? '+' : '') + fmt(diff) + ' (' + (pct >= 0 ? '+' : '') + fmt(pct) + '%)';
   changeEl.className = 'change ' + (diff >= 0 ? 'up' : 'down');
-  document.title = data.symbol + ' Candlestick Chart';
 }
 
 function resizeCanvas(){
@@ -689,6 +697,7 @@ function plotWidthFor(width){
 function draw(){
   const readoutIndex = state.hover >= state.start && state.hover < state.end ? state.hover : state.end - 1;
   renderMaLegend(state.candles[readoutIndex]);
+  updateHeaderPrice(readoutIndex);
 
   const rect = canvas.getBoundingClientRect();
   const width = rect.width;
@@ -966,6 +975,13 @@ canvas.addEventListener('mouseleave', () => {
   state.hover = -1;
   state.hoverY = null;
   endGesture();
+  draw();
+});
+
+document.addEventListener('mousemove', event => {
+  if(event.target === canvas || state.hover < 0 || state.dragging) return;
+  state.hover = -1;
+  state.hoverY = null;
   draw();
 });
 
