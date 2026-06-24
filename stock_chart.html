@@ -16,8 +16,8 @@
   --tv-faint:#5d606b;
   --tv-blue:#2962ff;
   --tv-blue-soft:#1e3a8a;
-  --tv-green:#26a69a;
-  --tv-red:#ef5350;
+  --tv-green:#00d109;
+  --tv-red:#ff4d00;
   --tv-hover:#101820;
   --tv-accent:#00d109;
 }
@@ -337,10 +337,10 @@ const directionSelect = document.getElementById('directionSelect');
 const stockSearch = document.getElementById('stockSearch');
 const filterSummary = document.getElementById('filterSummary');
 const MOVING_AVERAGES = [
-  { key:'ma10', label:'MA10', period:10, color:'#ffffff', alpha:0.2 },
-  { key:'ma20', label:'MA20', period:20, color:'#2962ff', alpha:0.95 },
+  { key:'ma10', label:'MA10', period:10, color:'#6f7b82', alpha:0.55 },
+  { key:'ma20', label:'MA20', period:20, color:'#2aa8ff', alpha:0.9 },
   { key:'ma50', label:'MA50', period:50, color:'#7b61ff', alpha:0.5 },
-  { key:'ma200', label:'MA200', period:200, color:'#ff9800', alpha:0.5 }
+  { key:'ma200', label:'MA200', period:200, color:'#c36a00', alpha:0.72 }
 ];
 const UNIVERSE_LABELS = { r2kRaw:'Russell 2000', spRaw:'S&P 500', ndqRaw:'Nasdaq 100', all:'All Stocks' };
 const SORT_LABELS = { gain:'Gain', rank:'Rank', price:'Price', marketCapNum:'Market Cap', symbol:'Symbol' };
@@ -552,12 +552,12 @@ function drawMovingAverage(ma, candles, xFor, yFor){
 }
 
 function drawGrid(left, top, right, priceBottom, bottom, width, height, minPrice, maxPrice, candles, xFor){
-  ctx.strokeStyle = '#26323b';
+  ctx.strokeStyle = 'rgba(83, 118, 130, 0.58)';
   ctx.lineWidth = 1;
-  ctx.setLineDash([1, 9]);
-  ctx.fillStyle = '#787b86';
-  ctx.font = '12px SF Mono, Fira Code, monospace';
-  ctx.textAlign = 'left';
+  ctx.setLineDash([1, 12]);
+  ctx.fillStyle = '#d7d9df';
+  ctx.font = '13px SF Mono, Fira Code, monospace';
+  ctx.textAlign = 'right';
   ctx.textBaseline = 'middle';
   for(let i=0;i<=5;i++){
     const y = top + (priceBottom - top) * i / 5;
@@ -566,7 +566,16 @@ function drawGrid(left, top, right, priceBottom, bottom, width, height, minPrice
     ctx.lineTo(width, y);
     ctx.stroke();
     const price = maxPrice - (maxPrice - minPrice) * i / 5;
-    ctx.fillText(fmt(price), 8, y);
+    ctx.fillText(fmt(price), width - 8, y);
+  }
+  const verticalTicks = Math.min(8, candles.length);
+  for(let i=0;i<verticalTicks;i++){
+    const idx = Math.floor(i * (candles.length - 1) / Math.max(1, verticalTicks - 1));
+    const x = xFor(idx);
+    ctx.beginPath();
+    ctx.moveTo(x, top);
+    ctx.lineTo(x, height - bottom);
+    ctx.stroke();
   }
   ctx.setLineDash([]);
   ctx.textAlign = 'center';
@@ -582,7 +591,7 @@ function drawGrid(left, top, right, priceBottom, bottom, width, height, minPrice
 }
 
 function drawPanelLabel(label, top){
-  ctx.fillStyle = '#787b86';
+  ctx.fillStyle = '#8b909b';
   ctx.font = '12px SF Mono, Fira Code, monospace';
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
@@ -598,8 +607,8 @@ function drawVolumePanel(candles, xFor, bodyWidth, top, bottom, maxVolume, heigh
     const x = xFor(i);
     const up = c.close >= c.open;
     const vh = Math.max(1, (c.volume / maxVolume) * panelHeight);
-    ctx.globalAlpha = 0.35;
-    ctx.fillStyle = up ? '#26a69a' : '#ef5350';
+    ctx.globalAlpha = 0.5;
+    ctx.fillStyle = up ? '#00d109' : '#ff4d00';
     ctx.fillRect(x - bodyWidth / 2, bottom - vh, bodyWidth, vh);
     ctx.globalAlpha = 1;
   });
@@ -625,8 +634,8 @@ function drawMacdPanel(candles, xFor, bodyWidth, top, bottom, width){
     const y = yForMacd(c.macdHist);
     const barTop = Math.min(y, zeroY);
     const barHeight = Math.max(1, Math.abs(zeroY - y));
-    ctx.globalAlpha = 0.48;
-    ctx.fillStyle = c.macdHist >= 0 ? '#26a69a' : '#ef5350';
+    ctx.globalAlpha = 0.5;
+    ctx.fillStyle = c.macdHist >= 0 ? '#00d109' : '#ff4d00';
     ctx.fillRect(x - bodyWidth / 2, barTop, bodyWidth, barHeight);
     ctx.globalAlpha = 1;
   });
@@ -672,9 +681,9 @@ function updateHistoryMeta(){
 }
 
 function chartPadding(width){
-  if(width <= 380) return { left: 4, right: 4, top: 18, bottom: 28 };
-  if(width <= 520) return { left: 5, right: 5, top: 18, bottom: 30 };
-  return { left: 6, right: 6, top: 22, bottom: 36 };
+  if(width <= 380) return { left: 4, right: 42, top: 18, bottom: 28 };
+  if(width <= 520) return { left: 5, right: 46, top: 18, bottom: 30 };
+  return { left: 6, right: 56, top: 22, bottom: 36 };
 }
 
 function plotWidthFor(width){
@@ -731,7 +740,7 @@ function draw(){
   candles.forEach((c, i) => {
     const x = xFor(i);
     const up = c.close >= c.open;
-    const color = up ? '#26a69a' : '#ef5350';
+    const color = up ? '#00d109' : '#ff4d00';
     const yOpen = yFor(c.open), yClose = yFor(c.close), yHigh = yFor(c.high), yLow = yFor(c.low);
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
