@@ -42,10 +42,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 .nav-search input:focus{border-color:#b8ff00;box-shadow:0 0 0 1px rgba(184,255,0,.24)}
 .nav-search-mark{position:absolute;left:16px;top:50%;width:13px;height:13px;border:2px solid #b8ff00;border-radius:50%;transform:translateY(-50%);pointer-events:none}
 .nav-search-mark::after{content:"";position:absolute;width:7px;height:2px;background:#b8ff00;border-radius:999px;right:-6px;bottom:-4px;transform:rotate(45deg)}
-.container{width:100%;max-width:none;margin:0;padding:10px clamp(10px,1vw,24px)}
-.page-layout{display:grid;grid-template-columns:clamp(292px,16vw,360px) minmax(0,1fr) clamp(190px,11vw,240px);gap:0;align-items:stretch;border:1px solid var(--tv-border);background:#000}
+.container{width:100%;max-width:none;margin:0;padding:0}
+.page-layout{display:grid;grid-template-columns:clamp(292px,16vw,360px) minmax(0,1fr) clamp(190px,11vw,240px);gap:0;align-items:stretch;border:none;background:#000}
 .page-layout.sidebar-collapsed{grid-template-columns:44px minmax(0,1fr) clamp(190px,11vw,240px)}
-.stock-panel{position:sticky;top:10px;height:calc(100vh - 84px);min-height:520px;background:#050709;border:none;border-right:1px solid var(--tv-border);border-radius:0;overflow:hidden;display:flex;flex-direction:column}
+.stock-panel{position:sticky;top:0;height:calc(100vh - 64px);min-height:520px;background:#050709;border:none;border-right:1px solid var(--tv-border);border-radius:0;overflow:hidden;display:flex;flex-direction:column}
 .sidebar-collapsed .stock-panel{align-items:center}
 .stock-panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px;height:38px;padding:0 10px;border-bottom:1px solid var(--tv-border)}
 .stock-panel-title{font-size:12px;font-weight:800;color:var(--tv-text);white-space:nowrap}
@@ -53,10 +53,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 .icon-btn:hover{background:var(--tv-hover);color:var(--tv-text)}
 .stock-panel-body{padding:8px;display:flex;flex-direction:column;gap:8px;min-height:0;flex:1}
 .sidebar-collapsed .stock-panel-title,.sidebar-collapsed .stock-panel-body{display:none}
-.filter-drawer{border:1px solid var(--tv-border);border-radius:4px;background:var(--tv-panel-2);overflow:hidden}
+.filter-drawer{border:1px solid var(--tv-border);border-radius:4px;background:var(--tv-panel-2);overflow:visible}
 .filter-drawer summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;cursor:pointer;color:var(--tv-text);font-size:12px;font-weight:800}
 .filter-drawer summary::-webkit-details-marker{display:none}
-.filter-summary{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tv-muted);font-weight:750}
+.filter-summary{min-width:0;display:flex;align-items:center;gap:6px;overflow:hidden;white-space:nowrap}
+.filter-title{color:var(--tv-text);font-weight:850;flex:0 0 auto}
+.filter-values{min-width:0;color:var(--tv-muted);font-weight:750;overflow:hidden;text-overflow:ellipsis}
 .filter-caret{color:var(--tv-muted);font-size:14px;line-height:1;transition:transform .18s ease}
 .filter-drawer[open] .filter-caret{transform:rotate(180deg)}
 .filter-fields{display:grid;gap:8px;padding:0 8px 8px;border-top:1px solid var(--tv-border-soft)}
@@ -120,7 +122,7 @@ h1{font-size:22px;color:#fff;font-weight:800;letter-spacing:0}
 canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:crosshair;touch-action:none}
 .status{padding:28px;text-align:center;color:var(--tv-muted);font-size:13px}
 .status strong{color:var(--tv-blue)}
-.indicator-panel{position:sticky;top:10px;height:calc(100vh - 84px);min-height:520px;background:#050709;border-left:1px solid var(--tv-border);display:flex;flex-direction:column}
+.indicator-panel{position:sticky;top:0;height:calc(100vh - 64px);min-height:520px;background:#050709;border-left:1px solid var(--tv-border);display:flex;flex-direction:column}
 .indicator-head{height:52px;display:flex;align-items:center;padding:0 14px;border-bottom:1px solid var(--tv-border);font-size:14px;font-weight:850;color:#fff}
 .indicator-list{padding:14px 14px 8px;display:flex;flex-direction:column;gap:16px}
 .indicator-item{display:grid;grid-template-columns:12px minmax(0,1fr);gap:8px;align-items:center;color:var(--tv-text);font-size:12px;font-weight:800}
@@ -188,7 +190,10 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
       <div class="stock-panel-body">
         <details class="filter-drawer" id="filterDrawer">
           <summary>
-            <span class="filter-summary" id="filterSummary">Filters</span>
+            <span class="filter-summary">
+              <span class="filter-title">Filters</span>
+              <span class="filter-values" id="filterSummary">Russell 2000 · Gain · 1D · High to low</span>
+            </span>
             <span class="filter-caret" aria-hidden="true">⌄</span>
           </summary>
           <div class="filter-fields">
