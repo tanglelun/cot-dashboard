@@ -101,6 +101,9 @@ h1{font-size:22px;color:#fff;font-weight:800;letter-spacing:0}
 .ma-group.collapsed .ma-legend{display:none}
 .ma-item{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
 .ma-dot{width:18px;height:2px;border-radius:2px;display:inline-block}
+.indicator-controls{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.indicator-toggle{border:1px solid var(--tv-border);background:var(--tv-panel-2);color:var(--tv-muted);border-radius:4px;padding:5px 8px;font-size:11px;font-weight:800;cursor:pointer}
+.indicator-toggle.active{background:rgba(0,209,9,.16);border-color:var(--tv-accent);color:var(--tv-accent)}
 .hint{font-size:11px;color:var(--tv-faint)}
 .chart-wrap{position:relative;flex:1;min-height:0}
 canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:crosshair;touch-action:none}
@@ -125,21 +128,24 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
   .nav-link.active::after{display:none}
   .nav-search{order:4;min-width:0;margin-left:0;padding-top:8px}
   .nav-search input{height:40px;font-size:14px}
-  .container{padding:10px}
-  .page-layout{display:block}
+  .container{padding:0}
+  .page-layout{display:block;border:none}
   .main-panel{min-height:calc(100dvh - 78px)}
   .stock-panel{position:fixed;left:10px;right:10px;top:78px;bottom:10px;height:auto;min-height:0;z-index:20;box-shadow:0 20px 60px rgba(0,0,0,.45);display:none}
   .stock-panel.open{display:flex}
   .sidebar-collapsed .stock-panel-title,.sidebar-collapsed .stock-panel-body{display:flex}
   .sidebar-collapsed .stock-panel{align-items:stretch}
   .stock-panel-body{display:flex}
-  .mobile-switcher{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:0 0 10px}
+  .mobile-switcher{display:none}
   .mobile-switcher .select{flex:1;min-width:132px;width:auto}
   h1{font-size:19px}
   .last-price{font-size:18px}
   .candle-readout{font-size:11px;gap:7px;line-height:1.45}
-  .chart-shell{min-height:calc(100dvh - 168px)}
+  .chart-shell{min-height:calc(100dvh - 260px)}
   .chart-wrap{min-height:0}
+  .chart-toolbar{border-bottom:none;padding:8px 10px}
+  .topbar{border-bottom:none}
+  .indicator-controls{order:3;width:100%}
   .indicator-panel{display:none}
   .hint{display:none}
 }
@@ -256,6 +262,10 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
           <button class="ma-toggle" id="maToggle" type="button" aria-label="Collapse moving averages" aria-expanded="true" title="Collapse moving averages">-</button>
           <div class="ma-legend" id="maLegend"></div>
         </div>
+        <div class="indicator-controls" id="indicatorControls" aria-label="Indicator visibility">
+          <button class="indicator-toggle active" type="button" data-indicator="volume">VOL</button>
+          <button class="indicator-toggle active" type="button" data-indicator="macd">MACD</button>
+        </div>
       </div>
       <div class="hint">Drag to pan · Wheel or pinch to zoom · Move cursor for OHLC</div>
       <div class="candle-readout" id="candleReadout">Select a candlestick</div>
@@ -275,6 +285,7 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
         <div class="indicator-item"><span class="indicator-dot" style="background:#7b61ff"></span><span class="indicator-name">MA(50)</span></div>
         <div class="indicator-item"><span class="indicator-dot" style="background:#ff9800"></span><span class="indicator-name">MA(200)</span></div>
         <div class="indicator-item"><span class="indicator-dot" style="background:#26a69a"></span><span class="indicator-name">Volume</span></div>
+        <div class="indicator-item"><span class="indicator-dot" style="background:#00bcd4"></span><span class="indicator-name">MACD</span></div>
       </div>
     </aside>
   </div>
@@ -290,6 +301,7 @@ const statusEl = document.getElementById('status');
 const candleReadout = document.getElementById('candleReadout');
 const maGroup = document.getElementById('maGroup');
 const maToggle = document.getElementById('maToggle');
+const indicatorControls = document.getElementById('indicatorControls');
 const pageLayout = document.getElementById('pageLayout');
 const stockPanel = document.getElementById('stockPanel');
 const stockListEl = document.getElementById('stockList');
@@ -310,11 +322,12 @@ const SORT_LABELS = { gain:'Gain', rank:'Rank', price:'Price', marketCapNum:'Mar
 const DEFAULT_VISIBLE_CANDLES = 220;
 const TOUCH_INSPECT_DELAY = 350;
 const TOUCH_PAN_THRESHOLD = 7;
+const STOCK_SWIPE_THRESHOLD = 72;
 const state = {
   candles: [], start: 0, end: 0, hover: -1, dragging: false, dragX: 0, dragStart: 0, dragEnd: 0,
   pinching: false, pinchDistance: 0, pinchStart: 0, pinchEnd: 0, pinchRatio: 0.5,
-  touchMode: 'idle', touchTimer: null, touchStartX: 0, touchStartY: 0,
-  maCollapsed: false,
+  touchMode: 'idle', touchTimer: null, touchStartX: 0, touchStartY: 0, touchCurrentX: 0, touchCurrentY: 0,
+  maCollapsed: false, showVolume: true, showMacd: true,
   marketIndex: null, stockRows: [], activeRange: 'all',
   universe: params.get('universe') || 'r2kRaw',
   metric: params.get('metric') || 'd',
@@ -424,6 +437,25 @@ function calculateMovingAverages(candles){
   });
 }
 
+function calculateMacd(candles){
+  let ema12 = null;
+  let ema26 = null;
+  let signal = null;
+  const k12 = 2 / 13;
+  const k26 = 2 / 27;
+  const k9 = 2 / 10;
+  candles.forEach(candle => {
+    const close = Number(candle.close);
+    ema12 = ema12 === null ? close : close * k12 + ema12 * (1 - k12);
+    ema26 = ema26 === null ? close : close * k26 + ema26 * (1 - k26);
+    const macd = ema12 - ema26;
+    signal = signal === null ? macd : macd * k9 + signal * (1 - k9);
+    candle.macd = macd;
+    candle.macdSignal = signal;
+    candle.macdHist = macd - signal;
+  });
+}
+
 function renderMaLegend(candle){
   const target = document.getElementById('maLegend');
   maGroup.classList.toggle('collapsed', state.maCollapsed);
@@ -439,6 +471,16 @@ function renderMaLegend(candle){
     const value = candle && candle[ma.key] ? fmt(candle[ma.key]) : '--';
     return '<span class="ma-item" style="color:'+ma.color+';opacity:'+ma.alpha+'"><span class="ma-dot" style="background:'+ma.color+'"></span>'+ma.label+' '+value+'</span>';
   }).join('');
+}
+
+function renderIndicatorControls(){
+  if(!indicatorControls) return;
+  indicatorControls.querySelectorAll('[data-indicator]').forEach(button => {
+    const key = button.dataset.indicator;
+    const active = key === 'volume' ? state.showVolume : state.showMacd;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
 }
 
 function renderCandleReadout(candle, index){
@@ -482,7 +524,7 @@ function drawMovingAverage(ma, candles, xFor, yFor){
   ctx.globalAlpha = 1;
 }
 
-function drawGrid(left, top, right, priceBottom, volumeTop, bottom, width, height, minPrice, maxPrice, maxVolume, candles, xFor, yFor){
+function drawGrid(left, top, right, priceBottom, bottom, width, height, minPrice, maxPrice, candles, xFor){
   ctx.strokeStyle = '#26323b';
   ctx.lineWidth = 1;
   ctx.setLineDash([1, 9]);
@@ -510,7 +552,82 @@ function drawGrid(left, top, right, priceBottom, volumeTop, bottom, width, heigh
   }
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  ctx.fillText(maxVolume ? Math.round(maxVolume / 1000000) + 'M' : '', 8, volumeTop + 8);
+}
+
+function drawPanelLabel(label, top){
+  ctx.fillStyle = '#787b86';
+  ctx.font = '12px SF Mono, Fira Code, monospace';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillText(label, 8, top + 4);
+}
+
+function drawVolumePanel(candles, xFor, bodyWidth, top, bottom, maxVolume, height){
+  drawPanelLabel(maxVolume ? Math.round(maxVolume / 1000000) + 'M' : 'VOL', top);
+  if(!maxVolume) return;
+  const panelHeight = Math.max(1, bottom - top - 10);
+  candles.forEach((c, i) => {
+    if(!c.volume) return;
+    const x = xFor(i);
+    const up = c.close >= c.open;
+    const vh = Math.max(1, (c.volume / maxVolume) * panelHeight);
+    ctx.globalAlpha = 0.35;
+    ctx.fillStyle = up ? '#26a69a' : '#ef5350';
+    ctx.fillRect(x - bodyWidth / 2, bottom - vh, bodyWidth, vh);
+    ctx.globalAlpha = 1;
+  });
+}
+
+function drawMacdPanel(candles, xFor, bodyWidth, top, bottom, width){
+  drawPanelLabel('MACD', top);
+  const values = candles.flatMap(c => [c.macd, c.macdSignal, c.macdHist]).filter(value => Number.isFinite(value));
+  const maxAbs = Math.max(...values.map(value => Math.abs(value)), 0) || 1;
+  const panelTop = top + 16;
+  const panelBottom = bottom - 2;
+  const zeroY = panelTop + (panelBottom - panelTop) / 2;
+  const yForMacd = value => zeroY - (value / maxAbs) * ((panelBottom - panelTop) / 2);
+  ctx.strokeStyle = '#26323b';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, zeroY);
+  ctx.lineTo(width, zeroY);
+  ctx.stroke();
+  candles.forEach((c, i) => {
+    if(!Number.isFinite(c.macdHist)) return;
+    const x = xFor(i);
+    const y = yForMacd(c.macdHist);
+    const barTop = Math.min(y, zeroY);
+    const barHeight = Math.max(1, Math.abs(zeroY - y));
+    ctx.globalAlpha = 0.48;
+    ctx.fillStyle = c.macdHist >= 0 ? '#26a69a' : '#ef5350';
+    ctx.fillRect(x - bodyWidth / 2, barTop, bodyWidth, barHeight);
+    ctx.globalAlpha = 1;
+  });
+  [
+    { key:'macd', color:'#00bcd4' },
+    { key:'macdSignal', color:'#ff9800' }
+  ].forEach(line => {
+    ctx.strokeStyle = line.color;
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    let started = false;
+    candles.forEach((c, i) => {
+      const value = c[line.key];
+      if(!Number.isFinite(value)){
+        started = false;
+        return;
+      }
+      const x = xFor(i);
+      const y = yForMacd(value);
+      if(!started){
+        ctx.moveTo(x, y);
+        started = true;
+      }else{
+        ctx.lineTo(x, y);
+      }
+    });
+    ctx.stroke();
+  });
 }
 
 function updateHistoryMeta(){
@@ -539,6 +656,7 @@ function plotWidthFor(width){
 function draw(){
   const readoutIndex = state.hover >= state.start && state.hover < state.end ? state.hover : state.end - 1;
   renderMaLegend(state.candles[readoutIndex]);
+  renderIndicatorControls();
   renderCandleReadout(state.candles[readoutIndex], readoutIndex);
 
   const rect = canvas.getBoundingClientRect();
@@ -551,10 +669,18 @@ function draw(){
 
   const padBox = chartPadding(width);
   const left = padBox.left, right = padBox.right, top = padBox.top, bottom = padBox.bottom;
-  const volumeHeight = Math.max(64, Math.min(92, height * 0.18));
-  const gap = 16;
-  const priceBottom = height - bottom - volumeHeight - gap;
-  const volumeTop = priceBottom + gap;
+  const volumeHeight = state.showVolume ? Math.max(54, Math.min(82, height * 0.14)) : 0;
+  const macdHeight = state.showMacd ? Math.max(72, Math.min(108, height * 0.17)) : 0;
+  const lowerGap = state.showVolume && state.showMacd ? 12 : 0;
+  const panelGap = (state.showVolume || state.showMacd) ? 16 : 0;
+  const lowerHeight = volumeHeight + macdHeight + lowerGap;
+  const priceBottom = height - bottom - lowerHeight - panelGap;
+  let panelTop = priceBottom + panelGap;
+  const volumeTop = state.showVolume ? panelTop : 0;
+  const volumeBottom = state.showVolume ? volumeTop + volumeHeight : 0;
+  if(state.showVolume) panelTop = volumeBottom + (state.showMacd ? lowerGap : 0);
+  const macdTop = state.showMacd ? panelTop : 0;
+  const macdBottom = state.showMacd ? height - bottom : 0;
   const plotWidth = width - left - right;
   const step = plotWidth / candles.length;
   const bodyWidth = Math.max(2, Math.min(12, step * 0.62));
@@ -571,7 +697,7 @@ function draw(){
   const xFor = i => left + i * step + step / 2;
   const yFor = price => top + (maxPrice - price) / (maxPrice - minPrice) * (priceBottom - top);
 
-  drawGrid(left, top, right, priceBottom, volumeTop, bottom, width, height, minPrice, maxPrice, maxVolume, candles, xFor, yFor);
+  drawGrid(left, top, right, priceBottom, bottom, width, height, minPrice, maxPrice, candles, xFor);
 
   candles.forEach((c, i) => {
     const x = xFor(i);
@@ -594,15 +720,11 @@ function draw(){
     }else{
       ctx.fillRect(x - bodyWidth / 2, bodyTop, bodyWidth, bodyHeight);
     }
-    if(maxVolume && c.volume){
-      const vh = (c.volume / maxVolume) * (height - bottom - volumeTop);
-      ctx.globalAlpha = 0.35;
-      ctx.fillRect(x - bodyWidth / 2, height - bottom - vh, bodyWidth, vh);
-      ctx.globalAlpha = 1;
-    }
   });
 
   MOVING_AVERAGES.forEach(ma => drawMovingAverage(ma, candles, xFor, yFor));
+  if(state.showVolume) drawVolumePanel(candles, xFor, bodyWidth, volumeTop, volumeBottom, maxVolume, height);
+  if(state.showMacd) drawMacdPanel(candles, xFor, bodyWidth, macdTop, macdBottom, width);
 
   if(state.hover >= state.start && state.hover < state.end){
     const local = state.hover - state.start;
@@ -668,6 +790,8 @@ function beginTouchInspect(touch){
   state.touchMode = 'pending';
   state.touchStartX = touch.clientX;
   state.touchStartY = touch.clientY;
+  state.touchCurrentX = touch.clientX;
+  state.touchCurrentY = touch.clientY;
   state.dragging = false;
   state.pinching = false;
   state.touchTimer = setTimeout(() => {
@@ -680,6 +804,11 @@ function beginTouchInspect(touch){
 }
 
 function updateTouchInspect(touch){
+  state.touchCurrentX = touch.clientX;
+  state.touchCurrentY = touch.clientY;
+  if(state.touchMode === 'stockSwipe'){
+    return;
+  }
   if(state.touchMode === 'inspect'){
     inspectTouch(touch.clientX);
     return;
@@ -696,6 +825,12 @@ function updateTouchInspect(touch){
   if(Math.hypot(dx, dy) < TOUCH_PAN_THRESHOLD) return;
 
   clearTouchTimer();
+  if(isMobileViewport() && Math.abs(dx) >= STOCK_SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.35){
+    state.touchMode = 'stockSwipe';
+    state.dragging = false;
+    state.hover = -1;
+    return;
+  }
   state.touchMode = 'pan';
   state.hover = -1;
   beginDrag(state.touchStartX);
@@ -707,6 +842,10 @@ function endGesture(){
   state.touchMode = 'idle';
   state.dragging = false;
   state.pinching = false;
+}
+
+function isMobileViewport(){
+  return window.matchMedia('(max-width: 768px)').matches;
 }
 
 function touchDistance(touches){
@@ -788,6 +927,15 @@ canvas.addEventListener('touchmove', event => {
 }, { passive:false });
 
 canvas.addEventListener('touchend', event => {
+  if(state.touchMode === 'stockSwipe'){
+    const dx = state.touchCurrentX - state.touchStartX;
+    const offset = dx < 0 ? 1 : -1;
+    endGesture();
+    moveStock(offset);
+    draw();
+    event.preventDefault();
+    return;
+  }
   if(event.touches.length >= 2){
     beginPinch(event.touches);
   }else if(event.touches.length === 1){
@@ -823,6 +971,14 @@ document.getElementById('ranges').addEventListener('click', event => {
 
 maToggle.addEventListener('click', () => {
   state.maCollapsed = !state.maCollapsed;
+  draw();
+});
+
+indicatorControls.addEventListener('click', event => {
+  const button = event.target.closest('[data-indicator]');
+  if(!button) return;
+  if(button.dataset.indicator === 'volume') state.showVolume = !state.showVolume;
+  if(button.dataset.indicator === 'macd') state.showMacd = !state.showMacd;
   draw();
 });
 
@@ -1052,6 +1208,7 @@ async function loadChart(){
     fallbackName = data.name || fallbackName || currentSymbol;
     state.candles = data.prices;
     calculateMovingAverages(state.candles);
+    calculateMacd(state.candles);
     renderHeader(data);
     setStatus('');
     setRange(state.activeRange || 'all');
