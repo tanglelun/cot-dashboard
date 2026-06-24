@@ -604,11 +604,12 @@ function drawMacdPanel(candles, xFor, bodyWidth, top, bottom, width){
     ctx.globalAlpha = 1;
   });
   [
-    { key:'macd', color:'#00bcd4' },
-    { key:'macdSignal', color:'#ff9800' }
+    { key:'macd', color:'#00bcd4', alpha:0.58 },
+    { key:'macdSignal', color:'#ff9800', alpha:0.5 }
   ].forEach(line => {
     ctx.strokeStyle = line.color;
     ctx.lineWidth = 1.2;
+    ctx.globalAlpha = line.alpha;
     ctx.beginPath();
     let started = false;
     candles.forEach((c, i) => {
@@ -627,6 +628,7 @@ function drawMacdPanel(candles, xFor, bodyWidth, top, bottom, width){
       }
     });
     ctx.stroke();
+    ctx.globalAlpha = 1;
   });
 }
 
@@ -736,6 +738,8 @@ function draw(){
     ctx.beginPath();
     ctx.moveTo(x, top);
     ctx.lineTo(x, priceBottom);
+    ctx.moveTo(0, y);
+    ctx.lineTo(width, y);
     ctx.stroke();
     ctx.setLineDash([]);
   }
@@ -848,6 +852,13 @@ function isMobileViewport(){
   return window.matchMedia('(max-width: 768px)').matches;
 }
 
+function shouldSwitchStockOnSwipe(){
+  if(!isMobileViewport() || state.touchMode === 'pinch' || state.pinching) return false;
+  const dx = state.touchCurrentX - state.touchStartX;
+  const dy = state.touchCurrentY - state.touchStartY;
+  return Math.abs(dx) >= STOCK_SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.35;
+}
+
 function touchDistance(touches){
   const dx = touches[0].clientX - touches[1].clientX;
   const dy = touches[0].clientY - touches[1].clientY;
@@ -927,7 +938,7 @@ canvas.addEventListener('touchmove', event => {
 }, { passive:false });
 
 canvas.addEventListener('touchend', event => {
-  if(state.touchMode === 'stockSwipe'){
+  if(state.touchMode === 'stockSwipe' || shouldSwitchStockOnSwipe()){
     const dx = state.touchCurrentX - state.touchStartX;
     const offset = dx < 0 ? 1 : -1;
     endGesture();
