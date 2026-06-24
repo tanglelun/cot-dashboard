@@ -381,6 +381,7 @@ function setRange(range){
   state.start = Math.max(0, total - count);
   state.hover = -1;
   state.hoverY = null;
+  updateHeaderPrice(total - 1);
   document.querySelectorAll('#ranges .btn').forEach(item => item.classList.toggle('active', item.dataset.range === range));
   draw();
 }
@@ -408,6 +409,11 @@ function updateHeaderPrice(index){
   document.getElementById('lastPrice').textContent = fmt(close);
   changeEl.textContent = (diff >= 0 ? '+' : '') + fmt(diff) + ' (' + (pct >= 0 ? '+' : '') + fmt(pct) + '%)';
   changeEl.className = 'change ' + (diff >= 0 ? 'up' : 'down');
+}
+
+function updateHeaderForHover(){
+  const selected = state.hover >= 0 ? state.hover : state.candles.length - 1;
+  updateHeaderPrice(selected);
 }
 
 function resizeCanvas(){
@@ -697,7 +703,6 @@ function plotWidthFor(width){
 function draw(){
   const readoutIndex = state.hover >= state.start && state.hover < state.end ? state.hover : state.end - 1;
   renderMaLegend(state.candles[readoutIndex]);
-  updateHeaderPrice(readoutIndex);
 
   const rect = canvas.getBoundingClientRect();
   const width = rect.width;
@@ -830,6 +835,7 @@ function inspectTouch(clientX, clientY){
   state.pinching = false;
   state.hover = nearestIndex(clientX);
   state.hoverY = clientY === undefined ? null : clientY - canvas.getBoundingClientRect().top;
+  updateHeaderForHover();
 }
 
 function clearTouchTimer(){
@@ -967,6 +973,7 @@ canvas.addEventListener('mousemove', event => {
   }else{
     state.hover = nearestIndex(event.clientX);
     state.hoverY = event.clientY - canvas.getBoundingClientRect().top;
+    updateHeaderForHover();
   }
   draw();
 });
@@ -974,6 +981,7 @@ canvas.addEventListener('mousemove', event => {
 canvas.addEventListener('mouseleave', () => {
   state.hover = -1;
   state.hoverY = null;
+  updateHeaderForHover();
   endGesture();
   draw();
 });
@@ -982,6 +990,7 @@ document.addEventListener('mousemove', event => {
   if(event.target === canvas || state.hover < 0 || state.dragging) return;
   state.hover = -1;
   state.hoverY = null;
+  updateHeaderForHover();
   draw();
 });
 
