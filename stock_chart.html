@@ -351,7 +351,7 @@ const TOUCH_INSPECT_DELAY = 350;
 const TOUCH_PAN_THRESHOLD = 7;
 const STOCK_SWIPE_THRESHOLD = 72;
 const state = {
-  candles: [], start: 0, end: 0, hover: -1, dragging: false, dragX: 0, dragStart: 0, dragEnd: 0,
+  candles: [], start: 0, end: 0, hover: -1, hoverY: null, dragging: false, dragX: 0, dragStart: 0, dragEnd: 0,
   pinching: false, pinchDistance: 0, pinchStart: 0, pinchEnd: 0, pinchRatio: 0.5,
   touchMode: 'idle', touchTimer: null, touchStartX: 0, touchStartY: 0, touchCurrentX: 0, touchCurrentY: 0,
   maCollapsed: false, showVolume: true, showMacd: true,
@@ -396,6 +396,7 @@ function setRange(range){
   state.end = total;
   state.start = Math.max(0, total - count);
   state.hover = -1;
+  state.hoverY = null;
   document.querySelectorAll('#ranges .btn').forEach(item => item.classList.toggle('active', item.dataset.range === range));
   draw();
 }
@@ -759,12 +760,12 @@ function draw(){
     const local = state.hover - state.start;
     const c = state.candles[state.hover];
     const x = xFor(local);
-    const y = yFor(c.close);
+    const y = state.hoverY === null ? yFor(c.close) : Math.max(top, Math.min(height - bottom, state.hoverY));
     ctx.strokeStyle = '#2962ff';
     ctx.setLineDash([4, 4]);
     ctx.beginPath();
     ctx.moveTo(x, top);
-    ctx.lineTo(x, priceBottom);
+    ctx.lineTo(x, height - bottom);
     ctx.moveTo(0, y);
     ctx.lineTo(width, y);
     ctx.stroke();
@@ -803,10 +804,11 @@ function updateDrag(clientX){
   state.end = start + count;
 }
 
-function inspectTouch(clientX){
+function inspectTouch(clientX, clientY){
   state.dragging = false;
   state.pinching = false;
   state.hover = nearestIndex(clientX);
+  state.hoverY = clientY === undefined ? null : clientY - canvas.getBoundingClientRect().top;
 }
 
 function clearTouchTimer(){
@@ -829,7 +831,7 @@ function beginTouchInspect(touch){
     state.touchTimer = null;
     if(state.touchMode !== 'pending') return;
     state.touchMode = 'inspect';
-    inspectTouch(state.touchStartX);
+    inspectTouch(state.touchStartX, state.touchStartY);
     draw();
   }, TOUCH_INSPECT_DELAY);
 }
@@ -841,12 +843,13 @@ function updateTouchInspect(touch){
     return;
   }
   if(state.touchMode === 'inspect'){
-    inspectTouch(touch.clientX);
+    inspectTouch(touch.clientX, touch.clientY);
     return;
   }
   if(state.touchMode === 'pan'){
     updateDrag(touch.clientX);
     state.hover = -1;
+    state.hoverY = null;
     return;
   }
   if(state.touchMode !== 'pending') return;
@@ -860,10 +863,12 @@ function updateTouchInspect(touch){
     state.touchMode = 'stockSwipe';
     state.dragging = false;
     state.hover = -1;
+    state.hoverY = null;
     return;
   }
   state.touchMode = 'pan';
   state.hover = -1;
+  state.hoverY = null;
   beginDrag(state.touchStartX);
   updateDrag(touch.clientX);
 }
@@ -921,6 +926,7 @@ function updatePinch(touches){
   state.start = start;
   state.end = start + next;
   state.hover = -1;
+  state.hoverY = null;
 }
 
 canvas.addEventListener('mousemove', event => {
@@ -928,12 +934,14 @@ canvas.addEventListener('mousemove', event => {
     updateDrag(event.clientX);
   }else{
     state.hover = nearestIndex(event.clientX);
+    state.hoverY = event.clientY - canvas.getBoundingClientRect().top;
   }
   draw();
 });
 
 canvas.addEventListener('mouseleave', () => {
   state.hover = -1;
+  state.hoverY = null;
   endGesture();
   draw();
 });
