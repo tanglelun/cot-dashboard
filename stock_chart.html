@@ -553,14 +553,8 @@ function drawMovingAverage(ma, candles, xFor, yFor){
 }
 
 function drawGrid(left, top, right, priceBottom, bottom, width, height, minPrice, maxPrice, candles, xFor){
-  ctx.fillStyle = 'rgba(83, 118, 130, 0.68)';
-  const dotGap = 18;
-  const dotSize = 1.15;
-  for(let y = top + 8; y <= priceBottom; y += dotGap){
-    for(let x = 0; x <= width - right; x += dotGap){
-      ctx.fillRect(Math.round(x), Math.round(y), dotSize, dotSize);
-    }
-  }
+  ctx.strokeStyle = 'rgba(83, 118, 130, 0.36)';
+  ctx.lineWidth = 1;
   ctx.fillStyle = '#d7d9df';
   ctx.font = '13px SF Mono, Fira Code, monospace';
   ctx.textAlign = 'right';
@@ -568,6 +562,10 @@ function drawGrid(left, top, right, priceBottom, bottom, width, height, minPrice
   for(let i=0;i<=5;i++){
     const y = top + (priceBottom - top) * i / 5;
     const price = maxPrice - (maxPrice - minPrice) * i / 5;
+    ctx.beginPath();
+    ctx.moveTo(0, Math.round(y) + 0.5);
+    ctx.lineTo(width - right + 4, Math.round(y) + 0.5);
+    ctx.stroke();
     ctx.fillText(fmt(price), width - 8, y);
   }
   ctx.textAlign = 'center';
