@@ -44,13 +44,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 h1{font-size:56px;font-weight:900;line-height:1;letter-spacing:0}
 .meta{display:flex;gap:8px;flex-wrap:wrap;color:#333;font-size:14px}
 .chip{min-height:34px;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:7px;background:#fff;padding:0 10px;font-weight:700}
-.source-link{color:#111;text-decoration:none}
-.source-link:hover{color:var(--blue)}
 .controls{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:10px;margin-bottom:18px}
 .select-box{height:46px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#111;padding:0 14px;font-size:16px;font-weight:650;outline:none}
 .select-box:focus{border-color:#cfcfcf;box-shadow:0 0 0 2px rgba(0,0,0,.04)}
-.tabs{display:flex;align-items:center;gap:12px;margin-bottom:16px;overflow:auto}
-.tab{height:40px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:0 16px;font-size:15px;font-weight:800;cursor:pointer;white-space:nowrap}
+.tabs{display:flex;align-items:center;gap:10px;margin-bottom:16px;overflow:auto}
+.tab{height:40px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:0 14px;font-size:15px;font-weight:800;cursor:pointer;white-space:nowrap}
 .tab.active{background:#111;color:#fff;border-color:#111}
 .table-wrap{border:1px solid var(--line);border-radius:14px;overflow:auto;background:#fff}
 table{width:100%;border-collapse:separate;border-spacing:0;min-width:980px}
@@ -58,15 +56,16 @@ thead th{position:sticky;top:0;z-index:2;background:#f8f8f8;border-bottom:1px so
 tbody td{border-bottom:1px solid var(--line);padding:13px 14px;font-size:14px;vertical-align:middle}
 tbody tr:hover{background:#fafafa}
 tbody tr.today{background:#fbfff0}
-.time{font-weight:850;white-space:nowrap}
-.date{color:var(--muted);font-size:12px;margin-top:3px}
+.day-row td{background:#f4f4f4;color:#333;font-size:17px;font-weight:850;padding:10px 14px}
+.day-row .day-label{min-width:260px}
+.day-row .day-metric{text-align:right}
+.time-badge{display:inline-flex;align-items:center;justify-content:center;min-width:78px;height:27px;background:#b11f2c;color:#fff;border-radius:2px;padding:0 8px;font-weight:900;white-space:nowrap}
 .country{display:inline-flex;align-items:center;gap:8px;font-weight:850;white-space:nowrap}
 .flag{font-size:20px}
 .event{font-weight:850;font-size:15px}
-.ref{color:var(--muted);font-size:12px;margin-top:3px}
-.impact{color:#111;letter-spacing:1px;white-space:nowrap}
+.ref{color:#c7c7c7;font-size:13px;font-weight:850;margin-left:5px;text-transform:uppercase}
 .category{display:inline-flex;height:28px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:0 10px;background:#fff;font-size:12px;font-weight:800;white-space:nowrap}
-.num{font-family:"SF Mono","Fira Code",Consolas,monospace;font-weight:750;white-space:nowrap}
+.num{font-family:"SF Mono","Fira Code",Consolas,monospace;font-weight:750;white-space:nowrap;text-align:right}
 .empty{padding:44px;text-align:center;color:var(--muted);font-size:16px}
 .note{margin-top:14px;color:var(--muted);font-size:13px;line-height:1.5}
 @media(max-width:900px){
@@ -123,10 +122,16 @@ tbody tr.today{background:#fbfff0}
   </section>
 
   <section class="tabs" id="rangeTabs" aria-label="Date range">
-    <button class="tab active" type="button" data-range="all">All</button>
+    <button class="tab active" type="button" data-range="recent">Recent</button>
     <button class="tab" type="button" data-range="today">Today</button>
-    <button class="tab" type="button" data-range="week">7 Days</button>
-    <button class="tab" type="button" data-range="month">30 Days</button>
+    <button class="tab" type="button" data-range="tomorrow">Tomorrow</button>
+    <button class="tab" type="button" data-range="thisWeek">This Week</button>
+    <button class="tab" type="button" data-range="nextWeek">Next Week</button>
+    <button class="tab" type="button" data-range="thisMonth">This Month</button>
+    <button class="tab" type="button" data-range="nextMonth">Next Month</button>
+    <button class="tab" type="button" data-range="yesterday">Yesterday</button>
+    <button class="tab" type="button" data-range="previousWeek">Previous Week</button>
+    <button class="tab" type="button" data-range="previousMonth">Previous Month</button>
   </section>
 
   <section class="table-wrap">
@@ -136,12 +141,10 @@ tbody tr.today{background:#fbfff0}
           <th>Time</th>
           <th>Country</th>
           <th>Event</th>
-          <th>Impact</th>
           <th>Actual</th>
           <th>Previous</th>
           <th>Consensus</th>
           <th>Forecast</th>
-          <th>Source</th>
         </tr>
       </thead>
       <tbody id="calendarRows"></tbody>
@@ -152,7 +155,7 @@ tbody tr.today{background:#fbfff0}
 </main>
 
 <script>
-const state = { data:null, range:'all', country:'all', category:'all', source:'all', impact:'all' };
+const state = { data:null, range:'recent', country:'all', category:'all', source:'all', impact:'all' };
 const rowsEl = document.getElementById('calendarRows');
 const emptyEl = document.getElementById('emptyState');
 const countrySelect = document.getElementById('countrySelect');
@@ -203,21 +206,72 @@ function flagFromCode(code){
 function eventCountryCode(event){ return event.countryCode || countryCode(event.country); }
 function flag(event){ return flagFromCode(eventCountryCode(event)); }
 function dateObj(value){ return new Date(String(value).replace('+00:00','Z')); }
+function startOfDay(date){ return new Date(date.getFullYear(), date.getMonth(), date.getDate()); }
+function addDays(date, days){ const next = new Date(date); next.setDate(next.getDate() + days); return next; }
+function addMonths(date, months){ const next = new Date(date); next.setMonth(next.getMonth() + months); return next; }
+function weekStart(date){
+  const day = date.getDay() || 7;
+  return addDays(startOfDay(date), 1 - day);
+}
 function sameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
+function dateRange(){
+  const today = startOfDay(new Date());
+  if(state.range === 'today') return [today, addDays(today, 1)];
+  if(state.range === 'tomorrow') return [addDays(today, 1), addDays(today, 2)];
+  if(state.range === 'yesterday') return [addDays(today, -1), today];
+  if(state.range === 'thisWeek'){
+    const start = weekStart(today);
+    return [start, addDays(start, 7)];
+  }
+  if(state.range === 'nextWeek'){
+    const start = addDays(weekStart(today), 7);
+    return [start, addDays(start, 7)];
+  }
+  if(state.range === 'previousWeek'){
+    const start = addDays(weekStart(today), -7);
+    return [start, addDays(start, 7)];
+  }
+  if(state.range === 'thisMonth'){
+    const start = new Date(today.getFullYear(), today.getMonth(), 1);
+    return [start, addMonths(start, 1)];
+  }
+  if(state.range === 'nextMonth'){
+    const start = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    return [start, addMonths(start, 1)];
+  }
+  if(state.range === 'previousMonth'){
+    const start = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+    return [start, addMonths(start, 1)];
+  }
+  return [addDays(today, -30), addDays(today, 14)];
+}
 function inRange(event){
-  if(state.range === 'all') return true;
-  const now = new Date();
   const date = dateObj(event.date);
-  const days = state.range === 'today' ? 1 : state.range === 'week' ? 7 : 30;
-  const end = new Date(now.getTime() + days * 86400000);
-  return date >= new Date(now.getFullYear(), now.getMonth(), now.getDate()) && date <= end;
+  const [start, end] = dateRange();
+  return date >= start && date < end;
 }
 function displayTime(event){
   const date = dateObj(event.date);
   return {
-    time: date.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}),
-    date: date.toLocaleDateString([], {month:'short', day:'numeric', year:'numeric'})
+    time: date.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit', hour12:true}),
+    date: date.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})
   };
+}
+function displayDay(date){
+  return date.toLocaleDateString('en-US', {weekday:'long', month:'long', day:'2-digit', year:'numeric'}).replace(/,/g, '');
+}
+function eventPeriod(event){
+  const text = event.reference || '';
+  const match = text.match(/(?:period|Period):\s*([A-Z0-9-]+)/i);
+  if(!match) return '';
+  const period = match[1].toUpperCase();
+  const monthly = period.match(/^\d{4}-(\d{2})$/);
+  if(monthly){
+    return new Date(2000, Number(monthly[1]) - 1, 1).toLocaleDateString('en-US', {month:'short'}).toUpperCase();
+  }
+  const quarterly = period.match(/^\d{4}-(Q[1-4])$/);
+  if(quarterly) return quarterly[1];
+  return period;
 }
 function cell(value){ return value ? esc(value) : '<span style="color:#aaa">--</span>'; }
 function populateFilters(data){
@@ -244,19 +298,29 @@ function filteredEvents(){
 }
 function render(){
   const events = filteredEvents();
+  let lastDay = '';
   rowsEl.innerHTML = events.map(event => {
     const dt = displayTime(event);
+    const date = dateObj(event.date);
+    const dayKey = date.toISOString().slice(0, 10);
     const todayClass = sameDay(dateObj(event.date), new Date()) ? ' class="today"' : '';
-    return `<tr${todayClass}>
-      <td><div class="time">${esc(dt.time)}</div><div class="date">${esc(dt.date)}</div></td>
+    const period = eventPeriod(event);
+    const dayHeader = dayKey === lastDay ? '' : `<tr class="day-row">
+      <td class="day-label" colspan="3">${esc(displayDay(date))}</td>
+      <td class="day-metric">Actual</td>
+      <td class="day-metric">Previous</td>
+      <td class="day-metric">Consensus</td>
+      <td class="day-metric">Forecast</td>
+    </tr>`;
+    lastDay = dayKey;
+    return `${dayHeader}<tr${todayClass}>
+      <td><span class="time-badge">${esc(dt.time)}</span></td>
       <td><span class="country" title="${esc(event.country)}"><span class="flag">${flag(event)}</span>${esc(eventCountryCode(event))}</span></td>
-      <td><div class="event">${esc(event.event)}</div><div class="ref">${esc(event.reference || event.category)}</div></td>
-      <td><span class="impact">★★★</span></td>
+      <td><span class="event">${esc(event.event)}</span>${period ? `<span class="ref">${esc(period)}</span>` : ''}</td>
       <td class="num">${cell(event.actual)}</td>
       <td class="num">${cell(event.previous)}</td>
       <td class="num">${cell(event.consensus)}</td>
       <td class="num">${cell(event.forecast)}</td>
-      <td><a class="source-link" href="${esc(event.url)}" target="_blank" rel="noopener">${esc(event.source)}</a></td>
     </tr>`;
   }).join('');
   emptyEl.hidden = events.length > 0;
