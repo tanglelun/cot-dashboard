@@ -46,16 +46,12 @@ h1{font-size:56px;font-weight:900;line-height:1;letter-spacing:0}
 .chip{min-height:34px;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:7px;background:#fff;padding:0 10px;font-weight:700}
 .source-link{color:#111;text-decoration:none}
 .source-link:hover{color:var(--blue)}
-.controls{display:grid;grid-template-columns:minmax(260px,1fr) repeat(3,minmax(150px,210px));gap:10px;margin-bottom:18px}
-.search-box,.select-box{height:46px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#111;padding:0 14px;font-size:16px;font-weight:650;outline:none}
-.search-box:focus,.select-box:focus{border-color:#cfcfcf;box-shadow:0 0 0 2px rgba(0,0,0,.04)}
+.controls{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:10px;margin-bottom:18px}
+.select-box{height:46px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#111;padding:0 14px;font-size:16px;font-weight:650;outline:none}
+.select-box:focus{border-color:#cfcfcf;box-shadow:0 0 0 2px rgba(0,0,0,.04)}
 .tabs{display:flex;align-items:center;gap:12px;margin-bottom:16px;overflow:auto}
 .tab{height:40px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:0 16px;font-size:15px;font-weight:800;cursor:pointer;white-space:nowrap}
 .tab.active{background:#111;color:#fff;border-color:#111}
-.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}
-.stat{border:1px solid var(--line);border-radius:12px;background:#fff;padding:16px}
-.stat-label{color:var(--muted);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
-.stat-value{font-size:32px;font-weight:900;margin-top:8px}
 .table-wrap{border:1px solid var(--line);border-radius:14px;overflow:auto;background:#fff}
 table{width:100%;border-collapse:separate;border-spacing:0;min-width:980px}
 thead th{position:sticky;top:0;z-index:2;background:#f8f8f8;border-bottom:1px solid var(--line);color:#555;font-size:12px;text-transform:uppercase;letter-spacing:.06em;text-align:left;padding:13px 14px;white-space:nowrap}
@@ -89,8 +85,6 @@ tbody tr.today{background:#fbfff0}
   .head{display:grid;gap:16px}
   h1{font-size:38px}
   .controls{grid-template-columns:1fr}
-  .summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-  .stat-value{font-size:26px}
   .table-wrap{border-left:none;border-right:none;border-radius:0;margin-left:-14px;margin-right:-14px}
 }
 </style>
@@ -122,10 +116,10 @@ tbody tr.today{background:#fbfff0}
   </header>
 
   <section class="controls" aria-label="Calendar filters">
-    <input class="search-box" id="searchInput" type="search" placeholder="Search event, country, category" autocomplete="off">
     <select class="select-box" id="countrySelect" aria-label="Country"></select>
     <select class="select-box" id="categorySelect" aria-label="Category"></select>
     <select class="select-box" id="sourceSelect" aria-label="Source"></select>
+    <select class="select-box" id="impactSelect" aria-label="Impact"></select>
   </section>
 
   <section class="tabs" id="rangeTabs" aria-label="Date range">
@@ -133,13 +127,6 @@ tbody tr.today{background:#fbfff0}
     <button class="tab" type="button" data-range="today">Today</button>
     <button class="tab" type="button" data-range="week">7 Days</button>
     <button class="tab" type="button" data-range="month">30 Days</button>
-  </section>
-
-  <section class="summary">
-    <div class="stat"><div class="stat-label">Events</div><div class="stat-value" id="eventCount">0</div></div>
-    <div class="stat"><div class="stat-label">Countries</div><div class="stat-value" id="countryCount">0</div></div>
-    <div class="stat"><div class="stat-label">Categories</div><div class="stat-value" id="categoryCount">0</div></div>
-    <div class="stat"><div class="stat-label">Impact</div><div class="stat-value">★★★</div></div>
   </section>
 
   <section class="table-wrap">
@@ -165,13 +152,13 @@ tbody tr.today{background:#fbfff0}
 </main>
 
 <script>
-const state = { data:null, range:'all', query:'', country:'all', category:'all', source:'all' };
+const state = { data:null, range:'all', country:'all', category:'all', source:'all', impact:'all' };
 const rowsEl = document.getElementById('calendarRows');
 const emptyEl = document.getElementById('emptyState');
 const countrySelect = document.getElementById('countrySelect');
 const categorySelect = document.getElementById('categorySelect');
 const sourceSelect = document.getElementById('sourceSelect');
-const searchInput = document.getElementById('searchInput');
+const impactSelect = document.getElementById('impactSelect');
 
 function setupNavSearch(){
   const form = document.querySelector('.nav-search');
@@ -243,25 +230,20 @@ function populateFilters(data){
   }).join('');
   categorySelect.innerHTML = categories.map(item => `<option value="${esc(item)}">${item === 'all' ? 'All Events' : esc(item)}</option>`).join('');
   sourceSelect.innerHTML = sources.map(item => `<option value="${esc(item)}">${item === 'all' ? 'All sources' : esc(item)}</option>`).join('');
+  impactSelect.innerHTML = '<option value="all">All impact</option><option value="3">★★★</option>';
 }
 function filteredEvents(){
-  const q = state.query.toLowerCase();
   return (state.data?.events || []).filter(event => {
     if(!inRange(event)) return false;
     if(state.country !== 'all' && eventCountryCode(event) !== state.country) return false;
     if(state.category !== 'all' && event.category !== state.category) return false;
     if(state.source !== 'all' && event.source !== state.source) return false;
-    if(!q) return true;
-    return [event.event,event.reference,event.country,event.category,event.source].some(value => String(value || '').toLowerCase().includes(q));
+    if(state.impact !== 'all' && String(event.importance || '') !== state.impact) return false;
+    return true;
   });
 }
 function render(){
   const events = filteredEvents();
-  const countries = new Set(events.map(event => eventCountryCode(event)));
-  const categories = new Set(events.map(event => event.category));
-  document.getElementById('eventCount').textContent = events.length;
-  document.getElementById('countryCount').textContent = countries.size;
-  document.getElementById('categoryCount').textContent = categories.size;
   rowsEl.innerHTML = events.map(event => {
     const dt = displayTime(event);
     const todayClass = sameDay(dateObj(event.date), new Date()) ? ' class="today"' : '';
@@ -294,10 +276,10 @@ async function init(){
   renderMeta(state.data);
   render();
 }
-searchInput.addEventListener('input', event => { state.query = event.target.value; render(); });
 countrySelect.addEventListener('change', event => { state.country = event.target.value; render(); });
 categorySelect.addEventListener('change', event => { state.category = event.target.value; render(); });
 sourceSelect.addEventListener('change', event => { state.source = event.target.value; render(); });
+impactSelect.addEventListener('change', event => { state.impact = event.target.value; render(); });
 document.getElementById('rangeTabs').addEventListener('click', event => {
   const button = event.target.closest('[data-range]');
   if(!button) return;
