@@ -203,7 +203,11 @@ function setupNavSearch(){
 function esc(value){
   return String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
 }
-function flag(country){ return country === 'United States' ? '🇺🇸' : '•'; }
+function countryCode(country){
+  const codes = {'United States':'US','United Kingdom':'GB','European Union':'EU'};
+  return codes[country] || String(country || '').slice(0,2).toUpperCase();
+}
+function flag(country){ return countryCode(country) === 'US' ? '🇺🇸' : '•'; }
 function dateObj(value){ return new Date(String(value).replace('+00:00','Z')); }
 function sameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
 function inRange(event){
@@ -253,7 +257,7 @@ function render(){
     const todayClass = sameDay(dateObj(event.date), new Date()) ? ' class="today"' : '';
     return `<tr${todayClass}>
       <td><div class="time">${esc(dt.time)}</div><div class="date">${esc(dt.date)}</div></td>
-      <td><span class="country"><span class="flag">${flag(event.country)}</span>${esc(event.country)}</span></td>
+      <td><span class="country" title="${esc(event.country)}"><span class="flag">${flag(event.country)}</span>${esc(countryCode(event.country))}</span></td>
       <td><div class="event">${esc(event.event)}</div><div class="ref">${esc(event.reference || event.category)}</div></td>
       <td><span class="impact">★★★</span></td>
       <td class="num">${cell(event.actual)}</td>
