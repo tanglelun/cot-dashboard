@@ -204,10 +204,17 @@ function esc(value){
   return String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
 }
 function countryCode(country){
-  const codes = {'United States':'US','United Kingdom':'GB','European Union':'EU'};
+  const codes = Object.fromEntries((state.data?.countries || []).map(country => [country.name, country.code]));
   return codes[country] || String(country || '').slice(0,2).toUpperCase();
 }
-function flag(country){ return countryCode(country) === 'US' ? '🇺🇸' : '•'; }
+function flagFromCode(code){
+  if(code === 'EU') return '🇪🇺';
+  if(!/^[A-Z]{2}$/.test(code)) return '•';
+  const base = 127397;
+  return String.fromCodePoint(...code.split('').map(char => char.charCodeAt(0) + base));
+}
+function eventCountryCode(event){ return event.countryCode || countryCode(event.country); }
+function flag(event){ return flagFromCode(eventCountryCode(event)); }
 function dateObj(value){ return new Date(String(value).replace('+00:00','Z')); }
 function sameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
 function inRange(event){
@@ -230,7 +237,10 @@ function populateFilters(data){
   const countries = ['all', ...data.countries];
   const categories = ['all', ...data.categories];
   const sources = ['all', ...Array.from(new Set(data.events.map(event => event.source).filter(Boolean))).sort()];
-  countrySelect.innerHTML = countries.map(item => `<option value="${esc(item)}">${item === 'all' ? 'All countries' : esc(item)}</option>`).join('');
+  countrySelect.innerHTML = countries.map(item => {
+    if(item === 'all') return '<option value="all">All G20 countries</option>';
+    return `<option value="${esc(item.code)}">${flagFromCode(item.code)} ${esc(item.code)} ${esc(item.name)}</option>`;
+  }).join('');
   categorySelect.innerHTML = categories.map(item => `<option value="${esc(item)}">${item === 'all' ? 'All categories' : esc(item)}</option>`).join('');
   sourceSelect.innerHTML = sources.map(item => `<option value="${esc(item)}">${item === 'all' ? 'All sources' : esc(item)}</option>`).join('');
 }
@@ -238,7 +248,7 @@ function filteredEvents(){
   const q = state.query.toLowerCase();
   return (state.data?.events || []).filter(event => {
     if(!inRange(event)) return false;
-    if(state.country !== 'all' && event.country !== state.country) return false;
+    if(state.country !== 'all' && eventCountryCode(event) !== state.country) return false;
     if(state.category !== 'all' && event.category !== state.category) return false;
     if(state.source !== 'all' && event.source !== state.source) return false;
     if(!q) return true;
@@ -247,7 +257,7 @@ function filteredEvents(){
 }
 function render(){
   const events = filteredEvents();
-  const countries = new Set(events.map(event => event.country));
+  const countries = new Set(events.map(event => eventCountryCode(event)));
   const categories = new Set(events.map(event => event.category));
   document.getElementById('eventCount').textContent = events.length;
   document.getElementById('countryCount').textContent = countries.size;
@@ -257,7 +267,7 @@ function render(){
     const todayClass = sameDay(dateObj(event.date), new Date()) ? ' class="today"' : '';
     return `<tr${todayClass}>
       <td><div class="time">${esc(dt.time)}</div><div class="date">${esc(dt.date)}</div></td>
-      <td><span class="country" title="${esc(event.country)}"><span class="flag">${flag(event.country)}</span>${esc(countryCode(event.country))}</span></td>
+      <td><span class="country" title="${esc(event.country)}"><span class="flag">${flag(event)}</span>${esc(eventCountryCode(event))}</span></td>
       <td><div class="event">${esc(event.event)}</div><div class="ref">${esc(event.reference || event.category)}</div></td>
       <td><span class="impact">★★★</span></td>
       <td class="num">${cell(event.actual)}</td>

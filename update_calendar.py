@@ -17,6 +17,30 @@ EASTERN_OFFSET = "-04:00"
 BEA_JSON_URL = "https://apps.bea.gov/API/signup/release_dates.json"
 FED_FOMC_URL = "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
 
+G20_COUNTRIES = [
+    {"code": "AR", "name": "Argentina"},
+    {"code": "AU", "name": "Australia"},
+    {"code": "BR", "name": "Brazil"},
+    {"code": "CA", "name": "Canada"},
+    {"code": "CN", "name": "China"},
+    {"code": "EU", "name": "European Union"},
+    {"code": "FR", "name": "France"},
+    {"code": "DE", "name": "Germany"},
+    {"code": "IN", "name": "India"},
+    {"code": "ID", "name": "Indonesia"},
+    {"code": "IT", "name": "Italy"},
+    {"code": "JP", "name": "Japan"},
+    {"code": "MX", "name": "Mexico"},
+    {"code": "RU", "name": "Russia"},
+    {"code": "SA", "name": "Saudi Arabia"},
+    {"code": "ZA", "name": "South Africa"},
+    {"code": "KR", "name": "South Korea"},
+    {"code": "TR", "name": "Turkiye"},
+    {"code": "GB", "name": "United Kingdom"},
+    {"code": "US", "name": "United States"},
+]
+COUNTRY_CODE_BY_NAME = {country["name"]: country["code"] for country in G20_COUNTRIES}
+
 HIGH_IMPACT_KEYWORDS = {
     "employment situation": ("Labour Market", "Employment Situation"),
     "consumer price index": ("Prices & Inflation", "Consumer Price Index"),
@@ -126,10 +150,12 @@ def event_id(source, date_value, title):
 
 
 def build_event(source, source_url, date_value, title, category, reference="", country="United States"):
+    country_code = COUNTRY_CODE_BY_NAME.get(country, country[:2].upper())
     return {
         "id": event_id(source, date_value, title),
         "date": date_value,
         "country": country,
+        "countryCode": country_code,
         "category": category,
         "event": title,
         "reference": reference,
@@ -242,7 +268,12 @@ def build_payload(events, generated_at):
             {"name": "U.S. Bureau of Economic Analysis", "url": BEA_JSON_URL},
             {"name": "Federal Reserve", "url": FED_FOMC_URL},
         ],
-        "countries": sorted({event["country"] for event in filtered}),
+        "countries": G20_COUNTRIES,
+        "coverage": {
+            "scope": "G20 countries",
+            "activeSources": sorted({event["countryCode"] for event in filtered}),
+            "note": "Events are included only when an official public source is connected; no third-party calendar tables are copied.",
+        },
         "categories": sorted({event["category"] for event in filtered}),
         "events": filtered,
     }
