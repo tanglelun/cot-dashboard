@@ -10,10 +10,13 @@ import requests
 
 OUTPUT_FILE = Path("calendar_data.json")
 ECONOMIC_DATA_FILE = Path("economic_data.json")
-WINDOW_PAST_DAYS = 400
-WINDOW_FUTURE_DAYS = 180
+WINDOW_PAST_DAYS = 7
+WINDOW_FUTURE_DAYS = 370
 IMPORTANCE = 3
 EASTERN_OFFSET = "-04:00"
+FUTURE_MONTHLY_RELEASES = 6
+FUTURE_QUARTERLY_RELEASES = 4
+FUTURE_YEARLY_RELEASES = 2
 
 BEA_JSON_URL = "https://apps.bea.gov/API/signup/release_dates.json"
 FED_FOMC_URL = "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
@@ -216,6 +219,46 @@ def period_to_date(period):
     return None
 
 
+def period_kind(period):
+    if re.fullmatch(r"\d{4}-\d{2}", normalize_space(period)):
+        return "monthly"
+    if re.fullmatch(r"\d{4}-Q[1-4]", normalize_space(period)):
+        return "quarterly"
+    if re.fullmatch(r"\d{4}", normalize_space(period)):
+        return "yearly"
+    return ""
+
+
+def add_period(period, count):
+    period = normalize_space(period)
+    if re.fullmatch(r"\d{4}-\d{2}", period):
+        year, month = map(int, period.split("-"))
+        month += count
+        year += (month - 1) // 12
+        month = ((month - 1) % 12) + 1
+        return f"{year:04d}-{month:02d}"
+    if re.fullmatch(r"\d{4}-Q[1-4]", period):
+        year = int(period[:4])
+        quarter = int(period[-1]) + count
+        year += (quarter - 1) // 4
+        quarter = ((quarter - 1) % 4) + 1
+        return f"{year:04d}-Q{quarter}"
+    if re.fullmatch(r"\d{4}", period):
+        return f"{int(period) + count:04d}"
+    return ""
+
+
+def future_period_count(period):
+    kind = period_kind(period)
+    if kind == "monthly":
+        return FUTURE_MONTHLY_RELEASES
+    if kind == "quarterly":
+        return FUTURE_QUARTERLY_RELEASES
+    if kind == "yearly":
+        return FUTURE_YEARLY_RELEASES
+    return 0
+
+
 def format_value(value, unit, decimals=2):
     if value is None or value == "":
         return ""
@@ -244,7 +287,7 @@ def previous_observation(indicator, country_code, latest_period):
     return None
 
 
-def fetch_economic_snapshot_events():
+def fetch_projected_economic_events():
     data = json.loads(ECONOMIC_DATA_FILE.read_text(encoding="utf-8"))
     countries_by_code = {country["code"]: country["name"] for country in G20_COUNTRIES}
     result = []
@@ -260,24 +303,26 @@ def fetch_economic_snapshot_events():
             if not country or not latest or latest.get("value") is None:
                 continue
             period = latest.get("date") or latest.get("year")
-            date_value = period_to_date(period)
-            if not date_value:
-                continue
             previous = previous_observation(indicator, country_code, period)
-            event = build_event(
-                "OECD / World Bank",
-                ECONOMIC_DATA_URL,
-                date_value.isoformat().replace("+00:00", "Z"),
-                event_name,
-                category,
-                f"Latest reported period: {period}",
-                country,
-            )
-            event["actual"] = format_value(latest.get("value"), unit, decimals)
-            event["previous"] = format_value(previous, unit, decimals)
-            event["lastUpdate"] = data.get("updated", "")
-            event["unit"] = unit
-            result.append(event)
+            latest_value = format_value(latest.get("value"), unit, decimals)
+            for offset in range(1, future_period_count(period) + 1):
+                future_period = add_period(period, offset)
+                date_value = period_to_date(future_period)
+                if not date_value:
+                    continue
+                event = build_event(
+                    "Projected economic schedule",
+                    ECONOMIC_DATA_URL,
+                    date_value.isoformat().replace("+00:00", "Z"),
+                    event_name,
+                    category,
+                    f"Expected period: {future_period}",
+                    country,
+                )
+                event["previous"] = latest_value
+                event["lastUpdate"] = data.get("updated", "")
+                event["unit"] = unit
+                result.append(event)
     return result
 
 
@@ -373,7 +418,7 @@ def build_payload(events, generated_at):
         "importance": IMPORTANCE,
         "window": {"start": start.isoformat(), "end": end.isoformat()},
         "sources": [
-            {"name": "OECD / World Bank", "url": ECONOMIC_DATA_URL},
+            {"name": "Projected economic schedule", "url": ECONOMIC_DATA_URL},
             {"name": "U.S. Bureau of Economic Analysis", "url": BEA_JSON_URL},
             {"name": "Federal Reserve", "url": FED_FOMC_URL},
         ],
@@ -381,7 +426,7 @@ def build_payload(events, generated_at):
         "coverage": {
             "scope": "G20 countries",
             "activeSources": sorted({event["countryCode"] for event in filtered}),
-            "note": "Economic rows use official or public indicator histories. Consensus and forecasts are left blank unless a connected source provides them; no third-party calendar tables are copied.",
+            "note": "Future rows are projected from official or public indicator histories. Previous values use the latest available actual; consensus and forecasts are left blank unless a connected source provides them.",
         },
         "categories": CATEGORY_ORDER,
         "events": filtered,
@@ -403,7 +448,7 @@ def main():
     now = utc_now()
     events = []
     errors = []
-    for fetcher in (fetch_economic_snapshot_events, fetch_bea_events, fetch_fomc_events):
+    for fetcher in (fetch_projected_economic_events, fetch_bea_events, fetch_fomc_events):
         try:
             events.extend(fetcher())
         except Exception as error:
