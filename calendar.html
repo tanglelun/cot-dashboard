@@ -161,7 +161,7 @@ tbody tr.today{background:#fbfff0}
     </table>
     <div class="empty" id="emptyState" hidden>No matching events.</div>
   </section>
-  <p class="note">Data comes from official public release calendars. Consensus and forecast are shown only when an official source provides them; third-party calendar data is not copied.</p>
+  <p class="note">Data comes from official or free public release calendars. Consensus and forecast are shown only when a connected source provides them; third-party calendar tables are not copied.</p>
 </main>
 
 <script>
@@ -241,7 +241,7 @@ function populateFilters(data){
     if(item === 'all') return '<option value="all">All G20 countries</option>';
     return `<option value="${esc(item.code)}">${flagFromCode(item.code)} ${esc(item.code)} ${esc(item.name)}</option>`;
   }).join('');
-  categorySelect.innerHTML = categories.map(item => `<option value="${esc(item)}">${item === 'all' ? 'All categories' : esc(item)}</option>`).join('');
+  categorySelect.innerHTML = categories.map(item => `<option value="${esc(item)}">${item === 'all' ? 'All Events' : esc(item)}</option>`).join('');
   sourceSelect.innerHTML = sources.map(item => `<option value="${esc(item)}">${item === 'all' ? 'All sources' : esc(item)}</option>`).join('');
 }
 function filteredEvents(){
