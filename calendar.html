@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendar - High Impact Events</title>
+<style>
+:root{
+  --bg:#fff;
+  --ink:#111;
+  --muted:#858585;
+  --line:#e7e7e7;
+  --line-strong:#d8d8d8;
+  --soft:#f5f5f5;
+  --nav-active:#b8ff00;
+  --blue:#0f67ff;
+  --green:#079b86;
+  --red:#e44f55;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{min-height:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--ink)}
+.site-nav{min-height:64px;display:flex;align-items:center;gap:28px;padding:0 24px;background:#000;border-bottom:1px solid #1b1f2a;position:relative;z-index:30}
+.site-brand{display:inline-flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-size:25px;font-weight:800;white-space:nowrap}
+.brand-mark{position:relative;width:22px;height:26px;display:inline-block}
+.brand-mark::before{content:"";position:absolute;left:7px;top:1px;width:10px;height:24px;background:#fff;border-radius:10px 10px 10px 1px;transform:skew(-18deg) rotate(22deg)}
+.brand-mark::after{content:"";position:absolute;left:2px;bottom:2px;width:13px;height:3px;background:#fff;border-radius:999px;transform:rotate(-34deg)}
+.nav-check{position:absolute;opacity:0;pointer-events:none}
+.nav-toggle{display:none;width:38px;height:38px;border:1px solid #2a2e39;border-radius:999px;align-items:center;justify-content:center;flex-direction:column;gap:4px;cursor:pointer;margin-left:auto}
+.nav-toggle span{width:16px;height:2px;background:#fff;border-radius:999px}
+.nav-links{display:flex;align-items:center;gap:28px;flex:0 1 auto}
+.nav-link{color:#f3f4f6;text-decoration:none;font-size:15px;font-weight:650;white-space:nowrap}
+.nav-link:hover,.nav-link.active{color:var(--nav-active)}
+.nav-search{position:relative;flex:0 1 360px;min-width:220px;margin-left:auto}
+.nav-search input{width:100%;height:42px;border:1px solid #2a2e39;border-radius:999px;background:#090c12;color:#fff;padding:0 16px 0 42px;font-size:15px;font-weight:650;outline:none}
+.nav-search input::placeholder{color:#787b86}
+.nav-search input:focus{border-color:var(--nav-active);box-shadow:0 0 0 1px rgba(184,255,0,.24)}
+.nav-search-mark{position:absolute;left:16px;top:50%;width:13px;height:13px;border:2px solid var(--nav-active);border-radius:50%;transform:translateY(-50%);pointer-events:none}
+.nav-search-mark::after{content:"";position:absolute;width:7px;height:2px;background:var(--nav-active);border-radius:999px;right:-6px;bottom:-4px;transform:rotate(45deg)}
+.page{width:100%;max-width:2048px;margin:0 auto;padding:32px 40px 38px}
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:22px}
+.title-block{display:grid;gap:8px}
+.eyebrow{font-size:18px;font-weight:850;color:var(--muted)}
+h1{font-size:56px;font-weight:900;line-height:1;letter-spacing:0}
+.meta{display:flex;gap:8px;flex-wrap:wrap;color:#333;font-size:14px}
+.chip{min-height:34px;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:7px;background:#fff;padding:0 10px;font-weight:700}
+.source-link{color:#111;text-decoration:none}
+.source-link:hover{color:var(--blue)}
+.controls{display:grid;grid-template-columns:minmax(260px,1fr) repeat(3,minmax(150px,210px));gap:10px;margin-bottom:18px}
+.search-box,.select-box{height:46px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#111;padding:0 14px;font-size:16px;font-weight:650;outline:none}
+.search-box:focus,.select-box:focus{border-color:#cfcfcf;box-shadow:0 0 0 2px rgba(0,0,0,.04)}
+.tabs{display:flex;align-items:center;gap:12px;margin-bottom:16px;overflow:auto}
+.tab{height:40px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:0 16px;font-size:15px;font-weight:800;cursor:pointer;white-space:nowrap}
+.tab.active{background:#111;color:#fff;border-color:#111}
+.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}
+.stat{border:1px solid var(--line);border-radius:12px;background:#fff;padding:16px}
+.stat-label{color:var(--muted);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.stat-value{font-size:32px;font-weight:900;margin-top:8px}
+.table-wrap{border:1px solid var(--line);border-radius:14px;overflow:auto;background:#fff}
+table{width:100%;border-collapse:separate;border-spacing:0;min-width:980px}
+thead th{position:sticky;top:0;z-index:2;background:#f8f8f8;border-bottom:1px solid var(--line);color:#555;font-size:12px;text-transform:uppercase;letter-spacing:.06em;text-align:left;padding:13px 14px;white-space:nowrap}
+tbody td{border-bottom:1px solid var(--line);padding:13px 14px;font-size:14px;vertical-align:middle}
+tbody tr:hover{background:#fafafa}
+tbody tr.today{background:#fbfff0}
+.time{font-weight:850;white-space:nowrap}
+.date{color:var(--muted);font-size:12px;margin-top:3px}
+.country{display:inline-flex;align-items:center;gap:8px;font-weight:850;white-space:nowrap}
+.flag{font-size:20px}
+.event{font-weight:850;font-size:15px}
+.ref{color:var(--muted);font-size:12px;margin-top:3px}
+.impact{color:#111;letter-spacing:1px;white-space:nowrap}
+.category{display:inline-flex;height:28px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:0 10px;background:#fff;font-size:12px;font-weight:800;white-space:nowrap}
+.num{font-family:"SF Mono","Fira Code",Consolas,monospace;font-weight:750;white-space:nowrap}
+.empty{padding:44px;text-align:center;color:var(--muted);font-size:16px}
+.note{margin-top:14px;color:var(--muted);font-size:13px;line-height:1.5}
+@media(max-width:900px){
+  .site-nav{min-height:58px;padding:10px 14px;gap:10px;flex-wrap:wrap}
+  .site-brand{font-size:21px}
+  .brand-mark{width:20px;height:24px}
+  .nav-toggle{display:flex}
+  .nav-links,.nav-search{display:none;flex:0 0 100%;width:100%}
+  .nav-check:checked ~ .nav-links{display:flex}
+  .nav-check:checked ~ .nav-search{display:block}
+  .nav-links{order:3;flex-direction:column;align-items:stretch;gap:4px;padding-top:8px}
+  .nav-link{height:40px;display:flex;align-items:center;padding:0 4px;font-size:14px}
+  .nav-search{order:4;min-width:0;margin-left:0;padding-top:8px}
+  .nav-search input{height:40px;font-size:14px}
+  .page{padding:24px 14px 28px}
+  .head{display:grid;gap:16px}
+  h1{font-size:38px}
+  .controls{grid-template-columns:1fr}
+  .summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .stat-value{font-size:26px}
+  .table-wrap{border-left:none;border-right:none;border-radius:0;margin-left:-14px;margin-right:-14px}
+}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="Primary">
+  <a class="site-brand" href="index.html" aria-label="Net Data home"><span class="brand-mark" aria-hidden="true"></span><span>Net Data</span></a>
+  <input class="nav-check" type="checkbox" id="navMenu">
+  <label class="nav-toggle" for="navMenu" aria-label="Toggle navigation"><span></span><span></span><span></span></label>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Non-Commercial</a>
+    <a class="nav-link" href="russell2000_top100.html">Market</a>
+    <a class="nav-link" href="economy.html">Economy</a>
+    <a class="nav-link active" href="calendar.html">Calendar</a>
+  </div>
+  <form class="nav-search" role="search" data-root="">
+    <span class="nav-search-mark" aria-hidden="true"></span>
+    <input type="search" name="q" placeholder="Search stocks" autocomplete="off" aria-label="Search stocks">
+  </form>
+</nav>
+
+<main class="page">
+  <header class="head">
+    <div class="title-block">
+      <div class="eyebrow">Official high-impact releases</div>
+      <h1>Calendar</h1>
+      <div class="meta" id="meta"></div>
+    </div>
+  </header>
+
+  <section class="controls" aria-label="Calendar filters">
+    <input class="search-box" id="searchInput" type="search" placeholder="Search event, country, category" autocomplete="off">
+    <select class="select-box" id="countrySelect" aria-label="Country"></select>
+    <select class="select-box" id="categorySelect" aria-label="Category"></select>
+    <select class="select-box" id="sourceSelect" aria-label="Source"></select>
+  </section>
+
+  <section class="tabs" id="rangeTabs" aria-label="Date range">
+    <button class="tab active" type="button" data-range="all">All</button>
+    <button class="tab" type="button" data-range="today">Today</button>
+    <button class="tab" type="button" data-range="week">7 Days</button>
+    <button class="tab" type="button" data-range="month">30 Days</button>
+  </section>
+
+  <section class="summary">
+    <div class="stat"><div class="stat-label">Events</div><div class="stat-value" id="eventCount">0</div></div>
+    <div class="stat"><div class="stat-label">Countries</div><div class="stat-value" id="countryCount">0</div></div>
+    <div class="stat"><div class="stat-label">Categories</div><div class="stat-value" id="categoryCount">0</div></div>
+    <div class="stat"><div class="stat-label">Impact</div><div class="stat-value">★★★</div></div>
+  </section>
+
+  <section class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Country</th>
+          <th>Event</th>
+          <th>Impact</th>
+          <th>Actual</th>
+          <th>Previous</th>
+          <th>Consensus</th>
+          <th>Forecast</th>
+          <th>Source</th>
+        </tr>
+      </thead>
+      <tbody id="calendarRows"></tbody>
+    </table>
+    <div class="empty" id="emptyState" hidden>No matching events.</div>
+  </section>
+  <p class="note">Data comes from official public release calendars. Consensus and forecast are shown only when an official source provides them; third-party calendar data is not copied.</p>
+</main>
+
+<script>
+const state = { data:null, range:'all', query:'', country:'all', category:'all', source:'all' };
+const rowsEl = document.getElementById('calendarRows');
+const emptyEl = document.getElementById('emptyState');
+const countrySelect = document.getElementById('countrySelect');
+const categorySelect = document.getElementById('categorySelect');
+const sourceSelect = document.getElementById('sourceSelect');
+const searchInput = document.getElementById('searchInput');
+
+function setupNavSearch(){
+  const form = document.querySelector('.nav-search');
+  if(!form) return;
+  const input = form.querySelector('input[name="q"]');
+  const runSearch = async () => {
+    const query = (input.value || '').trim();
+    if(!query) return;
+    let target = { symbol: query.toUpperCase(), name: query };
+    try{
+      const response = await fetch('market_data/index.json', { cache:'no-store' });
+      if(response.ok){
+        const index = await response.json();
+        const groups = index.groups || {};
+        const rows = Object.keys(groups).length ? Object.values(groups).flatMap(group => group.stocks || []) : (index.stocks || []);
+        const normalized = query.toLowerCase();
+        const match = rows.find(row => String(row.symbol || '').toLowerCase() === normalized) || rows.find(row => String(row.name || '').toLowerCase().includes(normalized));
+        if(match) target = { symbol: match.symbol, name: match.name || match.symbol };
+      }
+    }catch(error){}
+    const next = new URLSearchParams();
+    next.set('symbol', target.symbol);
+    next.set('name', target.name);
+    window.location.href = 'stock_chart.html?' + next.toString();
+  };
+  form.addEventListener('submit', event => { event.preventDefault(); runSearch(); });
+}
+
+function esc(value){
+  return String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
+}
+function flag(country){ return country === 'United States' ? '🇺🇸' : '•'; }
+function dateObj(value){ return new Date(String(value).replace('+00:00','Z')); }
+function sameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
+function inRange(event){
+  if(state.range === 'all') return true;
+  const now = new Date();
+  const date = dateObj(event.date);
+  const days = state.range === 'today' ? 1 : state.range === 'week' ? 7 : 30;
+  const end = new Date(now.getTime() + days * 86400000);
+  return date >= new Date(now.getFullYear(), now.getMonth(), now.getDate()) && date <= end;
+}
+function displayTime(event){
+  const date = dateObj(event.date);
+  return {
+    time: date.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}),
+    date: date.toLocaleDateString([], {month:'short', day:'numeric', year:'numeric'})
+  };
+}
+function cell(value){ return value ? esc(value) : '<span style="color:#aaa">--</span>'; }
+function populateFilters(data){
+  const countries = ['all', ...data.countries];
+  const categories = ['all', ...data.categories];
+  const sources = ['all', ...Array.from(new Set(data.events.map(event => event.source).filter(Boolean))).sort()];
+  countrySelect.innerHTML = countries.map(item => `<option value="${esc(item)}">${item === 'all' ? 'All countries' : esc(item)}</option>`).join('');
+  categorySelect.innerHTML = categories.map(item => `<option value="${esc(item)}">${item === 'all' ? 'All categories' : esc(item)}</option>`).join('');
+  sourceSelect.innerHTML = sources.map(item => `<option value="${esc(item)}">${item === 'all' ? 'All sources' : esc(item)}</option>`).join('');
+}
+function filteredEvents(){
+  const q = state.query.toLowerCase();
+  return (state.data?.events || []).filter(event => {
+    if(!inRange(event)) return false;
+    if(state.country !== 'all' && event.country !== state.country) return false;
+    if(state.category !== 'all' && event.category !== state.category) return false;
+    if(state.source !== 'all' && event.source !== state.source) return false;
+    if(!q) return true;
+    return [event.event,event.reference,event.country,event.category,event.source].some(value => String(value || '').toLowerCase().includes(q));
+  });
+}
+function render(){
+  const events = filteredEvents();
+  const countries = new Set(events.map(event => event.country));
+  const categories = new Set(events.map(event => event.category));
+  document.getElementById('eventCount').textContent = events.length;
+  document.getElementById('countryCount').textContent = countries.size;
+  document.getElementById('categoryCount').textContent = categories.size;
+  rowsEl.innerHTML = events.map(event => {
+    const dt = displayTime(event);
+    const todayClass = sameDay(dateObj(event.date), new Date()) ? ' class="today"' : '';
+    return `<tr${todayClass}>
+      <td><div class="time">${esc(dt.time)}</div><div class="date">${esc(dt.date)}</div></td>
+      <td><span class="country"><span class="flag">${flag(event.country)}</span>${esc(event.country)}</span></td>
+      <td><div class="event">${esc(event.event)}</div><div class="ref">${esc(event.reference || event.category)}</div></td>
+      <td><span class="impact">★★★</span></td>
+      <td class="num">${cell(event.actual)}</td>
+      <td class="num">${cell(event.previous)}</td>
+      <td class="num">${cell(event.consensus)}</td>
+      <td class="num">${cell(event.forecast)}</td>
+      <td><a class="source-link" href="${esc(event.url)}" target="_blank" rel="noopener">${esc(event.source)}</a></td>
+    </tr>`;
+  }).join('');
+  emptyEl.hidden = events.length > 0;
+}
+function renderMeta(data){
+  const updated = new Date(data.updated).toLocaleString([], {dateStyle:'medium', timeStyle:'short'});
+  document.getElementById('meta').innerHTML = `
+    <span class="chip">Updated ${esc(updated)}</span>
+    <span class="chip">${esc(data.window.start)} to ${esc(data.window.end)}</span>
+    <span class="chip">Official sources</span>`;
+}
+async function init(){
+  setupNavSearch();
+  const response = await fetch('calendar_data.json', { cache:'no-store' });
+  state.data = await response.json();
+  populateFilters(state.data);
+  renderMeta(state.data);
+  render();
+}
+searchInput.addEventListener('input', event => { state.query = event.target.value; render(); });
+countrySelect.addEventListener('change', event => { state.country = event.target.value; render(); });
+categorySelect.addEventListener('change', event => { state.category = event.target.value; render(); });
+sourceSelect.addEventListener('change', event => { state.source = event.target.value; render(); });
+document.getElementById('rangeTabs').addEventListener('click', event => {
+  const button = event.target.closest('[data-range]');
+  if(!button) return;
+  state.range = button.dataset.range;
+  document.querySelectorAll('.tab').forEach(tab => tab.classList.toggle('active', tab === button));
+  render();
+});
+init().catch(() => {
+  rowsEl.innerHTML = '';
+  emptyEl.hidden = false;
+  emptyEl.textContent = 'Unable to load calendar data.';
+});
+</script>
+</body>
+</html>

@@ -51,6 +51,15 @@ Economy dashboard weekly from OECD SDMX and World Bank WDI APIs and updates:
 - `economic.html`
 - `economic_data.json`
 
+The workflow in `.github/workflows/update-calendar.yml` refreshes the high-impact
+economic Calendar daily from official public release calendars and updates:
+
+- `calendar_data.json`
+
+The Calendar intentionally uses official public sources rather than third-party
+calendar tables. Current sources include BEA's machine-readable release schedule
+and the Federal Reserve FOMC calendar.
+
 You can also run it manually in GitHub:
 
 `Actions` -> `Update COT data` -> `Run workflow`

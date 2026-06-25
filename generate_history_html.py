@@ -173,6 +173,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             <a class="nav-link active" href="../index.html">Non-Commercial</a>
             <a class="nav-link" href="../russell2000_top100.html">Market</a>
             <a class="nav-link" href="../economy.html">Economy</a>
+            <a class="nav-link" href="../calendar.html">Calendar</a>
         </div>
         <form class="nav-search" role="search" data-root="../">
             <span class="nav-search-mark" aria-hidden="true"></span>
@@ -818,6 +819,7 @@ html = f'''<!DOCTYPE html>
             <a class="nav-link active" href="index.html">Non-Commercial</a>
             <a class="nav-link" href="russell2000_top100.html">Market</a>
             <a class="nav-link" href="economy.html">Economy</a>
+            <a class="nav-link" href="calendar.html">Calendar</a>
         </div>
         <form class="nav-search" role="search" data-root="">
             <span class="nav-search-mark" aria-hidden="true"></span>
