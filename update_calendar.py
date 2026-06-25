@@ -9,16 +9,15 @@ import requests
 
 
 OUTPUT_FILE = Path("calendar_data.json")
-WINDOW_PAST_DAYS = 7
-WINDOW_FUTURE_DAYS = 190
+ECONOMIC_DATA_FILE = Path("economic_data.json")
+WINDOW_PAST_DAYS = 400
+WINDOW_FUTURE_DAYS = 180
 IMPORTANCE = 3
 EASTERN_OFFSET = "-04:00"
 
 BEA_JSON_URL = "https://apps.bea.gov/API/signup/release_dates.json"
 FED_FOMC_URL = "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
-NAGER_HOLIDAYS_URL = "https://date.nager.at/api/v3/PublicHolidays/{year}/{code}"
-ECB_TARGET_HOLIDAYS_URL = "https://www.ecb.europa.eu/paym/target/target_services/profuse/html/index.en.html"
-PUBLIC_HOLIDAY_RULES_URL = "https://date.nager.at/"
+ECONOMIC_DATA_URL = "economic_data.json"
 
 CATEGORY_ORDER = [
     "Interest Rate",
@@ -60,19 +59,6 @@ G20_COUNTRIES = [
 ]
 COUNTRY_CODE_BY_NAME = {country["name"]: country["code"] for country in G20_COUNTRIES}
 
-FIXED_PUBLIC_HOLIDAYS = {
-    "India": [
-        (1, 26, "Republic Day"),
-        (8, 15, "Independence Day"),
-        (10, 2, "Gandhi Jayanti"),
-        (12, 25, "Christmas Day"),
-    ],
-    "Saudi Arabia": [
-        (2, 22, "Founding Day"),
-        (9, 23, "Saudi National Day"),
-    ],
-}
-
 HIGH_IMPACT_KEYWORDS = {
     "employment situation": ("Labour Market", "Employment Situation"),
     "consumer price index": ("Prices & Inflation", "Consumer Price Index"),
@@ -87,6 +73,16 @@ HIGH_IMPACT_KEYWORDS = {
     "personal income and outlays": ("Consumer Sentiment", "Personal Income and Outlays"),
     "u.s. international trade in goods and services": ("Foreign Trade", "U.S. Trade Balance"),
     "fomc": ("Interest Rate", "FOMC Decision"),
+}
+
+ECONOMIC_EVENT_MAP = {
+    "interest_rate": ("Interest Rate", "Interest Rate Decision"),
+    "inflation": ("Prices & Inflation", "CPI Inflation Rate"),
+    "unemployment": ("Labour Market", "Unemployment Rate"),
+    "gdp_growth": ("GDP Growth", "GDP Growth Rate"),
+    "balance_trade": ("Foreign Trade", "Balance of Trade"),
+    "government_debt": ("Government", "Government Debt to GDP"),
+    "current_account": ("Foreign Trade", "Current Account to GDP"),
 }
 
 
@@ -176,15 +172,15 @@ def high_impact_meta(title):
     return None
 
 
-def event_id(source, date_value, title):
-    compact = re.sub(r"[^a-z0-9]+", "-", f"{source}-{date_value}-{title}".lower()).strip("-")
+def event_id(source, date_value, title, country=""):
+    compact = re.sub(r"[^a-z0-9]+", "-", f"{source}-{country}-{date_value}-{title}".lower()).strip("-")
     return compact[:140]
 
 
 def build_event(source, source_url, date_value, title, category, reference="", country="United States"):
     country_code = COUNTRY_CODE_BY_NAME.get(country, country[:2].upper())
     return {
-        "id": event_id(source, date_value, title),
+        "id": event_id(source, date_value, title, country),
         "date": date_value,
         "country": country,
         "countryCode": country_code,
@@ -205,99 +201,83 @@ def build_event(source, source_url, date_value, title, category, reference="", c
     }
 
 
-def easter_date(year):
-    a = year % 19
-    b = year // 100
-    c = year % 100
-    d = b // 4
-    e = b % 4
-    f = (b + 8) // 25
-    g = (b - f + 1) // 3
-    h = (19 * a + b - d - g + 15) % 30
-    i = c // 4
-    k = c % 4
-    l = (32 + 2 * e + 2 * i - h - k) % 7
-    m = (a + 11 * h + 22 * l) // 451
-    month = (h + l - 7 * m + 114) // 31
-    day = ((h + l - 7 * m + 114) % 31) + 1
-    return datetime(year, month, day, tzinfo=timezone.utc).date()
+def period_to_date(period):
+    period = normalize_space(period)
+    if re.fullmatch(r"\d{4}-Q[1-4]", period):
+        year = int(period[:4])
+        quarter = int(period[-1])
+        month = quarter * 3
+        return datetime(year, month, 28, tzinfo=timezone.utc)
+    if re.fullmatch(r"\d{4}-\d{2}", period):
+        year, month = map(int, period.split("-"))
+        return datetime(year, month, 28, tzinfo=timezone.utc)
+    if re.fullmatch(r"\d{4}", period):
+        return datetime(int(period), 12, 31, tzinfo=timezone.utc)
+    return None
 
 
-def target_holidays_for_year(year):
-    easter = easter_date(year)
-    days = [
-        (datetime(year, 1, 1, tzinfo=timezone.utc).date(), "New Year's Day"),
-        (easter - timedelta(days=2), "Good Friday"),
-        (easter + timedelta(days=1), "Easter Monday"),
-        (datetime(year, 5, 1, tzinfo=timezone.utc).date(), "Labour Day"),
-        (datetime(year, 12, 25, tzinfo=timezone.utc).date(), "Christmas Day"),
-        (datetime(year, 12, 26, tzinfo=timezone.utc).date(), "Boxing Day"),
-    ]
-    return [
-        build_event(
-            "European Central Bank",
-            ECB_TARGET_HOLIDAYS_URL,
-            f"{day.isoformat()}T00:00:00Z",
-            name,
-            "Holidays",
-            "TARGET closing day",
-            "European Union",
-        )
-        for day, name in days
-    ]
+def format_value(value, unit, decimals=2):
+    if value is None or value == "":
+        return ""
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return str(value)
+    suffix = unit or ""
+    if abs(number) >= 100:
+        text = f"{number:.1f}"
+    else:
+        text = f"{number:.{decimals}f}"
+    text = text.rstrip("0").rstrip(".")
+    return f"{text}{suffix}"
 
 
-def fetch_holiday_events():
+def previous_observation(indicator, country_code, latest_period):
+    values = (indicator.get("series") or indicator.get("values") or {}).get(country_code) or []
+    periods = indicator.get("dates") or indicator.get("years") or []
+    if latest_period not in periods:
+        return None
+    index = periods.index(latest_period)
+    for earlier in range(index - 1, -1, -1):
+        if earlier < len(values) and values[earlier] is not None:
+            return values[earlier]
+    return None
+
+
+def fetch_economic_snapshot_events():
+    data = json.loads(ECONOMIC_DATA_FILE.read_text(encoding="utf-8"))
+    countries_by_code = {country["code"]: country["name"] for country in G20_COUNTRIES}
     result = []
-    now = utc_now()
-    years = sorted({now.year, (now + timedelta(days=WINDOW_FUTURE_DAYS)).year})
-    for country in G20_COUNTRIES:
-        code = country["code"]
-        if code == "EU":
-            for year in years:
-                result.extend(target_holidays_for_year(year))
+    for indicator in data.get("indicators", []):
+        key = indicator.get("key")
+        if key not in ECONOMIC_EVENT_MAP:
             continue
-        for year in years:
-            url = NAGER_HOLIDAYS_URL.format(year=year, code=code)
-            try:
-                response = requests.get(url, headers={"User-Agent": "NetDataCalendar/1.0"}, timeout=45)
-                if not response.ok:
-                    continue
-                rows = response.json()
-            except (requests.RequestException, ValueError):
+        category, event_name = ECONOMIC_EVENT_MAP[key]
+        decimals = int(indicator.get("decimals", 2) or 2)
+        unit = indicator.get("unit", "")
+        for country_code, latest in (indicator.get("latest") or {}).items():
+            country = countries_by_code.get(country_code)
+            if not country or not latest or latest.get("value") is None:
                 continue
-            if not isinstance(rows, list):
+            period = latest.get("date") or latest.get("year")
+            date_value = period_to_date(period)
+            if not date_value:
                 continue
-            for row in rows:
-                date_value = normalize_space(row.get("date"))
-                name = normalize_space(row.get("name") or row.get("localName"))
-                if not date_value or not name:
-                    continue
-                result.append(
-                    build_event(
-                        "Nager.Date Public Holidays",
-                        url,
-                        f"{date_value}T00:00:00Z",
-                        name,
-                        "Holidays",
-                        row.get("localName") or "Public holiday",
-                        country["name"],
-                    )
-                )
-    for country_name, days in FIXED_PUBLIC_HOLIDAYS.items():
-        for year in years:
-            for month, day, name in days:
-                result.append(
-                    build_event(
-                        "Public holiday rules",
-                        PUBLIC_HOLIDAY_RULES_URL,
-                        f"{year:04d}-{month:02d}-{day:02d}T00:00:00Z",
-                        name,
-                        "Holidays",
-                        "Fixed-date public holiday",
-                        country_name,
-                    )
-                )
+            previous = previous_observation(indicator, country_code, period)
+            event = build_event(
+                "OECD / World Bank",
+                ECONOMIC_DATA_URL,
+                date_value.isoformat().replace("+00:00", "Z"),
+                event_name,
+                category,
+                f"Latest reported period: {period}",
+                country,
+            )
+            event["actual"] = format_value(latest.get("value"), unit, decimals)
+            event["previous"] = format_value(previous, unit, decimals)
+            event["lastUpdate"] = data.get("updated", "")
+            event["unit"] = unit
+            result.append(event)
     return result
 
 
@@ -388,22 +368,20 @@ def build_payload(events, generated_at):
     filtered = sorted(dedup.values(), key=lambda item: (item["date"], item["country"], item["event"]))
     return {
         "updated": generated_at.isoformat().replace("+00:00", "Z"),
-        "source": "Official public release calendars",
-        "sourceUrl": BEA_JSON_URL,
+        "source": "Official and public economic data",
+        "sourceUrl": ECONOMIC_DATA_URL,
         "importance": IMPORTANCE,
         "window": {"start": start.isoformat(), "end": end.isoformat()},
         "sources": [
+            {"name": "OECD / World Bank", "url": ECONOMIC_DATA_URL},
             {"name": "U.S. Bureau of Economic Analysis", "url": BEA_JSON_URL},
             {"name": "Federal Reserve", "url": FED_FOMC_URL},
-            {"name": "Nager.Date Public Holidays", "url": "https://date.nager.at/"},
-            {"name": "European Central Bank", "url": ECB_TARGET_HOLIDAYS_URL},
-            {"name": "Public holiday rules", "url": PUBLIC_HOLIDAY_RULES_URL},
         ],
         "countries": G20_COUNTRIES,
         "coverage": {
             "scope": "G20 countries",
             "activeSources": sorted({event["countryCode"] for event in filtered}),
-            "note": "Events are included only when an official or free public source is connected; no third-party calendar tables are copied.",
+            "note": "Economic rows use official or public indicator histories. Consensus and forecasts are left blank unless a connected source provides them; no third-party calendar tables are copied.",
         },
         "categories": CATEGORY_ORDER,
         "events": filtered,
@@ -425,7 +403,7 @@ def main():
     now = utc_now()
     events = []
     errors = []
-    for fetcher in (fetch_bea_events, fetch_fomc_events, fetch_holiday_events):
+    for fetcher in (fetch_economic_snapshot_events, fetch_bea_events, fetch_fomc_events):
         try:
             events.extend(fetcher())
         except Exception as error:
@@ -443,7 +421,7 @@ def main():
     if errors:
         payload["updateWarnings"] = errors
     write_payload(payload)
-    print(f"Updated {OUTPUT_FILE} with {len(payload['events'])} high-impact public events")
+    print(f"Updated {OUTPUT_FILE} with {len(payload['events'])} economic events")
 
 
 if __name__ == "__main__":
