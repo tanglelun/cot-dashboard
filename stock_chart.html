@@ -570,23 +570,22 @@ function drawPanelLabel(label, top){
   ctx.fillText(label, 8, top + 4);
 }
 
-function drawVolumePanel(candles, xFor, bodyWidth, top, bottom, maxVolume, height){
+function drawVolumePanel(candles, xFor, step, top, bottom, maxVolume, height){
   drawPanelLabel(maxVolume ? Math.round(maxVolume / 1000000) + 'M' : 'VOL', top);
   if(!maxVolume) return;
   const panelHeight = Math.max(1, bottom - top - 10);
+  const barWidth = Math.max(1, Math.min(7, step * 0.38));
   candles.forEach((c, i) => {
     if(!c.volume) return;
     const x = xFor(i);
     const up = c.close >= c.open;
     const vh = Math.max(1, (c.volume / maxVolume) * panelHeight);
-    ctx.globalAlpha = 0.5;
-    ctx.fillStyle = up ? '#00d109' : '#ff4d00';
-    ctx.fillRect(x - bodyWidth / 2, bottom - vh, bodyWidth, vh);
-    ctx.globalAlpha = 1;
+    ctx.fillStyle = up ? 'rgba(0, 209, 9, 0.34)' : 'rgba(255, 77, 0, 0.34)';
+    ctx.fillRect(x - barWidth / 2, bottom - vh, barWidth, vh);
   });
 }
 
-function drawMacdPanel(candles, xFor, bodyWidth, top, bottom, width){
+function drawMacdPanel(candles, xFor, step, top, bottom, width){
   drawPanelLabel('MACD', top);
   const values = candles.flatMap(c => [c.macd, c.macdSignal, c.macdHist]).filter(value => Number.isFinite(value));
   const maxAbs = Math.max(...values.map(value => Math.abs(value)), 0) || 1;
@@ -594,6 +593,7 @@ function drawMacdPanel(candles, xFor, bodyWidth, top, bottom, width){
   const panelBottom = bottom - 2;
   const zeroY = panelTop + (panelBottom - panelTop) / 2;
   const yForMacd = value => zeroY - (value / maxAbs) * ((panelBottom - panelTop) / 2);
+  const barWidth = Math.max(1, Math.min(7, step * 0.36));
   ctx.strokeStyle = '#26323b';
   ctx.lineWidth = 1;
   ctx.beginPath();
@@ -606,10 +606,8 @@ function drawMacdPanel(candles, xFor, bodyWidth, top, bottom, width){
     const y = yForMacd(c.macdHist);
     const barTop = Math.min(y, zeroY);
     const barHeight = Math.max(1, Math.abs(zeroY - y));
-    ctx.globalAlpha = 0.5;
-    ctx.fillStyle = c.macdHist >= 0 ? '#00d109' : '#ff4d00';
-    ctx.fillRect(x - bodyWidth / 2, barTop, bodyWidth, barHeight);
-    ctx.globalAlpha = 1;
+    ctx.fillStyle = c.macdHist >= 0 ? 'rgba(0, 209, 9, 0.34)' : 'rgba(255, 77, 0, 0.34)';
+    ctx.fillRect(x - barWidth / 2, barTop, barWidth, barHeight);
   });
   [
     { key:'macd', color:'#00bcd4', alpha:0.58 },
@@ -760,8 +758,8 @@ function draw(){
   });
 
   MOVING_AVERAGES.forEach(ma => drawMovingAverage(ma, candles, xFor, yFor));
-  if(state.showVolume) drawVolumePanel(candles, xFor, bodyWidth, volumeTop, volumeBottom, maxVolume, height);
-  if(state.showMacd) drawMacdPanel(candles, xFor, bodyWidth, macdTop, macdBottom, width);
+  if(state.showVolume) drawVolumePanel(candles, xFor, step, volumeTop, volumeBottom, maxVolume, height);
+  if(state.showMacd) drawMacdPanel(candles, xFor, step, macdTop, macdBottom, width);
 
   if(state.hover >= state.start && state.hover < state.end){
     const local = state.hover - state.start;
