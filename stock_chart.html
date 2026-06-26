@@ -64,9 +64,8 @@ body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-t
 .filter-fields{display:grid;gap:8px;padding:0 8px 8px;border-top:1px solid var(--tv-border-soft)}
 .field{display:flex;flex-direction:column;gap:4px}
 .field label{font-size:10px;color:var(--tv-muted);font-weight:800;text-transform:uppercase;letter-spacing:.2px}
-.select,.stock-search{width:100%;border:1px solid var(--tv-border);background:var(--tv-panel-2);color:var(--tv-text);border-radius:4px;padding:7px 8px;font-size:12px;outline:none}
-.select:focus,.stock-search:focus{border-color:var(--tv-blue)}
-.stock-nav{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.select{width:100%;border:1px solid var(--tv-border);background:var(--tv-panel-2);color:var(--tv-text);border-radius:4px;padding:7px 8px;font-size:12px;outline:none}
+.select:focus{border-color:var(--tv-blue)}
 .stock-list{min-height:0;overflow:auto;border:1px solid var(--tv-border);border-radius:4px;background:var(--tv-panel-2);scrollbar-color:#2a3440 #080c12;scrollbar-width:thin}
 .stock-list::-webkit-scrollbar{width:8px;height:8px}
 .stock-list::-webkit-scrollbar-track{background:#080c12}
@@ -217,11 +216,6 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
             </div>
           </div>
         </details>
-        <input class="stock-search" id="stockSearch" placeholder="Search symbol or name">
-        <div class="stock-nav">
-          <button class="btn" id="prevStock" type="button">Prev</button>
-          <button class="btn" id="nextStock" type="button">Next</button>
-        </div>
         <div class="stock-list" id="stockList"></div>
       </div>
     </aside>
@@ -236,8 +230,6 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
           <option value="marketCapNum">Market Cap</option>
           <option value="symbol">Symbol</option>
         </select>
-        <button class="btn" id="mobilePrevStock" type="button">Prev</button>
-        <button class="btn" id="mobileNextStock" type="button">Next</button>
       </div>
 
   <div class="topbar">
@@ -305,7 +297,6 @@ const sortSelect = document.getElementById('sortSelect');
 const mobileSortSelect = document.getElementById('mobileSortSelect');
 const metricSelect = document.getElementById('metricSelect');
 const directionSelect = document.getElementById('directionSelect');
-const stockSearch = document.getElementById('stockSearch');
 const filterSummary = document.getElementById('filterSummary');
 const MOVING_AVERAGES = [
   { key:'ma10', label:'MA10', period:10, color:'#6f7b82', alpha:0.55 },
@@ -1149,11 +1140,7 @@ function getSortValue(row){
 }
 
 function sortedRows(){
-  const query = stockSearch.value.trim().toLowerCase();
   let rows = getBaseRows();
-  if(query){
-    rows = rows.filter(row => rowSymbol(row).toLowerCase().includes(query) || rowName(row).toLowerCase().includes(query));
-  }
   rows = rows.slice().sort((a,b) => {
     const av = getSortValue(a);
     const bv = getSortValue(b);
@@ -1241,6 +1228,18 @@ function moveStock(offset){
   switchStock(rowSymbol(state.stockRows[next]));
 }
 
+function setupKeyboardStockSwitching(){
+  window.addEventListener('keydown', event => {
+    if(window.matchMedia('(max-width: 768px)').matches) return;
+    if(event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+    if(event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    const direction = ({ ArrowLeft:-1, ArrowUp:-1, ArrowRight:1, ArrowDown:1 })[event.key];
+    if(!direction) return;
+    event.preventDefault();
+    moveStock(direction);
+  });
+}
+
 function setupStockControls(){
   document.getElementById('panelToggle').addEventListener('click', () => {
     if(window.matchMedia('(max-width: 768px)').matches){
@@ -1261,11 +1260,7 @@ function setupStockControls(){
   mobileSortSelect.addEventListener('change', () => { state.sortKey = normalizeSortKey(mobileSortSelect.value); renderStockList(); updateUrl(currentRow()); });
   metricSelect.addEventListener('change', () => { state.metric = metricSelect.value; renderStockList(); updateUrl(currentRow()); });
   directionSelect.addEventListener('change', () => { state.sortDir = directionSelect.value === 'asc' ? 'asc' : 'desc'; renderStockList(); updateUrl(currentRow()); });
-  stockSearch.addEventListener('input', renderStockList);
-  document.getElementById('prevStock').addEventListener('click', () => moveStock(-1));
-  document.getElementById('nextStock').addEventListener('click', () => moveStock(1));
-  document.getElementById('mobilePrevStock').addEventListener('click', () => moveStock(-1));
-  document.getElementById('mobileNextStock').addEventListener('click', () => moveStock(1));
+  setupKeyboardStockSwitching();
 }
 
 async function loadMarketIndex(){
