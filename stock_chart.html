@@ -518,7 +518,7 @@ function drawMovingAverage(ma, candles, xFor, yFor){
 function drawGrid(left, top, right, priceBottom, bottom, width, height, minPrice, maxPrice, candles, xFor){
   const compact = width <= 520;
   const gridDivisions = 8;
-  ctx.strokeStyle = 'rgba(83, 118, 130, 0.36)';
+  ctx.strokeStyle = 'rgba(110, 116, 128, 0.28)';
   ctx.lineWidth = 1;
   ctx.fillStyle = '#d7d9df';
   ctx.font = (compact ? '10px' : '13px') + ' Inter, Arial, sans-serif';
@@ -535,7 +535,7 @@ function drawGrid(left, top, right, priceBottom, bottom, width, height, minPrice
     }
     ctx.fillText(fmt(price), width - 8, y);
   }
-  ctx.strokeStyle = 'rgba(83, 118, 130, 0.36)';
+  ctx.strokeStyle = 'rgba(110, 116, 128, 0.28)';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
   const ticks = Math.min(gridDivisions + 1, candles.length);
