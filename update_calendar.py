@@ -10,7 +10,7 @@ import requests
 
 OUTPUT_FILE = Path("calendar_data.json")
 ECONOMIC_DATA_FILE = Path("economic_data.json")
-WINDOW_PAST_DAYS = 7
+WINDOW_PAST_DAYS = 0
 WINDOW_FUTURE_DAYS = 370
 IMPORTANCE = 3
 EASTERN_OFFSET = "-04:00"

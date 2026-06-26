@@ -109,7 +109,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         }}
         * {{ box-sizing: border-box; }}
         html, body {{ height: 100%; }}
-        body {{ margin: 0; background: var(--tv-bg); color: var(--tv-text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }}
+        body {{ margin: 0; background: var(--tv-bg); color: var(--tv-text); font-family: Inter, Arial, sans-serif; }}
         .site-nav {{ min-height: 64px; display: flex; align-items: center; gap: 28px; padding: 0 24px; background: #000; border-bottom: 1px solid #1b1f2a; position: relative; z-index: 30; }}
         .site-brand {{ display: inline-flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; font-size: 25px; font-weight: 800; letter-spacing: 0; white-space: nowrap; }}
         .brand-mark {{ position: relative; width: 22px; height: 26px; display: inline-block; }}
@@ -299,7 +299,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
 
             if (!points.length) {{
                 ctx.fillStyle = '#787b86';
-                ctx.font = '14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+                ctx.font = '14px Inter, Arial, sans-serif';
                 ctx.fillText('No chart data available', 28, 38);
                 return;
             }}
@@ -345,7 +345,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             ctx.strokeStyle = '#2a2e39';
             ctx.lineWidth = 1;
             ctx.fillStyle = '#787b86';
-            ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+            ctx.font = '12px Inter, Arial, sans-serif';
             ctx.textAlign = 'right';
             ctx.textBaseline = 'middle';
             for (let tick = 0; tick <= 4; tick++) {{
@@ -509,7 +509,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             }});
 
             ctx.fillStyle = '#787b86';
-            ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+            ctx.font = '12px Inter, Arial, sans-serif';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'top';
             ctx.fillText(points[state.start].date, slider.left, slider.bottom + 8);
@@ -739,7 +739,7 @@ html = f'''<!DOCTYPE html>
             --tv-accent: #00d109;
         }}
         * {{ box-sizing: border-box; }}
-        body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--tv-bg); color: var(--tv-text); padding: 0; margin: 0; }}
+        body {{ font-family: Inter, Arial, sans-serif; background: var(--tv-bg); color: var(--tv-text); padding: 0; margin: 0; }}
         .site-nav {{ min-height: 64px; display: flex; align-items: center; gap: 28px; padding: 0 24px; background: #000; border-bottom: 1px solid #1b1f2a; position: relative; z-index: 30; }}
         .site-brand {{ display: inline-flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; font-size: 25px; font-weight: 800; letter-spacing: 0; white-space: nowrap; }}
         .brand-mark {{ position: relative; width: 22px; height: 26px; display: inline-block; }}
@@ -774,7 +774,7 @@ html = f'''<!DOCTYPE html>
         table {{ width: 100%; border-collapse: collapse; font-size: 11px; background: var(--tv-panel); }}
         th {{ background: var(--tv-panel-2); color: var(--tv-muted); padding: 8px 6px; text-align: center; font-weight: 800; position: sticky; top: 0; border-bottom: 1px solid var(--tv-border); }}
         th:first-child {{ text-align: left; position: sticky; left: 0; background: var(--tv-panel-2); z-index: 10; }}
-        td {{ padding: 6px 6px; text-align: center; border-bottom: 1px solid var(--tv-border-soft); font-family: 'SF Mono', Monaco, monospace; font-size: 10px; }}
+        td {{ padding: 6px 6px; text-align: center; border-bottom: 1px solid var(--tv-border-soft); font-family: Inter, Arial, sans-serif; font-size: 10px; }}
         td:first-child {{ text-align: left; position: sticky; left: 0; background: var(--tv-panel); font-weight: 700; z-index: 5; }}
         tr.category {{ background: rgba(255,255,255,.10) !important; }}
         tr.category th {{ background: rgba(255,255,255,.10); color: #fff; text-align: left; padding: 9px 10px; font-size: 13px; }}
