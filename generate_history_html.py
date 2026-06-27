@@ -40,6 +40,13 @@ code_map = {
 def get_commodity_data(comm):
     return df[df['Commodity'] == comm].sort_values(by='Date')
 
+chart_items = [
+    {"code": code_map[comm], "name": comm}
+    for comms in categories.values()
+    for comm in comms
+    if comm in code_map and not get_commodity_data(comm).empty
+]
+
 os.makedirs('charts', exist_ok=True)
 
 def get_futures_index_data(comm, chart_dates):
@@ -131,6 +138,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         .nav-search-mark::after {{ content: ""; position: absolute; width: 7px; height: 2px; background: #b8ff00; border-radius: 999px; right: -6px; bottom: -4px; transform: rotate(45deg); }}
         .page {{ max-width: 1600px; height: calc(100vh - 84px); margin: 10px auto 0; width: calc(100% - 20px); display: flex; flex-direction: column; gap: 8px; }}
         .toolbar {{ display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 58px; padding: 8px 12px; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; }}
+        .toolbar-main {{ min-width: 0; }}
         h1 {{ margin: 0; font-size: 20px; font-weight: 800; color: #fff; letter-spacing: 0; }}
         .meta {{ color: var(--tv-muted); font-size: 12px; white-space: nowrap; }}
         .legend-inline {{ display: flex; align-items: center; gap: 14px; margin-top: 4px; color: var(--tv-muted); font-size: 12px; }}
@@ -138,6 +146,9 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         .legend-swatch {{ width: 18px; height: 3px; border-radius: 999px; display: inline-block; }}
         .legend-bar {{ background: var(--tv-green); }}
         .legend-line {{ background: var(--tv-blue); }}
+        .commodity-actions {{ display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }}
+        .commodity-btn {{ height: 34px; min-width: 42px; border: 1px solid var(--tv-border); border-radius: 5px; background: var(--tv-panel-2); color: var(--tv-text); cursor: pointer; font-size: 18px; font-weight: 800; line-height: 1; }}
+        .commodity-btn:hover {{ background: var(--tv-hover); color: #fff; border-color: #35424f; }}
         .chart-wrap {{ position: relative; flex: 1; min-height: 420px; }}
         canvas {{ display: block; width: 100%; height: 100%; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; }}
         .tooltip {{ position: fixed; pointer-events: none; display: none; background: rgba(19, 23, 34, 0.96); color: var(--tv-text); padding: 8px 10px; border-radius: 4px; border: 1px solid var(--tv-border); font-size: 12px; line-height: 1.35; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35); }}
@@ -157,7 +168,8 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             .nav-link.active::after {{ display: none; }}
             .nav-search {{ order: 4; min-width: 0; margin-left: 0; padding-top: 8px; }}
             .nav-search input {{ height: 40px; font-size: 14px; }}
-            .toolbar {{ align-items: flex-start; flex-direction: column; gap: 4px; }}
+            .toolbar {{ align-items: stretch; flex-direction: column; gap: 8px; }}
+            .commodity-actions {{ justify-content: flex-end; }}
             .meta {{ white-space: normal; }}
             .page {{ height: calc(100dvh - 78px); }}
             .chart-wrap {{ min-height: 360px; }}
@@ -182,12 +194,16 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
     </nav>
     <main class="page">
         <div class="toolbar">
-            <div>
+            <div class="toolbar-main">
                 <h1>{safe_title}</h1>
                 <div class="legend-inline">
                     <span class="legend-item"><span class="legend-swatch legend-bar"></span>Non-Commercial Net</span>
                     <span class="legend-item"><span class="legend-swatch legend-line"></span>Futures Index (base=100)</span>
                 </div>
+            </div>
+            <div class="commodity-actions" aria-label="Switch commodity">
+                <button class="commodity-btn" id="prevCommodity" type="button" title="Previous commodity" aria-label="Previous commodity">‹</button>
+                <button class="commodity-btn" id="nextCommodity" type="button" title="Next commodity" aria-label="Next commodity">›</button>
             </div>
             <div id="meta" class="meta">Non-Commercial Net | Weekly bars | Last {len(chart_points)} reports</div>
         </div>
@@ -198,6 +214,8 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
     </main>
     <script>
         const points = {json.dumps(chart_points, ensure_ascii=True)};
+        const currentCode = {json.dumps(code)};
+        const chartItems = {json.dumps(chart_items, ensure_ascii=True)};
         const canvas = document.getElementById('chart');
         const tooltip = document.getElementById('tooltip');
         const meta = document.getElementById('meta');
@@ -255,6 +273,31 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
         const minWindow = Math.min(4, points.length);
         let layout = null;
+
+        function commodityIndex() {{
+            return chartItems.findIndex(item => item.code === currentCode);
+        }}
+
+        function switchCommodity(offset) {{
+            if (!chartItems.length) return;
+            const current = commodityIndex();
+            const base = current < 0 ? 0 : current;
+            const next = (base + offset + chartItems.length) % chartItems.length;
+            window.location.href = `${{chartItems[next].code}}.html`;
+        }}
+
+        function setupCommoditySwitching() {{
+            document.getElementById('prevCommodity').addEventListener('click', () => switchCommodity(-1));
+            document.getElementById('nextCommodity').addEventListener('click', () => switchCommodity(1));
+            window.addEventListener('keydown', event => {{
+                if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+                if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+                const direction = ({{ ArrowLeft:-1, ArrowUp:-1, ArrowRight:1, ArrowDown:1 }})[event.key];
+                if (!direction) return;
+                event.preventDefault();
+                switchCommodity(direction);
+            }});
+        }}
 
         function setRange(start, end) {{
             if (!points.length) return;
@@ -624,6 +667,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         canvas.addEventListener('pointerup', endDrag);
         canvas.addEventListener('pointercancel', endDrag);
         window.addEventListener('resize', resizeCanvas);
+        setupCommoditySwitching();
         setupNavSearch();
         updateMeta();
         resizeCanvas();
@@ -657,18 +701,18 @@ html_rows_net = ''
 html_rows_all = ''
 
 for category, comms in categories.items():
-    html_rows_net += f'<tr class="category"><th colspan="{len(dates)+2}">{category}</th></tr>\n'
-    html_rows_net += '<tr><th>Commodity</th><th>Chart</th>'
+    html_rows_net += f'<tr class="category"><th colspan="{len(dates)+1}">{category}</th></tr>\n'
+    html_rows_net += '<tr><th>Commodity</th>'
     for d in dates:
         html_rows_net += f'<th>{d[5:]}</th>'
     html_rows_net += '</tr>\n'
     
-    html_rows_all += f'<tr class="category"><th colspan="{len(dates)+3}">{category}</th></tr>\n'
-    html_rows_all += '<tr><th>Commodity</th><th>Chart</th>'
+    html_rows_all += f'<tr class="category"><th colspan="{len(dates)*3+1}">{category}</th></tr>\n'
+    html_rows_all += '<tr><th>Commodity</th>'
     for d in dates:
         html_rows_all += f'<th colspan="3">{d[5:]}</th>'
     html_rows_all += '</tr>\n'
-    html_rows_all += '<tr><th></th><th></th>'
+    html_rows_all += '<tr><th></th>'
     for d in dates:
         html_rows_all += '<th>L</th><th>S</th><th>N</th>'
     html_rows_all += '</tr>\n'
@@ -676,9 +720,11 @@ for category, comms in categories.items():
     for comm in comms:
         code = code_map.get(comm, '')
         data = get_commodity(comm)
+        chart_href = f'charts/{code}.html'
+        comm_link = f'<a href="{chart_href}">{comm} ({code})</a>'
         
-        html_rows_net += f'<tr><td class="comm">{comm} ({code})</td><td><a href="charts/{code}.html" target="_blank" class="chart-link">📊</a></td>'
-        html_rows_all += f'<tr><td class="comm">{comm} ({code})</td><td><a href="charts/{code}.html" target="_blank" class="chart-link">📊</a></td>'
+        html_rows_net += f'<tr><td class="comm">{comm_link}</td>'
+        html_rows_all += f'<tr><td class="comm">{comm_link}</td>'
         
         for d in dates:
             row = data[data['Date'] == d]
@@ -759,7 +805,8 @@ html = f'''<!DOCTYPE html>
         .nav-search input:focus {{ border-color: #b8ff00; box-shadow: 0 0 0 1px rgba(184,255,0,.24); }}
         .nav-search-mark {{ position: absolute; left: 16px; top: 50%; width: 13px; height: 13px; border: 2px solid #b8ff00; border-radius: 50%; transform: translateY(-50%); pointer-events: none; }}
         .nav-search-mark::after {{ content: ""; position: absolute; width: 7px; height: 2px; background: #b8ff00; border-radius: 999px; right: -6px; bottom: -4px; transform: rotate(45deg); }}
-        .container {{ width: 100%; max-width: none; margin: 0; overflow-x: auto; background: #000; border: none; border-radius: 0; padding: 10px clamp(10px,1vw,24px); }}
+        .container {{ width: 100%; max-width: none; margin: 0; background: #000; border: none; border-radius: 0; padding: 10px clamp(10px,1vw,24px); }}
+        .page-head {{ position: relative; z-index: 2; background: #000; }}
         h1 {{ color: #fff; margin: 0 0 4px 0; font-size: 22px; font-weight: 800; letter-spacing: 0; }}
         .subtitle {{ color: var(--tv-muted); margin-bottom: 12px; font-size: 13px; }}
         
@@ -771,7 +818,8 @@ html = f'''<!DOCTYPE html>
         .tab-content {{ display: none; }}
         .tab-content.active {{ display: block; }}
         
-        table {{ width: 100%; border-collapse: collapse; font-size: 11px; background: var(--tv-panel); }}
+        .table-scroll {{ width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }}
+        table {{ width: 100%; min-width: max-content; border-collapse: collapse; font-size: 11px; background: var(--tv-panel); }}
         th {{ background: var(--tv-panel-2); color: var(--tv-muted); padding: 8px 6px; text-align: center; font-weight: 800; position: sticky; top: 0; border-bottom: 1px solid var(--tv-border); }}
         th:first-child {{ text-align: left; position: sticky; left: 0; background: var(--tv-panel-2); z-index: 10; }}
         td {{ padding: 6px 6px; text-align: center; border-bottom: 1px solid var(--tv-border-soft); font-family: Inter, Arial, sans-serif; font-size: 10px; }}
@@ -779,13 +827,13 @@ html = f'''<!DOCTYPE html>
         tr.category {{ background: rgba(255,255,255,.10) !important; }}
         tr.category th {{ background: rgba(255,255,255,.10); color: #fff; text-align: left; padding: 9px 10px; font-size: 13px; }}
         .comm {{ color: var(--tv-blue); }}
+        .comm a {{ color: inherit; text-decoration: none; }}
+        .comm a:hover {{ color: #fff; text-decoration: underline; }}
         .pos {{ color: var(--tv-green); }}
         .neg {{ color: var(--tv-red); }}
         .neu {{ color: var(--tv-faint); }}
         tr:hover td {{ background: var(--tv-hover); }}
         tr:hover td:first-child {{ background: var(--tv-hover); }}
-        .chart-link {{ color: var(--tv-blue); text-decoration: none; font-size: 14px; }}
-        .chart-link:hover {{ color: #fff; }}
         .legend {{ margin-top: 12px; padding: 10px 12px; background: var(--tv-panel-2); border: 1px solid var(--tv-border); border-radius: 6px; color: var(--tv-muted); font-size: 12px; }}
         .legend span {{ margin-right: 18px; white-space: nowrap; }}
         .legend .pos {{ color: var(--tv-green); font-weight: bold; }}
@@ -827,40 +875,44 @@ html = f'''<!DOCTYPE html>
         </form>
     </nav>
     <div class="container">
-        <h1>CFTC Non-Commercial Positions</h1>
-        <p class="subtitle">Legacy COT Report | Full Available History | 📊 Click for Chart</p>
-        
-        <div class="tabs">
-            <button class="tab active" onclick="showTab('net')">Net</button>
-            <button class="tab" onclick="showTab('all')">All</button>
+        <div class="page-head">
+            <h1>CFTC Non-Commercial Positions</h1>
+            <p class="subtitle">Legacy COT Report | Full Available History</p>
+            
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('net')">Net</button>
+                <button class="tab" onclick="showTab('all')">All</button>
+            </div>
         </div>
         
         <div id="net" class="tab-content active">
+            <div class="table-scroll">
             <table>
                 <thead>
                     <tr>
                         <th>Commodity</th>
-                        <th>📊</th>
                         {''.join(f'<th>{d[5:]}</th>' for d in dates)}
                     </tr>
                 </thead>
                 <tbody>
 {html_rows_net}                </tbody>
             </table>
+            </div>
         </div>
         
         <div id="all" class="tab-content">
+            <div class="table-scroll">
             <table>
                 <thead>
                     <tr>
                         <th>Commodity</th>
-                        <th>📊</th>
                         {''.join(f'<th>L</th><th>S</th><th>N</th>' for d in dates)}
                     </tr>
                 </thead>
                 <tbody>
 {html_rows_all}                </tbody>
             </table>
+            </div>
         </div>
         
         <div class="legend">
@@ -921,7 +973,8 @@ html = f'''<!DOCTYPE html>
 </body>
 </html>'''
 
-with open('cot_noncommercial_history.html', 'w') as f:
-    f.write(html)
+for output_file in ('index.html', 'cot_noncommercial_history.html'):
+    with open(output_file, 'w', encoding='utf-8') as f:
+        f.write(html)
 
-print("✓ Generated: cot_noncommercial_history.html with Net and All tabs")
+print("✓ Generated: index.html and cot_noncommercial_history.html with Net and All tabs")

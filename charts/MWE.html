@@ -44,6 +44,7 @@
         .nav-search-mark::after { content: ""; position: absolute; width: 7px; height: 2px; background: #b8ff00; border-radius: 999px; right: -6px; bottom: -4px; transform: rotate(45deg); }
         .page { max-width: 1600px; height: calc(100vh - 84px); margin: 10px auto 0; width: calc(100% - 20px); display: flex; flex-direction: column; gap: 8px; }
         .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 58px; padding: 8px 12px; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; }
+        .toolbar-main { min-width: 0; }
         h1 { margin: 0; font-size: 20px; font-weight: 800; color: #fff; letter-spacing: 0; }
         .meta { color: var(--tv-muted); font-size: 12px; white-space: nowrap; }
         .legend-inline { display: flex; align-items: center; gap: 14px; margin-top: 4px; color: var(--tv-muted); font-size: 12px; }
@@ -51,6 +52,9 @@
         .legend-swatch { width: 18px; height: 3px; border-radius: 999px; display: inline-block; }
         .legend-bar { background: var(--tv-green); }
         .legend-line { background: var(--tv-blue); }
+        .commodity-actions { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+        .commodity-btn { height: 34px; min-width: 42px; border: 1px solid var(--tv-border); border-radius: 5px; background: var(--tv-panel-2); color: var(--tv-text); cursor: pointer; font-size: 18px; font-weight: 800; line-height: 1; }
+        .commodity-btn:hover { background: var(--tv-hover); color: #fff; border-color: #35424f; }
         .chart-wrap { position: relative; flex: 1; min-height: 420px; }
         canvas { display: block; width: 100%; height: 100%; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; }
         .tooltip { position: fixed; pointer-events: none; display: none; background: rgba(19, 23, 34, 0.96); color: var(--tv-text); padding: 8px 10px; border-radius: 4px; border: 1px solid var(--tv-border); font-size: 12px; line-height: 1.35; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35); }
@@ -70,7 +74,8 @@
             .nav-link.active::after { display: none; }
             .nav-search { order: 4; min-width: 0; margin-left: 0; padding-top: 8px; }
             .nav-search input { height: 40px; font-size: 14px; }
-            .toolbar { align-items: flex-start; flex-direction: column; gap: 4px; }
+            .toolbar { align-items: stretch; flex-direction: column; gap: 8px; }
+            .commodity-actions { justify-content: flex-end; }
             .meta { white-space: normal; }
             .page { height: calc(100dvh - 78px); }
             .chart-wrap { min-height: 360px; }
@@ -95,12 +100,16 @@
     </nav>
     <main class="page">
         <div class="toolbar">
-            <div>
+            <div class="toolbar-main">
                 <h1>Spring Wheat Mpls (MWE)</h1>
                 <div class="legend-inline">
                     <span class="legend-item"><span class="legend-swatch legend-bar"></span>Non-Commercial Net</span>
                     <span class="legend-item"><span class="legend-swatch legend-line"></span>Futures Index (base=100)</span>
                 </div>
+            </div>
+            <div class="commodity-actions" aria-label="Switch commodity">
+                <button class="commodity-btn" id="prevCommodity" type="button" title="Previous commodity" aria-label="Previous commodity">‹</button>
+                <button class="commodity-btn" id="nextCommodity" type="button" title="Next commodity" aria-label="Next commodity">›</button>
             </div>
             <div id="meta" class="meta">Non-Commercial Net | Weekly bars | Last 71 reports</div>
         </div>
@@ -111,6 +120,8 @@
     </main>
     <script>
         const points = [{"date": "2024-11-26", "value": -25313, "index": null}, {"date": "2024-12-03", "value": -27397, "index": null}, {"date": "2024-12-10", "value": -25861, "index": null}, {"date": "2024-12-17", "value": -23147, "index": null}, {"date": "2024-12-24", "value": -25653, "index": null}, {"date": "2024-12-31", "value": -25185, "index": null}, {"date": "2025-01-07", "value": -28093, "index": null}, {"date": "2025-01-14", "value": -27101, "index": null}, {"date": "2025-01-21", "value": -23428, "index": null}, {"date": "2025-01-28", "value": -18776, "index": null}, {"date": "2025-02-04", "value": -12038, "index": null}, {"date": "2025-02-11", "value": -9093, "index": null}, {"date": "2025-02-18", "value": -5153, "index": null}, {"date": "2025-02-25", "value": -3339, "index": null}, {"date": "2025-03-04", "value": -16285, "index": null}, {"date": "2025-03-11", "value": -23119, "index": null}, {"date": "2025-03-18", "value": -17772, "index": null}, {"date": "2025-03-25", "value": -19387, "index": null}, {"date": "2025-04-01", "value": -24364, "index": null}, {"date": "2025-04-08", "value": -25115, "index": null}, {"date": "2025-04-15", "value": 0, "index": null}, {"date": "2025-04-22", "value": 0, "index": null}, {"date": "2025-04-29", "value": 0, "index": null}, {"date": "2025-05-06", "value": 0, "index": null}, {"date": "2025-05-13", "value": 0, "index": null}, {"date": "2025-05-20", "value": 0, "index": null}, {"date": "2025-05-27", "value": 0, "index": null}, {"date": "2025-06-03", "value": 0, "index": null}, {"date": "2025-06-10", "value": 0, "index": null}, {"date": "2025-06-17", "value": 0, "index": null}, {"date": "2025-06-24", "value": 0, "index": null}, {"date": "2025-07-01", "value": 0, "index": null}, {"date": "2025-07-08", "value": 0, "index": null}, {"date": "2025-07-15", "value": 0, "index": null}, {"date": "2025-07-22", "value": 0, "index": null}, {"date": "2025-07-29", "value": 0, "index": null}, {"date": "2025-08-05", "value": 0, "index": null}, {"date": "2025-08-12", "value": 0, "index": null}, {"date": "2025-08-19", "value": 0, "index": null}, {"date": "2025-08-26", "value": 0, "index": null}, {"date": "2025-09-02", "value": 0, "index": null}, {"date": "2025-09-09", "value": 0, "index": null}, {"date": "2025-09-16", "value": 0, "index": null}, {"date": "2025-09-23", "value": 0, "index": null}, {"date": "2025-09-30", "value": 0, "index": null}, {"date": "2025-10-07", "value": 0, "index": null}, {"date": "2025-10-14", "value": 0, "index": null}, {"date": "2025-10-21", "value": 0, "index": null}, {"date": "2025-10-28", "value": 0, "index": null}, {"date": "2025-11-04", "value": 0, "index": null}, {"date": "2025-11-10", "value": 0, "index": null}, {"date": "2025-11-18", "value": 0, "index": null}, {"date": "2025-11-25", "value": 0, "index": null}, {"date": "2025-12-02", "value": 0, "index": null}, {"date": "2025-12-09", "value": 0, "index": null}, {"date": "2025-12-16", "value": 0, "index": null}, {"date": "2025-12-23", "value": 0, "index": null}, {"date": "2025-12-30", "value": 0, "index": null}, {"date": "2026-01-06", "value": 0, "index": null}, {"date": "2026-01-13", "value": 0, "index": null}, {"date": "2026-01-20", "value": 0, "index": null}, {"date": "2026-01-27", "value": 0, "index": null}, {"date": "2026-02-03", "value": 0, "index": null}, {"date": "2026-02-10", "value": 0, "index": null}, {"date": "2026-02-17", "value": 0, "index": null}, {"date": "2026-02-24", "value": 0, "index": null}, {"date": "2026-03-03", "value": 0, "index": null}, {"date": "2026-03-10", "value": 0, "index": null}, {"date": "2026-03-17", "value": 0, "index": null}, {"date": "2026-03-24", "value": 0, "index": null}, {"date": "2026-03-31", "value": 0, "index": null}];
+        const currentCode = "MWE";
+        const chartItems = [{"code": "ZC", "name": "Corn"}, {"code": "ZS", "name": "Soybeans"}, {"code": "ZM", "name": "Soybean Meal"}, {"code": "ZL", "name": "Soybean Oil"}, {"code": "ZW", "name": "Wheat"}, {"code": "KE", "name": "Hard Red Winter Wheat"}, {"code": "MWE", "name": "Spring Wheat Mpls"}, {"code": "ZR", "name": "Rough Rice"}, {"code": "RS", "name": "Canola"}, {"code": "ZO", "name": "Oats"}, {"code": "CL", "name": "Crude Oil"}, {"code": "NG", "name": "Natural Gas"}, {"code": "GC", "name": "Gold"}, {"code": "SI", "name": "Silver"}, {"code": "HG", "name": "Copper"}, {"code": "PL", "name": "Platinum"}, {"code": "PA", "name": "Palladium"}, {"code": "KC", "name": "Coffee"}, {"code": "SB", "name": "Sugar"}, {"code": "CC", "name": "Cocoa"}, {"code": "CT", "name": "Cotton"}, {"code": "OJ", "name": "Orange Juice"}, {"code": "LE", "name": "Live Cattle"}, {"code": "HE", "name": "Lean Hogs"}, {"code": "GF", "name": "Feeder Cattle"}, {"code": "EC", "name": "Euro FX"}, {"code": "BP", "name": "British Pound"}, {"code": "JY", "name": "Japanese Yen"}, {"code": "SF", "name": "Swiss Franc"}, {"code": "AD", "name": "Australian Dollar"}, {"code": "CD", "name": "Canadian Dollar"}, {"code": "MP", "name": "Mexican Peso"}, {"code": "DX", "name": "U.S. Dollar Index"}, {"code": "ES", "name": "S&P 500"}, {"code": "MES", "name": "S&P 500 Micro"}, {"code": "NQ", "name": "Nasdaq 100"}, {"code": "YM", "name": "Dow Jones"}, {"code": "RTY", "name": "Russell 2000"}, {"code": "TY", "name": "10-Year T-Note"}, {"code": "FV", "name": "5-Year T-Note"}, {"code": "TU", "name": "2-Year T-Note"}, {"code": "US", "name": "30-Year T-Bond"}];
         const canvas = document.getElementById('chart');
         const tooltip = document.getElementById('tooltip');
         const meta = document.getElementById('meta');
@@ -168,6 +179,31 @@
         const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
         const minWindow = Math.min(4, points.length);
         let layout = null;
+
+        function commodityIndex() {
+            return chartItems.findIndex(item => item.code === currentCode);
+        }
+
+        function switchCommodity(offset) {
+            if (!chartItems.length) return;
+            const current = commodityIndex();
+            const base = current < 0 ? 0 : current;
+            const next = (base + offset + chartItems.length) % chartItems.length;
+            window.location.href = `${chartItems[next].code}.html`;
+        }
+
+        function setupCommoditySwitching() {
+            document.getElementById('prevCommodity').addEventListener('click', () => switchCommodity(-1));
+            document.getElementById('nextCommodity').addEventListener('click', () => switchCommodity(1));
+            window.addEventListener('keydown', event => {
+                if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+                if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+                const direction = ({ ArrowLeft:-1, ArrowUp:-1, ArrowRight:1, ArrowDown:1 })[event.key];
+                if (!direction) return;
+                event.preventDefault();
+                switchCommodity(direction);
+            });
+        }
 
         function setRange(start, end) {
             if (!points.length) return;
@@ -537,6 +573,7 @@
         canvas.addEventListener('pointerup', endDrag);
         canvas.addEventListener('pointercancel', endDrag);
         window.addEventListener('resize', resizeCanvas);
+        setupCommoditySwitching();
         setupNavSearch();
         updateMeta();
         resizeCanvas();
