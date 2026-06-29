@@ -43,6 +43,25 @@ body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-t
 .nav-search-mark{position:absolute;left:16px;top:50%;width:13px;height:13px;border:2px solid #b8ff00;border-radius:50%;transform:translateY(-50%);pointer-events:none}
 .nav-search-mark::after{content:"";position:absolute;width:7px;height:2px;background:#b8ff00;border-radius:999px;right:-6px;bottom:-4px;transform:rotate(45deg)}
 .container{width:100%;max-width:none;margin:0;padding:10px clamp(10px,1vw,24px)}
+.market-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.market-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;color:var(--tv-muted)}
+.market-select-wrap{position:relative;display:inline-flex;align-items:center}
+.market-select{appearance:none;-webkit-appearance:none;height:34px;min-width:172px;padding:0 34px 0 11px;border:1px solid var(--tv-border);border-radius:5px;background:var(--tv-panel-2);color:var(--tv-text);font-size:13px;font-weight:800;outline:none;cursor:pointer}
+.market-select:hover{background:var(--tv-hover);color:#fff}
+.market-select:focus{border-color:var(--tv-accent);box-shadow:0 0 0 1px rgba(0,209,9,.18)}
+.market-caret{position:absolute;right:11px;width:8px;height:8px;border-right:2px solid var(--tv-muted);border-bottom:2px solid var(--tv-muted);transform:rotate(45deg) translateY(-2px);pointer-events:none}
+.market-view.hidden{display:none}
+.commodity-meta{font-size:11px;color:var(--tv-muted);margin:0 0 8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.commodity-meta strong{color:var(--tv-accent)}
+.commodity-table-wrap{overflow:auto;border:1px solid var(--tv-border);background:#000}
+.commodity-table{border:0;border-radius:0;min-width:940px}
+.commodity-table .group-row td{background:rgba(255,255,255,.10);color:#fff;font-size:13px;font-weight:800;padding:9px 8px;border-top:1px solid var(--tv-border)}
+.commodity-name{font-weight:800;color:var(--tv-text)}
+.commodity-symbol{color:var(--tv-muted);font-size:10px;font-weight:800;margin-left:5px}
+.commodity-unit{color:var(--tv-faint);font-size:10px}
+.commodity-price{font-weight:800;color:var(--tv-text);text-align:right;font-family:Inter,Arial,sans-serif}
+.commodity-date{color:var(--tv-muted);font-size:10px;white-space:nowrap}
+.commodity-empty{border:1px solid var(--tv-border);background:#000;color:var(--tv-muted);padding:18px;font-size:13px}
 .tabs{display:flex;gap:4px;margin-bottom:8px;border:1px solid var(--tv-border);background:#000;border-radius:0;padding:5px;overflow:auto}
 .tab{height:30px;padding:0 12px;font-size:13px;font-weight:700;color:var(--tv-muted);cursor:pointer;border:none;background:transparent;border-radius:4px;position:relative;transition:all .15s;white-space:nowrap}
 .tab:hover{color:var(--tv-text);background:var(--tv-hover)}
@@ -109,6 +128,9 @@ tr:hover td{background:var(--tv-hover)}
   .nav-search{order:4;min-width:0;margin-left:0;padding-top:8px}
   .nav-search input{height:40px;font-size:14px}
   .container{padding:10px}
+  .market-header{align-items:stretch}
+  .market-select-wrap{flex:1}
+  .market-select{width:100%}
   td,th{padding:4px 3px;font-size:10px}
   .cn{max-width:80px}
   .cn,.tk,.g{font-size:10px}
@@ -137,15 +159,38 @@ tr:hover td{background:var(--tv-hover)}
 </nav>
 <div class="container">
 
-<div class="tabs" id="tabHeaders">
-  <button class="tab active" data-tab="r2000" onclick="switchTab('r2000')">Russell 2000 <span class="badge">100</span></button>
-  <button class="tab" data-tab="sp500" onclick="switchTab('sp500')">S&P 500 <span class="badge">100</span></button>
-  <button class="tab" data-tab="nasdaq" onclick="switchTab('nasdaq')">Nasdaq 100 <span class="badge">100</span></button>
+<div class="market-header">
+  <span class="market-label">Market</span>
+  <span class="market-select-wrap">
+    <select class="market-select" id="marketTypeSelect" aria-label="Market type">
+      <option value="stock" selected>Stock</option>
+      <option value="commodities">Commodities</option>
+      <option value="indexes">Indexes</option>
+      <option value="shares">Shares</option>
+      <option value="currencies">Currencies</option>
+      <option value="crypto">Crypto</option>
+      <option value="bonds">Bonds</option>
+    </select>
+    <span class="market-caret" aria-hidden="true"></span>
+  </span>
 </div>
 
-<div class="tab-pane active" id="pane-r2000"><div id="app-r2000"></div></div>
-<div class="tab-pane" id="pane-sp500"><div id="app-sp500"></div></div>
-<div class="tab-pane" id="pane-nasdaq"><div id="app-nasdaq"></div></div>
+<div class="market-view" id="stockMarketView">
+  <div class="tabs" id="tabHeaders">
+    <button class="tab active" data-tab="r2000" onclick="switchTab('r2000')">Russell 2000 <span class="badge">100</span></button>
+    <button class="tab" data-tab="sp500" onclick="switchTab('sp500')">S&P 500 <span class="badge">100</span></button>
+    <button class="tab" data-tab="nasdaq" onclick="switchTab('nasdaq')">Nasdaq 100 <span class="badge">100</span></button>
+  </div>
+
+  <div class="tab-pane active" id="pane-r2000"><div id="app-r2000"></div></div>
+  <div class="tab-pane" id="pane-sp500"><div id="app-sp500"></div></div>
+  <div class="tab-pane" id="pane-nasdaq"><div id="app-nasdaq"></div></div>
+</div>
+
+<div class="market-view hidden" id="commoditiesMarketView">
+  <div class="commodity-meta" id="commoditiesMeta">Loading commodities...</div>
+  <div id="commoditiesTable"></div>
+</div>
 
 <div class="ft"><p>数据来源: Finviz · 2026-06-26更新 · 仅供参考，不构成投资建议</p></div>
 </div>
@@ -618,7 +663,78 @@ function setupNavSearch(){
     runSearch();
   });
 }
+function fmtCommodityNumber(value, digits){
+  if(value===null||value===undefined||Number.isNaN(Number(value)))return '---';
+  return Number(value).toLocaleString(undefined,{minimumFractionDigits:digits,maximumFractionDigits:digits});
+}
+function fmtCommodityPct(value){
+  if(value===null||value===undefined||Number.isNaN(Number(value)))return '<span class="g">---</span>';
+  var number=Number(value), sign=number>0?'+':'', cls=number>=0?'p':'n';
+  return '<span class="g '+cls+'">'+sign+number.toFixed(2)+'%</span>';
+}
+function renderCommodities(payload){
+  var rows=(payload&&payload.commodities)||[];
+  var meta=document.getElementById('commoditiesMeta');
+  var mount=document.getElementById('commoditiesTable');
+  if(!rows.length){
+    meta.textContent='Commodities';
+    mount.innerHTML='<div class="commodity-empty">No commodity data available.</div>';
+    return;
+  }
+  meta.innerHTML='<span>共 <strong>'+rows.length+'</strong> 个商品</span><span>更新于 '+(payload.updated||'---')+'</span><span>Source: Yahoo Finance futures</span>';
+  var groups=['Energy','Metals','Agriculture','Livestock'];
+  var grouped=groups.map(function(group){
+    return {name:group,rows:rows.filter(function(row){return row.category===group;})};
+  }).filter(function(group){return group.rows.length;});
+  var html='<div class="commodity-table-wrap"><table class="commodity-table"><thead><tr>'+
+    '<th>Commodity</th><th class="pr">Price</th><th class="gc">Day</th><th class="gc">Week</th>'+
+    '<th class="gc">Month</th><th class="gc">YTD</th><th class="gc">1Y</th><th class="pr">Previous</th><th>Unit</th><th>Date</th>'+
+    '</tr></thead><tbody>';
+  grouped.forEach(function(group){
+    html+='<tr class="group-row"><td colspan="10">'+group.name+'</td></tr>';
+    group.rows.forEach(function(row){
+      html+='<tr>'+
+        '<td><span class="commodity-name">'+row.name+'</span><span class="commodity-symbol">'+row.symbol+'</span></td>'+
+        '<td class="commodity-price">'+fmtCommodityNumber(row.price,4)+'</td>'+
+        '<td class="gc">'+fmtCommodityPct(row.day)+'</td>'+
+        '<td class="gc">'+fmtCommodityPct(row.week)+'</td>'+
+        '<td class="gc">'+fmtCommodityPct(row.month)+'</td>'+
+        '<td class="gc">'+fmtCommodityPct(row.ytd)+'</td>'+
+        '<td class="gc">'+fmtCommodityPct(row.year)+'</td>'+
+        '<td class="commodity-price">'+fmtCommodityNumber(row.previous,4)+'</td>'+
+        '<td><span class="commodity-unit">'+(row.unit||'')+'</span></td>'+
+        '<td class="commodity-date">'+(row.date||'---')+'</td>'+
+        '</tr>';
+    });
+  });
+  html+='</tbody></table></div>';
+  mount.innerHTML=html;
+}
+function setupMarketType(){
+  var select=document.getElementById('marketTypeSelect');
+  var stock=document.getElementById('stockMarketView');
+  var commodities=document.getElementById('commoditiesMarketView');
+  var loaded=false;
+  function show(value){
+    var isCommodities=value==='commodities';
+    stock.classList.toggle('hidden',isCommodities);
+    commodities.classList.toggle('hidden',!isCommodities);
+    if(isCommodities&&!loaded){
+      loaded=true;
+      fetch('commodities_data.json',{cache:'no-store'})
+        .then(function(response){if(!response.ok)throw new Error('No commodities data');return response.json();})
+        .then(renderCommodities)
+        .catch(function(){
+          document.getElementById('commoditiesMeta').textContent='Commodities';
+          document.getElementById('commoditiesTable').innerHTML='<div class="commodity-empty">Commodity data has not been generated yet. Run python update_commodities.py.</div>';
+        });
+    }
+  }
+  select.addEventListener('change',function(){show(select.value);});
+  show(select.value);
+}
 setupNavSearch();
+setupMarketType();
 createApp('app-r2000', r2kRaw, 'Russell 2000', 'r2kRaw');
 createApp('app-sp500', spRaw, 'S&P 500', 'spRaw');
 createApp('app-nasdaq', ndqRaw, 'Nasdaq 100', 'ndqRaw');

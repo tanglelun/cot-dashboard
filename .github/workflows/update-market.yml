@@ -30,8 +30,11 @@ jobs:
       - name: Update Market page
         run: python update_market.py
 
+      - name: Update Commodities data
+        run: python update_commodities.py
+
       - name: Commit updated Market page
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Update Market data"
-          file_pattern: "russell2000_top100.html market_data/*.json"
+          file_pattern: "russell2000_top100.html market_data/*.json commodities_data.json"
