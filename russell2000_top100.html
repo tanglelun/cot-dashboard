@@ -36,6 +36,13 @@ body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-t
 .nav-link:hover{color:#b8ff00}
 .nav-link.active{color:#b8ff00}
 .nav-link.active::after{display:none}
+.nav-market{position:relative;display:flex;align-items:center}
+.market-menu{position:absolute;left:50%;top:calc(100% + 14px);min-width:190px;padding:8px;border:1px solid #26313d;border-radius:8px;background:rgba(9,13,18,.96);box-shadow:0 18px 48px rgba(0,0,0,.48);transform:translateX(-50%) translateY(6px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .14s ease,transform .14s ease,visibility .14s ease;z-index:50}
+.market-menu::before{content:"";position:absolute;left:0;right:0;top:-15px;height:15px}
+.nav-market:hover .market-menu,.nav-market:focus-within .market-menu{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.market-menu-link{display:flex;align-items:center;justify-content:space-between;gap:16px;height:34px;padding:0 10px;border-radius:5px;color:var(--tv-text);font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap}
+.market-menu-link:hover,.market-menu-link.active{background:rgba(0,209,9,.16);color:#fff}
+.market-menu-link.active::after{content:"";width:7px;height:12px;border-right:2px solid var(--tv-accent);border-bottom:2px solid var(--tv-accent);transform:rotate(45deg) translateY(-1px)}
 .nav-search{position:relative;flex:0 1 360px;min-width:220px;margin-left:auto}
 .nav-search input{width:100%;height:42px;border:1px solid #2a2e39;border-radius:999px;background:#090c12;color:#fff;padding:0 16px 0 42px;font-size:15px;font-weight:650;outline:none}
 .nav-search input::placeholder{color:#787b86}
@@ -43,7 +50,7 @@ body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-t
 .nav-search-mark{position:absolute;left:16px;top:50%;width:13px;height:13px;border:2px solid #b8ff00;border-radius:50%;transform:translateY(-50%);pointer-events:none}
 .nav-search-mark::after{content:"";position:absolute;width:7px;height:2px;background:#b8ff00;border-radius:999px;right:-6px;bottom:-4px;transform:rotate(45deg)}
 .container{width:100%;max-width:none;margin:0;padding:10px clamp(10px,1vw,24px)}
-.market-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.market-header{display:none}
 .market-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;color:var(--tv-muted)}
 .market-select-wrap{position:relative;display:inline-flex;align-items:center}
 .market-select{appearance:none;-webkit-appearance:none;height:34px;min-width:172px;padding:0 34px 0 11px;border:1px solid var(--tv-border);border-radius:5px;background:var(--tv-panel-2);color:var(--tv-text);font-size:13px;font-weight:800;outline:none;cursor:pointer}
@@ -132,6 +139,10 @@ tr:hover td{background:var(--tv-hover)}
   .nav-links{order:3;flex-direction:column;align-items:stretch;gap:4px;padding-top:8px}
   .nav-link{height:40px;display:flex;align-items:center;padding:0 4px;font-size:14px}
   .nav-link.active::after{display:none}
+  .nav-market{display:block}
+  .market-menu{position:static;opacity:1;visibility:visible;pointer-events:auto;transform:none;box-shadow:none;background:transparent;border:none;padding:0 0 0 12px;margin-top:0}
+  .market-menu::before{display:none}
+  .market-menu-link{height:34px;font-size:13px}
   .nav-search{order:4;min-width:0;margin-left:0;padding-top:8px}
   .nav-search input{height:40px;font-size:14px}
   .container{padding:10px}
@@ -155,7 +166,18 @@ tr:hover td{background:var(--tv-hover)}
   <label class="nav-toggle" for="navMenu" aria-label="Toggle navigation"><span></span><span></span><span></span></label>
   <div class="nav-links">
     <a class="nav-link" href="index.html">Non-Commercial</a>
-    <a class="nav-link active" href="russell2000_top100.html">Market</a>
+    <div class="nav-market">
+      <a class="nav-link active" href="russell2000_top100.html">Market</a>
+      <div class="market-menu" aria-label="Market sections">
+        <a class="market-menu-link" data-market-menu="stock" href="russell2000_top100.html?market=stock">Stock</a>
+        <a class="market-menu-link" data-market-menu="commodities" href="russell2000_top100.html?market=commodities">Commodities</a>
+        <a class="market-menu-link" data-market-menu="indexes" href="russell2000_top100.html?market=indexes">Indexes</a>
+        <a class="market-menu-link" data-market-menu="shares" href="russell2000_top100.html?market=shares">Shares</a>
+        <a class="market-menu-link" data-market-menu="currencies" href="russell2000_top100.html?market=currencies">Currencies</a>
+        <a class="market-menu-link" data-market-menu="crypto" href="russell2000_top100.html?market=crypto">Crypto</a>
+        <a class="market-menu-link" data-market-menu="bonds" href="russell2000_top100.html?market=bonds">Bonds</a>
+      </div>
+    </div>
     <a class="nav-link" href="economy.html">Economy</a>
     <a class="nav-link" href="calendar.html">Calendar</a>
   </div>
@@ -699,6 +721,16 @@ function commodityChartUrl(row){
   params.set('dir','desc');
   return 'commodity_chart.html?'+params.toString();
 }
+function indexChartUrl(row){
+  var params=new URLSearchParams();
+  params.set('symbol',row.symbol);
+  params.set('name',row.name||row.symbol);
+  params.set('universe',row.category||'all');
+  params.set('metric','d');
+  params.set('sort','gain');
+  params.set('dir','desc');
+  return 'index_chart.html?'+params.toString();
+}
 function renderCommodities(payload){
   var rows=(payload&&payload.commodities)||[];
   var meta=document.getElementById('commoditiesMeta');
@@ -759,8 +791,9 @@ function renderIndexes(payload){
   grouped.forEach(function(group){
     html+='<tr class="group-row"><td colspan="9">'+group.name+'</td></tr>';
     group.rows.forEach(function(row){
+      var href=indexChartUrl(row);
       html+='<tr>'+
-        '<td><span class="market-country"><span class="market-flag">'+(row.flag||'')+'</span>'+(row.country||'')+'</span><span class="commodity-name">'+row.name+'</span><span class="commodity-symbol">'+row.symbol+'</span></td>'+
+        '<td><span class="market-country"><span class="market-flag">'+(row.flag||'')+'</span>'+(row.country||'')+'</span><a class="commodity-name" href="'+href+'">'+row.name+'</a><span class="commodity-symbol">'+row.symbol+'</span></td>'+
         '<td class="commodity-price">'+fmtCommodityNumber(row.price,2)+'</td>'+
         '<td class="gc">'+fmtMarketDay(row.day)+'</td>'+
         '<td class="gc">'+fmtCommodityPct(row.pct)+'</td>'+
@@ -788,6 +821,9 @@ function setupMarketType(){
     stock.classList.toggle('hidden',isCommodities||isIndexes);
     commodities.classList.toggle('hidden',!isCommodities);
     indexes.classList.toggle('hidden',!isIndexes);
+    document.querySelectorAll('[data-market-menu]').forEach(function(link){
+      link.classList.toggle('active',link.dataset.marketMenu===value);
+    });
     if(isCommodities&&!loadedCommodities){
       loadedCommodities=true;
       fetch('commodities_data.json',{cache:'no-store'})

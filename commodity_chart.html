@@ -36,6 +36,13 @@ body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-t
 .nav-link:hover{color:#b8ff00}
 .nav-link.active{color:#b8ff00}
 .nav-link.active::after{display:none}
+.nav-market{position:relative;display:flex;align-items:center}
+.market-menu{position:absolute;left:50%;top:calc(100% + 14px);min-width:190px;padding:8px;border:1px solid #26313d;border-radius:8px;background:rgba(9,13,18,.96);box-shadow:0 18px 48px rgba(0,0,0,.48);transform:translateX(-50%) translateY(6px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .14s ease,transform .14s ease,visibility .14s ease;z-index:50}
+.market-menu::before{content:"";position:absolute;left:0;right:0;top:-15px;height:15px}
+.nav-market:hover .market-menu,.nav-market:focus-within .market-menu{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.market-menu-link{display:flex;align-items:center;justify-content:space-between;gap:16px;height:34px;padding:0 10px;border-radius:5px;color:var(--tv-text);font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap}
+.market-menu-link:hover,.market-menu-link.active{background:rgba(0,209,9,.16);color:#fff}
+.market-menu-link.active::after{content:"";width:7px;height:12px;border-right:2px solid var(--tv-accent);border-bottom:2px solid var(--tv-accent);transform:rotate(45deg) translateY(-1px)}
 .nav-search{position:relative;flex:0 1 360px;min-width:220px;margin-left:auto}
 .nav-search input{width:100%;height:42px;border:1px solid #2a2e39;border-radius:999px;background:#090c12;color:#fff;padding:0 16px 0 42px;font-size:15px;font-weight:650;outline:none}
 .nav-search input::placeholder{color:#787b86}
@@ -125,6 +132,10 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
   .nav-links{order:3;flex-direction:column;align-items:stretch;gap:4px;padding-top:8px}
   .nav-link{height:40px;display:flex;align-items:center;padding:0 4px;font-size:14px}
   .nav-link.active::after{display:none}
+  .nav-market{display:block}
+  .market-menu{position:static;opacity:1;visibility:visible;pointer-events:auto;transform:none;box-shadow:none;background:transparent;border:none;padding:0 0 0 12px;margin-top:0}
+  .market-menu::before{display:none}
+  .market-menu-link{height:34px;font-size:13px}
   .nav-search{order:4;min-width:0;margin-left:0;padding-top:8px}
   .nav-search input{height:40px;font-size:14px}
   .container{padding:0}
@@ -154,7 +165,18 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
   <label class="nav-toggle" for="navMenu" aria-label="Toggle navigation"><span></span><span></span><span></span></label>
   <div class="nav-links">
     <a class="nav-link" href="index.html">Non-Commercial</a>
-    <a class="nav-link active" href="russell2000_top100.html?market=commodities">Market</a>
+    <div class="nav-market">
+      <a class="nav-link active" href="russell2000_top100.html?market=commodities">Market</a>
+      <div class="market-menu" aria-label="Market sections">
+        <a class="market-menu-link" href="russell2000_top100.html?market=stock">Stock</a>
+        <a class="market-menu-link active" href="russell2000_top100.html?market=commodities">Commodities</a>
+        <a class="market-menu-link" href="russell2000_top100.html?market=indexes">Indexes</a>
+        <a class="market-menu-link" href="russell2000_top100.html?market=shares">Shares</a>
+        <a class="market-menu-link" href="russell2000_top100.html?market=currencies">Currencies</a>
+        <a class="market-menu-link" href="russell2000_top100.html?market=crypto">Crypto</a>
+        <a class="market-menu-link" href="russell2000_top100.html?market=bonds">Bonds</a>
+      </div>
+    </div>
     <a class="nav-link" href="economy.html">Economy</a>
     <a class="nav-link" href="calendar.html">Calendar</a>
   </div>
