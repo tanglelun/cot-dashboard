@@ -63,6 +63,12 @@ body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-t
 .commodity-price{font-weight:800;color:var(--tv-text);text-align:right;font-family:Inter,Arial,sans-serif}
 .commodity-date{color:var(--tv-muted);font-size:10px;white-space:nowrap}
 .commodity-empty{border:1px solid var(--tv-border);background:#000;color:var(--tv-muted);padding:18px;font-size:13px}
+.market-country{display:inline-flex;align-items:center;gap:6px;color:var(--tv-muted);font-size:10px;font-weight:800;margin-right:8px;text-transform:uppercase}
+.market-flag{font-size:12px;line-height:1}
+.day-value{font-weight:800;font-family:Inter,Arial,sans-serif}
+.day-value.p{color:#00d109}
+.day-value.n{color:#ff4d4d}
+.day-value .arrow{display:inline-block;margin-right:5px;font-size:12px}
 .tabs{display:flex;gap:4px;margin-bottom:8px;border:1px solid var(--tv-border);background:#000;border-radius:0;padding:5px;overflow:auto}
 .tab{height:30px;padding:0 12px;font-size:13px;font-weight:700;color:var(--tv-muted);cursor:pointer;border:none;background:transparent;border-radius:4px;position:relative;transition:all .15s;white-space:nowrap}
 .tab:hover{color:var(--tv-text);background:var(--tv-hover)}
@@ -191,6 +197,11 @@ tr:hover td{background:var(--tv-hover)}
 <div class="market-view hidden" id="commoditiesMarketView">
   <div class="commodity-meta" id="commoditiesMeta">Loading commodities...</div>
   <div id="commoditiesTable"></div>
+</div>
+
+<div class="market-view hidden" id="indexesMarketView">
+  <div class="commodity-meta" id="indexesMeta">Loading indexes...</div>
+  <div id="indexesTable"></div>
 </div>
 
 <div class="ft"><p>数据来源: Finviz · 2026-06-29更新 · 仅供参考，不构成投资建议</p></div>
@@ -673,6 +684,11 @@ function fmtCommodityPct(value){
   var number=Number(value), sign=number>0?'+':'', cls=number>=0?'p':'n';
   return '<span class="g '+cls+'">'+sign+number.toFixed(2)+'%</span>';
 }
+function fmtMarketDay(value){
+  if(value===null||value===undefined||Number.isNaN(Number(value)))return '<span class="day-value">---</span>';
+  var number=Number(value), cls=number>=0?'p':'n', arrow=number>=0?'▲':'▼';
+  return '<span class="day-value '+cls+'"><span class="arrow">'+arrow+'</span>'+Math.abs(number).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+'</span>';
+}
 function commodityChartUrl(row){
   var params=new URLSearchParams();
   params.set('symbol',row.symbol);
@@ -722,23 +738,74 @@ function renderCommodities(payload){
   html+='</tbody></table></div>';
   mount.innerHTML=html;
 }
+function renderIndexes(payload){
+  var rows=(payload&&payload.indexes)||[];
+  var meta=document.getElementById('indexesMeta');
+  var mount=document.getElementById('indexesTable');
+  if(!rows.length){
+    meta.textContent='Indexes';
+    mount.innerHTML='<div class="commodity-empty">No index data available.</div>';
+    return;
+  }
+  meta.innerHTML='<span>共 <strong>'+rows.length+'</strong> 个指数</span><span>更新于 '+(payload.updated||'---')+'</span><span>Source: Yahoo Finance indexes</span>';
+  var groups=['Major','Americas','Europe','Asia','Pacific','Middle East & Africa'];
+  var grouped=groups.map(function(group){
+    return {name:group,rows:rows.filter(function(row){return row.category===group;})};
+  }).filter(function(group){return group.rows.length;});
+  var html='<div class="commodity-table-wrap"><table class="commodity-table"><thead><tr>'+
+    '<th>Major</th><th class="pr">Price</th><th class="gc">Day</th><th class="gc">%</th>'+
+    '<th class="gc">Weekly</th><th class="gc">Monthly</th><th class="gc">YTD</th><th class="gc">YoY</th><th>Date</th>'+
+    '</tr></thead><tbody>';
+  grouped.forEach(function(group){
+    html+='<tr class="group-row"><td colspan="9">'+group.name+'</td></tr>';
+    group.rows.forEach(function(row){
+      html+='<tr>'+
+        '<td><span class="market-country"><span class="market-flag">'+(row.flag||'')+'</span>'+(row.country||'')+'</span><span class="commodity-name">'+row.name+'</span><span class="commodity-symbol">'+row.symbol+'</span></td>'+
+        '<td class="commodity-price">'+fmtCommodityNumber(row.price,2)+'</td>'+
+        '<td class="gc">'+fmtMarketDay(row.day)+'</td>'+
+        '<td class="gc">'+fmtCommodityPct(row.pct)+'</td>'+
+        '<td class="gc">'+fmtCommodityPct(row.week)+'</td>'+
+        '<td class="gc">'+fmtCommodityPct(row.month)+'</td>'+
+        '<td class="gc">'+fmtCommodityPct(row.ytd)+'</td>'+
+        '<td class="gc">'+fmtCommodityPct(row.year)+'</td>'+
+        '<td class="commodity-date">'+(row.date||'---')+'</td>'+
+        '</tr>';
+    });
+  });
+  html+='</tbody></table></div>';
+  mount.innerHTML=html;
+}
 function setupMarketType(){
   var select=document.getElementById('marketTypeSelect');
   var stock=document.getElementById('stockMarketView');
   var commodities=document.getElementById('commoditiesMarketView');
-  var loaded=false;
+  var indexes=document.getElementById('indexesMarketView');
+  var loadedCommodities=false;
+  var loadedIndexes=false;
   function show(value){
     var isCommodities=value==='commodities';
-    stock.classList.toggle('hidden',isCommodities);
+    var isIndexes=value==='indexes';
+    stock.classList.toggle('hidden',isCommodities||isIndexes);
     commodities.classList.toggle('hidden',!isCommodities);
-    if(isCommodities&&!loaded){
-      loaded=true;
+    indexes.classList.toggle('hidden',!isIndexes);
+    if(isCommodities&&!loadedCommodities){
+      loadedCommodities=true;
       fetch('commodities_data.json',{cache:'no-store'})
         .then(function(response){if(!response.ok)throw new Error('No commodities data');return response.json();})
         .then(renderCommodities)
         .catch(function(){
           document.getElementById('commoditiesMeta').textContent='Commodities';
           document.getElementById('commoditiesTable').innerHTML='<div class="commodity-empty">Commodity data has not been generated yet. Run python update_commodities.py.</div>';
+        });
+    }
+    if(isIndexes&&!loadedIndexes){
+      loadedIndexes=true;
+      fetch('indexes_data.json',{cache:'no-store'})
+        .then(function(response){if(!response.ok)throw new Error('No indexes data');return response.json();})
+        .then(renderIndexes)
+        .catch(function(){
+          document.getElementById('indexesMeta').textContent='Indexes';
+          document.getElementById('indexesTable').innerHTML='<div class="commodity-empty">Index data has not been generated yet. Run python update_indexes.py.</div>';
         });
     }
   }
