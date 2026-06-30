@@ -7,7 +7,9 @@ import yfinance as yf
 
 
 OUTPUT_FILE = Path("commodities_data.json")
-PERIOD = "18mo"
+CHART_DATA_DIR = Path("commodities_data")
+SUMMARY_PERIOD = "18mo"
+HISTORY_PERIOD = "max"
 
 COMMODITIES = [
     {"name": "Crude Oil WTI", "symbol": "CL=F", "category": "Energy", "unit": "USD/bbl"},
@@ -67,6 +69,10 @@ def rounded(value, digits=2):
     return round(float(value), digits)
 
 
+def safe_symbol(symbol):
+    return symbol.replace("=", "-").replace("/", "-").replace(".", "-")
+
+
 def series_from_download(data, symbol):
     if data.empty:
         return pd.Series(dtype=float)
@@ -82,11 +88,51 @@ def series_from_download(data, symbol):
     return data["Close"].dropna()
 
 
+def frame_from_download(data, symbol):
+    if data.empty:
+        return pd.DataFrame()
+    if isinstance(data.columns, pd.MultiIndex):
+        if symbol not in data.columns.get_level_values(0):
+            return pd.DataFrame()
+        frame = data[symbol]
+    else:
+        frame = data
+    columns = [column for column in ("Open", "High", "Low", "Close", "Volume") if column in frame.columns]
+    if not {"Open", "High", "Low", "Close"}.issubset(columns):
+        return pd.DataFrame()
+    return frame[columns].dropna(subset=["Open", "High", "Low", "Close"])
+
+
+def history_payload(item, frame, updated):
+    candles = []
+    for timestamp, values in frame.iterrows():
+        candle = {
+            "time": pd.Timestamp(timestamp).strftime("%Y-%m-%d"),
+            "open": rounded(values["Open"], 4),
+            "high": rounded(values["High"], 4),
+            "low": rounded(values["Low"], 4),
+            "close": rounded(values["Close"], 4),
+        }
+        if "Volume" in values and not pd.isna(values["Volume"]):
+            candle["volume"] = int(values["Volume"])
+        candles.append(candle)
+    return {
+        "symbol": item["symbol"],
+        "safeSymbol": safe_symbol(item["symbol"]),
+        "name": item["name"],
+        "sector": item["category"],
+        "unit": item["unit"],
+        "marketCap": item["unit"],
+        "updated": updated,
+        "prices": candles,
+    }
+
+
 def main():
     symbols = [item["symbol"] for item in COMMODITIES]
-    data = yf.download(
+    summary_data = yf.download(
         symbols,
-        period=PERIOD,
+        period=SUMMARY_PERIOD,
         interval="1d",
         group_by="ticker",
         auto_adjust=False,
@@ -97,7 +143,7 @@ def main():
 
     rows = []
     for item in COMMODITIES:
-        series = series_from_download(data, item["symbol"])
+        series = series_from_download(summary_data, item["symbol"])
         if series.empty:
             continue
         latest = series.iloc[-1]
@@ -122,12 +168,63 @@ def main():
     if len(rows) < 15:
         raise RuntimeError(f"Only fetched {len(rows)} commodity rows; aborting partial update")
 
+    history_data = yf.download(
+        symbols,
+        period=HISTORY_PERIOD,
+        interval="1d",
+        group_by="ticker",
+        auto_adjust=False,
+        progress=False,
+        threads=True,
+        timeout=30,
+    )
+    CHART_DATA_DIR.mkdir(exist_ok=True)
+    history_rows = []
+    rows_by_symbol = {row["symbol"]: row for row in rows}
+    for item in COMMODITIES:
+        frame = frame_from_download(history_data, item["symbol"])
+        if frame.empty:
+            continue
+        updated = pd.Timestamp(frame.index[-1]).strftime("%Y-%m-%d")
+        payload = history_payload(item, frame, updated)
+        (CHART_DATA_DIR / f"{safe_symbol(item['symbol'])}.json").write_text(
+            json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
+            encoding="utf-8",
+        )
+        summary = rows_by_symbol.get(item["symbol"], {})
+        history_rows.append(
+            {
+                "symbol": item["symbol"],
+                "safeSymbol": safe_symbol(item["symbol"]),
+                "name": item["name"],
+                "sector": item["category"],
+                "unit": item["unit"],
+                "price": summary.get("price"),
+                "d": summary.get("day"),
+                "w": summary.get("week"),
+                "m": summary.get("month"),
+                "y": summary.get("ytd"),
+                "year": summary.get("year"),
+                "rank": len(history_rows) + 1,
+            }
+        )
+
+    if len(history_rows) < 15:
+        raise RuntimeError(f"Only wrote {len(history_rows)} commodity history files; aborting partial update")
+
     rows.sort(key=lambda row: (row["category"], row["name"]))
+    groups = {}
+    for category in ("Energy", "Metals", "Agriculture", "Livestock"):
+        stocks = [row for row in history_rows if row["sector"] == category]
+        if stocks:
+            groups[category] = {"label": category, "stocks": stocks}
     payload = {
         "updated": max(row["date"] for row in rows),
         "source": "Yahoo Finance futures quotes via yfinance",
         "generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "commodities": rows,
+        "groups": groups,
+        "stocks": history_rows,
     }
     OUTPUT_FILE.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Updated {OUTPUT_FILE} with {len(rows)} rows through {payload['updated']}")

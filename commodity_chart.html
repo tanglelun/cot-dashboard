@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commodity Chart</title>
+<style>
+:root{
+  --tv-bg:#000;
+  --tv-panel:#050709;
+  --tv-panel-2:#090d12;
+  --tv-border:#202932;
+  --tv-border-soft:#111820;
+  --tv-text:#d1d4dc;
+  --tv-muted:#787b86;
+  --tv-faint:#5d606b;
+  --tv-blue:#2962ff;
+  --tv-blue-soft:#1e3a8a;
+  --tv-green:#00d109;
+  --tv-red:#ff4d00;
+  --tv-hover:#101820;
+  --tv-accent:#00d109;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-text);padding:0}
+.site-nav{min-height:64px;display:flex;align-items:center;gap:28px;padding:0 24px;background:#000;border-bottom:1px solid #1b1f2a;position:relative;z-index:30}
+.site-brand{display:inline-flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-size:25px;font-weight:800;letter-spacing:0;white-space:nowrap}
+.brand-mark{position:relative;width:22px;height:26px;display:inline-block}
+.brand-mark::before{content:"";position:absolute;left:7px;top:1px;width:10px;height:24px;background:#fff;border-radius:10px 10px 10px 1px;transform:skew(-18deg) rotate(22deg);transform-origin:center}
+.brand-mark::after{content:"";position:absolute;left:2px;bottom:2px;width:13px;height:3px;background:#fff;border-radius:999px;transform:rotate(-34deg)}
+.nav-check{position:absolute;opacity:0;pointer-events:none}
+.nav-toggle{display:none;width:38px;height:38px;border:1px solid #2a2e39;border-radius:999px;align-items:center;justify-content:center;flex-direction:column;gap:4px;cursor:pointer;margin-left:auto}
+.nav-toggle span{width:16px;height:2px;background:#fff;border-radius:999px}
+.nav-links{display:flex;align-items:center;gap:28px;flex:0 1 auto}
+.nav-link{position:relative;color:#f3f4f6;text-decoration:none;font-size:15px;font-weight:650;white-space:nowrap}
+.nav-link:hover{color:#b8ff00}
+.nav-link.active{color:#b8ff00}
+.nav-link.active::after{display:none}
+.nav-search{position:relative;flex:0 1 360px;min-width:220px;margin-left:auto}
+.nav-search input{width:100%;height:42px;border:1px solid #2a2e39;border-radius:999px;background:#090c12;color:#fff;padding:0 16px 0 42px;font-size:15px;font-weight:650;outline:none}
+.nav-search input::placeholder{color:#787b86}
+.nav-search input:focus{border-color:#b8ff00;box-shadow:0 0 0 1px rgba(184,255,0,.24)}
+.nav-search-mark{position:absolute;left:16px;top:50%;width:13px;height:13px;border:2px solid #b8ff00;border-radius:50%;transform:translateY(-50%);pointer-events:none}
+.nav-search-mark::after{content:"";position:absolute;width:7px;height:2px;background:#b8ff00;border-radius:999px;right:-6px;bottom:-4px;transform:rotate(45deg)}
+.container{width:100%;max-width:none;margin:0;padding:0}
+.page-layout{display:grid;grid-template-columns:clamp(292px,16vw,360px) minmax(0,1fr);gap:0;align-items:stretch;border:none;background:#000}
+.page-layout.sidebar-collapsed{grid-template-columns:44px minmax(0,1fr)}
+.stock-panel{position:sticky;top:0;height:calc(100vh - 64px);min-height:520px;background:#050709;border:none;border-right:1px solid var(--tv-border);border-radius:0;overflow:hidden;display:flex;flex-direction:column}
+.sidebar-collapsed .stock-panel{align-items:center}
+.stock-panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px;height:38px;padding:0 10px;border-bottom:1px solid var(--tv-border)}
+.stock-panel-title{font-size:12px;font-weight:800;color:var(--tv-text);white-space:nowrap}
+.icon-btn{width:26px;height:26px;border:1px solid transparent;background:transparent;color:var(--tv-muted);border-radius:4px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-weight:800}
+.icon-btn:hover{background:var(--tv-hover);color:var(--tv-text)}
+.stock-panel-body{padding:8px;display:flex;flex-direction:column;gap:8px;min-height:0;flex:1}
+.sidebar-collapsed .stock-panel-title,.sidebar-collapsed .stock-panel-body{display:none}
+.filter-drawer{border:1px solid var(--tv-border);border-radius:4px;background:var(--tv-panel-2);overflow:visible}
+.filter-drawer summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;cursor:pointer;color:var(--tv-text);font-size:12px;font-weight:800}
+.filter-drawer summary::-webkit-details-marker{display:none}
+.filter-summary{min-width:0;display:flex;align-items:center;gap:6px;overflow:hidden;white-space:nowrap}
+.filter-title{color:var(--tv-text);font-weight:850;flex:0 0 auto}
+.filter-values{min-width:0;color:var(--tv-muted);font-weight:750;overflow:hidden;text-overflow:ellipsis}
+.filter-caret{color:var(--tv-muted);font-size:14px;line-height:1;transition:transform .18s ease}
+.filter-drawer[open] .filter-caret{transform:rotate(180deg)}
+.filter-fields{display:grid;gap:8px;padding:0 8px 8px;border-top:1px solid var(--tv-border-soft)}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:10px;color:var(--tv-muted);font-weight:800;text-transform:uppercase;letter-spacing:.2px}
+.select{width:100%;border:1px solid var(--tv-border);background:var(--tv-panel-2);color:var(--tv-text);border-radius:4px;padding:7px 8px;font-size:12px;outline:none}
+.select:focus{border-color:var(--tv-blue)}
+.stock-list{min-height:0;overflow:auto;border:1px solid var(--tv-border);border-radius:4px;background:var(--tv-panel-2);scrollbar-color:#2a3440 #080c12;scrollbar-width:thin}
+.stock-list::-webkit-scrollbar{width:8px;height:8px}
+.stock-list::-webkit-scrollbar-track{background:#080c12}
+.stock-list::-webkit-scrollbar-thumb{background:#2a3440;border-radius:999px;border:2px solid #080c12}
+.stock-list::-webkit-scrollbar-thumb:hover{background:#3a4654}
+.stock-row{width:100%;display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:6px;align-items:center;border:none;border-bottom:1px solid var(--tv-border-soft);background:transparent;color:var(--tv-text);text-align:left;padding:7px 8px;cursor:pointer}
+.stock-row:hover{background:var(--tv-hover)}
+.stock-row.active{background:#1b2b55;color:#fff;box-shadow:inset 2px 0 0 var(--tv-blue)}
+.stock-rank{font-family:Inter,Arial,sans-serif;font-size:10px;color:var(--tv-muted)}
+.stock-main{min-width:0;display:flex;align-items:baseline;gap:2px;overflow:hidden}
+.stock-symbol{font-family:Inter,Arial,sans-serif;font-size:12px;font-weight:800;color:var(--tv-text)}
+.stock-name{font-size:10px;color:var(--tv-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.stock-value{font-family:Inter,Arial,sans-serif;font-size:11px;font-weight:800}
+.stock-value.up{color:var(--tv-green)}.stock-value.down{color:var(--tv-red)}
+.main-panel{min-width:0;min-height:calc(100vh - 86px);display:flex;flex-direction:column;background:#000}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:0;min-height:58px;padding:8px 12px;background:#000;border:none;border-bottom:1px solid var(--tv-border);border-radius:0;flex-wrap:wrap}
+.identity{display:flex;flex-direction:column;gap:4px}
+.symbol-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+h1{font-size:22px;color:#fff;font-weight:800;letter-spacing:0}
+.name{font-size:13px;color:var(--tv-muted)}
+.meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--tv-muted)}
+.badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:4px;background:var(--tv-panel-2);border:1px solid var(--tv-border);color:var(--tv-muted);font-size:11px}
+.price-line{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.last-price{font-family:Inter,Arial,sans-serif;font-size:22px;font-weight:800;color:var(--tv-text)}
+.change{font-family:Inter,Arial,sans-serif;font-size:14px;font-weight:800}
+.change.up{color:var(--tv-green)}.change.down{color:var(--tv-red)}
+.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--tv-border);background:var(--tv-panel-2);color:var(--tv-muted);border-radius:4px;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--tv-hover);color:var(--tv-text)}
+.btn.active{background:var(--tv-accent);border-color:var(--tv-accent);color:#001b03}
+.mobile-switcher{display:none}
+.chart-shell{background:#000;border:none;border-radius:0;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:520px}
+.chart-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 10px;border-bottom:none;flex-wrap:wrap}
+.toolbar-left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ma-group{display:flex;align-items:center;gap:8px;min-height:24px}
+.ma-toggle{height:30px;border:1px solid var(--tv-border);background:var(--tv-panel-2);color:var(--tv-muted);border-radius:4px;padding:7px 10px;display:inline-flex;align-items:center;gap:7px;cursor:pointer;font-size:12px;font-weight:700;line-height:1}
+.ma-toggle:hover{background:var(--tv-hover);color:var(--tv-text)}
+.ma-chevron{width:12px;height:12px;stroke:currentColor;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round;transition:transform .16s ease}
+.ma-group:not(.collapsed) .ma-chevron{transform:rotate(180deg)}
+.ma-legend{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:Inter,Arial,sans-serif;font-size:11px;color:var(--tv-muted)}
+.ma-group.collapsed .ma-legend{display:none}
+.ma-item{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.ma-dot{width:18px;height:2px;border-radius:2px;display:inline-block}
+.hint{font-size:11px;color:var(--tv-faint)}
+.chart-wrap{position:relative;flex:1;min-height:0}
+canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:crosshair;touch-action:none}
+.status{padding:28px;text-align:center;color:var(--tv-muted);font-size:13px}
+.status strong{color:var(--tv-blue)}
+@media(max-width:768px){
+  .site-nav{min-height:58px;padding:10px 14px;gap:10px;flex-wrap:wrap}
+  .site-brand{font-size:21px}
+  .brand-mark{width:20px;height:24px}
+  .nav-toggle{display:flex}
+  .nav-links,.nav-search{display:none;flex:0 0 100%;width:100%}
+  .nav-check:checked ~ .nav-links{display:flex}
+  .nav-check:checked ~ .nav-search{display:block}
+  .nav-links{order:3;flex-direction:column;align-items:stretch;gap:4px;padding-top:8px}
+  .nav-link{height:40px;display:flex;align-items:center;padding:0 4px;font-size:14px}
+  .nav-link.active::after{display:none}
+  .nav-search{order:4;min-width:0;margin-left:0;padding-top:8px}
+  .nav-search input{height:40px;font-size:14px}
+  .container{padding:0}
+  .page-layout{display:block;border:none}
+  .main-panel{min-height:calc(100dvh - 78px)}
+  .stock-panel{position:fixed;left:10px;right:10px;top:78px;bottom:10px;height:auto;min-height:0;z-index:20;box-shadow:0 20px 60px rgba(0,0,0,.45);display:none}
+  .stock-panel.open{display:flex}
+  .sidebar-collapsed .stock-panel-title,.sidebar-collapsed .stock-panel-body{display:flex}
+  .sidebar-collapsed .stock-panel{align-items:stretch}
+  .stock-panel-body{display:flex}
+  .mobile-switcher{display:none}
+  .mobile-switcher .select{flex:1;min-width:132px;width:auto}
+  h1{font-size:19px}
+  .last-price{font-size:18px}
+  .chart-shell{min-height:calc(100dvh - 260px)}
+  .chart-wrap{min-height:0}
+  .chart-toolbar{border-bottom:none;padding:8px 10px}
+  .topbar{border-bottom:none}
+  .hint{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="Primary">
+  <a class="site-brand" href="index.html" aria-label="Net Data home"><span class="brand-mark" aria-hidden="true"></span><span>Net Data</span></a>
+  <input class="nav-check" type="checkbox" id="navMenu">
+  <label class="nav-toggle" for="navMenu" aria-label="Toggle navigation"><span></span><span></span><span></span></label>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Non-Commercial</a>
+    <a class="nav-link active" href="russell2000_top100.html?market=commodities">Market</a>
+    <a class="nav-link" href="economy.html">Economy</a>
+    <a class="nav-link" href="calendar.html">Calendar</a>
+  </div>
+  <form class="nav-search" role="search" data-root="">
+    <span class="nav-search-mark" aria-hidden="true"></span>
+    <input type="search" name="q" placeholder="Search commodities" autocomplete="off" aria-label="Search commodities">
+  </form>
+</nav>
+
+<main class="container">
+  <div class="page-layout" id="pageLayout">
+    <aside class="stock-panel" id="stockPanel" aria-label="Commodity list">
+      <div class="stock-panel-head">
+        <span class="stock-panel-title">Commodities</span>
+        <button class="icon-btn" id="panelToggle" title="Toggle commodity list" aria-label="Toggle commodity list">‹</button>
+      </div>
+      <div class="stock-panel-body">
+        <details class="filter-drawer" id="filterDrawer">
+          <summary>
+            <span class="filter-summary">
+              <span class="filter-title">Filters</span>
+              <span class="filter-values" id="filterSummary">All Commodities · Gain · 1D · High to low</span>
+            </span>
+            <span class="filter-caret" aria-hidden="true">⌄</span>
+          </summary>
+          <div class="filter-fields">
+            <div class="field">
+              <label for="universeSelect">Category</label>
+              <select class="select" id="universeSelect"></select>
+            </div>
+            <div class="field">
+              <label for="sortSelect">Sort</label>
+              <select class="select" id="sortSelect">
+                <option value="gain">Gain</option>
+                <option value="rank">Rank</option>
+                <option value="price">Price</option>
+                <option value="unit">Unit</option>
+                <option value="symbol">Symbol</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="metricSelect">Period</label>
+              <select class="select" id="metricSelect">
+                <option value="d">1D</option>
+                <option value="w">1W</option>
+                <option value="m">1M</option>
+                <option value="year">1Y</option>
+                <option value="y">YTD</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="directionSelect">Direction</label>
+              <select class="select" id="directionSelect">
+                <option value="desc">High to low</option>
+                <option value="asc">Low to high</option>
+              </select>
+            </div>
+          </div>
+        </details>
+        <div class="stock-list" id="stockList"></div>
+      </div>
+    </aside>
+
+    <section class="main-panel">
+      <div class="mobile-switcher">
+        <button class="btn" id="mobileListToggle" type="button">Commodities</button>
+        <select class="select" id="mobileSortSelect" aria-label="Mobile commodity sort">
+          <option value="gain">Gain</option>
+          <option value="rank">Rank</option>
+          <option value="price">Price</option>
+          <option value="unit">Unit</option>
+          <option value="symbol">Symbol</option>
+        </select>
+      </div>
+
+  <div class="topbar">
+    <div class="identity">
+      <div class="symbol-line">
+        <h1 id="symbol">---</h1>
+        <span class="badge" id="sector">---</span>
+        <span class="badge" id="mcap">---</span>
+      </div>
+      <div class="name" id="name">Loading commodity chart...</div>
+      <div class="price-line">
+        <span class="last-price" id="lastPrice">--</span>
+        <span class="change" id="change">--</span>
+      </div>
+    </div>
+    <div class="actions">
+      <a class="btn" href="russell2000_top100.html?market=commodities">Back to Market</a>
+    </div>
+  </div>
+
+  <section class="chart-shell">
+    <div class="chart-toolbar">
+      <div class="toolbar-left">
+        <div class="actions" id="ranges">
+          <button class="btn" data-range="63">3M</button>
+          <button class="btn" data-range="126">6M</button>
+          <button class="btn" data-range="252">1Y</button>
+          <button class="btn active" data-range="all">All</button>
+        </div>
+        <div class="ma-group" id="maGroup">
+          <button class="ma-toggle" id="maToggle" type="button" aria-label="Expand moving averages" aria-expanded="false" title="Expand moving averages">
+            <span>MA</span>
+            <svg class="ma-chevron" aria-hidden="true" viewBox="0 0 16 16">
+              <path d="M3 6l5 5 5-5"></path>
+            </svg>
+          </button>
+          <div class="ma-legend" id="maLegend"></div>
+        </div>
+      </div>
+      <div class="hint">Drag to pan · Wheel or pinch to zoom · Move cursor for OHLC</div>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="chart"></canvas>
+      <div class="status" id="status">Loading commodity data...</div>
+    </div>
+  </section>
+    </section>
+  </div>
+</main>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+let currentSymbol = (params.get('symbol') || '').trim().toUpperCase();
+let fallbackName = params.get('name') || currentSymbol;
+const canvas = document.getElementById('chart');
+const ctx = canvas.getContext('2d');
+const statusEl = document.getElementById('status');
+const maGroup = document.getElementById('maGroup');
+const maToggle = document.getElementById('maToggle');
+const pageLayout = document.getElementById('pageLayout');
+const stockPanel = document.getElementById('stockPanel');
+const stockListEl = document.getElementById('stockList');
+const universeSelect = document.getElementById('universeSelect');
+const sortSelect = document.getElementById('sortSelect');
+const mobileSortSelect = document.getElementById('mobileSortSelect');
+const metricSelect = document.getElementById('metricSelect');
+const directionSelect = document.getElementById('directionSelect');
+const filterSummary = document.getElementById('filterSummary');
+const MOVING_AVERAGES = [
+  { key:'ma10', label:'MA10', period:10, color:'#6f7b82', alpha:0.55 },
+  { key:'ma20', label:'MA20', period:20, color:'#2aa8ff', alpha:0.9 },
+  { key:'ma50', label:'MA50', period:50, color:'#7b61ff', alpha:0.5 },
+  { key:'ma200', label:'MA200', period:200, color:'#c36a00', alpha:0.72 }
+];
+const UNIVERSE_LABELS = { all:'All Commodities' };
+const SORT_LABELS = { gain:'Gain', rank:'Rank', price:'Price', unit:'Unit', symbol:'Symbol' };
+const METRIC_LABELS = { d:'1D', w:'1W', m:'1M', y:'YTD', year:'1Y' };
+const DIRECTION_LABELS = { desc:'High to low', asc:'Low to high' };
+const DEFAULT_VISIBLE_CANDLES = 220;
+const TOUCH_INSPECT_DELAY = 350;
+const TOUCH_PAN_THRESHOLD = 7;
+const STOCK_SWIPE_THRESHOLD = 72;
+const state = {
+  candles: [], start: 0, end: 0, hover: -1, hoverY: null, dragging: false, dragX: 0, dragStart: 0, dragEnd: 0,
+  pinching: false, pinchDistance: 0, pinchStart: 0, pinchEnd: 0, pinchRatio: 0.5,
+  touchMode: 'idle', touchTimer: null, touchStartX: 0, touchStartY: 0, touchCurrentX: 0, touchCurrentY: 0,
+  maCollapsed: true, showVolume: true, showMacd: true,
+  marketIndex: null, stockRows: [], activeRange: 'all',
+  universe: params.get('universe') || 'all',
+  metric: params.get('metric') || 'd',
+  sortKey: normalizeSortKey(params.get('sort') || 'gain'),
+  sortDir: params.get('dir') === 'asc' ? 'asc' : 'desc'
+};
+let pendingLayoutRedraw = false;
+
+document.getElementById('symbol').textContent = currentSymbol || 'UNKNOWN';
+document.getElementById('name').textContent = fallbackName || 'Commodity chart';
+document.title = currentSymbol ? currentSymbol + ' Commodity Chart' : 'Commodity Chart';
+
+function normalizeSortKey(key){
+  if(key === 'mcapNum' || key === 'marketCapNum') return 'unit';
+  if(['gain','rank','price','unit','symbol'].includes(key)) return key;
+  return 'gain';
+}
+
+function safeSymbol(symbol){
+  return String(symbol || '').replace(/[=/.]/g, '-');
+}
+
+function fmt(value, digits=2){
+  if(value === null || value === undefined || Number.isNaN(Number(value))) return '--';
+  return Number(value).toFixed(digits);
+}
+
+function fmtPct(value){
+  if(value === null || value === undefined || Number.isNaN(Number(value))) return '--';
+  const numeric = Number(value);
+  return (numeric >= 0 ? '+' : '') + numeric.toFixed(2) + '%';
+}
+
+function chartRegions(width, height){
+  const padBox = chartPadding(width);
+  const bottom = padBox.bottom;
+  const volumeHeight = state.showVolume ? Math.max(54, Math.min(82, height * 0.14)) : 0;
+  const macdHeight = state.showMacd ? Math.max(72, Math.min(108, height * 0.17)) : 0;
+  const lowerGap = state.showVolume && state.showMacd ? 12 : 0;
+  const panelGap = (state.showVolume || state.showMacd) ? 16 : 0;
+  const lowerHeight = volumeHeight + macdHeight + lowerGap;
+  return {
+    indicatorTop: height - bottom - lowerHeight,
+    priceBottom: height - bottom - lowerHeight - panelGap
+  };
+}
+
+function setStatus(text){
+  statusEl.style.display = text ? 'block' : 'none';
+  statusEl.textContent = text || '';
+}
+
+function setRange(range){
+  const total = state.candles.length;
+  const count = range === 'all' ? Math.min(total, DEFAULT_VISIBLE_CANDLES) : Math.min(total, Number(range));
+  state.activeRange = range;
+  state.end = total;
+  state.start = Math.max(0, total - count);
+  state.hover = -1;
+  state.hoverY = null;
+  updateHeaderPrice(total - 1);
+  document.querySelectorAll('#ranges .btn').forEach(item => item.classList.toggle('active', item.dataset.range === range));
+  draw();
+}
+
+function renderHeader(data){
+  const candles = data.prices;
+  document.getElementById('symbol').textContent = data.symbol;
+  document.getElementById('name').textContent = data.name || fallbackName || data.symbol;
+  document.getElementById('sector').textContent = data.sector || 'Category';
+  document.getElementById('mcap').textContent = data.unit || data.marketCap || 'Unit';
+  updateHeaderPrice(candles.length - 1);
+  document.title = data.symbol + ' Commodity Chart';
+}
+
+function updateHeaderPrice(index){
+  if(!state.candles.length) return;
+  const safeIndex = Math.max(0, Math.min(state.candles.length - 1, index));
+  const candle = state.candles[safeIndex];
+  const prev = state.candles[safeIndex - 1] || candle;
+  const close = Number(candle.close);
+  const prevClose = Number(prev.close);
+  const diff = close - prevClose;
+  const pct = prevClose ? diff / prevClose * 100 : 0;
+  const changeEl = document.getElementById('change');
+  document.getElementById('lastPrice').textContent = fmt(close);
+  changeEl.textContent = (diff >= 0 ? '+' : '') + fmt(diff) + ' (' + (pct >= 0 ? '+' : '') + fmt(pct) + '%)';
+  changeEl.className = 'change ' + (diff >= 0 ? 'up' : 'down');
+}
+
+function updateHeaderForHover(){
+  const selected = state.hover >= 0 ? state.hover : state.candles.length - 1;
+  updateHeaderPrice(selected);
+}
+
+function resizeCanvas(){
+  draw();
+}
+
+function syncCanvasSize(rect){
+  const dpr = window.devicePixelRatio || 1;
+  const nextWidth = Math.max(1, Math.floor(rect.width * dpr));
+  const nextHeight = Math.max(1, Math.floor(rect.height * dpr));
+  if(canvas.width !== nextWidth || canvas.height !== nextHeight){
+    canvas.width = nextWidth;
+    canvas.height = nextHeight;
+  }
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+function queueLayoutRedraw(width, height){
+  if(pendingLayoutRedraw) return;
+  pendingLayoutRedraw = true;
+  requestAnimationFrame(() => {
+    pendingLayoutRedraw = false;
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    const bitmapWidth = Math.max(1, Math.floor(rect.width * dpr));
+    const bitmapHeight = Math.max(1, Math.floor(rect.height * dpr));
+    const cssChanged = Math.abs(rect.width - width) > 0.5 || Math.abs(rect.height - height) > 0.5;
+    const bitmapChanged = canvas.width !== bitmapWidth || canvas.height !== bitmapHeight;
+    if(cssChanged || bitmapChanged) draw();
+  });
+}
+
+function visibleCandles(){
+  return state.candles.slice(state.start, state.end);
+}
+
+function calculateMovingAverages(candles){
+  MOVING_AVERAGES.forEach(ma => {
+    let sum = 0;
+    candles.forEach((candle, index) => {
+      sum += candle.close;
+      if(index >= ma.period) sum -= candles[index - ma.period].close;
+      candle[ma.key] = index >= ma.period - 1 ? sum / ma.period : null;
+    });
+  });
+}
+
+function calculateMacd(candles){
+  let ema12 = null;
+  let ema26 = null;
+  let signal = null;
+  const k12 = 2 / 13;
+  const k26 = 2 / 27;
+  const k9 = 2 / 10;
+  candles.forEach(candle => {
+    const close = Number(candle.close);
+    ema12 = ema12 === null ? close : close * k12 + ema12 * (1 - k12);
+    ema26 = ema26 === null ? close : close * k26 + ema26 * (1 - k26);
+    const macd = ema12 - ema26;
+    signal = signal === null ? macd : macd * k9 + signal * (1 - k9);
+    candle.macd = macd;
+    candle.macdSignal = signal;
+    candle.macdHist = macd - signal;
+  });
+}
+
+function renderMaLegend(candle){
+  const target = document.getElementById('maLegend');
+  maGroup.classList.toggle('collapsed', state.maCollapsed);
+  maToggle.setAttribute('aria-expanded', String(!state.maCollapsed));
+  maToggle.setAttribute('aria-label', state.maCollapsed ? 'Expand moving averages' : 'Collapse moving averages');
+  maToggle.title = state.maCollapsed ? 'Expand moving averages' : 'Collapse moving averages';
+  if(state.maCollapsed){
+    target.innerHTML = '';
+    return;
+  }
+  target.innerHTML = MOVING_AVERAGES.map(ma => {
+    const value = candle && candle[ma.key] ? fmt(candle[ma.key]) : '--';
+    return '<span class="ma-item" style="color:'+ma.color+';opacity:'+ma.alpha+'"><span class="ma-dot" style="background:'+ma.color+'"></span>'+ma.label+' '+value+'</span>';
+  }).join('');
+}
+
+function drawMovingAverage(ma, candles, xFor, yFor){
+  ctx.strokeStyle = ma.color;
+  ctx.lineWidth = 1.4;
+  ctx.globalAlpha = ma.alpha;
+  ctx.beginPath();
+  let started = false;
+  candles.forEach((candle, index) => {
+    const value = candle[ma.key];
+    if(!value){
+      started = false;
+      return;
+    }
+    const x = xFor(index);
+    const y = yFor(value);
+    if(!started){
+      ctx.moveTo(x, y);
+      started = true;
+    }else{
+      ctx.lineTo(x, y);
+    }
+  });
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+}
+
+function drawGrid(left, top, right, priceBottom, bottom, width, height, minPrice, maxPrice, candles, xFor){
+  const compact = width <= 520;
+  const gridDivisions = 8;
+  ctx.strokeStyle = 'rgba(110, 116, 128, 0.28)';
+  ctx.lineWidth = 1;
+  ctx.fillStyle = '#d7d9df';
+  ctx.font = (compact ? '10px' : '13px') + ' Inter, Arial, sans-serif';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  for(let i=0;i<=gridDivisions;i++){
+    const y = top + (priceBottom - top) * i / gridDivisions;
+    const price = maxPrice - (maxPrice - minPrice) * i / gridDivisions;
+    if(!compact){
+      ctx.beginPath();
+      ctx.moveTo(0, Math.round(y) + 0.5);
+      ctx.lineTo(width - right + 4, Math.round(y) + 0.5);
+      ctx.stroke();
+    }
+    ctx.fillText(fmt(price), width - 8, y);
+  }
+  ctx.strokeStyle = 'rgba(110, 116, 128, 0.28)';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  const ticks = Math.min(gridDivisions + 1, candles.length);
+  for(let i=0;i<ticks;i++){
+    const idx = Math.floor(i * (candles.length - 1) / Math.max(1, ticks - 1));
+    const x = xFor(idx);
+    if(!compact){
+      ctx.beginPath();
+      ctx.moveTo(Math.round(x) + 0.5, top);
+      ctx.lineTo(Math.round(x) + 0.5, priceBottom);
+      ctx.stroke();
+    }
+    ctx.fillText(candles[idx].time.slice(5), x, height - bottom + 8);
+  }
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+}
+
+function drawPanelLabel(label, top){
+  ctx.fillStyle = '#8b909b';
+  ctx.font = '12px Inter, Arial, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillText(label, 8, top + 4);
+}
+
+function drawVolumePanel(candles, xFor, step, top, bottom, maxVolume, height){
+  drawPanelLabel(maxVolume ? Math.round(maxVolume / 1000000) + 'M' : 'VOL', top);
+  if(!maxVolume) return;
+  const panelHeight = Math.max(1, bottom - top - 10);
+  const barWidth = Math.max(1, Math.min(7, step * 0.38));
+  candles.forEach((c, i) => {
+    if(!c.volume) return;
+    const x = xFor(i);
+    const up = c.close >= c.open;
+    const vh = Math.max(1, (c.volume / maxVolume) * panelHeight);
+    ctx.fillStyle = up ? 'rgba(0, 209, 9, 0.34)' : 'rgba(255, 77, 0, 0.34)';
+    ctx.fillRect(x - barWidth / 2, bottom - vh, barWidth, vh);
+  });
+}
+
+function drawMacdPanel(candles, xFor, step, top, bottom, width){
+  drawPanelLabel('MACD', top);
+  const values = candles.flatMap(c => [c.macd, c.macdSignal, c.macdHist]).filter(value => Number.isFinite(value));
+  const maxAbs = Math.max(...values.map(value => Math.abs(value)), 0) || 1;
+  const panelTop = top + 16;
+  const panelBottom = bottom - 2;
+  const zeroY = panelTop + (panelBottom - panelTop) / 2;
+  const yForMacd = value => zeroY - (value / maxAbs) * ((panelBottom - panelTop) / 2);
+  const barWidth = Math.max(1, Math.min(7, step * 0.36));
+  ctx.strokeStyle = '#26323b';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, zeroY);
+  ctx.lineTo(width, zeroY);
+  ctx.stroke();
+  candles.forEach((c, i) => {
+    if(!Number.isFinite(c.macdHist)) return;
+    const x = xFor(i);
+    const y = yForMacd(c.macdHist);
+    const barTop = Math.min(y, zeroY);
+    const barHeight = Math.max(1, Math.abs(zeroY - y));
+    ctx.fillStyle = c.macdHist >= 0 ? 'rgba(0, 209, 9, 0.34)' : 'rgba(255, 77, 0, 0.34)';
+    ctx.fillRect(x - barWidth / 2, barTop, barWidth, barHeight);
+  });
+  [
+    { key:'macd', color:'#00bcd4', alpha:0.58 },
+    { key:'macdSignal', color:'#ff9800', alpha:0.5 }
+  ].forEach(line => {
+    ctx.strokeStyle = line.color;
+    ctx.lineWidth = 1.2;
+    ctx.globalAlpha = line.alpha;
+    ctx.beginPath();
+    let started = false;
+    candles.forEach((c, i) => {
+      const value = c[line.key];
+      if(!Number.isFinite(value)){
+        started = false;
+        return;
+      }
+      const x = xFor(i);
+      const y = yForMacd(value);
+      if(!started){
+        ctx.moveTo(x, y);
+        started = true;
+      }else{
+        ctx.lineTo(x, y);
+      }
+    });
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  });
+}
+
+function roundedRectPath(x, y, width, height, radius){
+  const r = Math.min(radius, width / 2, height / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + width - r, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+  ctx.lineTo(x + width, y + height - r);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+  ctx.lineTo(x + r, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+}
+
+function drawAxisLabel(text, x, y, options={}){
+  const paddingX = options.paddingX ?? 8;
+  const height = options.height ?? 22;
+  const radius = options.radius ?? 4;
+  ctx.font = options.font || '12px Inter, Arial, sans-serif';
+  const width = Math.ceil(ctx.measureText(text).width) + paddingX * 2;
+  const desiredLeft = options.align === 'right' ? x - width : x;
+  const maxLeft = options.maxRight ? options.maxRight - width : (options.maxLeft ?? desiredLeft);
+  const left = Math.max(2, Math.min(desiredLeft, maxLeft));
+  const top = Math.max(2, Math.min(y - height / 2, options.maxTop ?? y - height / 2));
+  ctx.fillStyle = options.background || '#1d2430';
+  roundedRectPath(left, top, width, height, radius);
+  ctx.fill();
+  if(options.border){
+    ctx.strokeStyle = options.border;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+  ctx.fillStyle = options.color || '#d7d9df';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, left + width / 2, top + height / 2);
+}
+
+function updateHistoryMeta(){
+  if(!state.candles.length) return;
+  const first = state.candles[0].time;
+  const last = state.candles[state.candles.length - 1].time;
+  const visible = visibleCandles();
+  const shown = visible.length ? visible[0].time + ' to ' + visible[visible.length - 1].time : '--';
+  const hint = document.querySelector('.hint');
+  if(hint){
+    hint.textContent = 'History ' + first + ' to ' + last + ' · Showing ' + shown + ' · Drag to pan · Wheel or pinch to zoom';
+  }
+}
+
+function chartPadding(width){
+  if(width <= 380) return { left: 4, right: 42, top: 18, bottom: 28 };
+  if(width <= 520) return { left: 5, right: 46, top: 18, bottom: 30 };
+  return { left: 6, right: 56, top: 22, bottom: 36 };
+}
+
+function plotWidthFor(width){
+  const pad = chartPadding(width);
+  return Math.max(1, width - pad.left - pad.right);
+}
+
+function draw(){
+  const readoutIndex = state.hover >= state.start && state.hover < state.end ? state.hover : state.end - 1;
+  renderMaLegend(state.candles[readoutIndex]);
+
+  const rect = canvas.getBoundingClientRect();
+  const width = rect.width;
+  const height = rect.height;
+  syncCanvasSize(rect);
+  const candles = visibleCandles();
+  if(!candles.length) return;
+  updateHistoryMeta();
+
+  const padBox = chartPadding(width);
+  const left = padBox.left, right = padBox.right, top = padBox.top, bottom = padBox.bottom;
+  const regions = chartRegions(width, height);
+  const volumeHeight = state.showVolume ? Math.max(54, Math.min(82, height * 0.14)) : 0;
+  const macdHeight = state.showMacd ? Math.max(72, Math.min(108, height * 0.17)) : 0;
+  const lowerGap = state.showVolume && state.showMacd ? 12 : 0;
+  const panelGap = (state.showVolume || state.showMacd) ? 16 : 0;
+  const priceBottom = regions.priceBottom;
+  let panelTop = priceBottom + panelGap;
+  const volumeTop = state.showVolume ? panelTop : 0;
+  const volumeBottom = state.showVolume ? volumeTop + volumeHeight : 0;
+  if(state.showVolume) panelTop = volumeBottom + (state.showMacd ? lowerGap : 0);
+  const macdTop = state.showMacd ? panelTop : 0;
+  const macdBottom = state.showMacd ? height - bottom : 0;
+  const plotWidth = width - left - right;
+  const step = plotWidth / candles.length;
+  const bodyWidth = Math.max(3, Math.min(13, step * 0.62));
+  const wickWidth = Math.max(2, Math.min(7, bodyWidth * 0.36));
+  const maValues = [];
+  candles.forEach(c => MOVING_AVERAGES.forEach(ma => { if(c[ma.key]) maValues.push(c[ma.key]); }));
+  const highs = candles.map(c => c.high).concat(maValues);
+  const lows = candles.map(c => c.low).concat(maValues);
+  let maxPrice = Math.max(...highs);
+  let minPrice = Math.min(...lows);
+  const pad = (maxPrice - minPrice || maxPrice || 1) * 0.06;
+  maxPrice += pad;
+  minPrice -= pad;
+  const maxVolume = Math.max(...candles.map(c => c.volume || 0), 0);
+  const xFor = i => left + i * step + step / 2;
+  const yFor = price => top + (maxPrice - price) / (maxPrice - minPrice) * (priceBottom - top);
+
+  drawGrid(left, top, right, priceBottom, bottom, width, height, minPrice, maxPrice, candles, xFor);
+
+  candles.forEach((c, i) => {
+    const x = xFor(i);
+    const up = c.close >= c.open;
+    const color = up ? '#00d109' : '#ff4d00';
+    const yOpen = yFor(c.open), yClose = yFor(c.close), yHigh = yFor(c.high), yLow = yFor(c.low);
+    const bodyTop = Math.min(yOpen, yClose);
+    const bodyHeight = Math.max(1, Math.abs(yOpen - yClose));
+    ctx.fillStyle = '#5e686f';
+    ctx.fillRect(x - wickWidth / 2, yHigh, wickWidth, Math.max(1, yLow - yHigh));
+    ctx.fillStyle = color;
+    ctx.fillRect(x - bodyWidth / 2, bodyTop, bodyWidth, bodyHeight);
+  });
+
+  MOVING_AVERAGES.forEach(ma => drawMovingAverage(ma, candles, xFor, yFor));
+  if(state.showVolume) drawVolumePanel(candles, xFor, step, volumeTop, volumeBottom, maxVolume, height);
+  if(state.showMacd) drawMacdPanel(candles, xFor, step, macdTop, macdBottom, width);
+
+  if(state.hover >= state.start && state.hover < state.end){
+    const local = state.hover - state.start;
+    const c = state.candles[state.hover];
+    const x = xFor(local);
+    const y = state.hoverY === null ? yFor(c.close) : Math.max(top, Math.min(height - bottom, state.hoverY));
+    ctx.strokeStyle = '#2962ff';
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(x, top);
+    ctx.lineTo(x, height - bottom);
+    ctx.moveTo(0, y);
+    ctx.lineTo(width, y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    const hoverPrice = maxPrice - ((y - top) / Math.max(1, priceBottom - top)) * (maxPrice - minPrice);
+    const priceText = fmt(hoverPrice);
+    drawAxisLabel(priceText, width - 4, y, {
+      align:'right',
+      background:'#202735',
+      border:'rgba(215,217,223,.18)',
+      color:'#f3f4f6',
+      maxRight:width - 4,
+      maxTop:height - bottom - 22
+    });
+    const dateText = c.time;
+    ctx.font = '12px Inter, Arial, sans-serif';
+    const dateWidth = Math.ceil(ctx.measureText(dateText).width) + 18;
+    drawAxisLabel(dateText, x - dateWidth / 2, height - bottom + 12, {
+      background:'#202735',
+      border:'rgba(215,217,223,.18)',
+      color:'#f3f4f6',
+      maxLeft:width - dateWidth - 4,
+      maxTop:height - 24
+    });
+  }
+  queueLayoutRedraw(width, height);
+}
+
+function nearestIndex(clientX){
+  const rect = canvas.getBoundingClientRect();
+  const padBox = chartPadding(rect.width);
+  const left = padBox.left;
+  const candles = visibleCandles();
+  const step = plotWidthFor(rect.width) / Math.max(1, candles.length);
+  const local = Math.max(0, Math.min(candles.length - 1, Math.floor((clientX - rect.left - left) / step)));
+  return state.start + local;
+}
+
+function beginDrag(clientX){
+  state.dragging = true;
+  state.pinching = false;
+  state.dragX = clientX;
+  state.dragStart = state.start;
+  state.dragEnd = state.end;
+}
+
+function updateDrag(clientX){
+  if(!state.dragging) return;
+  const rect = canvas.getBoundingClientRect();
+  const count = state.dragEnd - state.dragStart;
+  const step = plotWidthFor(rect.width) / Math.max(1, count);
+  const shift = Math.round((state.dragX - clientX) / step);
+  let start = state.dragStart + shift;
+  start = Math.max(0, Math.min(state.candles.length - count, start));
+  state.start = start;
+  state.end = start + count;
+}
+
+function inspectTouch(clientX, clientY){
+  state.dragging = false;
+  state.pinching = false;
+  state.hover = nearestIndex(clientX);
+  state.hoverY = clientY === undefined ? null : clientY - canvas.getBoundingClientRect().top;
+  updateHeaderForHover();
+}
+
+function clearTouchTimer(){
+  if(state.touchTimer){
+    clearTimeout(state.touchTimer);
+    state.touchTimer = null;
+  }
+}
+
+function beginTouchInspect(touch){
+  clearTouchTimer();
+  state.touchMode = 'pending';
+  state.touchStartX = touch.clientX;
+  state.touchStartY = touch.clientY;
+  state.touchCurrentX = touch.clientX;
+  state.touchCurrentY = touch.clientY;
+  state.dragging = false;
+  state.pinching = false;
+  state.touchTimer = setTimeout(() => {
+    state.touchTimer = null;
+    if(state.touchMode !== 'pending') return;
+    state.touchMode = 'inspect';
+    inspectTouch(state.touchStartX, state.touchStartY);
+    draw();
+  }, TOUCH_INSPECT_DELAY);
+}
+
+function updateTouchInspect(touch){
+  state.touchCurrentX = touch.clientX;
+  state.touchCurrentY = touch.clientY;
+  if(state.touchMode === 'stockSwipe'){
+    return;
+  }
+  if(state.touchMode === 'indicatorSwipe'){
+    if(shouldSwitchStockOnSwipe()) state.touchMode = 'stockSwipe';
+    return;
+  }
+  if(state.touchMode === 'inspect'){
+    inspectTouch(touch.clientX, touch.clientY);
+    return;
+  }
+  if(state.touchMode === 'pan'){
+    updateDrag(touch.clientX);
+    state.hover = -1;
+    state.hoverY = null;
+    return;
+  }
+  if(state.touchMode !== 'pending') return;
+
+  const dx = touch.clientX - state.touchStartX;
+  const dy = touch.clientY - state.touchStartY;
+  if(Math.hypot(dx, dy) < TOUCH_PAN_THRESHOLD) return;
+
+  clearTouchTimer();
+  if(isMobileViewport() && touchStartsInIndicatorRegion() && Math.abs(dx) > Math.abs(dy) * 1.35){
+    state.touchMode = shouldSwitchStockOnSwipe() ? 'stockSwipe' : 'indicatorSwipe';
+    state.dragging = false;
+    state.hover = -1;
+    state.hoverY = null;
+    return;
+  }
+  state.touchMode = 'pan';
+  state.hover = -1;
+  state.hoverY = null;
+  beginDrag(state.touchStartX);
+  updateDrag(touch.clientX);
+}
+
+function endGesture(){
+  clearTouchTimer();
+  state.touchMode = 'idle';
+  state.dragging = false;
+  state.pinching = false;
+}
+
+function isMobileViewport(){
+  return window.matchMedia('(max-width: 768px)').matches;
+}
+
+function touchStartsInIndicatorRegion(){
+  const rect = canvas.getBoundingClientRect();
+  const localY = state.touchStartY - rect.top;
+  return localY >= chartRegions(rect.width, rect.height).indicatorTop;
+}
+
+function shouldSwitchStockOnSwipe(){
+  if(!isMobileViewport() || state.touchMode === 'pinch' || state.pinching) return false;
+  if(!touchStartsInIndicatorRegion()) return false;
+  const dx = state.touchCurrentX - state.touchStartX;
+  const dy = state.touchCurrentY - state.touchStartY;
+  return Math.abs(dx) >= STOCK_SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.35;
+}
+
+function touchDistance(touches){
+  const dx = touches[0].clientX - touches[1].clientX;
+  const dy = touches[0].clientY - touches[1].clientY;
+  return Math.max(1, Math.hypot(dx, dy));
+}
+
+function touchMidX(touches){
+  return (touches[0].clientX + touches[1].clientX) / 2;
+}
+
+function beginPinch(touches){
+  clearTouchTimer();
+  const rect = canvas.getBoundingClientRect();
+  const padBox = chartPadding(rect.width);
+  state.touchMode = 'pinch';
+  state.pinching = true;
+  state.dragging = false;
+  state.pinchDistance = touchDistance(touches);
+  state.pinchStart = state.start;
+  state.pinchEnd = state.end;
+  state.pinchRatio = Math.max(0, Math.min(1, (touchMidX(touches) - rect.left - padBox.left) / plotWidthFor(rect.width)));
+}
+
+function updatePinch(touches){
+  if(!state.pinching || !state.candles.length) return;
+  const total = state.candles.length;
+  const startCount = state.pinchEnd - state.pinchStart;
+  const scale = state.pinchDistance / touchDistance(touches);
+  const next = Math.max(20, Math.min(total, Math.round(startCount * scale)));
+  const center = state.pinchStart + startCount * state.pinchRatio;
+  let start = Math.round(center - next * state.pinchRatio);
+  start = Math.max(0, Math.min(total - next, start));
+  state.start = start;
+  state.end = start + next;
+  state.hover = -1;
+  state.hoverY = null;
+}
+
+canvas.addEventListener('mousemove', event => {
+  if(state.dragging){
+    updateDrag(event.clientX);
+  }else{
+    state.hover = nearestIndex(event.clientX);
+    state.hoverY = event.clientY - canvas.getBoundingClientRect().top;
+    updateHeaderForHover();
+  }
+  draw();
+});
+
+canvas.addEventListener('mouseleave', () => {
+  state.hover = -1;
+  state.hoverY = null;
+  updateHeaderForHover();
+  endGesture();
+  draw();
+});
+
+document.addEventListener('mousemove', event => {
+  if(event.target === canvas || state.hover < 0 || state.dragging) return;
+  state.hover = -1;
+  state.hoverY = null;
+  updateHeaderForHover();
+  draw();
+});
+
+canvas.addEventListener('mousedown', event => {
+  beginDrag(event.clientX);
+});
+
+window.addEventListener('mouseup', endGesture);
+
+canvas.addEventListener('touchstart', event => {
+  if(event.touches.length === 1){
+    beginTouchInspect(event.touches[0]);
+  }else if(event.touches.length >= 2){
+    beginPinch(event.touches);
+  }
+  draw();
+  event.preventDefault();
+}, { passive:false });
+
+canvas.addEventListener('touchmove', event => {
+  if(event.touches.length >= 2){
+    updatePinch(event.touches);
+  }else if(event.touches.length === 1){
+    updateTouchInspect(event.touches[0]);
+  }
+  draw();
+  event.preventDefault();
+}, { passive:false });
+
+canvas.addEventListener('touchend', event => {
+  if(state.touchMode === 'stockSwipe' || shouldSwitchStockOnSwipe()){
+    const dx = state.touchCurrentX - state.touchStartX;
+    const offset = dx < 0 ? 1 : -1;
+    endGesture();
+    moveStock(offset);
+    draw();
+    event.preventDefault();
+    return;
+  }
+  if(event.touches.length >= 2){
+    beginPinch(event.touches);
+  }else if(event.touches.length === 1){
+    beginTouchInspect(event.touches[0]);
+  }else{
+    endGesture();
+  }
+  draw();
+  event.preventDefault();
+}, { passive:false });
+
+canvas.addEventListener('wheel', event => {
+  event.preventDefault();
+  const total = state.candles.length;
+  const current = state.end - state.start;
+  const rect = canvas.getBoundingClientRect();
+  const padBox = chartPadding(rect.width);
+  const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left - padBox.left) / plotWidthFor(rect.width)));
+  const center = state.start + current * ratio;
+  const next = Math.max(20, Math.min(total, Math.round(current * (event.deltaY > 0 ? 1.18 : 0.84))));
+  let start = Math.round(center - next * ratio);
+  start = Math.max(0, Math.min(total - next, start));
+  state.start = start;
+  state.end = start + next;
+  draw();
+}, { passive:false });
+
+document.getElementById('ranges').addEventListener('click', event => {
+  const button = event.target.closest('button[data-range]');
+  if(!button) return;
+  setRange(button.dataset.range);
+});
+
+maToggle.addEventListener('click', () => {
+  state.maCollapsed = !state.maCollapsed;
+  draw();
+});
+
+function setupNavSearch(){
+  const form = document.querySelector('.nav-search');
+  if(!form) return;
+  const input = form.querySelector('input[name="q"]');
+  const runSearch = async () => {
+    const query = (input.value || '').trim();
+    if(!query) return;
+    const root = form.dataset.root || '';
+    let target = { symbol: query.toUpperCase(), name: query };
+    try{
+      const response = await fetch(root + 'commodities_data.json', { cache:'no-store' });
+      if(response.ok){
+        const index = await response.json();
+        const groups = index.groups || {};
+        const rows = Object.keys(groups).length
+          ? Object.values(groups).flatMap(group => group.stocks || [])
+          : (index.stocks || []);
+        const normalized = query.toLowerCase();
+        const match = rows.find(row => String(row.symbol || '').toLowerCase() === normalized)
+          || rows.find(row => String(row.name || '').toLowerCase().includes(normalized));
+        if(match) target = { symbol: match.symbol, name: match.name || match.symbol };
+      }
+    }catch(error){}
+    const params = new URLSearchParams();
+    params.set('symbol', target.symbol);
+    params.set('name', target.name);
+    window.location.href = root + 'commodity_chart.html?' + params.toString();
+  };
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    runSearch();
+  });
+  input.addEventListener('keydown', event => {
+    if(event.key !== 'Enter') return;
+    event.preventDefault();
+    runSearch();
+  });
+}
+
+function rowSymbol(row){ return (row.symbol || row.t || '').toUpperCase(); }
+function rowName(row){ return row.name || row.n || rowSymbol(row); }
+function rowSector(row){ return row.sector || row.s || 'Sector'; }
+function rowMarketCap(row){ return row.unit || row.marketCap || row.c || 'Unit'; }
+function rowPrice(row){ return Number(row.price ?? row.p ?? 0); }
+function rowMarketCapNum(row){ return rowMarketCap(row); }
+function rowRank(row){ return Number(row.rank ?? row.r ?? 9999); }
+function rowMetric(row){ return Number(row[state.metric] ?? 0); }
+
+function groupEntries(){
+  const groups = state.marketIndex && state.marketIndex.groups ? state.marketIndex.groups : {};
+  const entries = Object.keys(groups).map(key => ({ key, label: groups[key].label || UNIVERSE_LABELS[key] || key }));
+  if(entries.length) entries.push({ key:'all', label:'All Commodities' });
+  return entries.length ? entries : [{ key:'all', label:'All Commodities' }];
+}
+
+function getBaseRows(){
+  const index = state.marketIndex || {};
+  const groups = index.groups || {};
+  if(state.universe !== 'all' && groups[state.universe] && groups[state.universe].stocks){
+    return groups[state.universe].stocks;
+  }
+  const source = Object.keys(groups).length
+    ? Object.values(groups).flatMap(group => group.stocks || [])
+    : (index.stocks || []);
+  const seen = new Set();
+  return source.filter(row => {
+    const symbol = rowSymbol(row);
+    if(!symbol || seen.has(symbol)) return false;
+    seen.add(symbol);
+    return true;
+  });
+}
+
+function getSortValue(row){
+  if(state.sortKey === 'gain') return rowMetric(row);
+  if(state.sortKey === 'rank') return rowRank(row);
+  if(state.sortKey === 'price') return rowPrice(row);
+  if(state.sortKey === 'unit') return rowMarketCapNum(row);
+  return rowSymbol(row);
+}
+
+function sortedRows(){
+  let rows = getBaseRows();
+  rows = rows.slice().sort((a,b) => {
+    const av = getSortValue(a);
+    const bv = getSortValue(b);
+    if(typeof av === 'string' || typeof bv === 'string'){
+      return state.sortDir === 'asc' ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
+    }
+    return state.sortDir === 'asc' ? av - bv : bv - av;
+  });
+  return rows;
+}
+
+function valueLabel(row){
+  if(state.sortKey === 'gain') return fmtPct(rowMetric(row));
+  if(state.sortKey === 'rank') return '#' + rowRank(row);
+  if(state.sortKey === 'price') return fmt(rowPrice(row));
+  if(state.sortKey === 'unit') return rowMarketCap(row);
+  return rowSymbol(row);
+}
+
+function syncControls(){
+  const entries = groupEntries();
+  if(!entries.some(entry => entry.key === state.universe)) state.universe = entries[0].key;
+  universeSelect.innerHTML = entries.map(entry => '<option value="'+entry.key+'">'+entry.label+'</option>').join('');
+  universeSelect.value = state.universe;
+  sortSelect.value = state.sortKey;
+  mobileSortSelect.value = state.sortKey;
+  metricSelect.value = state.metric;
+  directionSelect.value = state.sortDir;
+  const universeLabel = entries.find(entry => entry.key === state.universe)?.label || UNIVERSE_LABELS[state.universe] || state.universe;
+  filterSummary.textContent = [universeLabel, SORT_LABELS[state.sortKey], METRIC_LABELS[state.metric], DIRECTION_LABELS[state.sortDir]].filter(Boolean).join(' · ');
+}
+
+function renderStockList(){
+  syncControls();
+  state.stockRows = sortedRows();
+  const currentIndex = state.stockRows.findIndex(row => rowSymbol(row) === currentSymbol);
+  stockListEl.innerHTML = state.stockRows.map((row, index) => {
+    const symbol = rowSymbol(row);
+    const active = symbol === currentSymbol ? ' active' : '';
+    const value = valueLabel(row);
+    const numeric = state.sortKey === 'gain' ? rowMetric(row) : null;
+    const valueClass = numeric === null ? '' : (numeric >= 0 ? ' up' : ' down');
+    return '<button class="stock-row'+active+'" data-symbol="'+symbol+'" type="button">' +
+      '<span class="stock-rank">'+(index + 1)+'</span>' +
+      '<span class="stock-main"><span class="stock-symbol">'+symbol+'</span><span class="stock-name">'+rowName(row)+'</span></span>' +
+      '<span class="stock-value'+valueClass+'">'+value+'</span>' +
+      '</button>';
+  }).join('');
+  if(currentIndex >= 0){
+    const active = stockListEl.querySelector('.stock-row.active');
+    if(active) active.scrollIntoView({ block:'nearest' });
+  }
+}
+
+function currentRow(){
+  return state.stockRows.find(row => rowSymbol(row) === currentSymbol);
+}
+
+function updateUrl(row){
+  const next = new URLSearchParams();
+  next.set('symbol', currentSymbol);
+  next.set('name', rowName(row || currentRow() || { symbol: currentSymbol, name: fallbackName }));
+  next.set('universe', state.universe);
+  next.set('metric', state.metric);
+  next.set('sort', state.sortKey);
+  next.set('dir', state.sortDir);
+  window.history.replaceState(null, '', window.location.pathname + '?' + next.toString());
+}
+
+async function switchStock(symbol){
+  const row = state.stockRows.find(item => rowSymbol(item) === symbol);
+  currentSymbol = symbol;
+  fallbackName = row ? rowName(row) : symbol;
+  renderStockList();
+  updateUrl(row);
+  await loadChart();
+  stockPanel.classList.remove('open');
+}
+
+function moveStock(offset){
+  if(!state.stockRows.length) return;
+  let index = state.stockRows.findIndex(row => rowSymbol(row) === currentSymbol);
+  if(index < 0) index = 0;
+  const next = Math.max(0, Math.min(state.stockRows.length - 1, index + offset));
+  switchStock(rowSymbol(state.stockRows[next]));
+}
+
+function setupKeyboardStockSwitching(){
+  window.addEventListener('keydown', event => {
+    if(window.matchMedia('(max-width: 768px)').matches) return;
+    if(event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+    if(event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    const direction = ({ ArrowLeft:-1, ArrowUp:-1, ArrowRight:1, ArrowDown:1 })[event.key];
+    if(!direction) return;
+    event.preventDefault();
+    moveStock(direction);
+  });
+}
+
+function setupStockControls(){
+  document.getElementById('panelToggle').addEventListener('click', () => {
+    if(window.matchMedia('(max-width: 768px)').matches){
+      stockPanel.classList.toggle('open');
+    }else{
+      pageLayout.classList.toggle('sidebar-collapsed');
+      document.getElementById('panelToggle').textContent = pageLayout.classList.contains('sidebar-collapsed') ? '›' : '‹';
+      setTimeout(resizeCanvas, 80);
+    }
+  });
+  document.getElementById('mobileListToggle').addEventListener('click', () => stockPanel.classList.toggle('open'));
+  stockListEl.addEventListener('click', event => {
+    const button = event.target.closest('.stock-row[data-symbol]');
+    if(button) switchStock(button.dataset.symbol);
+  });
+  universeSelect.addEventListener('change', () => { state.universe = universeSelect.value; renderStockList(); updateUrl(currentRow()); });
+  sortSelect.addEventListener('change', () => { state.sortKey = normalizeSortKey(sortSelect.value); renderStockList(); updateUrl(currentRow()); });
+  mobileSortSelect.addEventListener('change', () => { state.sortKey = normalizeSortKey(mobileSortSelect.value); renderStockList(); updateUrl(currentRow()); });
+  metricSelect.addEventListener('change', () => { state.metric = metricSelect.value; renderStockList(); updateUrl(currentRow()); });
+  directionSelect.addEventListener('change', () => { state.sortDir = directionSelect.value === 'asc' ? 'asc' : 'desc'; renderStockList(); updateUrl(currentRow()); });
+  setupKeyboardStockSwitching();
+}
+
+async function loadMarketIndex(){
+  try{
+    const response = await fetch('commodities_data.json', { cache:'no-store' });
+    if(!response.ok) throw new Error('No commodities index');
+    state.marketIndex = await response.json();
+  }catch(error){
+    state.marketIndex = { stocks: currentSymbol ? [{ symbol: currentSymbol, name: fallbackName }] : [] };
+  }
+  setupStockControls();
+  renderStockList();
+}
+
+async function loadChart(){
+  if(!currentSymbol){
+    setStatus('Missing commodity symbol.');
+    return;
+  }
+  try{
+    setStatus('Loading commodity data...');
+    const response = await fetch('commodities_data/' + encodeURIComponent(safeSymbol(currentSymbol)) + '.json', { cache:'no-store' });
+    if(!response.ok) throw new Error('No commodity chart data found for ' + currentSymbol);
+    const data = await response.json();
+    if(!data.prices || !data.prices.length) throw new Error('Commodity chart data is empty for ' + currentSymbol);
+    currentSymbol = data.symbol;
+    fallbackName = data.name || fallbackName || currentSymbol;
+    state.candles = data.prices;
+    calculateMovingAverages(state.candles);
+    calculateMacd(state.candles);
+    renderHeader(data);
+    setStatus('');
+    setRange(state.activeRange || 'all');
+  }catch(error){
+    setStatus(error.message || 'Unable to load commodity chart data.');
+  }
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+setupNavSearch();
+async function init(){
+  await loadMarketIndex();
+  if(!currentSymbol && state.stockRows.length){
+    const first = state.stockRows[0];
+    currentSymbol = rowSymbol(first);
+    fallbackName = rowName(first);
+    updateUrl(first);
+    renderStockList();
+  }
+  await loadChart();
+}
+init();
+</script>
+</body>
+</html>

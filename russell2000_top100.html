@@ -56,7 +56,8 @@ body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-t
 .commodity-table-wrap{overflow:auto;border:1px solid var(--tv-border);background:#000}
 .commodity-table{border:0;border-radius:0;min-width:940px}
 .commodity-table .group-row td{background:rgba(255,255,255,.10);color:#fff;font-size:13px;font-weight:800;padding:9px 8px;border-top:1px solid var(--tv-border)}
-.commodity-name{font-weight:800;color:var(--tv-text)}
+.commodity-name{font-weight:800;color:var(--tv-text);text-decoration:none}
+.commodity-name:hover{color:#fff;text-decoration:underline}
 .commodity-symbol{color:var(--tv-muted);font-size:10px;font-weight:800;margin-left:5px}
 .commodity-unit{color:var(--tv-faint);font-size:10px}
 .commodity-price{font-weight:800;color:var(--tv-text);text-align:right;font-family:Inter,Arial,sans-serif}
@@ -672,6 +673,16 @@ function fmtCommodityPct(value){
   var number=Number(value), sign=number>0?'+':'', cls=number>=0?'p':'n';
   return '<span class="g '+cls+'">'+sign+number.toFixed(2)+'%</span>';
 }
+function commodityChartUrl(row){
+  var params=new URLSearchParams();
+  params.set('symbol',row.symbol);
+  params.set('name',row.name||row.symbol);
+  params.set('universe',row.category||'all');
+  params.set('metric','d');
+  params.set('sort','gain');
+  params.set('dir','desc');
+  return 'commodity_chart.html?'+params.toString();
+}
 function renderCommodities(payload){
   var rows=(payload&&payload.commodities)||[];
   var meta=document.getElementById('commoditiesMeta');
@@ -693,8 +704,9 @@ function renderCommodities(payload){
   grouped.forEach(function(group){
     html+='<tr class="group-row"><td colspan="10">'+group.name+'</td></tr>';
     group.rows.forEach(function(row){
+      var href=commodityChartUrl(row);
       html+='<tr>'+
-        '<td><span class="commodity-name">'+row.name+'</span><span class="commodity-symbol">'+row.symbol+'</span></td>'+
+        '<td><a class="commodity-name" href="'+href+'">'+row.name+'</a><span class="commodity-symbol">'+row.symbol+'</span></td>'+
         '<td class="commodity-price">'+fmtCommodityNumber(row.price,4)+'</td>'+
         '<td class="gc">'+fmtCommodityPct(row.day)+'</td>'+
         '<td class="gc">'+fmtCommodityPct(row.week)+'</td>'+
@@ -730,6 +742,8 @@ function setupMarketType(){
         });
     }
   }
+  var initialMarket=new URLSearchParams(window.location.search).get('market');
+  if(initialMarket&&select.querySelector('option[value="'+initialMarket+'"]')) select.value=initialMarket;
   select.addEventListener('change',function(){show(select.value);});
   show(select.value);
 }
