@@ -693,7 +693,7 @@ function renderCommodities(payload){
     return;
   }
   meta.innerHTML='<span>共 <strong>'+rows.length+'</strong> 个商品</span><span>更新于 '+(payload.updated||'---')+'</span><span>Source: Yahoo Finance futures</span>';
-  var groups=['Energy','Metals','Agriculture','Livestock'];
+  var groups=['Indexes','Energy','Metals','Agriculture','Livestock'];
   var grouped=groups.map(function(group){
     return {name:group,rows:rows.filter(function(row){return row.category===group;})};
   }).filter(function(group){return group.rows.length;});

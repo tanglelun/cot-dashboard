@@ -12,6 +12,15 @@ SUMMARY_PERIOD = "18mo"
 HISTORY_PERIOD = "max"
 
 COMMODITIES = [
+    {"name": "CRB Index", "symbol": "DBC", "category": "Indexes", "unit": "USD"},
+    {"name": "GSCI", "symbol": "^SPGSCI", "category": "Indexes", "unit": "Index Points"},
+    {"name": "SSE Commodity Index", "symbol": "000066.SS", "category": "Indexes", "unit": "Index Points"},
+    {"name": "World Container Index", "symbol": "BOAT", "category": "Indexes", "unit": "USD"},
+    {"name": "Containerized Freight Index", "symbol": "BDRY", "category": "Indexes", "unit": "Points"},
+    {"name": "EU Carbon Permits", "symbol": "KRBN", "category": "Indexes", "unit": "USD"},
+    {"name": "Wind Energy Index", "symbol": "FAN", "category": "Indexes", "unit": "USD"},
+    {"name": "Nuclear Energy Index", "symbol": "URA", "category": "Indexes", "unit": "USD"},
+    {"name": "Solar Energy Index", "symbol": "TAN", "category": "Indexes", "unit": "USD"},
     {"name": "Crude Oil WTI", "symbol": "CL=F", "category": "Energy", "unit": "USD/bbl"},
     {"name": "Brent Crude Oil", "symbol": "BZ=F", "category": "Energy", "unit": "USD/bbl"},
     {"name": "Natural Gas", "symbol": "NG=F", "category": "Energy", "unit": "USD/MMBtu"},
@@ -128,6 +137,24 @@ def history_payload(item, frame, updated):
     }
 
 
+def fallback_history_frame(symbol):
+    for period in (HISTORY_PERIOD, "10y", "5y", "1y", "5d"):
+        data = yf.download(
+            symbol,
+            period=period,
+            interval="1d",
+            group_by="ticker",
+            auto_adjust=False,
+            progress=False,
+            threads=False,
+            timeout=30,
+        )
+        frame = frame_from_download(data, symbol)
+        if not frame.empty:
+            return frame
+    return pd.DataFrame()
+
+
 def main():
     symbols = [item["symbol"] for item in COMMODITIES]
     summary_data = yf.download(
@@ -184,6 +211,8 @@ def main():
     for item in COMMODITIES:
         frame = frame_from_download(history_data, item["symbol"])
         if frame.empty:
+            frame = fallback_history_frame(item["symbol"])
+        if frame.empty:
             continue
         updated = pd.Timestamp(frame.index[-1]).strftime("%Y-%m-%d")
         payload = history_payload(item, frame, updated)
@@ -214,7 +243,7 @@ def main():
 
     rows.sort(key=lambda row: (row["category"], row["name"]))
     groups = {}
-    for category in ("Energy", "Metals", "Agriculture", "Livestock"):
+    for category in ("Indexes", "Energy", "Metals", "Agriculture", "Livestock"):
         stocks = [row for row in history_rows if row["sector"] == category]
         if stocks:
             groups[category] = {"label": category, "stocks": stocks}
