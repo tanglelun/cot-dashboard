@@ -818,14 +818,14 @@ html = f'''<!DOCTYPE html>
         .tab-content {{ display: none; }}
         .tab-content.active {{ display: block; }}
         
-        .table-scroll {{ width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }}
-        table {{ width: 100%; min-width: max-content; border-collapse: collapse; font-size: 11px; background: var(--tv-panel); }}
-        th {{ background: var(--tv-panel-2); color: var(--tv-muted); padding: 8px 6px; text-align: center; font-weight: 800; position: sticky; top: 0; border-bottom: 1px solid var(--tv-border); }}
-        th:first-child {{ text-align: left; position: sticky; left: 0; background: var(--tv-panel-2); z-index: 10; }}
-        td {{ padding: 6px 6px; text-align: center; border-bottom: 1px solid var(--tv-border-soft); font-family: Inter, Arial, sans-serif; font-size: 10px; }}
-        td:first-child {{ text-align: left; position: sticky; left: 0; background: var(--tv-panel); font-weight: 700; z-index: 5; }}
+        .table-scroll {{ width: 100%; overflow-x: auto; overscroll-behavior-x: contain; border: 1px solid var(--tv-border); background: #000; }}
+        table {{ width: 100%; min-width: max-content; border: 0; border-collapse: collapse; border-radius: 0; font-size: 12px; background: #000; }}
+        th {{ background: var(--tv-panel-2); color: var(--tv-muted); padding: 6px; text-align: center; font-weight: 800; position: sticky; top: 0; border-bottom: 1px solid var(--tv-border); }}
+        th:first-child {{ text-align: left; position: sticky; left: 0; min-width: 150px; max-width: 210px; background: var(--tv-panel-2); z-index: 10; white-space: normal; }}
+        td {{ padding: 6px; text-align: center; border-top: 1px solid var(--tv-border-soft); font-family: Inter, Arial, sans-serif; font-size: 11px; }}
+        td:first-child {{ text-align: left; position: sticky; left: 0; min-width: 150px; max-width: 210px; background: #000; font-weight: 800; z-index: 5; white-space: normal; }}
         tr.category {{ background: rgba(255,255,255,.10) !important; }}
-        tr.category th {{ background: rgba(255,255,255,.10); color: #fff; text-align: left; padding: 9px 10px; font-size: 13px; }}
+        tr.category th {{ background: rgba(255,255,255,.10); color: #fff; text-align: left; padding: 9px 10px; font-size: 13px; min-width: auto; max-width: none; }}
         .comm {{ color: var(--tv-blue); }}
         .comm a {{ color: inherit; text-decoration: none; }}
         .comm a:hover {{ color: #fff; text-decoration: underline; }}
@@ -855,6 +855,11 @@ html = f'''<!DOCTYPE html>
             h1 {{ font-size: 19px; }}
             .tabs {{ width: 100%; }}
             .tab {{ flex: 1; }}
+            .table-scroll {{ border: 0; }}
+            table {{ width: max-content; min-width: max-content; border: 0; }}
+            th, td {{ border: 0; }}
+            th:first-child, td:first-child {{ width: 132px; min-width: 132px; max-width: 132px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }}
+            tr.category th:first-child {{ width: auto; min-width: auto; max-width: none; white-space: normal; }}
         }}
     </style>
 </head>

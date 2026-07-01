@@ -153,8 +153,15 @@ tr:hover td:first-child{background:var(--tv-hover)}
   .market-header{align-items:stretch}
   .market-select-wrap{flex:1}
   .market-select{width:100%}
+  .commodity-table-wrap{border:0}
+  .commodity-table{width:max-content;min-width:max-content;border:0}
+  .commodity-table th,
+  .commodity-table td{border:0}
   .commodity-table th:first-child,
-  .commodity-table td:first-child{min-width:170px;max-width:190px}
+  .commodity-table td:first-child{width:168px;min-width:168px;max-width:168px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .commodity-table .group-row td:first-child{width:auto;min-width:auto;max-width:none;white-space:normal}
+  .commodity-table .commodity-name{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:middle}
+  .market-country{margin-right:5px}
   td,th{padding:4px 3px;font-size:10px}
   .cn{max-width:80px}
   .cn,.tk,.g{font-size:10px}
