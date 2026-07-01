@@ -1,15 +1,25 @@
 import html
+import io
 import json
+import os
 import re
+import time
 from pathlib import Path
 
 import pandas as pd
+import requests
 import yfinance as yf
 
 
 MARKET_FILE = "russell2000_top100.html"
 MARKET_DATA_DIR = Path("market_data")
 CHART_PERIOD = "max"
+SUMMARY_PERIOD = os.getenv("MARKET_SUMMARY_PERIOD", "1y")
+MARKET_DOWNLOAD_SLEEP = float(os.getenv("MARKET_DOWNLOAD_SLEEP", "0.8"))
+TRACK_ALL_US_STOCKS = os.getenv("TRACK_ALL_US_STOCKS", "1") != "0"
+GENERATE_ALL_STOCK_CHARTS = os.getenv("GENERATE_ALL_STOCK_CHARTS", "0") == "1"
+NASDAQ_LISTED_URL = "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt"
+OTHER_LISTED_URL = "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt"
 ARRAYS = {
     "r2kRaw": "Russell 2000",
     "spRaw": "S&P 500",
@@ -17,6 +27,21 @@ ARRAYS = {
 }
 MAX_ABS_DAILY_CHANGE = 300
 SPLIT_FACTORS = (10,)
+EXCHANGE_LABELS = {
+    "A": "NYSE American",
+    "N": "NYSE",
+    "P": "NYSE Arca",
+    "Q": "NASDAQ",
+    "V": "IEX",
+    "Z": "Cboe BZX",
+}
+NON_COMMON_NAME_RE = re.compile(
+    r"\b("
+    r"warrant|right|unit|preferred|preference|depositary|depository|"
+    r"note|notes|bond|debenture|etf|etn|fund|index|certificate"
+    r")\b",
+    re.I,
+)
 
 
 def extract_array_source(text, name):
@@ -162,11 +187,13 @@ def normalize_price_frame_dislocations(frame, symbol):
     return adjusted
 
 
-def get_close_frame(symbols):
+def get_close_frame(symbols, period=CHART_PERIOD):
     yf_symbols = sorted({yahoo_symbol(symbol) for symbol in symbols})
+    if not yf_symbols:
+        return pd.DataFrame()
     data = yf.download(
         yf_symbols,
-        period=CHART_PERIOD,
+        period=period,
         interval="1d",
         auto_adjust=False,
         group_by="ticker",
@@ -229,22 +256,29 @@ def series_from_download(data, display_symbol):
     return pd.Series(dtype=float)
 
 
-def get_price_frame_map(symbols):
+def get_price_frame_map(symbols, period=CHART_PERIOD, chunk_size=180, retry_missing=True):
     unique_symbols = sorted(set(symbols))
-    batch_data = get_close_frame(unique_symbols)
     result = {}
     missing = []
-    for symbol in unique_symbols:
-        frame = price_frame_from_download(batch_data, symbol)
-        if frame.empty:
-            missing.append(symbol)
-        else:
-            result[symbol] = frame
+    for start in range(0, len(unique_symbols), chunk_size):
+        chunk = unique_symbols[start : start + chunk_size]
+        batch_data = get_close_frame(chunk, period=period)
+        for symbol in chunk:
+            frame = price_frame_from_download(batch_data, symbol)
+            if frame.empty:
+                missing.append(symbol)
+            else:
+                result[symbol] = frame
+        if MARKET_DOWNLOAD_SLEEP and start + chunk_size < len(unique_symbols):
+            time.sleep(MARKET_DOWNLOAD_SLEEP)
+
+    if not retry_missing:
+        return result
 
     for symbol in missing:
         data = yf.download(
             yahoo_symbol(symbol),
-            period=CHART_PERIOD,
+            period=period,
             interval="1d",
             auto_adjust=False,
             progress=False,
@@ -255,6 +289,101 @@ def get_price_frame_map(symbols):
             print(f"Retried {symbol} individually")
             result[symbol] = frame
 
+    return result
+
+
+def read_pipe_table(text):
+    lines = [line for line in text.splitlines() if line and not line.startswith("File Creation Time")]
+    return pd.read_csv(io.StringIO("\n".join(lines)), sep="|", keep_default_na=False)
+
+
+def is_common_stock(symbol, name, is_etf, is_test):
+    if str(is_test).strip().upper() == "Y" or str(is_etf).strip().upper() == "Y":
+        return False
+    if not symbol or "^" in symbol or "/" in symbol or "$" in symbol:
+        return False
+    if re.search(r"-(W|WS|WT|R|U)$", symbol, re.I):
+        return False
+    clean_name = str(name or "")
+    return not NON_COMMON_NAME_RE.search(clean_name)
+
+
+def fetch_us_stock_universe():
+    rows = []
+
+    nasdaq_text = requests.get(NASDAQ_LISTED_URL, timeout=30).text
+    nasdaq_table = read_pipe_table(nasdaq_text)
+    for _, item in nasdaq_table.iterrows():
+        symbol = str(item.get("Symbol", "")).strip()
+        name = str(item.get("Security Name", "")).strip()
+        if not is_common_stock(symbol, name, item.get("ETF", ""), item.get("Test Issue", "")):
+            continue
+        rows.append(
+            {
+                "t": symbol,
+                "n": name,
+                "s": "NASDAQ",
+                "exchange": "NASDAQ",
+                "c": "",
+                "mn": 0.0,
+            }
+        )
+
+    other_text = requests.get(OTHER_LISTED_URL, timeout=30).text
+    other_table = read_pipe_table(other_text)
+    for _, item in other_table.iterrows():
+        symbol = str(item.get("ACT Symbol", "")).strip()
+        name = str(item.get("Security Name", "")).strip()
+        if not is_common_stock(symbol, name, item.get("ETF", ""), item.get("Test Issue", "")):
+            continue
+        exchange_code = str(item.get("Exchange", "")).strip()
+        exchange = EXCHANGE_LABELS.get(exchange_code, exchange_code or "US")
+        rows.append(
+            {
+                "t": symbol,
+                "n": name,
+                "s": exchange,
+                "exchange": exchange,
+                "c": "",
+                "mn": 0.0,
+            }
+        )
+
+    seen = {}
+    for row in rows:
+        seen.setdefault(row["t"], row)
+    return [seen[symbol] for symbol in sorted(seen)]
+
+
+def metrics_from_frame(symbol, row, frame):
+    if frame.empty or "Close" not in frame.columns:
+        return None
+    frame = normalize_price_frame_dislocations(frame, symbol)
+    series = normalize_split_dislocations(frame["Close"].dropna(), symbol)
+    if series.empty:
+        return None
+    latest = float(series.iloc[-1])
+    metrics = {
+        "d": pct_change(series, 1),
+        "w": pct_change(series, 5),
+        "m": pct_change(series, 21),
+        "m2": pct_change(series, 42),
+        "q": pct_change(series, 63),
+        "h": pct_change(series, 126),
+        "y": ytd_change(series),
+    }
+    result = {
+        "r": row.get("r", 0),
+        "t": row["t"],
+        "n": row["n"],
+        "c": row.get("c", ""),
+        "mn": float(row.get("mn", 0) or 0),
+        "s": row.get("s", "US"),
+        "exchange": row.get("exchange", row.get("s", "US")),
+        "p": round(latest, 2),
+    }
+    for key, value in metrics.items():
+        result[key] = round(float(value), 2) if value is not None else 0.0
     return result
 
 
@@ -284,16 +413,19 @@ def index_row_from_market_row(row):
     }
 
 
-def write_chart_data(static_data, price_frames, updated_at):
+def write_chart_data(static_data, chart_price_frames, updated_at, universe_rows=None):
     MARKET_DATA_DIR.mkdir(exist_ok=True)
     rows_by_symbol = {}
     for rows in static_data.values():
         for row in rows:
             rows_by_symbol.setdefault(row["t"], row)
 
-    index_rows = []
-    for symbol, row in sorted(rows_by_symbol.items()):
-        frame = price_frames.get(symbol, pd.DataFrame())
+    chart_symbols = rows_by_symbol
+    if GENERATE_ALL_STOCK_CHARTS and universe_rows:
+        chart_symbols = {row["t"]: row for row in universe_rows}
+
+    for symbol, row in sorted(chart_symbols.items()):
+        frame = chart_price_frames.get(symbol, pd.DataFrame())
         if frame.empty:
             continue
         frame = normalize_price_frame_dislocations(frame, symbol)
@@ -322,23 +454,30 @@ def write_chart_data(static_data, price_frames, updated_at):
             json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
             encoding="utf-8",
         )
-        index_rows.append(
-            {
-                "symbol": symbol,
-                "name": row["n"],
-                "sector": row["s"],
-                "marketCap": row["c"],
-                "marketCapNum": row["mn"],
-                "price": row["p"],
-                "d": row["d"],
-                "w": row["w"],
-                "m": row["m"],
-                "m2": row["m2"],
-                "q": row["q"],
-                "h": row["h"],
-                "y": row["y"],
-            }
-        )
+
+    if universe_rows:
+        index_source = universe_rows
+    else:
+        index_source = [row for symbol, row in sorted(rows_by_symbol.items())]
+    index_rows = [
+        {
+            "symbol": row["t"],
+            "name": row["n"],
+            "sector": row["s"],
+            "exchange": row.get("exchange", row["s"]),
+            "marketCap": row.get("c", ""),
+            "marketCapNum": row.get("mn", 0),
+            "price": row.get("p", 0),
+            "d": row.get("d", 0),
+            "w": row.get("w", 0),
+            "m": row.get("m", 0),
+            "m2": row.get("m2", 0),
+            "q": row.get("q", 0),
+            "h": row.get("h", 0),
+            "y": row.get("y", 0),
+        }
+        for row in index_source
+    ]
 
     groups = {}
     for array_name, label in ARRAYS.items():
@@ -394,6 +533,38 @@ def update_rows(rows, series_map):
     return updated[:100]
 
 
+def update_universe_rows(rows, price_frames):
+    updated = []
+    for row in rows:
+        symbol = row["t"]
+        metrics = metrics_from_frame(symbol, row, price_frames.get(symbol, pd.DataFrame()))
+        updated.append(
+            metrics
+            if metrics
+            else {
+                "r": row.get("r", 0),
+                "t": row["t"],
+                "n": row["n"],
+                "c": row.get("c", ""),
+                "mn": float(row.get("mn", 0) or 0),
+                "s": row.get("s", "US"),
+                "exchange": row.get("exchange", row.get("s", "US")),
+                "p": 0.0,
+                "d": 0.0,
+                "w": 0.0,
+                "m": 0.0,
+                "m2": 0.0,
+                "q": 0.0,
+                "h": 0.0,
+                "y": 0.0,
+            }
+        )
+    updated.sort(key=lambda item: item["d"], reverse=True)
+    for index, row in enumerate(updated, start=1):
+        row["r"] = index
+    return updated
+
+
 def js_string(value):
     return json.dumps(str(value), ensure_ascii=False)
 
@@ -429,15 +600,35 @@ def main():
         text = file.read()
 
     static_data = {name: parse_static_rows(extract_array_source(text, name)) for name in ARRAYS}
-    symbols = [row["t"] for rows in static_data.values() for row in rows]
-    price_frames = get_price_frame_map(symbols)
+    static_symbols = [row["t"] for rows in static_data.values() for row in rows]
+    chart_symbols = static_symbols
+    universe_rows = None
+
+    if TRACK_ALL_US_STOCKS:
+        try:
+            raw_universe = fetch_us_stock_universe()
+            print(f"Fetched {len(raw_universe)} US listed common stocks")
+            summary_frames = get_price_frame_map(
+                [row["t"] for row in raw_universe],
+                period=SUMMARY_PERIOD,
+                chunk_size=80,
+                retry_missing=False,
+            )
+            universe_rows = update_universe_rows(raw_universe, summary_frames)
+            print(f"Refreshed {len(universe_rows)} US stock summary rows")
+            if GENERATE_ALL_STOCK_CHARTS:
+                chart_symbols = [row["t"] for row in universe_rows]
+        except Exception as error:
+            print(f"Full US stock universe unavailable, using Tops universe only: {error}")
+
+    price_frames = get_price_frame_map(chart_symbols, period=CHART_PERIOD)
     series_map = {symbol: frame["Close"] for symbol, frame in price_frames.items() if "Close" in frame.columns}
 
     for name, rows in static_data.items():
         text = replace_array(text, name, update_rows(rows, series_map))
 
     today = latest_price_date(series_map)
-    write_chart_data(static_data, price_frames, today)
+    write_chart_data(static_data, price_frames, today, universe_rows=universe_rows)
     text = ensure_daily_button(text)
     text = re.sub(r"更新于\s*\d{4}-\d{2}-\d{2}", f"更新于 {today}", text)
     text = re.sub(r"·\s*\d{4}-\d{2}-\d{2}更新", f"· {today}更新", text)

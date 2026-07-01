@@ -906,10 +906,10 @@ function renderSharesOverview(payload){
     return;
   }
   meta.innerHTML='<span>共 <strong>'+rows.length+'</strong> 只股票</span><span>更新于 '+((payload&&payload.updated)||'---')+'</span><span>Source: local US stock universe</span>';
-  var order=['科技','通信','消费周期','消费防御','医疗','工业','金融','能源','基础材料','公用事业','房地产'];
+  var order=['科技','通信','消费周期','消费防御','医疗','工业','金融','能源','基础材料','公用事业','房地产','NASDAQ','NYSE','NYSE American','NYSE Arca','IEX','Cboe BZX'];
   var groups=order.map(function(name){
-    return {name:name,rows:rows.filter(function(row){return row.sector===name;})};
-  }).concat([{name:'Other',rows:rows.filter(function(row){return order.indexOf(row.sector)<0;})}]).filter(function(group){return group.rows.length;});
+    return {name:name,rows:rows.filter(function(row){return (row.sector||row.exchange)===name;} )};
+  }).concat([{name:'Other',rows:rows.filter(function(row){return order.indexOf(row.sector||row.exchange)<0;})}]).filter(function(group){return group.rows.length;});
   var maxCap=Math.max.apply(null,rows.map(function(row){return Number(row.marketCapNum||0);}));
   var html='<div class="heatmap">';
   groups.forEach(function(group){

@@ -128,6 +128,7 @@ h1{font-size:22px;color:#fff;font-weight:800;letter-spacing:0}
 .chart-wrap{position:relative;flex:1;min-height:0}
 canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:crosshair;touch-action:none}
 .status{padding:28px;text-align:center;color:var(--tv-muted);font-size:13px}
+.status-title{display:block;color:var(--tv-text);font-size:15px;font-weight:800;margin-bottom:6px}
 .status strong{color:var(--tv-blue)}
 @media(max-width:768px){
   .site-nav{min-height:58px;padding:10px 14px;gap:10px;flex-wrap:wrap}
@@ -394,6 +395,11 @@ function chartRegions(width, height){
 function setStatus(text){
   statusEl.style.display = text ? 'block' : 'none';
   statusEl.textContent = text || '';
+}
+
+function setStatusHtml(html){
+  statusEl.style.display = html ? 'block' : 'none';
+  statusEl.innerHTML = html || '';
 }
 
 function setRange(range){
@@ -1404,7 +1410,14 @@ async function loadChart(){
     setStatus('');
     setRange(state.activeRange || 'all');
   }catch(error){
-    setStatus(error.message || 'Unable to load chart data.');
+    if(String(error.message || '').includes('No chart data found')){
+      setStatusHtml(
+        '<span class="status-title">' + currentSymbol + ' chart history is not generated yet.</span>' +
+        '<span>This symbol is tracked in the full US stock universe for search and overview. Full historical chart files are still generated only for the Tops universe by default.</span>'
+      );
+    }else{
+      setStatus(error.message || 'Unable to load chart data.');
+    }
   }
 }
 

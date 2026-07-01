@@ -40,4 +40,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Update Market data"
-          file_pattern: "russell2000_top100.html index_chart.html market_data/*.json commodities_data.json commodities_data/*.json indexes_data.json indexes_data/*.json"
+          file_pattern: "russell2000_top100.html stock_chart.html index_chart.html update_market.py market_data/*.json commodities_data.json commodities_data/*.json indexes_data.json indexes_data/*.json"
