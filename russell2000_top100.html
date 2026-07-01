@@ -65,7 +65,6 @@ body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-t
 .commodity-table .group-row td{background:rgba(255,255,255,.10);color:#fff;font-size:13px;font-weight:800;padding:9px 8px;border-top:1px solid var(--tv-border)}
 .commodity-name{font-weight:800;color:var(--tv-text);text-decoration:none}
 .commodity-name:hover{color:#fff;text-decoration:underline}
-.commodity-symbol{color:var(--tv-muted);font-size:10px;font-weight:800;margin-left:5px}
 .commodity-unit{color:var(--tv-faint);font-size:10px}
 .commodity-price{font-weight:800;color:var(--tv-text);text-align:right;font-family:Inter,Arial,sans-serif}
 .commodity-date{color:var(--tv-muted);font-size:10px;white-space:nowrap}
@@ -748,7 +747,7 @@ function renderCommodities(payload){
     group.rows.forEach(function(row){
       var href=commodityChartUrl(row);
       html+='<tr>'+
-        '<td><a class="commodity-name" href="'+href+'">'+row.name+'</a><span class="commodity-symbol">'+row.symbol+'</span></td>'+
+        '<td><a class="commodity-name" href="'+href+'">'+row.name+'</a></td>'+
         '<td class="commodity-price">'+fmtCommodityNumber(row.price,4)+'</td>'+
         '<td class="gc">'+fmtCommodityPct(row.day)+'</td>'+
         '<td class="gc">'+fmtCommodityPct(row.week)+'</td>'+

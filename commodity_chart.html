@@ -78,10 +78,9 @@ body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-t
 .stock-list::-webkit-scrollbar-track{background:#080c12}
 .stock-list::-webkit-scrollbar-thumb{background:#2a3440;border-radius:999px;border:2px solid #080c12}
 .stock-list::-webkit-scrollbar-thumb:hover{background:#3a4654}
-.stock-row{width:100%;display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:6px;align-items:center;border:none;border-bottom:1px solid var(--tv-border-soft);background:transparent;color:var(--tv-text);text-align:left;padding:7px 8px;cursor:pointer}
+.stock-row{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:center;border:none;border-bottom:1px solid var(--tv-border-soft);background:transparent;color:var(--tv-text);text-align:left;padding:7px 8px;cursor:pointer}
 .stock-row:hover{background:var(--tv-hover)}
 .stock-row.active{background:#1b2b55;color:#fff;box-shadow:inset 2px 0 0 var(--tv-blue)}
-.stock-rank{font-family:Inter,Arial,sans-serif;font-size:10px;color:var(--tv-muted)}
 .stock-main{min-width:0;display:flex;align-items:baseline;gap:2px;overflow:hidden}
 .stock-symbol{font-family:Inter,Arial,sans-serif;font-size:12px;font-weight:800;color:var(--tv-text)}
 .stock-name{font-size:10px;color:var(--tv-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
@@ -345,9 +344,9 @@ const state = {
 };
 let pendingLayoutRedraw = false;
 
-document.getElementById('symbol').textContent = currentSymbol || 'UNKNOWN';
+document.getElementById('symbol').textContent = fallbackName || currentSymbol || 'UNKNOWN';
 document.getElementById('name').textContent = fallbackName || 'Commodity chart';
-document.title = currentSymbol ? currentSymbol + ' Commodity Chart' : 'Commodity Chart';
+document.title = fallbackName ? fallbackName + ' Chart' : 'Commodity Chart';
 
 function normalizeSortKey(key){
   if(key === 'mcapNum' || key === 'marketCapNum') return 'unit';
@@ -404,12 +403,13 @@ function setRange(range){
 
 function renderHeader(data){
   const candles = data.prices;
-  document.getElementById('symbol').textContent = data.symbol;
-  document.getElementById('name').textContent = data.name || fallbackName || data.symbol;
+  const titleName = data.name || fallbackName || data.symbol;
+  document.getElementById('symbol').textContent = titleName;
+  document.getElementById('name').textContent = data.sector || 'Commodity';
   document.getElementById('sector').textContent = data.sector || 'Category';
   document.getElementById('mcap').textContent = data.unit || data.marketCap || 'Unit';
   updateHeaderPrice(candles.length - 1);
-  document.title = data.symbol + ' Commodity Chart';
+  document.title = titleName + ' Chart';
 }
 
 function updateHeaderPrice(index){
@@ -1165,16 +1165,7 @@ function getSortValue(row){
 }
 
 function sortedRows(){
-  let rows = getBaseRows();
-  rows = rows.slice().sort((a,b) => {
-    const av = getSortValue(a);
-    const bv = getSortValue(b);
-    if(typeof av === 'string' || typeof bv === 'string'){
-      return state.sortDir === 'asc' ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
-    }
-    return state.sortDir === 'asc' ? av - bv : bv - av;
-  });
-  return rows;
+  return getBaseRows();
 }
 
 function valueLabel(row){
@@ -1202,15 +1193,14 @@ function renderStockList(){
   syncControls();
   state.stockRows = sortedRows();
   const currentIndex = state.stockRows.findIndex(row => rowSymbol(row) === currentSymbol);
-  stockListEl.innerHTML = state.stockRows.map((row, index) => {
+  stockListEl.innerHTML = state.stockRows.map(row => {
     const symbol = rowSymbol(row);
     const active = symbol === currentSymbol ? ' active' : '';
     const value = valueLabel(row);
     const numeric = state.sortKey === 'gain' ? rowMetric(row) : null;
     const valueClass = numeric === null ? '' : (numeric >= 0 ? ' up' : ' down');
     return '<button class="stock-row'+active+'" data-symbol="'+symbol+'" type="button">' +
-      '<span class="stock-rank">'+(index + 1)+'</span>' +
-      '<span class="stock-main"><span class="stock-symbol">'+symbol+'</span><span class="stock-name">'+rowName(row)+'</span></span>' +
+      '<span class="stock-main"><span class="stock-symbol">'+rowName(row)+'</span></span>' +
       '<span class="stock-value'+valueClass+'">'+value+'</span>' +
       '</button>';
   }).join('');
