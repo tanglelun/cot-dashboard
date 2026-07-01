@@ -22,6 +22,7 @@
   --tv-accent:#00d109;
 }
 *{margin:0;padding:0;box-sizing:border-box}
+html,body{max-width:100%;overflow-x:hidden}
 body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-text);padding:0}
 .site-nav{min-height:64px;display:flex;align-items:center;gap:28px;padding:0 24px;background:#000;border-bottom:1px solid #1b1f2a;position:relative;z-index:30}
 .site-brand{display:inline-flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-size:25px;font-weight:800;letter-spacing:0;white-space:nowrap}
@@ -49,7 +50,7 @@ body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-t
 .nav-search input:focus{border-color:#b8ff00;box-shadow:0 0 0 1px rgba(184,255,0,.24)}
 .nav-search-mark{position:absolute;left:16px;top:50%;width:13px;height:13px;border:2px solid #b8ff00;border-radius:50%;transform:translateY(-50%);pointer-events:none}
 .nav-search-mark::after{content:"";position:absolute;width:7px;height:2px;background:#b8ff00;border-radius:999px;right:-6px;bottom:-4px;transform:rotate(45deg)}
-.container{width:100%;max-width:none;margin:0;padding:10px clamp(10px,1vw,24px)}
+.container{width:100%;max-width:100%;margin:0;padding:10px clamp(10px,1vw,24px);overflow:hidden}
 .market-header{display:none}
 .market-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;color:var(--tv-muted)}
 .market-select-wrap{position:relative;display:inline-flex;align-items:center}
@@ -57,11 +58,12 @@ body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-t
 .market-select:hover{background:var(--tv-hover);color:#fff}
 .market-select:focus{border-color:var(--tv-accent);box-shadow:0 0 0 1px rgba(0,209,9,.18)}
 .market-caret{position:absolute;right:11px;width:8px;height:8px;border-right:2px solid var(--tv-muted);border-bottom:2px solid var(--tv-muted);transform:rotate(45deg) translateY(-2px);pointer-events:none}
+.market-view{min-width:0}
 .market-view.hidden{display:none}
 .commodity-meta{font-size:11px;color:var(--tv-muted);margin:0 0 8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .commodity-meta strong{color:var(--tv-accent)}
-.commodity-table-wrap{overflow:auto;overscroll-behavior-x:contain;border:1px solid var(--tv-border);background:#000}
-.commodity-table{border:0;border-radius:0;min-width:940px}
+.commodity-table-wrap{width:100%;max-width:100%;overflow-x:auto;overflow-y:visible;overscroll-behavior-x:contain;border:1px solid var(--tv-border);background:#000}
+.commodity-table{border:0;border-radius:0;border-collapse:separate;border-spacing:0;width:max-content;min-width:940px}
 .commodity-table .group-row td{background:rgba(255,255,255,.10);color:#fff;font-size:13px;font-weight:800;padding:9px 8px;border-top:1px solid var(--tv-border)}
 .commodity-table th:first-child,
 .commodity-table td:first-child{position:sticky;left:0;z-index:5;min-width:220px;max-width:260px;background:#000;white-space:normal}
@@ -149,16 +151,21 @@ tr:hover td:first-child{background:var(--tv-hover)}
   .market-menu-link{height:34px;font-size:13px}
   .nav-search{order:4;min-width:0;margin-left:0;padding-top:8px}
   .nav-search input{height:40px;font-size:14px}
-  .container{padding:10px}
+  .container{padding:10px;max-width:100%;overflow:hidden}
   .market-header{align-items:stretch}
   .market-select-wrap{flex:1}
   .market-select{width:100%}
-  .commodity-table-wrap{border:0}
-  .commodity-table{width:max-content;min-width:max-content;border:0}
+  .market-view{width:100%;max-width:100%;overflow:hidden}
+  .commodity-table-wrap{width:100%;max-width:100%;overflow-x:auto;overflow-y:visible;border:0}
+  .commodity-table{width:max-content;min-width:max-content;border:0;border-collapse:separate;border-spacing:0}
   .commodity-table th,
   .commodity-table td{border:0}
   .commodity-table th:first-child,
-  .commodity-table td:first-child{width:168px;min-width:168px;max-width:168px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .commodity-table td:first-child{width:164px;min-width:164px;max-width:164px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .commodity-table th:not(:first-child),
+  .commodity-table td:not(:first-child){width:76px;min-width:76px;max-width:76px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:clip}
+  .commodity-table th:last-child,
+  .commodity-table td:last-child{width:58px;min-width:58px;max-width:58px}
   .commodity-table .group-row td:first-child{width:auto;min-width:auto;max-width:none;white-space:normal}
   .commodity-table .commodity-name{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:middle}
   .market-country{margin-right:5px}
