@@ -15,8 +15,8 @@
             --tv-muted: #787b86;
             --tv-faint: #5d606b;
             --tv-blue: #2962ff;
-            --tv-green: #26a69a;
-            --tv-red: #ef5350;
+            --tv-green: #00d109;
+            --tv-red: #ff4d00;
             --tv-hover: #101820;
             --tv-accent: #00d109;
         }
@@ -175,7 +175,7 @@
         };
 
         const formatNumber = value => value.toLocaleString('en-US');
-        const getColor = value => value >= 0 ? '#26a69a' : '#ef5350';
+        const getColor = value => value >= 0 ? '#00d109' : '#ff4d00';
         const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
         const minWindow = Math.min(4, points.length);
         let layout = null;

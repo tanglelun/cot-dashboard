@@ -109,8 +109,8 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             --tv-muted: #787b86;
             --tv-faint: #5d606b;
             --tv-blue: #2962ff;
-            --tv-green: #26a69a;
-            --tv-red: #ef5350;
+            --tv-green: #00d109;
+            --tv-red: #ff4d00;
             --tv-hover: #101820;
             --tv-accent: #00d109;
         }}
@@ -269,7 +269,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         }};
 
         const formatNumber = value => value.toLocaleString('en-US');
-        const getColor = value => value >= 0 ? '#26a69a' : '#ef5350';
+        const getColor = value => value >= 0 ? '#00d109' : '#ff4d00';
         const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
         const minWindow = Math.min(4, points.length);
         let layout = null;
@@ -779,8 +779,8 @@ html = f'''<!DOCTYPE html>
             --tv-muted: #787b86;
             --tv-faint: #5d606b;
             --tv-blue: #2962ff;
-            --tv-green: #26a69a;
-            --tv-red: #ef5350;
+            --tv-green: #00d109;
+            --tv-red: #ff4d00;
             --tv-hover: #101820;
             --tv-accent: #00d109;
         }}
@@ -827,18 +827,17 @@ html = f'''<!DOCTYPE html>
         td:first-child {{ text-align: left; position: sticky; left: 0; min-width: 150px; max-width: 210px; background: #000; font-weight: 800; z-index: 5; white-space: normal; }}
         tr.category {{ background: rgba(255,255,255,.10) !important; }}
         tr.category th {{ background: rgba(255,255,255,.10); color: #fff; text-align: left; padding: 9px 10px; font-size: 13px; min-width: auto; max-width: none; }}
-        .comm {{ color: var(--tv-blue); }}
-        .comm a {{ color: inherit; text-decoration: none; }}
+        .comm, .comm a {{ color: var(--tv-text) !important; font-weight: 800; }}
+        .comm a {{ text-decoration: none; }}
         .comm a:hover {{ color: #fff; text-decoration: underline; }}
-        .pos {{ color: var(--tv-green); }}
-        .neg {{ color: var(--tv-red); }}
+        .pos, .legend .pos {{ color: var(--tv-green) !important; }}
+        .neg, .legend .neg {{ color: var(--tv-red) !important; }}
         .neu {{ color: var(--tv-faint); }}
         tr:hover td {{ background: var(--tv-hover); }}
         tr:hover td:first-child {{ background: var(--tv-hover); }}
         .legend {{ margin-top: 12px; padding: 10px 12px; background: var(--tv-panel-2); border: 1px solid var(--tv-border); border-radius: 6px; color: var(--tv-muted); font-size: 12px; }}
         .legend span {{ margin-right: 18px; white-space: nowrap; }}
-        .legend .pos {{ color: var(--tv-green); font-weight: bold; }}
-        .legend .neg {{ color: var(--tv-red); font-weight: bold; }}
+        .legend .pos, .legend .neg {{ font-weight: bold; }}
         @media (max-width: 768px) {{
             .site-nav {{ min-height: 58px; padding: 10px 14px; gap: 10px; flex-wrap: wrap; }}
             .site-brand {{ font-size: 21px; }}

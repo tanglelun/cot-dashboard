@@ -248,19 +248,23 @@ def generate_html_table(df, date):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CFTC Non-Commercial Positions</title>
     <style>
-        body {{ font-family: Inter, Arial, sans-serif; background: #f5f5f5; padding: 20px; }}
-        .container {{ max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }}
-        h1 {{ color: #333; margin-bottom: 5px; }}
-        .subtitle {{ color: #666; margin-bottom: 20px; font-size: 14px; }}
-        table {{ width: 100%; border-collapse: collapse; font-size: 14px; }}
-        th {{ background: #2c3e50; color: white; padding: 12px 15px; text-align: left; font-weight: 600; }}
-        td {{ padding: 10px 15px; border-bottom: 1px solid #eee; }}
-        tr:hover {{ background: #f8f9fa; }}
-        .commodity {{ font-weight: 600; color: #333; }}
-        .positive {{ color: #27ae60; font-weight: 600; }}
-        .negative {{ color: #e74c3c; font-weight: 600; }}
-        .neutral {{ color: #7f8c8d; }}
-        .category {{ background: #ecf0f1; font-weight: 600; color: #2c3e50; }}
+        :root {{ --tv-bg: #000; --tv-panel-2: #090d12; --tv-border: #202932; --tv-border-soft: #111820; --tv-text: #d1d4dc; --tv-muted: #787b86; --tv-faint: #5d606b; --tv-green: #00d109; --tv-red: #ff4d00; --tv-hover: #101820; }}
+        * {{ box-sizing: border-box; }}
+        html, body {{ max-width: 100%; overflow-x: hidden; }}
+        body {{ font-family: Inter, Arial, sans-serif; background: var(--tv-bg); color: var(--tv-text); padding: 10px clamp(10px,1vw,24px); margin: 0; }}
+        .container {{ width: 100%; max-width: 100%; margin: 0; background: #000; padding: 0; border-radius: 0; box-shadow: none; overflow: hidden; }}
+        h1 {{ color: #fff; margin: 0 0 4px; font-size: 22px; font-weight: 800; }}
+        .subtitle {{ color: var(--tv-muted); margin-bottom: 12px; font-size: 13px; }}
+        table {{ width: 100%; border: 1px solid var(--tv-border); border-collapse: separate; border-spacing: 0; font-size: 12px; background: #000; }}
+        th {{ background: var(--tv-panel-2); color: var(--tv-muted); padding: 8px 6px; text-align: left; font-weight: 800; text-transform: uppercase; letter-spacing: .3px; border-bottom: 1px solid var(--tv-border); }}
+        td {{ padding: 6px; border-top: 1px solid var(--tv-border-soft); }}
+        tr:hover td {{ background: var(--tv-hover); }}
+        .commodity {{ font-weight: 800; color: var(--tv-text) !important; }}
+        .positive {{ color: var(--tv-green) !important; font-weight: 800; }}
+        .negative {{ color: var(--tv-red) !important; font-weight: 800; }}
+        .neutral {{ color: var(--tv-faint); }}
+        .category {{ background: rgba(255,255,255,.10); font-weight: 800; color: #fff; }}
+        .category td {{ padding: 9px 10px; border-top: 1px solid var(--tv-border); font-size: 13px; }}
     </style>
 </head>
 <body>
