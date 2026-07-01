@@ -404,12 +404,13 @@ function setRange(range){
 
 function renderHeader(data){
   const candles = data.prices;
-  document.getElementById('symbol').textContent = data.symbol;
+  const titleName = data.fullName || data.name || fallbackName || data.symbol;
+  document.getElementById('symbol').textContent = titleName;
   document.getElementById('name').textContent = data.name || fallbackName || data.symbol;
   document.getElementById('sector').textContent = data.country || data.sector || 'Index';
   document.getElementById('mcap').textContent = data.unit || 'Index Points';
   updateHeaderPrice(candles.length - 1);
-  document.title = data.symbol + ' Index Chart';
+  document.title = titleName + ' Chart';
 }
 
 function updateHeaderPrice(index){
@@ -1231,7 +1232,7 @@ function renderStockList(){
     const valueClass = numeric === null ? '' : (numeric >= 0 ? ' up' : ' down');
     return '<button class="stock-row'+active+'" data-symbol="'+symbol+'" type="button">' +
       '<span class="stock-rank">'+(index + 1)+'</span>' +
-      '<span class="stock-main"><span class="stock-symbol">'+symbol+'</span><span class="stock-name">'+rowName(row)+'</span></span>' +
+      '<span class="stock-main"><span class="stock-symbol">'+rowName(row)+'</span><span class="stock-name">'+(row.fullName || '')+'</span></span>' +
       '<span class="stock-value'+valueClass+'">'+value+'</span>' +
       '</button>';
   }).join('');

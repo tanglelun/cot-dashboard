@@ -56,6 +56,50 @@ INDEXES = [
     {"name": "JSE Top 40", "symbol": "^J200.JO", "category": "Middle East & Africa", "country": "ZA", "flag": "🇿🇦", "unit": "Index Points"},
 ]
 
+FULL_INDEX_NAMES = {
+    "US500": "S&P 500 Index",
+    "US30": "Dow Jones Industrial Average",
+    "US100": "Nasdaq 100 Index",
+    "JP225": "Nikkei 225 Index",
+    "GB100": "FTSE 100 Index",
+    "DE40": "DAX 40 Index",
+    "FR40": "CAC 40 Index",
+    "IT40": "FTSE MIB Index",
+    "ES35": "IBEX 35 Index",
+    "ASX200": "S&P/ASX 200 Index",
+    "SHANGHAI": "Shanghai Composite Index",
+    "SENSEX": "BSE Sensex Index",
+    "TSX": "S&P/TSX Composite Index",
+    "MOEX": "MOEX Russia Index",
+    "Russell 2000": "Russell 2000 Index",
+    "VIX": "CBOE Volatility Index",
+    "Mexico IPC": "S&P/BMV IPC Index",
+    "Bovespa": "Bovespa Index",
+    "Merval": "S&P Merval Index",
+    "IPSA": "S&P IPSA Index",
+    "Euro Stoxx 50": "Euro Stoxx 50 Index",
+    "SMI": "Swiss Market Index",
+    "AEX": "AEX Index",
+    "BEL20": "BEL 20 Index",
+    "ATX": "Austrian Traded Index",
+    "OMX Stockholm": "OMX Stockholm 30 Index",
+    "Hang Seng": "Hang Seng Index",
+    "Shenzhen": "Shenzhen Component Index",
+    "Taiwan Weighted": "Taiwan Weighted Index",
+    "KOSPI": "KOSPI Composite Index",
+    "NIFTY 50": "Nifty 50 Index",
+    "STI": "Straits Times Index",
+    "Jakarta Composite": "Jakarta Composite Index",
+    "FTSE Malaysia": "FTSE Bursa Malaysia KLCI",
+    "SET": "Stock Exchange of Thailand SET Index",
+    "PSEi": "PSEi Composite Index",
+    "NZ50": "S&P/NZX 50 Index",
+    "TA125": "Tel Aviv 125 Index",
+    "Tadawul": "Tadawul All Share Index",
+    "EGX30": "EGX 30 Index",
+    "JSE Top 40": "FTSE/JSE Top 40 Index",
+}
+
 
 def pct_change(series, periods):
     if len(series) <= periods:
@@ -89,6 +133,10 @@ def rounded(value, digits=2):
 def safe_symbol(symbol):
     clean = re.sub(r"[^A-Za-z0-9_-]+", "-", symbol).strip("-")
     return clean or "index"
+
+
+def full_index_name(item):
+    return item.get("fullName") or FULL_INDEX_NAMES.get(item["name"], item["name"])
 
 
 def frame_from_download(data, symbol):
@@ -138,6 +186,7 @@ def history_payload(item, frame, updated):
         "symbol": item["symbol"],
         "safeSymbol": safe_symbol(item["symbol"]),
         "name": item["name"],
+        "fullName": full_index_name(item),
         "country": item["country"],
         "flag": item["flag"],
         "sector": item["category"],
@@ -160,6 +209,7 @@ def summarize(item, frame):
     date = pd.Timestamp(close.index[-1]).strftime("%b/%d")
     return {
         "name": item["name"],
+        "fullName": full_index_name(item),
         "symbol": item["symbol"],
         "safeSymbol": safe_symbol(item["symbol"]),
         "category": item["category"],

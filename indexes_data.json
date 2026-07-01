@@ -17,7 +17,8 @@
       "month": -1.06,
       "ytd": 9.55,
       "year": 21.49,
-      "date": "Jun/30"
+      "date": "Jun/30",
+      "fullName": "S&P 500 Index"
     },
     {
       "name": "US30",
@@ -34,7 +35,8 @@
       "month": 2.52,
       "ytd": 8.85,
       "year": 19.4,
-      "date": "Jun/30"
+      "date": "Jun/30",
+      "fullName": "Dow Jones Industrial Average"
     },
     {
       "name": "US100",
@@ -51,7 +53,8 @@
       "month": -0.19,
       "ytd": 19.91,
       "year": 34.36,
-      "date": "Jun/30"
+      "date": "Jun/30",
+      "fullName": "Nasdaq 100 Index"
     },
     {
       "name": "JP225",
@@ -68,7 +71,8 @@
       "month": 4.73,
       "ytd": 38.0,
       "year": 81.33,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "Nikkei 225 Index"
     },
     {
       "name": "GB100",
@@ -85,7 +89,8 @@
       "month": 0.72,
       "ytd": 5.57,
       "year": 19.67,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "FTSE 100 Index"
     },
     {
       "name": "DE40",
@@ -102,7 +107,8 @@
       "month": -1.9,
       "ytd": 0.56,
       "year": 3.0,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "DAX 40 Index"
     },
     {
       "name": "FR40",
@@ -119,7 +125,8 @@
       "month": 2.25,
       "ytd": 2.67,
       "year": 8.13,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "CAC 40 Index"
     },
     {
       "name": "IT40",
@@ -136,7 +143,8 @@
       "month": 2.25,
       "ytd": 13.83,
       "year": 28.74,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "FTSE MIB Index"
     },
     {
       "name": "ES35",
@@ -153,7 +161,8 @@
       "month": 5.58,
       "ytd": 12.02,
       "year": 38.04,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "IBEX 35 Index"
     },
     {
       "name": "ASX200",
@@ -170,7 +179,8 @@
       "month": 2.68,
       "ytd": 1.25,
       "year": 3.31,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "S&P/ASX 200 Index"
     },
     {
       "name": "SHANGHAI",
@@ -187,7 +197,8 @@
       "month": -0.6,
       "ytd": 2.65,
       "year": 20.64,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "Shanghai Composite Index"
     },
     {
       "name": "SENSEX",
@@ -204,7 +215,8 @@
       "month": 1.13,
       "ytd": -9.97,
       "year": -5.79,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "BSE Sensex Index"
     },
     {
       "name": "TSX",
@@ -221,7 +233,8 @@
       "month": 0.35,
       "ytd": 9.91,
       "year": 30.59,
-      "date": "Jun/30"
+      "date": "Jun/30",
+      "fullName": "S&P/TSX Composite Index"
     },
     {
       "name": "Russell 2000",
@@ -238,7 +251,8 @@
       "month": 3.6,
       "ytd": 21.86,
       "year": 39.21,
-      "date": "Jun/30"
+      "date": "Jun/30",
+      "fullName": "Russell 2000 Index"
     },
     {
       "name": "VIX",
@@ -255,7 +269,8 @@
       "month": 7.38,
       "ytd": 10.03,
       "year": -1.67,
-      "date": "Jun/30"
+      "date": "Jun/30",
+      "fullName": "CBOE Volatility Index"
     },
     {
       "name": "Mexico IPC",
@@ -272,7 +287,8 @@
       "month": -1.72,
       "ytd": 4.13,
       "year": 16.68,
-      "date": "Jun/30"
+      "date": "Jun/30",
+      "fullName": "S&P/BMV IPC Index"
     },
     {
       "name": "Bovespa",
@@ -289,7 +305,8 @@
       "month": -1.01,
       "ytd": 6.76,
       "year": 25.46,
-      "date": "Jun/30"
+      "date": "Jun/30",
+      "fullName": "Bovespa Index"
     },
     {
       "name": "Merval",
@@ -306,7 +323,8 @@
       "month": 0.07,
       "ytd": 3.83,
       "year": 54.49,
-      "date": "Jun/30"
+      "date": "Jun/30",
+      "fullName": "S&P Merval Index"
     },
     {
       "name": "IPSA",
@@ -323,7 +341,8 @@
       "month": null,
       "ytd": 0.0,
       "year": null,
-      "date": "Jun/30"
+      "date": "Jun/30",
+      "fullName": "S&P IPSA Index"
     },
     {
       "name": "Euro Stoxx 50",
@@ -340,7 +359,8 @@
       "month": 2.99,
       "ytd": 7.51,
       "year": 17.64,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "Euro Stoxx 50 Index"
     },
     {
       "name": "SMI",
@@ -357,7 +377,8 @@
       "month": 5.03,
       "ytd": 7.21,
       "year": 18.64,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "Swiss Market Index"
     },
     {
       "name": "AEX",
@@ -374,7 +395,8 @@
       "month": 2.94,
       "ytd": 11.99,
       "year": 17.0,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "AEX Index"
     },
     {
       "name": "BEL20",
@@ -391,7 +413,8 @@
       "month": 2.43,
       "ytd": 12.62,
       "year": 27.3,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "BEL 20 Index"
     },
     {
       "name": "ATX",
@@ -408,7 +431,8 @@
       "month": 3.3,
       "ytd": 19.25,
       "year": 43.37,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "Austrian Traded Index"
     },
     {
       "name": "OMX Stockholm",
@@ -425,7 +449,8 @@
       "month": 1.37,
       "ytd": 9.84,
       "year": 29.56,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "OMX Stockholm 30 Index"
     },
     {
       "name": "Hang Seng",
@@ -442,7 +467,8 @@
       "month": -7.92,
       "ytd": -10.16,
       "year": -2.88,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "Hang Seng Index"
     },
     {
       "name": "Shenzhen",
@@ -459,7 +485,8 @@
       "month": -0.31,
       "ytd": 16.92,
       "year": 56.22,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "Shenzhen Component Index"
     },
     {
       "name": "Taiwan Weighted",
@@ -476,7 +503,8 @@
       "month": 3.12,
       "ytd": 55.37,
       "year": 104.08,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "Taiwan Weighted Index"
     },
     {
       "name": "KOSPI",
@@ -493,7 +521,8 @@
       "month": 2.56,
       "ytd": 99.2,
       "year": 184.54,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "KOSPI Composite Index"
     },
     {
       "name": "NIFTY 50",
@@ -510,7 +539,8 @@
       "month": 0.16,
       "ytd": -8.36,
       "year": -3.49,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "Nifty 50 Index"
     },
     {
       "name": "STI",
@@ -527,7 +557,8 @@
       "month": 4.4,
       "ytd": 12.11,
       "year": 31.33,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "Straits Times Index"
     },
     {
       "name": "Jakarta Composite",
@@ -544,7 +575,8 @@
       "month": -6.21,
       "ytd": -32.68,
       "year": -18.17,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "Jakarta Composite Index"
     },
     {
       "name": "FTSE Malaysia",
@@ -561,7 +593,8 @@
       "month": -1.13,
       "ytd": -0.85,
       "year": 10.18,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "FTSE Bursa Malaysia KLCI"
     },
     {
       "name": "SET",
@@ -578,7 +611,8 @@
       "month": -0.71,
       "ytd": 22.44,
       "year": 35.39,
-      "date": "Jun/26"
+      "date": "Jun/26",
+      "fullName": "Stock Exchange of Thailand SET Index"
     },
     {
       "name": "PSEi",
@@ -595,7 +629,8 @@
       "month": 1.83,
       "ytd": 0.32,
       "year": -4.5,
-      "date": "Jun/26"
+      "date": "Jun/26",
+      "fullName": "PSEi Composite Index"
     },
     {
       "name": "NZ50",
@@ -612,7 +647,8 @@
       "month": 2.93,
       "ytd": 0.63,
       "year": 8.34,
-      "date": "Jul/01"
+      "date": "Jul/01",
+      "fullName": "S&P/NZX 50 Index"
     },
     {
       "name": "TA125",
@@ -629,7 +665,8 @@
       "month": -10.48,
       "ytd": 8.52,
       "year": 58.67,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "Tel Aviv 125 Index"
     },
     {
       "name": "Tadawul",
@@ -646,7 +683,8 @@
       "month": -0.48,
       "ytd": 4.22,
       "year": 2.05,
-      "date": "Jun/25"
+      "date": "Jun/25",
+      "fullName": "Tadawul All Share Index"
     },
     {
       "name": "EGX30",
@@ -663,7 +701,8 @@
       "month": null,
       "ytd": 0.0,
       "year": null,
-      "date": "Jun/30"
+      "date": "Jun/30",
+      "fullName": "EGX 30 Index"
     },
     {
       "name": "JSE Top 40",
@@ -680,7 +719,8 @@
       "month": -5.04,
       "ytd": -5.69,
       "year": 15.2,
-      "date": "Jun/29"
+      "date": "Jun/29",
+      "fullName": "FTSE/JSE Top 40 Index"
     }
   ],
   "groups": [
@@ -702,7 +742,8 @@
           "month": -1.06,
           "ytd": 9.55,
           "year": 21.49,
-          "date": "Jun/30"
+          "date": "Jun/30",
+          "fullName": "S&P 500 Index"
         },
         {
           "name": "US30",
@@ -719,7 +760,8 @@
           "month": 2.52,
           "ytd": 8.85,
           "year": 19.4,
-          "date": "Jun/30"
+          "date": "Jun/30",
+          "fullName": "Dow Jones Industrial Average"
         },
         {
           "name": "US100",
@@ -736,7 +778,8 @@
           "month": -0.19,
           "ytd": 19.91,
           "year": 34.36,
-          "date": "Jun/30"
+          "date": "Jun/30",
+          "fullName": "Nasdaq 100 Index"
         },
         {
           "name": "JP225",
@@ -753,7 +796,8 @@
           "month": 4.73,
           "ytd": 38.0,
           "year": 81.33,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "Nikkei 225 Index"
         },
         {
           "name": "GB100",
@@ -770,7 +814,8 @@
           "month": 0.72,
           "ytd": 5.57,
           "year": 19.67,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "FTSE 100 Index"
         },
         {
           "name": "DE40",
@@ -787,7 +832,8 @@
           "month": -1.9,
           "ytd": 0.56,
           "year": 3.0,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "DAX 40 Index"
         },
         {
           "name": "FR40",
@@ -804,7 +850,8 @@
           "month": 2.25,
           "ytd": 2.67,
           "year": 8.13,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "CAC 40 Index"
         },
         {
           "name": "IT40",
@@ -821,7 +868,8 @@
           "month": 2.25,
           "ytd": 13.83,
           "year": 28.74,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "FTSE MIB Index"
         },
         {
           "name": "ES35",
@@ -838,7 +886,8 @@
           "month": 5.58,
           "ytd": 12.02,
           "year": 38.04,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "IBEX 35 Index"
         },
         {
           "name": "ASX200",
@@ -855,7 +904,8 @@
           "month": 2.68,
           "ytd": 1.25,
           "year": 3.31,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "S&P/ASX 200 Index"
         },
         {
           "name": "SHANGHAI",
@@ -872,7 +922,8 @@
           "month": -0.6,
           "ytd": 2.65,
           "year": 20.64,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "Shanghai Composite Index"
         },
         {
           "name": "SENSEX",
@@ -889,7 +940,8 @@
           "month": 1.13,
           "ytd": -9.97,
           "year": -5.79,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "BSE Sensex Index"
         },
         {
           "name": "TSX",
@@ -906,7 +958,8 @@
           "month": 0.35,
           "ytd": 9.91,
           "year": 30.59,
-          "date": "Jun/30"
+          "date": "Jun/30",
+          "fullName": "S&P/TSX Composite Index"
         }
       ]
     },
@@ -928,7 +981,8 @@
           "month": 3.6,
           "ytd": 21.86,
           "year": 39.21,
-          "date": "Jun/30"
+          "date": "Jun/30",
+          "fullName": "Russell 2000 Index"
         },
         {
           "name": "VIX",
@@ -945,7 +999,8 @@
           "month": 7.38,
           "ytd": 10.03,
           "year": -1.67,
-          "date": "Jun/30"
+          "date": "Jun/30",
+          "fullName": "CBOE Volatility Index"
         },
         {
           "name": "Mexico IPC",
@@ -962,7 +1017,8 @@
           "month": -1.72,
           "ytd": 4.13,
           "year": 16.68,
-          "date": "Jun/30"
+          "date": "Jun/30",
+          "fullName": "S&P/BMV IPC Index"
         },
         {
           "name": "Bovespa",
@@ -979,7 +1035,8 @@
           "month": -1.01,
           "ytd": 6.76,
           "year": 25.46,
-          "date": "Jun/30"
+          "date": "Jun/30",
+          "fullName": "Bovespa Index"
         },
         {
           "name": "Merval",
@@ -996,7 +1053,8 @@
           "month": 0.07,
           "ytd": 3.83,
           "year": 54.49,
-          "date": "Jun/30"
+          "date": "Jun/30",
+          "fullName": "S&P Merval Index"
         },
         {
           "name": "IPSA",
@@ -1013,7 +1071,8 @@
           "month": null,
           "ytd": 0.0,
           "year": null,
-          "date": "Jun/30"
+          "date": "Jun/30",
+          "fullName": "S&P IPSA Index"
         }
       ]
     },
@@ -1035,7 +1094,8 @@
           "month": 2.99,
           "ytd": 7.51,
           "year": 17.64,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "Euro Stoxx 50 Index"
         },
         {
           "name": "SMI",
@@ -1052,7 +1112,8 @@
           "month": 5.03,
           "ytd": 7.21,
           "year": 18.64,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "Swiss Market Index"
         },
         {
           "name": "AEX",
@@ -1069,7 +1130,8 @@
           "month": 2.94,
           "ytd": 11.99,
           "year": 17.0,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "AEX Index"
         },
         {
           "name": "BEL20",
@@ -1086,7 +1148,8 @@
           "month": 2.43,
           "ytd": 12.62,
           "year": 27.3,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "BEL 20 Index"
         },
         {
           "name": "ATX",
@@ -1103,7 +1166,8 @@
           "month": 3.3,
           "ytd": 19.25,
           "year": 43.37,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "Austrian Traded Index"
         },
         {
           "name": "OMX Stockholm",
@@ -1120,7 +1184,8 @@
           "month": 1.37,
           "ytd": 9.84,
           "year": 29.56,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "OMX Stockholm 30 Index"
         }
       ]
     },
@@ -1142,7 +1207,8 @@
           "month": -7.92,
           "ytd": -10.16,
           "year": -2.88,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "Hang Seng Index"
         },
         {
           "name": "Shenzhen",
@@ -1159,7 +1225,8 @@
           "month": -0.31,
           "ytd": 16.92,
           "year": 56.22,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "Shenzhen Component Index"
         },
         {
           "name": "Taiwan Weighted",
@@ -1176,7 +1243,8 @@
           "month": 3.12,
           "ytd": 55.37,
           "year": 104.08,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "Taiwan Weighted Index"
         },
         {
           "name": "KOSPI",
@@ -1193,7 +1261,8 @@
           "month": 2.56,
           "ytd": 99.2,
           "year": 184.54,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "KOSPI Composite Index"
         },
         {
           "name": "NIFTY 50",
@@ -1210,7 +1279,8 @@
           "month": 0.16,
           "ytd": -8.36,
           "year": -3.49,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "Nifty 50 Index"
         },
         {
           "name": "STI",
@@ -1227,7 +1297,8 @@
           "month": 4.4,
           "ytd": 12.11,
           "year": 31.33,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "Straits Times Index"
         },
         {
           "name": "Jakarta Composite",
@@ -1244,7 +1315,8 @@
           "month": -6.21,
           "ytd": -32.68,
           "year": -18.17,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "Jakarta Composite Index"
         },
         {
           "name": "FTSE Malaysia",
@@ -1261,7 +1333,8 @@
           "month": -1.13,
           "ytd": -0.85,
           "year": 10.18,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "FTSE Bursa Malaysia KLCI"
         },
         {
           "name": "SET",
@@ -1278,7 +1351,8 @@
           "month": -0.71,
           "ytd": 22.44,
           "year": 35.39,
-          "date": "Jun/26"
+          "date": "Jun/26",
+          "fullName": "Stock Exchange of Thailand SET Index"
         },
         {
           "name": "PSEi",
@@ -1295,7 +1369,8 @@
           "month": 1.83,
           "ytd": 0.32,
           "year": -4.5,
-          "date": "Jun/26"
+          "date": "Jun/26",
+          "fullName": "PSEi Composite Index"
         }
       ]
     },
@@ -1317,7 +1392,8 @@
           "month": 2.93,
           "ytd": 0.63,
           "year": 8.34,
-          "date": "Jul/01"
+          "date": "Jul/01",
+          "fullName": "S&P/NZX 50 Index"
         }
       ]
     },
@@ -1339,7 +1415,8 @@
           "month": -10.48,
           "ytd": 8.52,
           "year": 58.67,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "Tel Aviv 125 Index"
         },
         {
           "name": "Tadawul",
@@ -1356,7 +1433,8 @@
           "month": -0.48,
           "ytd": 4.22,
           "year": 2.05,
-          "date": "Jun/25"
+          "date": "Jun/25",
+          "fullName": "Tadawul All Share Index"
         },
         {
           "name": "EGX30",
@@ -1373,7 +1451,8 @@
           "month": null,
           "ytd": 0.0,
           "year": null,
-          "date": "Jun/30"
+          "date": "Jun/30",
+          "fullName": "EGX 30 Index"
         },
         {
           "name": "JSE Top 40",
@@ -1390,7 +1469,8 @@
           "month": -5.04,
           "ytd": -5.69,
           "year": 15.2,
-          "date": "Jun/29"
+          "date": "Jun/29",
+          "fullName": "FTSE/JSE Top 40 Index"
         }
       ]
     }

@@ -188,21 +188,15 @@ tr:hover td{background:var(--tv-hover)}
 </nav>
 <div class="container">
 
-<div class="market-header">
-  <span class="market-label">Market</span>
-  <span class="market-select-wrap">
-    <select class="market-select" id="marketTypeSelect" aria-label="Market type">
-      <option value="stock" selected>Stock</option>
-      <option value="commodities">Commodities</option>
-      <option value="indexes">Indexes</option>
-      <option value="shares">Shares</option>
-      <option value="currencies">Currencies</option>
-      <option value="crypto">Crypto</option>
-      <option value="bonds">Bonds</option>
-    </select>
-    <span class="market-caret" aria-hidden="true"></span>
-  </span>
-</div>
+<select id="marketTypeSelect" hidden aria-hidden="true">
+  <option value="stock" selected>Stock</option>
+  <option value="commodities">Commodities</option>
+  <option value="indexes">Indexes</option>
+  <option value="shares">Shares</option>
+  <option value="currencies">Currencies</option>
+  <option value="crypto">Crypto</option>
+  <option value="bonds">Bonds</option>
+</select>
 
 <div class="market-view" id="stockMarketView">
   <div class="tabs" id="tabHeaders">
@@ -725,7 +719,7 @@ function indexChartUrl(row){
   var params=new URLSearchParams();
   params.set('symbol',row.symbol);
   params.set('name',row.name||row.symbol);
-  params.set('universe',row.category||'all');
+  params.set('universe','all');
   params.set('metric','d');
   params.set('sort','gain');
   params.set('dir','desc');
@@ -793,7 +787,7 @@ function renderIndexes(payload){
     group.rows.forEach(function(row){
       var href=indexChartUrl(row);
       html+='<tr>'+
-        '<td><span class="market-country"><span class="market-flag">'+(row.flag||'')+'</span>'+(row.country||'')+'</span><a class="commodity-name" href="'+href+'">'+row.name+'</a><span class="commodity-symbol">'+row.symbol+'</span></td>'+
+        '<td><span class="market-country"><span class="market-flag">'+(row.flag||'')+'</span>'+(row.country||'')+'</span><a class="commodity-name" href="'+href+'">'+row.name+'</a></td>'+
         '<td class="commodity-price">'+fmtCommodityNumber(row.price,2)+'</td>'+
         '<td class="gc">'+fmtMarketDay(row.day)+'</td>'+
         '<td class="gc">'+fmtCommodityPct(row.pct)+'</td>'+
