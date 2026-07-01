@@ -49,6 +49,14 @@ body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-t
 .nav-search input:focus{border-color:#b8ff00;box-shadow:0 0 0 1px rgba(184,255,0,.24)}
 .nav-search-mark{position:absolute;left:16px;top:50%;width:13px;height:13px;border:2px solid #b8ff00;border-radius:50%;transform:translateY(-50%);pointer-events:none}
 .nav-search-mark::after{content:"";position:absolute;width:7px;height:2px;background:#b8ff00;border-radius:999px;right:-6px;bottom:-4px;transform:rotate(45deg)}
+.nav-search-results{position:absolute;left:0;right:0;top:calc(100% + 8px);max-height:320px;overflow:auto;padding:6px;border:1px solid #26313d;border-radius:8px;background:rgba(9,13,18,.98);box-shadow:0 18px 48px rgba(0,0,0,.48);display:none;z-index:80;scrollbar-color:#2a3440 #080c12;scrollbar-width:thin}
+.nav-search-results.open{display:block}
+.nav-result{width:100%;border:0;background:transparent;color:var(--tv-text);display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px;border-radius:5px;cursor:pointer;text-align:left}
+.nav-result:hover,.nav-result.active{background:rgba(0,209,9,.14);color:#fff}
+.nav-result-symbol{font-weight:850;font-size:13px;color:#fff}
+.nav-result-name{font-size:12px;color:var(--tv-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-result-change{font-size:12px;font-weight:850;font-family:Inter,Arial,sans-serif}
+.nav-result-change.up{color:var(--tv-green)}.nav-result-change.down{color:var(--tv-red)}
 .container{width:100%;max-width:none;margin:0;padding:0}
 .page-layout{display:grid;grid-template-columns:clamp(292px,16vw,360px) minmax(0,1fr);gap:0;align-items:stretch;border:none;background:#000}
 .page-layout.sidebar-collapsed{grid-template-columns:44px minmax(0,1fr)}
@@ -138,6 +146,7 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
   .market-menu-link{height:34px;font-size:13px}
   .nav-search{order:4;min-width:0;margin-left:0;padding-top:8px}
   .nav-search input{height:40px;font-size:14px}
+  .nav-search-results{top:calc(100% + 4px)}
   .container{padding:0}
   .page-layout{display:block;border:none}
   .main-panel{min-height:calc(100dvh - 78px)}
@@ -168,16 +177,16 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
     <div class="nav-market">
       <a class="nav-link active" href="russell2000_top100.html">Market</a>
       <div class="market-menu" aria-label="Market sections">
-        <a class="market-menu-link active" href="russell2000_top100.html?market=stock">Stock</a>
+        <a class="market-menu-link active" href="russell2000_top100.html?market=stock">Tops</a>
         <a class="market-menu-link" href="russell2000_top100.html?market=commodities">Commodities</a>
         <a class="market-menu-link" href="russell2000_top100.html?market=indexes">Indexes</a>
-        <a class="market-menu-link" href="russell2000_top100.html?market=shares">Shares</a>
+        <a class="market-menu-link" href="russell2000_top100.html?market=shares">Stock</a>
         <a class="market-menu-link" href="russell2000_top100.html?market=currencies">Currencies</a>
         <a class="market-menu-link" href="russell2000_top100.html?market=crypto">Crypto</a>
         <a class="market-menu-link" href="russell2000_top100.html?market=bonds">Bonds</a>
       </div>
     </div>
-    <a class="nav-link" href="economy.html">Economy</a>
+    <a class="nav-link" href="economy.html">Indicators</a>
     <a class="nav-link" href="calendar.html">Calendar</a>
   </div>
   <form class="nav-search" role="search" data-root="">
@@ -1085,38 +1094,115 @@ function setupNavSearch(){
   const form = document.querySelector('.nav-search');
   if(!form) return;
   const input = form.querySelector('input[name="q"]');
-  const runSearch = async () => {
-    const query = (input.value || '').trim();
-    if(!query) return;
+  const results = document.createElement('div');
+  results.className = 'nav-search-results';
+  form.appendChild(results);
+  let rowsCache = null;
+  let activeIndex = -1;
+  let currentMatches = [];
+  const stockUrl = row => {
     const root = form.dataset.root || '';
-    let target = { symbol: query.toUpperCase(), name: query };
+    const params = new URLSearchParams();
+    params.set('symbol', row.symbol);
+    params.set('name', row.name || row.symbol);
+    return root + 'stock_chart.html?' + params.toString();
+  };
+  const loadRows = async () => {
+    if(rowsCache) return rowsCache;
+    const root = form.dataset.root || '';
     try{
       const response = await fetch(root + 'market_data/index.json', { cache:'no-store' });
-      if(response.ok){
-        const index = await response.json();
-        const groups = index.groups || {};
-        const rows = Object.keys(groups).length
-          ? Object.values(groups).flatMap(group => group.stocks || [])
-          : (index.stocks || []);
-        const normalized = query.toLowerCase();
-        const match = rows.find(row => String(row.symbol || '').toLowerCase() === normalized)
-          || rows.find(row => String(row.name || '').toLowerCase().includes(normalized));
-        if(match) target = { symbol: match.symbol, name: match.name || match.symbol };
-      }
-    }catch(error){}
-    const params = new URLSearchParams();
-    params.set('symbol', target.symbol);
-    params.set('name', target.name);
-    window.location.href = root + 'stock_chart.html?' + params.toString();
+      if(!response.ok) throw new Error('No market index');
+      const index = await response.json();
+      const groups = index.groups || {};
+      const source = Object.keys(groups).length
+        ? Object.values(groups).flatMap(group => group.stocks || [])
+        : (index.stocks || []);
+      const seen = new Set();
+      rowsCache = source.map(row => ({
+        symbol: String(row.symbol || '').toUpperCase(),
+        name: row.name || row.symbol || '',
+        d: Number(row.d || 0)
+      })).filter(row => {
+        if(!row.symbol || seen.has(row.symbol)) return false;
+        seen.add(row.symbol);
+        return true;
+      });
+    }catch(error){
+      rowsCache = [];
+    }
+    return rowsCache;
+  };
+  const closeResults = () => {
+    results.classList.remove('open');
+    results.innerHTML = '';
+    activeIndex = -1;
+    currentMatches = [];
+  };
+  const paintResults = () => {
+    if(!currentMatches.length){ closeResults(); return; }
+    results.innerHTML = currentMatches.map((row,index) => {
+      const cls = row.d >= 0 ? 'up' : 'down';
+      const sign = row.d > 0 ? '+' : '';
+      return '<button class="nav-result'+(index === activeIndex ? ' active' : '')+'" type="button" data-index="'+index+'">' +
+        '<span class="nav-result-symbol">'+row.symbol+'</span>' +
+        '<span class="nav-result-name">'+row.name+'</span>' +
+        '<span class="nav-result-change '+cls+'">'+sign+row.d.toFixed(2)+'%</span>' +
+        '</button>';
+    }).join('');
+    results.classList.add('open');
+  };
+  const updateResults = async () => {
+    const query = (input.value || '').trim().toLowerCase();
+    if(!query){ closeResults(); return; }
+    const rows = await loadRows();
+    currentMatches = rows.filter(row => row.symbol.toLowerCase().includes(query) || String(row.name).toLowerCase().includes(query)).slice(0, 10);
+    activeIndex = currentMatches.length ? Math.max(0, Math.min(activeIndex, currentMatches.length - 1)) : -1;
+    paintResults();
+  };
+  const runSearch = async () => {
+    if(currentMatches.length){
+      const row = currentMatches[Math.max(0, activeIndex)];
+      window.location.href = stockUrl(row);
+      return;
+    }
+    const query = (input.value || '').trim();
+    if(!query) return;
+    window.location.href = stockUrl({ symbol: query.toUpperCase(), name: query });
   };
   form.addEventListener('submit', event => {
     event.preventDefault();
     runSearch();
   });
-  input.addEventListener('keydown', event => {
+  input.addEventListener('keydown', async event => {
+    if(event.key === 'ArrowDown' && currentMatches.length){
+      event.preventDefault();
+      activeIndex = Math.min(currentMatches.length - 1, activeIndex + 1);
+      paintResults();
+      return;
+    }
+    if(event.key === 'ArrowUp' && currentMatches.length){
+      event.preventDefault();
+      activeIndex = Math.max(0, activeIndex - 1);
+      paintResults();
+      return;
+    }
+    if(event.key === 'Escape'){ closeResults(); return; }
     if(event.key !== 'Enter') return;
     event.preventDefault();
     runSearch();
+  });
+  input.addEventListener('input', updateResults);
+  input.addEventListener('focus', updateResults);
+  results.addEventListener('mousedown', event => {
+    const button = event.target.closest('.nav-result');
+    if(!button) return;
+    event.preventDefault();
+    const row = currentMatches[Number(button.dataset.index)];
+    if(row) window.location.href = stockUrl(row);
+  });
+  document.addEventListener('click', event => {
+    if(!form.contains(event.target)) closeResults();
   });
 }
 

@@ -50,6 +50,14 @@ body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-t
 .nav-search input:focus{border-color:#b8ff00;box-shadow:0 0 0 1px rgba(184,255,0,.24)}
 .nav-search-mark{position:absolute;left:16px;top:50%;width:13px;height:13px;border:2px solid #b8ff00;border-radius:50%;transform:translateY(-50%);pointer-events:none}
 .nav-search-mark::after{content:"";position:absolute;width:7px;height:2px;background:#b8ff00;border-radius:999px;right:-6px;bottom:-4px;transform:rotate(45deg)}
+.nav-search-results{position:absolute;left:0;right:0;top:calc(100% + 8px);max-height:320px;overflow:auto;padding:6px;border:1px solid #26313d;border-radius:8px;background:rgba(9,13,18,.98);box-shadow:0 18px 48px rgba(0,0,0,.48);display:none;z-index:80;scrollbar-color:#2a3440 #080c12;scrollbar-width:thin}
+.nav-search-results.open{display:block}
+.nav-result{width:100%;border:0;background:transparent;color:var(--tv-text);display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px;border-radius:5px;cursor:pointer;text-align:left}
+.nav-result:hover,.nav-result.active{background:rgba(0,209,9,.14);color:#fff}
+.nav-result-symbol{font-weight:850;font-size:13px;color:#fff}
+.nav-result-name{font-size:12px;color:var(--tv-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-result-change{font-size:12px;font-weight:850;font-family:Inter,Arial,sans-serif}
+.nav-result-change.up{color:var(--tv-green)}.nav-result-change.down{color:var(--tv-red)}
 .container{width:100%;max-width:100%;margin:0;padding:10px clamp(10px,1vw,24px);overflow:hidden}
 .market-header{display:none}
 .market-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;color:var(--tv-muted)}
@@ -60,6 +68,29 @@ body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-t
 .market-caret{position:absolute;right:11px;width:8px;height:8px;border-right:2px solid var(--tv-muted);border-bottom:2px solid var(--tv-muted);transform:rotate(45deg) translateY(-2px);pointer-events:none}
 .market-view{min-width:0}
 .market-view.hidden{display:none}
+.stock-overview-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin:2px 0 10px;flex-wrap:wrap}
+.overview-title{display:flex;flex-direction:column;gap:3px}
+.overview-title h1{margin:0}
+.overview-subtitle{font-size:11px;color:var(--tv-muted)}
+.overview-subtitle strong{color:var(--tv-accent)}
+.heat-legend{display:flex;align-items:center;gap:8px;color:var(--tv-muted);font-size:10px;font-weight:800}
+.heat-scale{width:88px;height:8px;border-radius:999px;background:linear-gradient(90deg,#8f2632,#444,#008a3a)}
+.heatmap{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-auto-rows:72px;gap:2px;background:#081018;border:1px solid var(--tv-border);padding:2px;min-height:560px}
+.heat-sector{position:relative;display:flex;flex-direction:column;min-height:0;overflow:hidden;background:#050709;border:1px solid #111820}
+.heat-sector-title{height:18px;padding:2px 5px;background:#102337;color:#dfe7ef;font-size:10px;font-weight:850;text-transform:uppercase;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.heat-sector-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-auto-rows:28px;gap:1px;padding:1px;background:#000}
+.heat-tile{grid-column:span var(--tile-w,2);grid-row:span var(--tile-h,2);min-height:26px;background:var(--tile-bg,#303a32);color:#fff;text-decoration:none;border:1px solid rgba(0,0,0,.45);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;overflow:hidden;text-align:center;text-shadow:0 1px 2px rgba(0,0,0,.55)}
+.heat-tile:hover{outline:1px solid rgba(255,255,255,.65);z-index:2}
+.heat-symbol{font-size:clamp(10px,1.45vw,24px);font-weight:900;line-height:1}
+.heat-change{font-family:Inter,Arial,sans-serif;font-size:clamp(8px,.8vw,13px);font-weight:800;line-height:1}
+.heat-name{max-width:100%;font-size:9px;color:rgba(255,255,255,.74);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.heat-sector:nth-child(1){grid-column:span 4;grid-row:span 4}
+.heat-sector:nth-child(2){grid-column:span 3;grid-row:span 3}
+.heat-sector:nth-child(3){grid-column:span 3;grid-row:span 3}
+.heat-sector:nth-child(4){grid-column:span 2;grid-row:span 3}
+.heat-sector:nth-child(5){grid-column:span 3;grid-row:span 3}
+.heat-sector:nth-child(6){grid-column:span 3;grid-row:span 3}
+.heat-sector:nth-child(n+7){grid-column:span 2;grid-row:span 2}
 .commodity-meta{font-size:11px;color:var(--tv-muted);margin:0 0 8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .commodity-meta strong{color:var(--tv-accent)}
 .commodity-table-wrap{width:100%;max-width:100%;overflow-x:auto;overflow-y:visible;overscroll-behavior-x:contain;border:1px solid var(--tv-border);background:#000}
@@ -151,11 +182,21 @@ tr:hover td:first-child{background:var(--tv-hover)}
   .market-menu-link{height:34px;font-size:13px}
   .nav-search{order:4;min-width:0;margin-left:0;padding-top:8px}
   .nav-search input{height:40px;font-size:14px}
+  .nav-search-results{top:calc(100% + 4px)}
   .container{padding:10px;max-width:100%;overflow:hidden}
   .market-header{align-items:stretch}
   .market-select-wrap{flex:1}
   .market-select{width:100%}
   .market-view{width:100%;max-width:100%;overflow:hidden}
+  .stock-overview-head{align-items:flex-start}
+  .heatmap{grid-template-columns:1fr;grid-auto-rows:auto;min-height:0;border:0;background:#000;padding:0;gap:8px}
+  .heat-sector,.heat-sector:nth-child(n){grid-column:auto;grid-row:auto;border:0}
+  .heat-sector-title{height:24px;font-size:11px;padding:5px 7px;background:rgba(255,255,255,.10)}
+  .heat-sector-grid{grid-auto-rows:34px}
+  .heat-tile{grid-column:span var(--tile-w-mobile,4);grid-row:span 1}
+  .heat-symbol{font-size:12px}
+  .heat-change{font-size:10px}
+  .heat-name{display:none}
   .commodity-table-wrap{width:100%;max-width:100%;overflow-x:auto;overflow-y:visible;border:0}
   .commodity-table{width:max-content;min-width:max-content;border:0;border-collapse:separate;border-spacing:0}
   .commodity-table th,
@@ -189,16 +230,16 @@ tr:hover td:first-child{background:var(--tv-hover)}
     <div class="nav-market">
       <a class="nav-link active" href="russell2000_top100.html">Market</a>
       <div class="market-menu" aria-label="Market sections">
-        <a class="market-menu-link" data-market-menu="stock" href="russell2000_top100.html?market=stock">Stock</a>
+        <a class="market-menu-link" data-market-menu="stock" href="russell2000_top100.html?market=stock">Tops</a>
         <a class="market-menu-link" data-market-menu="commodities" href="russell2000_top100.html?market=commodities">Commodities</a>
         <a class="market-menu-link" data-market-menu="indexes" href="russell2000_top100.html?market=indexes">Indexes</a>
-        <a class="market-menu-link" data-market-menu="shares" href="russell2000_top100.html?market=shares">Shares</a>
+        <a class="market-menu-link" data-market-menu="shares" href="russell2000_top100.html?market=shares">Stock</a>
         <a class="market-menu-link" data-market-menu="currencies" href="russell2000_top100.html?market=currencies">Currencies</a>
         <a class="market-menu-link" data-market-menu="crypto" href="russell2000_top100.html?market=crypto">Crypto</a>
         <a class="market-menu-link" data-market-menu="bonds" href="russell2000_top100.html?market=bonds">Bonds</a>
       </div>
     </div>
-    <a class="nav-link" href="economy.html">Economy</a>
+    <a class="nav-link" href="economy.html">Indicators</a>
     <a class="nav-link" href="calendar.html">Calendar</a>
   </div>
   <form class="nav-search" role="search" data-root="">
@@ -209,10 +250,10 @@ tr:hover td:first-child{background:var(--tv-hover)}
 <div class="container">
 
 <select id="marketTypeSelect" hidden aria-hidden="true">
-  <option value="stock" selected>Stock</option>
+  <option value="stock" selected>Tops</option>
   <option value="commodities">Commodities</option>
   <option value="indexes">Indexes</option>
-  <option value="shares">Shares</option>
+  <option value="shares">Stock</option>
   <option value="currencies">Currencies</option>
   <option value="crypto">Crypto</option>
   <option value="bonds">Bonds</option>
@@ -228,6 +269,17 @@ tr:hover td:first-child{background:var(--tv-hover)}
   <div class="tab-pane active" id="pane-r2000"><div id="app-r2000"></div></div>
   <div class="tab-pane" id="pane-sp500"><div id="app-sp500"></div></div>
   <div class="tab-pane" id="pane-nasdaq"><div id="app-nasdaq"></div></div>
+</div>
+
+<div class="market-view hidden" id="sharesMarketView">
+  <div class="stock-overview-head">
+    <div class="overview-title">
+      <h1>Stock Overview</h1>
+      <div class="overview-subtitle" id="sharesMeta">Loading US stocks...</div>
+    </div>
+    <div class="heat-legend"><span>Down</span><span class="heat-scale" aria-hidden="true"></span><span>Up</span></div>
+  </div>
+  <div id="sharesHeatmap"></div>
 </div>
 
 <div class="market-view hidden" id="commoditiesMarketView">
@@ -682,34 +734,201 @@ function setupNavSearch(){
   var form=document.querySelector('.nav-search');
   if(!form)return;
   var input=form.querySelector('input[name="q"]');
+  var results=document.createElement('div');
+  results.className='nav-search-results';
+  form.appendChild(results);
+  var rowsCache=null;
+  var activeIndex=-1;
+  function stockUrl(row){
+    var params=new URLSearchParams();
+    params.set('symbol',row.symbol||row.t);
+    params.set('name',row.name||row.n||row.symbol||row.t);
+    return 'stock_chart.html?'+params.toString();
+  }
+  function normalizeStockRows(source){
+    var rows=[], seen={};
+    source.forEach(function(row){
+      var symbol=String(row.symbol||row.t||'').toUpperCase();
+      if(!symbol||seen[symbol])return;
+      seen[symbol]=true;
+      rows.push({
+        symbol:symbol,
+        name:row.name||row.n||symbol,
+        sector:row.sector||row.s||'',
+        marketCap:row.marketCap||row.c||'',
+        marketCapNum:Number(row.marketCapNum||row.mn||0),
+        price:Number(row.price||row.p||0),
+        d:Number(row.d||0)
+      });
+    });
+    return rows;
+  }
+  function loadSearchRows(){
+    if(rowsCache)return Promise.resolve(rowsCache);
+    return fetch('market_data/index.json',{cache:'no-store'})
+      .then(function(response){if(!response.ok)throw new Error('No stock index');return response.json();})
+      .then(function(index){
+        var groups=index.groups||{};
+        var source=Object.keys(groups).length?Object.values(groups).flatMap(function(group){return group.stocks||[];}):(index.stocks||[]);
+        rowsCache=normalizeStockRows(source);
+        return rowsCache;
+      })
+      .catch(function(){
+        rowsCache=normalizeStockRows([].concat(r2kRaw,spRaw,ndqRaw));
+        return rowsCache;
+      });
+  }
+  function closeResults(){
+    results.classList.remove('open');
+    results.innerHTML='';
+    activeIndex=-1;
+  }
+  function paintResults(matches){
+    if(!matches.length){closeResults();return;}
+    results.innerHTML=matches.map(function(row,index){
+      var cls=row.d>=0?'up':'down';
+      var sign=row.d>0?'+':'';
+      return '<button class="nav-result'+(index===activeIndex?' active':'')+'" type="button" data-symbol="'+row.symbol+'">'+
+        '<span class="nav-result-symbol">'+row.symbol+'</span>'+
+        '<span class="nav-result-name">'+row.name+'</span>'+
+        '<span class="nav-result-change '+cls+'">'+sign+row.d.toFixed(2)+'%</span>'+
+        '</button>';
+    }).join('');
+    results.classList.add('open');
+  }
+  function updateResults(){
+    var query=(input.value||'').trim();
+    if(!query){closeResults();return;}
+    loadSearchRows().then(function(rows){
+      var normalized=query.toLowerCase();
+      var matches=rows.filter(function(row){
+        return row.symbol.toLowerCase().includes(normalized)||String(row.name||'').toLowerCase().includes(normalized);
+      }).slice(0,10);
+      activeIndex=matches.length?Math.max(0,Math.min(activeIndex,matches.length-1)):-1;
+      paintResults(matches);
+    });
+  }
   function runSearch(){
+    var selected=results.querySelector('.nav-result.active')||results.querySelector('.nav-result');
+    if(selected){
+      loadSearchRows().then(function(rows){
+        var match=rows.find(function(row){return row.symbol===selected.dataset.symbol;});
+        window.location.href=stockUrl(match||{symbol:selected.dataset.symbol,name:selected.dataset.symbol});
+      });
+      return;
+    }
     var query=(input.value||'').trim();
     if(!query)return;
-    var normalized=query.toLowerCase();
-    var rows=[].concat(r2kRaw,spRaw,ndqRaw);
-    var seen={};
-    rows=rows.filter(function(row){
-      if(seen[row.t])return false;
-      seen[row.t]=true;
-      return true;
-    });
-    var match=rows.find(function(row){return String(row.t||'').toLowerCase()===normalized;})||
-      rows.find(function(row){return String(row.n||'').toLowerCase().includes(normalized);});
-    var target=match||{t:query.toUpperCase(),n:query};
-    var params=new URLSearchParams();
-    params.set('symbol',target.t);
-    params.set('name',target.n||target.t);
-    window.location.href='stock_chart.html?'+params.toString();
+    window.location.href=stockUrl({symbol:query.toUpperCase(),name:query});
   }
   form.addEventListener('submit',function(event){
     event.preventDefault();
     runSearch();
   });
   input.addEventListener('keydown',function(event){
+    var items=results.querySelectorAll('.nav-result');
+    if(event.key==='ArrowDown'&&items.length){
+      event.preventDefault();
+      activeIndex=Math.min(items.length-1,activeIndex+1);
+      paintResults([].map.call(items,function(item){return {symbol:item.dataset.symbol,name:item.querySelector('.nav-result-name').textContent,d:Number(item.querySelector('.nav-result-change').textContent.replace('%',''))||0};}));
+      return;
+    }
+    if(event.key==='ArrowUp'&&items.length){
+      event.preventDefault();
+      activeIndex=Math.max(0,activeIndex-1);
+      paintResults([].map.call(items,function(item){return {symbol:item.dataset.symbol,name:item.querySelector('.nav-result-name').textContent,d:Number(item.querySelector('.nav-result-change').textContent.replace('%',''))||0};}));
+      return;
+    }
+    if(event.key==='Escape'){closeResults();return;}
     if(event.key!=='Enter')return;
     event.preventDefault();
     runSearch();
   });
+  input.addEventListener('input',updateResults);
+  input.addEventListener('focus',updateResults);
+  results.addEventListener('mousedown',function(event){
+    var button=event.target.closest('.nav-result');
+    if(!button)return;
+    event.preventDefault();
+    loadSearchRows().then(function(rows){
+      var row=rows.find(function(item){return item.symbol===button.dataset.symbol;});
+      window.location.href=stockUrl(row||{symbol:button.dataset.symbol,name:button.dataset.symbol});
+    });
+  });
+  document.addEventListener('click',function(event){
+    if(!form.contains(event.target))closeResults();
+  });
+}
+function stockChartUrl(row){
+  var params=new URLSearchParams();
+  params.set('symbol',row.symbol);
+  params.set('name',row.name||row.symbol);
+  return 'stock_chart.html?'+params.toString();
+}
+function normalizeShares(payload){
+  var groups=(payload&&payload.groups)||{};
+  var source=Object.keys(groups).length?Object.values(groups).flatMap(function(group){return group.stocks||[];}):((payload&&payload.stocks)||[]);
+  var seen={};
+  return source.filter(function(row){
+    var symbol=String(row.symbol||'').toUpperCase();
+    if(!symbol||seen[symbol])return false;
+    seen[symbol]=true;
+    row.symbol=symbol;
+    return true;
+  });
+}
+function heatColor(value){
+  var v=Math.max(-6,Math.min(6,Number(value)||0));
+  if(Math.abs(v)<.08)return '#3f4542';
+  if(v>0){
+    var g=Math.round(76+Math.min(1,v/6)*132);
+    return 'rgb(0,'+g+',54)';
+  }
+  var r=Math.round(118+Math.min(1,Math.abs(v)/6)*120);
+  return 'rgb('+r+',44,52)';
+}
+function tileSpan(row,maxCap){
+  var cap=Math.max(1,Number(row.marketCapNum||0));
+  var weight=Math.sqrt(cap/Math.max(1,maxCap));
+  if(weight>.8)return {w:5,h:5,m:6};
+  if(weight>.55)return {w:4,h:4,m:5};
+  if(weight>.35)return {w:3,h:3,m:4};
+  if(weight>.18)return {w:2,h:2,m:3};
+  return {w:1,h:2,m:3};
+}
+function renderSharesOverview(payload){
+  var rows=normalizeShares(payload);
+  var meta=document.getElementById('sharesMeta');
+  var mount=document.getElementById('sharesHeatmap');
+  if(!rows.length){
+    meta.textContent='Stock overview';
+    mount.innerHTML='<div class="commodity-empty">No stock overview data available.</div>';
+    return;
+  }
+  meta.innerHTML='<span>共 <strong>'+rows.length+'</strong> 只股票</span><span>更新于 '+((payload&&payload.updated)||'---')+'</span><span>Source: local US stock universe</span>';
+  var order=['科技','通信','消费周期','消费防御','医疗','工业','金融','能源','基础材料','公用事业','房地产'];
+  var groups=order.map(function(name){
+    return {name:name,rows:rows.filter(function(row){return row.sector===name;})};
+  }).concat([{name:'Other',rows:rows.filter(function(row){return order.indexOf(row.sector)<0;})}]).filter(function(group){return group.rows.length;});
+  var maxCap=Math.max.apply(null,rows.map(function(row){return Number(row.marketCapNum||0);}));
+  var html='<div class="heatmap">';
+  groups.forEach(function(group){
+    var sorted=group.rows.slice().sort(function(a,b){return Number(b.marketCapNum||0)-Number(a.marketCapNum||0);});
+    html+='<section class="heat-sector"><div class="heat-sector-title">'+group.name+'</div><div class="heat-sector-grid">';
+    sorted.forEach(function(row){
+      var span=tileSpan(row,maxCap);
+      var change=Number(row.d||0);
+      var sign=change>0?'+':'';
+      html+='<a class="heat-tile" href="'+stockChartUrl(row)+'" title="'+row.symbol+' · '+(row.name||'')+' · '+sign+change.toFixed(2)+'%" style="--tile-w:'+span.w+';--tile-h:'+span.h+';--tile-w-mobile:'+span.m+';--tile-bg:'+heatColor(change)+'">'+
+        '<span class="heat-symbol">'+row.symbol+'</span>'+
+        '<span class="heat-change">'+sign+change.toFixed(2)+'%</span>'+
+        '<span class="heat-name">'+(row.name||'')+'</span>'+
+        '</a>';
+    });
+    html+='</div></section>';
+  });
+  html+='</div>';
+  mount.innerHTML=html;
 }
 function fmtCommodityNumber(value, digits){
   if(value===null||value===undefined||Number.isNaN(Number(value)))return '---';
@@ -825,19 +1044,33 @@ function renderIndexes(payload){
 function setupMarketType(){
   var select=document.getElementById('marketTypeSelect');
   var stock=document.getElementById('stockMarketView');
+  var shares=document.getElementById('sharesMarketView');
   var commodities=document.getElementById('commoditiesMarketView');
   var indexes=document.getElementById('indexesMarketView');
+  var loadedShares=false;
   var loadedCommodities=false;
   var loadedIndexes=false;
   function show(value){
+    var isShares=value==='shares';
     var isCommodities=value==='commodities';
     var isIndexes=value==='indexes';
-    stock.classList.toggle('hidden',isCommodities||isIndexes);
+    stock.classList.toggle('hidden',isShares||isCommodities||isIndexes);
+    shares.classList.toggle('hidden',!isShares);
     commodities.classList.toggle('hidden',!isCommodities);
     indexes.classList.toggle('hidden',!isIndexes);
     document.querySelectorAll('[data-market-menu]').forEach(function(link){
       link.classList.toggle('active',link.dataset.marketMenu===value);
     });
+    if(isShares&&!loadedShares){
+      loadedShares=true;
+      fetch('market_data/index.json',{cache:'no-store'})
+        .then(function(response){if(!response.ok)throw new Error('No stock index');return response.json();})
+        .then(renderSharesOverview)
+        .catch(function(){
+          document.getElementById('sharesMeta').textContent='Stock overview';
+          document.getElementById('sharesHeatmap').innerHTML='<div class="commodity-empty">Stock overview data has not been generated yet.</div>';
+        });
+    }
     if(isCommodities&&!loadedCommodities){
       loadedCommodities=true;
       fetch('commodities_data.json',{cache:'no-store'})
