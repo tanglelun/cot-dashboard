@@ -14,6 +14,7 @@ import yfinance as yf
 MARKET_FILE = "russell2000_top100.html"
 MARKET_DATA_DIR = Path("market_data")
 CHART_PERIOD = "max"
+CHART_MAX_ROWS = int(os.getenv("MARKET_CHART_MAX_ROWS", "1600") or 0)
 SUMMARY_PERIOD = os.getenv("MARKET_SUMMARY_PERIOD", "1y")
 MARKET_DOWNLOAD_SLEEP = float(os.getenv("MARKET_DOWNLOAD_SLEEP", "0.8"))
 MARKET_UNIVERSE_LIMIT = int(os.getenv("MARKET_UNIVERSE_LIMIT", "0") or 0)
@@ -431,6 +432,8 @@ def write_chart_data(static_data, chart_price_frames, updated_at, universe_rows=
         if frame.empty:
             continue
         frame = normalize_price_frame_dislocations(frame, symbol)
+        if CHART_MAX_ROWS and len(frame) > CHART_MAX_ROWS:
+            frame = frame.tail(CHART_MAX_ROWS)
         candles = []
         for timestamp, values in frame.iterrows():
             candle = {

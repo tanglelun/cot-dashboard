@@ -355,6 +355,8 @@ const state = {
   sortKey: normalizeSortKey(params.get('sort') || 'gain'),
   sortDir: params.get('dir') === 'asc' ? 'asc' : 'desc'
 };
+const chartCache = new Map();
+let activeChartRequest = 0;
 let pendingLayoutRedraw = false;
 
 document.getElementById('symbol').textContent = currentSymbol || 'UNKNOWN';
@@ -423,6 +425,23 @@ function renderHeader(data){
   document.getElementById('mcap').textContent = data.marketCap || 'Market cap';
   updateHeaderPrice(candles.length - 1);
   document.title = data.symbol + ' Candlestick Chart';
+}
+
+function renderHeaderFromRow(row){
+  if(!row) return;
+  const symbol = rowSymbol(row);
+  const name = rowName(row);
+  const price = Number(row.price || row.p || 0);
+  const pct = Number(row.d || 0);
+  const changeEl = document.getElementById('change');
+  document.getElementById('symbol').textContent = symbol;
+  document.getElementById('name').textContent = name || symbol;
+  document.getElementById('sector').textContent = row.sector || row.exchange || 'Stock';
+  document.getElementById('mcap').textContent = row.marketCap || 'Market cap';
+  document.getElementById('lastPrice').textContent = price ? fmt(price) : '--';
+  changeEl.textContent = (pct >= 0 ? '+' : '') + fmt(pct) + '%';
+  changeEl.className = 'change ' + (pct >= 0 ? 'up' : 'down');
+  document.title = symbol + ' Candlestick Chart';
 }
 
 function updateHeaderPrice(index){
@@ -1291,7 +1310,6 @@ function syncControls(){
 function renderStockList(){
   syncControls();
   state.stockRows = sortedRows();
-  const currentIndex = state.stockRows.findIndex(row => rowSymbol(row) === currentSymbol);
   stockListEl.innerHTML = state.stockRows.map((row, index) => {
     const symbol = rowSymbol(row);
     const active = symbol === currentSymbol ? ' active' : '';
@@ -1304,9 +1322,16 @@ function renderStockList(){
       '<span class="stock-value'+valueClass+'">'+value+'</span>' +
       '</button>';
   }).join('');
-  if(currentIndex >= 0){
-    const active = stockListEl.querySelector('.stock-row.active');
-    if(active) active.scrollIntoView({ block:'nearest' });
+  markActiveStockRow(true);
+}
+
+function markActiveStockRow(scroll=false){
+  stockListEl.querySelectorAll('.stock-row.active').forEach(item => item.classList.remove('active'));
+  if(!currentSymbol) return;
+  const active = stockListEl.querySelector('.stock-row[data-symbol="'+CSS.escape(currentSymbol)+'"]');
+  if(active){
+    active.classList.add('active');
+    if(scroll) active.scrollIntoView({ block:'nearest' });
   }
 }
 
@@ -1329,9 +1354,10 @@ async function switchStock(symbol){
   const row = state.stockRows.find(item => rowSymbol(item) === symbol);
   currentSymbol = symbol;
   fallbackName = row ? rowName(row) : symbol;
-  renderStockList();
+  markActiveStockRow(true);
+  renderHeaderFromRow(row);
   updateUrl(row);
-  await loadChart();
+  loadChart();
   stockPanel.classList.remove('open');
 }
 
@@ -1395,12 +1421,20 @@ async function loadChart(){
     setStatus('Missing stock symbol.');
     return;
   }
+  const requestId = ++activeChartRequest;
+  const symbol = currentSymbol;
   try{
-    setStatus('Loading price data...');
-    const response = await fetch('market_data/' + encodeURIComponent(currentSymbol) + '.json', { cache:'no-store' });
-    if(!response.ok) throw new Error('No chart data found for ' + currentSymbol);
-    const data = await response.json();
-    if(!data.prices || !data.prices.length) throw new Error('Chart data is empty for ' + currentSymbol);
+    let data = chartCache.get(symbol);
+    if(!data){
+      setStatus('Loading price data...');
+      const response = await fetch('market_data/' + encodeURIComponent(symbol) + '.json', { cache:'no-store' });
+      if(!response.ok) throw new Error('No chart data found for ' + symbol);
+      data = await response.json();
+      if(chartCache.size > 24) chartCache.delete(chartCache.keys().next().value);
+      chartCache.set(symbol, data);
+    }
+    if(requestId !== activeChartRequest || symbol !== currentSymbol) return;
+    if(!data.prices || !data.prices.length) throw new Error('Chart data is empty for ' + symbol);
     currentSymbol = data.symbol;
     fallbackName = data.name || fallbackName || currentSymbol;
     state.candles = data.prices;
@@ -1410,6 +1444,7 @@ async function loadChart(){
     setStatus('');
     setRange(state.activeRange || 'all');
   }catch(error){
+    if(requestId !== activeChartRequest || symbol !== currentSymbol) return;
     if(String(error.message || '').includes('No chart data found')){
       setStatusHtml(
         '<span class="status-title">' + currentSymbol + ' chart history is not generated yet.</span>' +
