@@ -2,11 +2,12 @@
   "symbol": "^HSI",
   "safeSymbol": "HSI",
   "name": "Hang Seng",
+  "fullName": "Hang Seng Index",
   "country": "HK",
   "flag": "🇭🇰",
   "sector": "Asia",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1986-12-31",
@@ -77959,7 +77960,14 @@
       "low": 22783.6406,
       "close": 23026.6797,
       "volume": 3457600000
+    },
+    {
+      "time": "2026-06-30",
+      "open": 23007.8691,
+      "high": 23086.8496,
+      "low": 22685.1406,
+      "close": 22881.0195,
+      "volume": 4494700000
     }
-  ],
-  "fullName": "Hang Seng Index"
+  ]
 }

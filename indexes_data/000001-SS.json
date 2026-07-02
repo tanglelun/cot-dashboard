@@ -2,11 +2,12 @@
   "symbol": "000001.SS",
   "safeSymbol": "000001-SS",
   "name": "SHANGHAI",
+  "fullName": "Shanghai Composite Index",
   "country": "CN",
   "flag": "🇨🇳",
   "sector": "Major",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1997-07-02",
@@ -56175,7 +56176,14 @@
       "low": 3992.552,
       "close": 4073.9021,
       "volume": 659200
+    },
+    {
+      "time": "2026-06-30",
+      "open": 4058.1689,
+      "high": 4097.415,
+      "low": 4052.1699,
+      "close": 4094.397,
+      "volume": 598400
     }
-  ],
-  "fullName": "Shanghai Composite Index"
+  ]
 }

@@ -2,11 +2,12 @@
   "symbol": "FTSEMIB.MI",
   "safeSymbol": "FTSEMIB-MI",
   "name": "IT40",
+  "fullName": "FTSE MIB Index",
   "country": "IT",
   "flag": "🇮🇹",
   "sector": "Major",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1997-12-31",
@@ -58215,7 +58216,14 @@
       "low": 50997.0,
       "close": 51163.0,
       "volume": 201529300
+    },
+    {
+      "time": "2026-06-30",
+      "open": 51374.0,
+      "high": 51746.0,
+      "low": 51243.0,
+      "close": 51682.0,
+      "volume": 255264700
     }
-  ],
-  "fullName": "FTSE MIB Index"
+  ]
 }

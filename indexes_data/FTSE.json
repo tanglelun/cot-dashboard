@@ -2,11 +2,12 @@
   "symbol": "^FTSE",
   "safeSymbol": "FTSE",
   "name": "GB100",
+  "fullName": "FTSE 100 Index",
   "country": "GB",
   "flag": "🇬🇧",
   "sector": "Major",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1984-01-03",
@@ -85863,7 +85864,14 @@
       "low": 10472.0,
       "close": 10484.2002,
       "volume": 724560800
+    },
+    {
+      "time": "2026-06-30",
+      "open": 10484.2998,
+      "high": 10613.2002,
+      "low": 10483.9004,
+      "close": 10497.0996,
+      "volume": 832111200
     }
-  ],
-  "fullName": "FTSE 100 Index"
+  ]
 }

@@ -2,11 +2,12 @@
   "symbol": "^TASI.SR",
   "safeSymbol": "TASI-SR",
   "name": "Tadawul",
+  "fullName": "Tadawul All Share Index",
   "country": "SA",
   "flag": "🇸🇦",
   "sector": "Middle East & Africa",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1998-10-19",
@@ -48016,6 +48017,5 @@
       "close": 10933.2305,
       "volume": 207566900
     }
-  ],
-  "fullName": "Tadawul All Share Index"
+  ]
 }

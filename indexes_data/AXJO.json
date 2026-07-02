@@ -2,11 +2,12 @@
   "symbol": "^AXJO",
   "safeSymbol": "AXJO",
   "name": "ASX200",
+  "fullName": "S&P/ASX 200 Index",
   "country": "AU",
   "flag": "🇦🇺",
   "sector": "Major",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1992-11-23",
@@ -67943,7 +67944,14 @@
       "low": 8823.4004,
       "close": 8823.4004,
       "volume": 0
+    },
+    {
+      "time": "2026-06-30",
+      "open": 8823.4004,
+      "high": 8836.4004,
+      "low": 8778.7002,
+      "close": 8778.7002,
+      "volume": 905700
     }
-  ],
-  "fullName": "S&P/ASX 200 Index"
+  ]
 }

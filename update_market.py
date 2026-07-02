@@ -39,7 +39,7 @@ EXCHANGE_LABELS = {
 }
 NON_COMMON_NAME_RE = re.compile(
     r"\b("
-    r"warrant|right|unit|preferred|preference|depositary|depository|"
+    r"warrant|warrants|right|rights|unit|preferred|preference|depositary|depository|"
     r"note|notes|bond|debenture|etf|etn|fund|index|certificate"
     r")\b",
     re.I,

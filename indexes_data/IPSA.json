@@ -2,11 +2,12 @@
   "symbol": "^IPSA",
   "safeSymbol": "IPSA",
   "name": "IPSA",
+  "fullName": "S&P IPSA Index",
   "country": "CL",
   "flag": "🇨🇱",
   "sector": "Americas",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "2002-01-02",
@@ -34777,13 +34778,12 @@
       "volume": 0
     },
     {
-      "time": "2026-06-30",
-      "open": 10762.9805,
-      "high": 10863.3604,
-      "low": 10762.9805,
-      "close": 10839.7998,
-      "volume": 1194594818
+      "time": "2026-07-01",
+      "open": 10839.7998,
+      "high": 10909.0,
+      "low": 10810.1699,
+      "close": 10811.9502,
+      "volume": 952553715
     }
-  ],
-  "fullName": "S&P IPSA Index"
+  ]
 }

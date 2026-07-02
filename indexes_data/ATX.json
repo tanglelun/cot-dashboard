@@ -2,11 +2,12 @@
   "symbol": "^ATX",
   "safeSymbol": "ATX",
   "name": "ATX",
+  "fullName": "Austrian Traded Index",
   "country": "AT",
   "flag": "🇦🇹",
   "sector": "Europe",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1992-11-11",
@@ -66855,7 +66856,14 @@
       "low": 6312.54,
       "close": 6351.75,
       "volume": 2107800
+    },
+    {
+      "time": "2026-06-30",
+      "open": 6352.5698,
+      "high": 6470.2402,
+      "low": 6350.5498,
+      "close": 6464.2002,
+      "volume": 2953800
     }
-  ],
-  "fullName": "Austrian Traded Index"
+  ]
 }

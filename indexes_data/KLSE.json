@@ -2,11 +2,12 @@
   "symbol": "^KLSE",
   "safeSymbol": "KLSE",
   "name": "FTSE Malaysia",
+  "fullName": "FTSE Bursa Malaysia KLCI",
   "country": "MY",
   "flag": "🇲🇾",
   "sector": "Asia",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1993-12-03",
@@ -64015,7 +64016,14 @@
       "low": 1655.28,
       "close": 1665.91,
       "volume": 154504400
+    },
+    {
+      "time": "2026-06-30",
+      "open": 1667.28,
+      "high": 1669.88,
+      "low": 1661.8,
+      "close": 1664.0601,
+      "volume": 240522700
     }
-  ],
-  "fullName": "FTSE Bursa Malaysia KLCI"
+  ]
 }

@@ -2,11 +2,12 @@
   "symbol": "^RUT",
   "safeSymbol": "RUT",
   "name": "Russell 2000",
+  "fullName": "Russell 2000 Index",
   "country": "US",
   "flag": "🇺🇸",
   "sector": "Americas",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1987-09-10",
@@ -78194,12 +78195,19 @@
     },
     {
       "time": "2026-06-30",
-      "open": 3007.1538,
-      "high": 3030.6138,
-      "low": 3000.2471,
-      "close": 3024.3672,
+      "open": 3007.1499,
+      "high": 3030.6101,
+      "low": 3000.25,
+      "close": 3024.3701,
+      "volume": 6037540000
+    },
+    {
+      "time": "2026-07-01",
+      "open": 3018.4849,
+      "high": 3046.5942,
+      "low": 3010.876,
+      "close": 3012.5896,
       "volume": 0
     }
-  ],
-  "fullName": "Russell 2000 Index"
+  ]
 }

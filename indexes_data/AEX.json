@@ -2,11 +2,12 @@
   "symbol": "^AEX",
   "safeSymbol": "AEX",
   "name": "AEX",
+  "fullName": "AEX Index",
   "country": "NL",
   "flag": "🇳🇱",
   "sector": "Europe",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1992-10-12",
@@ -68815,7 +68816,14 @@
       "low": 1057.09,
       "close": 1065.34,
       "volume": 45845400
+    },
+    {
+      "time": "2026-06-30",
+      "open": 1072.3199,
+      "high": 1082.0699,
+      "low": 1069.51,
+      "close": 1080.17,
+      "volume": 55289800
     }
-  ],
-  "fullName": "AEX Index"
+  ]
 }

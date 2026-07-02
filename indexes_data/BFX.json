@@ -2,11 +2,12 @@
   "symbol": "^BFX",
   "safeSymbol": "BFX",
   "name": "BEL20",
+  "fullName": "BEL 20 Index",
   "country": "BE",
   "flag": "🇧🇪",
   "sector": "Europe",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1991-04-09",
@@ -71535,7 +71536,14 @@
       "low": 5707.2998,
       "close": 5719.2798,
       "volume": 4701700
+    },
+    {
+      "time": "2026-06-30",
+      "open": 5735.8701,
+      "high": 5775.8101,
+      "low": 5730.8301,
+      "close": 5751.3599,
+      "volume": 7236900
     }
-  ],
-  "fullName": "BEL 20 Index"
+  ]
 }

@@ -2,11 +2,12 @@
   "symbol": "399001.SZ",
   "safeSymbol": "399001-SZ",
   "name": "Shenzhen",
+  "fullName": "Shenzhen Component Index",
   "country": "CN",
   "flag": "🇨🇳",
   "sector": "Asia",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1997-08-22",
@@ -55911,7 +55912,14 @@
       "low": 15487.9199,
       "close": 15812.8701,
       "volume": 3380300
+    },
+    {
+      "time": "2026-06-30",
+      "open": 15811.6699,
+      "high": 16232.2305,
+      "low": 15809.6504,
+      "close": 16205.5596,
+      "volume": 3172700
     }
-  ],
-  "fullName": "Shenzhen Component Index"
+  ]
 }

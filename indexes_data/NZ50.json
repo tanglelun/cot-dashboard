@@ -2,11 +2,12 @@
   "symbol": "^NZ50",
   "safeSymbol": "NZ50",
   "name": "NZ50",
+  "fullName": "S&P/NZX 50 Index",
   "country": "NZ",
   "flag": "🇳🇿",
   "sector": "Pacific",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "2003-01-03",
@@ -46369,13 +46370,20 @@
       "volume": 23727400
     },
     {
-      "time": "2026-07-01",
-      "open": 13621.6602,
-      "high": 13639.9902,
-      "low": 13588.6104,
-      "close": 13639.9902,
+      "time": "2026-06-30",
+      "open": 13545.5596,
+      "high": 13663.3604,
+      "low": 13545.5596,
+      "close": 13621.6602,
+      "volume": 37544300
+    },
+    {
+      "time": "2026-07-02",
+      "open": 13610.5,
+      "high": 13613.2598,
+      "low": 13581.0703,
+      "close": 13596.2803,
       "volume": 0
     }
-  ],
-  "fullName": "S&P/NZX 50 Index"
+  ]
 }
