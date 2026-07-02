@@ -16,6 +16,8 @@ MARKET_DATA_DIR = Path("market_data")
 CHART_PERIOD = "max"
 SUMMARY_PERIOD = os.getenv("MARKET_SUMMARY_PERIOD", "1y")
 MARKET_DOWNLOAD_SLEEP = float(os.getenv("MARKET_DOWNLOAD_SLEEP", "0.8"))
+MARKET_UNIVERSE_LIMIT = int(os.getenv("MARKET_UNIVERSE_LIMIT", "0") or 0)
+MARKET_UNIVERSE_OFFSET = int(os.getenv("MARKET_UNIVERSE_OFFSET", "0") or 0)
 TRACK_ALL_US_STOCKS = os.getenv("TRACK_ALL_US_STOCKS", "1") != "0"
 GENERATE_ALL_STOCK_CHARTS = os.getenv("GENERATE_ALL_STOCK_CHARTS", "0") == "1"
 NASDAQ_LISTED_URL = "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt"
@@ -302,7 +304,7 @@ def is_common_stock(symbol, name, is_etf, is_test):
         return False
     if not symbol or "^" in symbol or "/" in symbol or "$" in symbol:
         return False
-    if re.search(r"-(W|WS|WT|R|U)$", symbol, re.I):
+    if re.search(r"[.-](W|WS|WT|R|U)$", symbol, re.I):
         return False
     clean_name = str(name or "")
     return not NON_COMMON_NAME_RE.search(clean_name)
@@ -608,6 +610,14 @@ def main():
         try:
             raw_universe = fetch_us_stock_universe()
             print(f"Fetched {len(raw_universe)} US listed common stocks")
+            if MARKET_UNIVERSE_OFFSET or MARKET_UNIVERSE_LIMIT:
+                start = MARKET_UNIVERSE_OFFSET
+                end = start + MARKET_UNIVERSE_LIMIT if MARKET_UNIVERSE_LIMIT else None
+                raw_universe = raw_universe[start:end]
+                print(
+                    f"Using US stock batch offset={MARKET_UNIVERSE_OFFSET} "
+                    f"limit={MARKET_UNIVERSE_LIMIT or 'all'} rows={len(raw_universe)}"
+                )
             summary_frames = get_price_frame_map(
                 [row["t"] for row in raw_universe],
                 period=SUMMARY_PERIOD,
