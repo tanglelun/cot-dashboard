@@ -483,6 +483,21 @@ def write_chart_data(static_data, chart_price_frames, updated_at, universe_rows=
         }
         for row in index_source
     ]
+    if universe_rows and (MARKET_UNIVERSE_OFFSET or MARKET_UNIVERSE_LIMIT):
+        index_path = MARKET_DATA_DIR / "index.json"
+        if index_path.exists():
+            try:
+                existing = json.loads(index_path.read_text(encoding="utf-8"))
+                merged = {row["symbol"]: row for row in existing.get("stocks", [])}
+                merged.update({row["symbol"]: row for row in index_rows})
+                index_rows = sorted(
+                    merged.values(),
+                    key=lambda row: row.get("d", 0),
+                    reverse=True,
+                )
+                print(f"Merged market index rows: {len(index_rows)}")
+            except Exception as error:
+                print(f"Could not merge existing market index rows: {error}")
 
     groups = {}
     for array_name, label in ARRAYS.items():
