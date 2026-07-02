@@ -2,11 +2,12 @@
   "symbol": "^MERV",
   "safeSymbol": "MERV",
   "name": "Merval",
+  "fullName": "S&P Merval Index",
   "country": "AR",
   "flag": "🇦🇷",
   "sector": "Americas",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1996-10-08",
@@ -58178,12 +58179,19 @@
     },
     {
       "time": "2026-06-30",
-      "open": 3176750.5,
+      "open": 3176751.0,
       "high": 3219587.0,
-      "low": 3155817.5,
-      "close": 3168607.5,
+      "low": 3155818.0,
+      "close": 3168608.0,
+      "volume": 0
+    },
+    {
+      "time": "2026-07-01",
+      "open": 3169769.5,
+      "high": 3210227.0,
+      "low": 3090986.75,
+      "close": 3121855.0,
       "volume": 0
     }
-  ],
-  "fullName": "S&P Merval Index"
+  ]
 }

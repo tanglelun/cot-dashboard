@@ -2,11 +2,12 @@
   "symbol": "^GSPC",
   "safeSymbol": "GSPC",
   "name": "US500",
+  "fullName": "S&P 500 Index",
   "country": "US",
   "flag": "🇺🇸",
   "sector": "Major",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1927-12-30",
@@ -197926,8 +197927,15 @@
       "high": 7508.29,
       "low": 7438.04,
       "close": 7499.3599,
-      "volume": 3763756000
+      "volume": 6037540000
+    },
+    {
+      "time": "2026-07-01",
+      "open": 7478.8398,
+      "high": 7521.8101,
+      "low": 7449.6299,
+      "close": 7483.23,
+      "volume": 3687282000
     }
-  ],
-  "fullName": "S&P 500 Index"
+  ]
 }

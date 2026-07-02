@@ -2,11 +2,12 @@
   "symbol": "^KS11",
   "safeSymbol": "KS11",
   "name": "KOSPI",
+  "fullName": "KOSPI Composite Index",
   "country": "KR",
   "flag": "🇰🇷",
   "sector": "Asia",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1996-12-11",
@@ -58183,7 +58184,14 @@
       "low": 8394.6504,
       "close": 8394.6504,
       "volume": 0
+    },
+    {
+      "time": "2026-06-30",
+      "open": 8416.7002,
+      "high": 8667.7305,
+      "low": 8220.7998,
+      "close": 8476.4805,
+      "volume": 449800
     }
-  ],
-  "fullName": "KOSPI Composite Index"
+  ]
 }

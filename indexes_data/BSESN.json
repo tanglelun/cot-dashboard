@@ -2,11 +2,12 @@
   "symbol": "^BSESN",
   "safeSymbol": "BSESN",
   "name": "SENSEX",
+  "fullName": "BSE Sensex Index",
   "country": "IN",
   "flag": "🇮🇳",
   "sector": "Major",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1997-07-01",
@@ -57127,7 +57128,14 @@
       "low": 76621.75,
       "close": 76728.3672,
       "volume": 18900
+    },
+    {
+      "time": "2026-06-30",
+      "open": 77005.5078,
+      "high": 77037.3594,
+      "low": 76329.3906,
+      "close": 76478.6719,
+      "volume": 23400
     }
-  ],
-  "fullName": "BSE Sensex Index"
+  ]
 }

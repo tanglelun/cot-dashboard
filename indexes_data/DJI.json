@@ -2,11 +2,12 @@
   "symbol": "^DJI",
   "safeSymbol": "DJI",
   "name": "US30",
+  "fullName": "Dow Jones Industrial Average",
   "country": "US",
   "flag": "🇺🇸",
   "sector": "Major",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1992-01-02",
@@ -69478,8 +69479,15 @@
       "high": 52387.4492,
       "low": 52033.1289,
       "close": 52319.1992,
-      "volume": 639535665
+      "volume": 622980000
+    },
+    {
+      "time": "2026-07-01",
+      "open": 52231.1797,
+      "high": 52742.6602,
+      "low": 52026.6406,
+      "close": 52305.2383,
+      "volume": 627339226
     }
-  ],
-  "fullName": "Dow Jones Industrial Average"
+  ]
 }

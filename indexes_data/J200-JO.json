@@ -2,11 +2,12 @@
   "symbol": "^J200.JO",
   "safeSymbol": "J200-JO",
   "name": "JSE Top 40",
+  "fullName": "FTSE/JSE Top 40 Index",
   "country": "ZA",
   "flag": "🇿🇦",
   "sector": "Middle East & Africa",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1995-06-30",
@@ -62367,7 +62368,14 @@
       "low": 101638.5,
       "close": 101834.2969,
       "volume": 0
+    },
+    {
+      "time": "2026-06-30",
+      "open": 101834.2969,
+      "high": 102365.0,
+      "low": 101419.6016,
+      "close": 101936.1016,
+      "volume": 0
     }
-  ],
-  "fullName": "FTSE/JSE Top 40 Index"
+  ]
 }

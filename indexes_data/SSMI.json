@@ -2,11 +2,12 @@
   "symbol": "^SSMI",
   "safeSymbol": "SSMI",
   "name": "SMI",
+  "fullName": "Swiss Market Index",
   "country": "CH",
   "flag": "🇨🇭",
   "sector": "Europe",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1990-11-09",
@@ -71567,7 +71568,14 @@
       "low": 14123.6396,
       "close": 14223.9004,
       "volume": 19331300
+    },
+    {
+      "time": "2026-06-30",
+      "open": 14245.5195,
+      "high": 14287.6201,
+      "low": 14153.9697,
+      "close": 14193.9199,
+      "volume": 24800300
     }
-  ],
-  "fullName": "Swiss Market Index"
+  ]
 }

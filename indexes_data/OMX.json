@@ -2,11 +2,12 @@
   "symbol": "^OMX",
   "safeSymbol": "OMX",
   "name": "OMX Stockholm",
+  "fullName": "OMX Stockholm 30 Index",
   "country": "SE",
   "flag": "🇸🇪",
   "sector": "Europe",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "2008-11-20",
@@ -35303,7 +35304,14 @@
       "low": 3150.22,
       "close": 3166.78,
       "volume": 50354000
+    },
+    {
+      "time": "2026-06-30",
+      "open": 3186.72,
+      "high": 3215.6499,
+      "low": 3184.6699,
+      "close": 3203.22,
+      "volume": 78065500
     }
-  ],
-  "fullName": "OMX Stockholm 30 Index"
+  ]
 }

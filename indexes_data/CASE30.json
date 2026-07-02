@@ -2,20 +2,20 @@
   "symbol": "^CASE30",
   "safeSymbol": "CASE30",
   "name": "EGX30",
+  "fullName": "EGX 30 Index",
   "country": "EG",
   "flag": "🇪🇬",
   "sector": "Middle East & Africa",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
-      "time": "2026-06-30",
-      "open": 49829.3008,
-      "high": 50703.1992,
-      "low": 49825.6016,
-      "close": 50488.0,
-      "volume": 259724000
+      "time": "2026-07-01",
+      "open": 50547.8984,
+      "high": 50677.6992,
+      "low": 50389.1016,
+      "close": 50532.6992,
+      "volume": 344747000
     }
-  ],
-  "fullName": "EGX 30 Index"
+  ]
 }

@@ -2,11 +2,12 @@
   "symbol": "PSEI.PS",
   "safeSymbol": "PSEI-PS",
   "name": "PSEi",
+  "fullName": "PSEi Composite Index",
   "country": "PH",
   "flag": "🇵🇭",
   "sector": "Asia",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1987-01-02",
@@ -79336,6 +79337,5 @@
       "close": 6072.2402,
       "volume": 66600
     }
-  ],
-  "fullName": "PSEi Composite Index"
+  ]
 }

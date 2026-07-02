@@ -2,11 +2,12 @@
   "symbol": "^IBEX",
   "safeSymbol": "IBEX",
   "name": "ES35",
+  "fullName": "IBEX 35 Index",
   "country": "ES",
   "flag": "🇪🇸",
   "sector": "Major",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1993-07-12",
@@ -66823,7 +66824,14 @@
       "low": 19317.8008,
       "close": 19387.4004,
       "volume": 0
+    },
+    {
+      "time": "2026-06-30",
+      "open": 19411.0,
+      "high": 19527.4004,
+      "low": 19381.5996,
+      "close": 19471.9004,
+      "volume": 0
     }
-  ],
-  "fullName": "IBEX 35 Index"
+  ]
 }

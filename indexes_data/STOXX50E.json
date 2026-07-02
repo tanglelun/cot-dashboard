@@ -2,11 +2,12 @@
   "symbol": "^STOXX50E",
   "safeSymbol": "STOXX50E",
   "name": "Euro Stoxx 50",
+  "fullName": "Euro Stoxx 50 Index",
   "country": "EU",
   "flag": "🇪🇺",
   "sector": "Europe",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "2007-03-30",
@@ -38583,7 +38584,14 @@
       "low": 6202.4902,
       "close": 6231.6299,
       "volume": 18393200
+    },
+    {
+      "time": "2026-06-30",
+      "open": 6247.8501,
+      "high": 6329.4199,
+      "low": 6247.8501,
+      "close": 6328.0898,
+      "volume": 24809500
     }
-  ],
-  "fullName": "Euro Stoxx 50 Index"
+  ]
 }

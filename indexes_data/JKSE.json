@@ -2,11 +2,12 @@
   "symbol": "^JKSE",
   "safeSymbol": "JKSE",
   "name": "Jakarta Composite",
+  "fullName": "Jakarta Composite Index",
   "country": "ID",
   "flag": "🇮🇩",
   "sector": "Asia",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1990-04-06",
@@ -70527,7 +70528,14 @@
       "low": 5800.2891,
       "close": 5820.79,
       "volume": 117823200
+    },
+    {
+      "time": "2026-06-30",
+      "open": 5801.4541,
+      "high": 5811.6689,
+      "low": 5638.5742,
+      "close": 5643.1938,
+      "volume": 177538200
     }
-  ],
-  "fullName": "Jakarta Composite Index"
+  ]
 }

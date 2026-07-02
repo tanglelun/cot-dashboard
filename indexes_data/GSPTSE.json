@@ -2,11 +2,12 @@
   "symbol": "^GSPTSE",
   "safeSymbol": "GSPTSE",
   "name": "TSX",
+  "fullName": "S&P/TSX Composite Index",
   "country": "CA",
   "flag": "🇨🇦",
   "sector": "Major",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1979-06-29",
@@ -94418,12 +94419,11 @@
     },
     {
       "time": "2026-06-30",
-      "open": 34810.9688,
+      "open": 34811.0,
       "high": 34919.6016,
-      "low": 34727.0508,
-      "close": 34856.9883,
-      "volume": 283403277
+      "low": 34727.1016,
+      "close": 34857.0,
+      "volume": 283403300
     }
-  ],
-  "fullName": "S&P/TSX Composite Index"
+  ]
 }

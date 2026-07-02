@@ -2,11 +2,12 @@
   "symbol": "^STI",
   "safeSymbol": "STI",
   "name": "STI",
+  "fullName": "Straits Times Index",
   "country": "SG",
   "flag": "🇸🇬",
   "sector": "Asia",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1987-12-28",
@@ -76967,7 +76968,14 @@
       "low": 5177.8398,
       "close": 5208.75,
       "volume": 213020700
+    },
+    {
+      "time": "2026-06-30",
+      "open": 5211.8901,
+      "high": 5213.0098,
+      "low": 5164.0098,
+      "close": 5170.6499,
+      "volume": 289297200
     }
-  ],
-  "fullName": "Straits Times Index"
+  ]
 }

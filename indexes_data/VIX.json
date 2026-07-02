@@ -2,11 +2,12 @@
   "symbol": "^VIX",
   "safeSymbol": "VIX",
   "name": "VIX",
+  "fullName": "CBOE Volatility Index",
   "country": "US",
   "flag": "🇺🇸",
   "sector": "Americas",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1990-01-02",
@@ -73535,7 +73536,14 @@
       "low": 16.27,
       "close": 16.45,
       "volume": 0
+    },
+    {
+      "time": "2026-07-01",
+      "open": 17.11,
+      "high": 17.3,
+      "low": 15.97,
+      "close": 16.59,
+      "volume": 0
     }
-  ],
-  "fullName": "CBOE Volatility Index"
+  ]
 }

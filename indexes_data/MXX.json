@@ -2,11 +2,12 @@
   "symbol": "^MXX",
   "safeSymbol": "MXX",
   "name": "Mexico IPC",
+  "fullName": "S&P/BMV IPC Index",
   "country": "MX",
   "flag": "🇲🇽",
   "sector": "Americas",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1991-11-08",
@@ -69398,8 +69399,15 @@
       "high": 67865.3594,
       "low": 66894.6172,
       "close": 66966.6797,
-      "volume": 213110796
+      "volume": 213110800
+    },
+    {
+      "time": "2026-07-01",
+      "open": 66966.6797,
+      "high": 67435.7188,
+      "low": 66614.4219,
+      "close": 67247.7891,
+      "volume": 162396437
     }
-  ],
-  "fullName": "S&P/BMV IPC Index"
+  ]
 }

@@ -2,11 +2,12 @@
   "symbol": "^FCHI",
   "safeSymbol": "FCHI",
   "name": "FR40",
+  "fullName": "CAC 40 Index",
   "country": "FR",
   "flag": "🇫🇷",
   "sector": "Major",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1990-03-01",
@@ -73807,7 +73808,14 @@
       "low": 8341.2598,
       "close": 8367.3301,
       "volume": 53787200
+    },
+    {
+      "time": "2026-06-30",
+      "open": 8377.8604,
+      "high": 8420.5801,
+      "low": 8363.2305,
+      "close": 8403.9902,
+      "volume": 69481300
     }
-  ],
-  "fullName": "CAC 40 Index"
+  ]
 }

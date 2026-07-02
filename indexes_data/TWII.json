@@ -2,11 +2,12 @@
   "symbol": "^TWII",
   "safeSymbol": "TWII",
   "name": "Taiwan Weighted",
+  "fullName": "Taiwan Weighted Index",
   "country": "TW",
   "flag": "🇹🇼",
   "sector": "Asia",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1997-07-02",
@@ -56831,7 +56832,14 @@
       "low": 44594.8086,
       "close": 44999.8984,
       "volume": 6052400
+    },
+    {
+      "time": "2026-06-30",
+      "open": 45165.8008,
+      "high": 46637.8594,
+      "low": 45165.8008,
+      "close": 46125.9102,
+      "volume": 7182400
     }
-  ],
-  "fullName": "Taiwan Weighted Index"
+  ]
 }

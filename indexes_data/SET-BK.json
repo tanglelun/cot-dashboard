@@ -2,11 +2,12 @@
   "symbol": "^SET.BK",
   "safeSymbol": "SET-BK",
   "name": "SET",
+  "fullName": "Stock Exchange of Thailand SET Index",
   "country": "TH",
   "flag": "🇹🇭",
   "sector": "Asia",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1996-12-11",
@@ -57632,6 +57633,5 @@
       "close": 1542.34,
       "volume": 3838200
     }
-  ],
-  "fullName": "Stock Exchange of Thailand SET Index"
+  ]
 }

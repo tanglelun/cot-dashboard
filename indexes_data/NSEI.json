@@ -2,11 +2,12 @@
   "symbol": "^NSEI",
   "safeSymbol": "NSEI",
   "name": "NIFTY 50",
+  "fullName": "Nifty 50 Index",
   "country": "IN",
   "flag": "🇮🇳",
   "sector": "Asia",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "2007-09-17",
@@ -36847,7 +36848,14 @@
       "low": 23924.5508,
       "close": 23946.25,
       "volume": 588500
+    },
+    {
+      "time": "2026-06-30",
+      "open": 24032.0508,
+      "high": 24035.5508,
+      "low": 23829.1992,
+      "close": 23865.75,
+      "volume": 449000
     }
-  ],
-  "fullName": "Nifty 50 Index"
+  ]
 }

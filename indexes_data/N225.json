@@ -2,11 +2,12 @@
   "symbol": "^N225",
   "safeSymbol": "N225",
   "name": "JP225",
+  "fullName": "Nikkei 225 Index",
   "country": "JP",
   "flag": "🇯🇵",
   "sector": "Major",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1965-01-05",
@@ -120919,7 +120920,14 @@
       "low": 67997.5703,
       "close": 69468.1094,
       "volume": 182400000
+    },
+    {
+      "time": "2026-06-30",
+      "open": 70085.6016,
+      "high": 70667.0,
+      "low": 69302.1875,
+      "close": 70062.3203,
+      "volume": 160500000
     }
-  ],
-  "fullName": "Nikkei 225 Index"
+  ]
 }

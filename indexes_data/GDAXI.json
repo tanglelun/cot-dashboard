@@ -2,11 +2,12 @@
   "symbol": "^GDAXI",
   "safeSymbol": "GDAXI",
   "name": "DE40",
+  "fullName": "DAX 40 Index",
   "country": "DE",
   "flag": "🇩🇪",
   "sector": "Major",
   "unit": "Index Points",
-  "updated": "2026-06-30",
+  "updated": "2026-07-02",
   "prices": [
     {
       "time": "1987-12-30",
@@ -77871,7 +77872,14 @@
       "low": 24556.7793,
       "close": 24626.8906,
       "volume": 56335000
+    },
+    {
+      "time": "2026-06-30",
+      "open": 24815.2207,
+      "high": 25024.2695,
+      "low": 24794.8398,
+      "close": 24995.8105,
+      "volume": 75930500
     }
-  ],
-  "fullName": "DAX 40 Index"
+  ]
 }
