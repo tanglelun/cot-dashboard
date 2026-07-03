@@ -616,6 +616,7 @@ body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--ink);pa
     <a class="nav-link" href="index.html">Non-Commercial</a>
     <a class="nav-link" href="russell2000_top100.html">Market</a>
     <a class="nav-link active" href="economy.html">Indicators</a>
+    <a class="nav-link" href="compare.html">Compare</a>
     <a class="nav-link" href="calendar.html">Calendar</a>
   </div>
   <form class="nav-search" role="search" data-root="">
@@ -1096,6 +1097,7 @@ boot();
 def write_outputs(payload):
     data_json = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
     Path("economic_data.json").write_text(data_json, encoding="utf-8")
+    Path("economic_data_embed.js").write_text(f"window.ECONOMIC_DATA = {data_json};\n", encoding="utf-8")
     html = HTML_TEMPLATE.replace("__DATA__", data_json).replace("__UPDATED__", payload["updated"])
     Path("economy.html").write_text(html, encoding="utf-8")
     Path("economic.html").write_text(html, encoding="utf-8")
