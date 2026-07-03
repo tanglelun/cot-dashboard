@@ -1481,7 +1481,7 @@ async function loadChart(){
     if(String(error.message || '').includes('No chart data found')){
       setStatusHtml(
         '<span class="status-title">' + currentSymbol + ' chart history is not generated yet.</span>' +
-        '<span>This symbol is tracked in the full US stock universe for search and overview. Full historical chart files are still generated only for the Tops universe by default.</span>'
+        '<span>This symbol is tracked in the full US stock universe, but its historical chart JSON has not been backfilled yet.</span>'
       );
     }else{
       setStatus(error.message || 'Unable to load chart data.');
