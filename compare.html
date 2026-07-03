@@ -31,9 +31,17 @@ h1{margin:0;font-size:clamp(28px,4vw,52px);line-height:.95;letter-spacing:-1.2px
 .card-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
 .dot{width:10px;height:10px;border-radius:50%}
 .dot.a{background:var(--blue)}.dot.b{background:var(--teal)}
-.field-grid{display:grid;grid-template-columns:110px 1fr;gap:8px}
+.field-grid{display:grid;grid-template-columns:minmax(170px,0.22fr) 1fr;gap:8px}
 label{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
-select{width:100%;height:38px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);padding:0 10px;font:800 14px Inter,Arial,sans-serif;outline:none}
+select{
+  width:100%;height:38px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);
+  padding:0 34px 0 10px;font:800 14px Inter,Arial,sans-serif;outline:none;
+  appearance:none;-webkit-appearance:none;
+  background-image:linear-gradient(45deg,transparent 50%,#111 50%),linear-gradient(135deg,#111 50%,transparent 50%);
+  background-position:calc(100% - 17px) 16px,calc(100% - 11px) 16px;
+  background-size:6px 6px,6px 6px;background-repeat:no-repeat;
+  text-overflow:ellipsis;
+}
 select:focus{border-color:#9ca3af}
 .toolbar{display:flex;align-items:center;gap:8px;justify-content:flex-end;flex-wrap:wrap}
 .btn{height:38px;border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:6px;padding:0 13px;font:900 13px Inter,Arial,sans-serif;cursor:pointer}

@@ -527,6 +527,7 @@ body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--ink);pa
 .country-picker{display:inline-flex;align-items:center;gap:14px;position:relative}
 .flag{display:inline-flex;align-items:center;justify-content:center;width:70px;height:70px;border-radius:50%;background:#f5f5f5;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05);font-size:50px;line-height:1;overflow:hidden}
 .title-select{appearance:none;border:none;background:transparent;color:var(--ink);font-size:66px;font-weight:900;letter-spacing:0;line-height:1;padding:0 46px 0 0;outline:none;cursor:pointer;max-width:min(900px,calc(100vw - 180px))}
+.title-select option{font-size:18px;font-weight:700;line-height:1.35;color:#111;background:#fff}
 .picker-caret{position:absolute;right:4px;top:50%;width:24px;height:24px;border-right:6px solid var(--ink);border-bottom:6px solid var(--ink);transform:translateY(-66%) rotate(45deg);pointer-events:none}
 .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px}
 .indicator-card{height:232px;border:1px solid var(--line);border-radius:20px;background:#fff;padding:22px;display:flex;flex-direction:column;text-decoration:none;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.02);transition:border-color .15s,box-shadow .15s,transform .15s}
