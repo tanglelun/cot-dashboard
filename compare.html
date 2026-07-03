@@ -26,12 +26,17 @@ body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(
 .eyebrow{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
 h1{margin:0;font-size:clamp(28px,4vw,52px);line-height:.95;letter-spacing:-1.2px}
 .sub{color:var(--muted);font-size:14px;margin-top:10px;font-weight:800}
+.compare-tabs{display:inline-flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:8px;background:#fff;margin:14px 0 0}
+.compare-tab{height:34px;border:0;border-radius:6px;background:transparent;color:var(--muted);padding:0 14px;font:900 13px Inter,Arial,sans-serif;cursor:pointer}
+.compare-tab.active{background:#000;color:#fff}
 .controls{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;margin-bottom:14px}
 .series-card{border:1px solid var(--line);background:var(--panel);padding:12px;border-radius:8px}
 .card-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
 .dot{width:10px;height:10px;border-radius:50%}
 .dot.a{background:var(--blue)}.dot.b{background:var(--teal)}
 .field-grid{display:grid;grid-template-columns:minmax(170px,0.22fr) 1fr;gap:8px}
+.field-grid.single{grid-template-columns:1fr}
+.hidden{display:none!important}
 label{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
 select{
   width:100%;height:38px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);
@@ -100,6 +105,10 @@ canvas{width:100%;height:100%;display:block}
       <div class="eyebrow">Indicators</div>
       <h1>Compare</h1>
       <div class="sub" id="dataMeta">Compare two G20 economic indicators.</div>
+      <div class="compare-tabs" aria-label="Compare type">
+        <button class="compare-tab active" type="button" data-type="indicators">Indicators</button>
+        <button class="compare-tab" type="button" data-type="indexes">Indexes</button>
+      </div>
     </div>
     <div class="toolbar" aria-label="Chart period">
       <button class="btn period active" data-period="all">All</button>
@@ -112,16 +121,22 @@ canvas{width:100%;height:100%;display:block}
   <section class="controls">
     <div class="series-card">
       <div class="card-head"><span class="dot a"></span><span>Series A</span></div>
-      <div class="field-grid">
+      <div class="field-grid indicator-fields">
         <div><label for="countryA">Country</label><select id="countryA"></select></div>
         <div><label for="indicatorA">Indicator</label><select id="indicatorA"></select></div>
+      </div>
+      <div class="field-grid single index-fields hidden">
+        <div><label for="indexA">Index</label><select id="indexA"></select></div>
       </div>
     </div>
     <div class="series-card">
       <div class="card-head"><span class="dot b"></span><span>Series B</span></div>
-      <div class="field-grid">
+      <div class="field-grid indicator-fields">
         <div><label for="countryB">Country</label><select id="countryB"></select></div>
         <div><label for="indicatorB">Indicator</label><select id="indicatorB"></select></div>
+      </div>
+      <div class="field-grid single index-fields hidden">
+        <div><label for="indexB">Index</label><select id="indexB"></select></div>
       </div>
     </div>
   </section>
@@ -139,10 +154,11 @@ canvas{width:100%;height:100%;display:block}
 </main>
 <script src="economic_data_embed.js"></script>
 <script>
-const state = { data:null, period:'all', indexed:false, hover:null };
+const state = { data:null, indexData:null, indexHistory:{}, type:'indicators', period:'all', indexed:false, hover:null, drawToken:0 };
 const els = {
   countryA: document.getElementById('countryA'), indicatorA: document.getElementById('indicatorA'),
   countryB: document.getElementById('countryB'), indicatorB: document.getElementById('indicatorB'),
+  indexA: document.getElementById('indexA'), indexB: document.getElementById('indexB'),
   chart: document.getElementById('chart'), tip: document.getElementById('tip'), empty: document.getElementById('empty'),
   legend: document.getElementById('legend'), latest: document.getElementById('latest'), meta: document.getElementById('dataMeta'),
   modeBtn: document.getElementById('modeBtn')
@@ -154,6 +170,8 @@ function parseX(label){
   const text = String(label || '');
   const q = text.match(/^(\d{4})-Q([1-4])$/);
   if(q) return Number(q[1]) * 12 + (Number(q[2]) - 1) * 3;
+  const d = text.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if(d) return Number(d[1]) * 12 + Number(d[2]) - 1 + (Number(d[3]) - 1) / 31;
   const m = text.match(/^(\d{4})-(\d{1,2})/);
   if(m) return Number(m[1]) * 12 + Number(m[2]) - 1;
   const y = text.match(/^(\d{4})$/);
@@ -175,6 +193,30 @@ function buildSeries(countryCode, indicatorKey){
   const labels = indicator.dates || indicator.years || [];
   const values = (indicator.series && indicator.series[countryCode]) || [];
   return labels.map((label, index) => ({ label, x:parseX(label), value:Number(values[index]) }))
+    .filter(point => Number.isFinite(point.x) && Number.isFinite(point.value))
+    .sort((a,b) => a.x - b.x);
+}
+function safeSymbol(symbol){
+  return String(symbol || '').replace(/[^A-Za-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || 'index';
+}
+function indexRows(){
+  return (state.indexData && state.indexData.indexes ? state.indexData.indexes : []).filter(item => item.symbol);
+}
+function getIndexRow(symbol){
+  return indexRows().find(item => item.symbol === symbol) || indexRows()[0];
+}
+async function loadIndexHistory(symbol){
+  const row = getIndexRow(symbol);
+  const key = row.safeSymbol || safeSymbol(row.symbol);
+  if(state.indexHistory[key]) return state.indexHistory[key];
+  const response = await fetch(`indexes_data/${encodeURIComponent(key)}.json`, { cache:'no-store' });
+  if(!response.ok) throw new Error(`Unable to load index history: ${key}`);
+  const data = await response.json();
+  state.indexHistory[key] = data;
+  return data;
+}
+function buildIndexSeries(history){
+  return (history.prices || []).map(candle => ({ label:candle.time, x:parseX(candle.time), value:Number(candle.close) }))
     .filter(point => Number.isFinite(point.x) && Number.isFinite(point.value))
     .sort((a,b) => a.x - b.x);
 }
@@ -220,24 +262,41 @@ function niceLabel(x){
   return `${year}-${String(month + 1).padStart(2,'0')}`;
 }
 function setupOptions(){
+  const params = new URLSearchParams(location.search);
+  state.type = params.get('type') === 'indexes' ? 'indexes' : 'indicators';
   const countries = state.data.countries;
   const indicators = eligibleIndicators();
   const countryOptions = countries.map(country => `<option value="${country.code}">${country.code} - ${country.name}</option>`).join('');
   const indicatorOptions = indicators.map(indicator => `<option value="${indicator.key}">${indicator.label}</option>`).join('');
   [els.countryA, els.countryB].forEach(select => select.innerHTML = countryOptions);
   [els.indicatorA, els.indicatorB].forEach(select => select.innerHTML = indicatorOptions);
-  const params = new URLSearchParams(location.search);
   els.countryA.value = params.get('aCountry') || 'US';
   els.countryB.value = params.get('bCountry') || 'US';
   els.indicatorA.value = params.get('aIndicator') || 'gdp_growth';
   els.indicatorB.value = params.get('bIndicator') || (indicators.find(item => item.key === 'inflation') || indicators[1]).key;
-  els.meta.textContent = `Updated ${state.data.updated || '--'} | ${state.data.source || 'Public data sources'}`;
+  const indexOptions = indexRows().map(item => `<option value="${item.symbol}">${item.name} - ${item.fullName || item.name}</option>`).join('');
+  [els.indexA, els.indexB].forEach(select => select.innerHTML = indexOptions);
+  els.indexA.value = params.get('aIndex') || '^GSPC';
+  els.indexB.value = params.get('bIndex') || '^NDX';
+  syncTypeUi();
+}
+function syncTypeUi(){
+  document.querySelectorAll('.compare-tab').forEach(button => button.classList.toggle('active', button.dataset.type === state.type));
+  document.querySelectorAll('.indicator-fields').forEach(node => node.classList.toggle('hidden', state.type !== 'indicators'));
+  document.querySelectorAll('.index-fields').forEach(node => node.classList.toggle('hidden', state.type !== 'indexes'));
+  const label = state.type === 'indexes' ? 'Indexes' : 'Indicators';
+  document.querySelector('.eyebrow').textContent = label;
+  els.meta.textContent = state.type === 'indexes'
+    ? `Updated ${(state.indexData && state.indexData.updated) || '--'} | ${(state.indexData && state.indexData.source) || 'Yahoo Finance indexes'}`
+    : `Updated ${state.data.updated || '--'} | ${state.data.source || 'Public data sources'}`;
 }
 function updateUrl(){
-  const params = new URLSearchParams({
-    aCountry:els.countryA.value, aIndicator:els.indicatorA.value,
-    bCountry:els.countryB.value, bIndicator:els.indicatorB.value
-  });
+  const params = state.type === 'indexes'
+    ? new URLSearchParams({ type:'indexes', aIndex:els.indexA.value, bIndex:els.indexB.value })
+    : new URLSearchParams({
+      aCountry:els.countryA.value, aIndicator:els.indicatorA.value,
+      bCountry:els.countryB.value, bIndicator:els.indicatorB.value
+    });
   history.replaceState(null, '', `${location.pathname}?${params.toString()}`);
 }
 function drawLine(series, xFor, yFor, color){
@@ -256,7 +315,8 @@ function drawLine(series, xFor, yFor, color){
   ctx.stroke();
   ctx.restore();
 }
-function draw(){
+async function draw(){
+  const drawToken = ++state.drawToken;
   updateUrl();
   const dpr = Math.max(1, window.devicePixelRatio || 1);
   const rect = els.chart.getBoundingClientRect();
@@ -265,23 +325,44 @@ function draw(){
   ctx.setTransform(dpr,0,0,dpr,0,0);
   const width = rect.width, height = rect.height;
   ctx.clearRect(0,0,width,height);
-  let a = buildSeries(els.countryA.value, els.indicatorA.value);
-  let b = buildSeries(els.countryB.value, els.indicatorB.value);
+  let a, b, metaA, metaB;
+  try{
+    if(state.type === 'indexes'){
+      const rowA = getIndexRow(els.indexA.value);
+      const rowB = getIndexRow(els.indexB.value);
+      const [historyA, historyB] = await Promise.all([loadIndexHistory(rowA.symbol), loadIndexHistory(rowB.symbol)]);
+      if(drawToken !== state.drawToken) return;
+      a = buildIndexSeries(historyA);
+      b = buildIndexSeries(historyB);
+      metaA = { code:rowA.country || '', label:rowA.fullName || rowA.name, short:rowA.name, unit:rowA.unit || 'Index Points', decimals:2 };
+      metaB = { code:rowB.country || '', label:rowB.fullName || rowB.name, short:rowB.name, unit:rowB.unit || 'Index Points', decimals:2 };
+    } else {
+      const indA = getIndicator(els.indicatorA.value), indB = getIndicator(els.indicatorB.value);
+      const countryA = getCountry(els.countryA.value), countryB = getCountry(els.countryB.value);
+      a = buildSeries(els.countryA.value, els.indicatorA.value);
+      b = buildSeries(els.countryB.value, els.indicatorB.value);
+      metaA = { code:countryA.code, label:indA.label, short:indA.short || indA.label, unit:indA.unit, decimals:indA.decimals };
+      metaB = { code:countryB.code, label:indB.label, short:indB.short || indB.label, unit:indB.unit, decimals:indB.decimals };
+    }
+  }catch(error){
+    els.empty.style.display = 'flex';
+    els.empty.textContent = 'Unable to load comparable time series.';
+    console.error(error);
+    return;
+  }
   [a,b] = trimToOverlap(a,b);
   [a,b] = applyPeriod(a,b);
   const rawA = a, rawB = b;
   if(state.indexed){ a = indexed(a); b = indexed(b); }
   els.empty.style.display = a.length && b.length ? 'none' : 'flex';
-  const indA = getIndicator(els.indicatorA.value), indB = getIndicator(els.indicatorB.value);
-  const countryA = getCountry(els.countryA.value), countryB = getCountry(els.countryB.value);
   els.legend.innerHTML = `
-    <span class="legend-item"><span class="dot a"></span>${countryA.code} ${indA.label}</span>
-    <span class="legend-item"><span class="dot b"></span>${countryB.code} ${indB.label}</span>
+    <span class="legend-item"><span class="dot a"></span>${metaA.code} ${metaA.label}</span>
+    <span class="legend-item"><span class="dot b"></span>${metaB.code} ${metaB.label}</span>
   `;
   const lastA = rawA[rawA.length - 1], lastB = rawB[rawB.length - 1];
   els.latest.innerHTML = `
-    <div>${countryA.code} ${indA.short || indA.label}<strong>${lastA ? formatNumber(lastA.value, indA.decimals, indA.unit) : '--'}</strong></div>
-    <div>${countryB.code} ${indB.short || indB.label}<strong>${lastB ? formatNumber(lastB.value, indB.decimals, indB.unit) : '--'}</strong></div>
+    <div>${metaA.code} ${metaA.short}<strong>${lastA ? formatNumber(lastA.value, metaA.decimals, metaA.unit) : '--'}</strong></div>
+    <div>${metaB.code} ${metaB.short}<strong>${lastB ? formatNumber(lastB.value, metaB.decimals, metaB.unit) : '--'}</strong></div>
   `;
   if(!a.length || !b.length) return;
   const left = width < 640 ? 42 : 56, right = width < 640 ? 46 : 60, top = 24, bottom = 44;
@@ -301,8 +382,8 @@ function draw(){
     ctx.beginPath();ctx.moveTo(left, y);ctx.lineTo(width - right, y);ctx.stroke();
     const av = yExtentA[1] - (yExtentA[1] - yExtentA[0]) * i / 5;
     const bv = yExtentB[1] - (yExtentB[1] - yExtentB[0]) * i / 5;
-    ctx.fillStyle = colors.blue;ctx.textAlign = 'left';ctx.fillText(formatNumber(av, 1, state.indexed ? '' : indA.unit), 6, y + 4);
-    ctx.fillStyle = colors.teal;ctx.textAlign = 'right';ctx.fillText(formatNumber(bv, 1, state.indexed ? '' : indB.unit), width - 6, y + 4);
+    ctx.fillStyle = colors.blue;ctx.textAlign = 'left';ctx.fillText(formatNumber(av, 1, state.indexed ? '' : metaA.unit), 6, y + 4);
+    ctx.fillStyle = colors.teal;ctx.textAlign = 'right';ctx.fillText(formatNumber(bv, 1, state.indexed ? '' : metaB.unit), width - 6, y + 4);
   }
   for(let i=0;i<=6;i++){
     const x = left + plotW * i / 6;
@@ -329,8 +410,8 @@ function draw(){
     els.tip.style.left = `${tipX}px`;
     els.tip.style.top = `${Math.max(10, top + 10)}px`;
     els.tip.innerHTML = `<b>${pa ? pa.label : pb.label}</b>
-      <div class="tip-row"><span>${countryA.code} ${indA.short || indA.label}</span><span>${pa ? formatNumber(state.indexed ? (pa.raw || pa.value) : pa.value, indA.decimals, indA.unit) : '--'}</span></div>
-      <div class="tip-row"><span>${countryB.code} ${indB.short || indB.label}</span><span>${pb ? formatNumber(state.indexed ? (pb.raw || pb.value) : pb.value, indB.decimals, indB.unit) : '--'}</span></div>`;
+      <div class="tip-row"><span>${metaA.code} ${metaA.short}</span><span>${pa ? formatNumber(state.indexed ? (pa.raw || pa.value) : pa.value, metaA.decimals, metaA.unit) : '--'}</span></div>
+      <div class="tip-row"><span>${metaB.code} ${metaB.short}</span><span>${pb ? formatNumber(state.indexed ? (pb.raw || pb.value) : pb.value, metaB.decimals, metaB.unit) : '--'}</span></div>`;
   } else {
     els.tip.style.display = 'none';
   }
@@ -343,6 +424,8 @@ async function init(){
       const response = await fetch('economic_data.json', { cache:'no-store' });
       state.data = await response.json();
     }
+    const indexResponse = await fetch('indexes_data.json', { cache:'no-store' });
+    state.indexData = await indexResponse.json();
     setupOptions();
     draw();
   }catch(error){
@@ -352,8 +435,14 @@ async function init(){
   }
 }
 ['change','input'].forEach(eventName => {
-  [els.countryA, els.countryB, els.indicatorA, els.indicatorB].forEach(el => el.addEventListener(eventName, draw));
+  [els.countryA, els.countryB, els.indicatorA, els.indicatorB, els.indexA, els.indexB].forEach(el => el.addEventListener(eventName, draw));
 });
+document.querySelectorAll('.compare-tab').forEach(button => button.addEventListener('click', () => {
+  state.type = button.dataset.type;
+  state.hover = null;
+  syncTypeUi();
+  draw();
+}));
 document.querySelectorAll('.period').forEach(button => button.addEventListener('click', () => {
   document.querySelectorAll('.period').forEach(item => item.classList.remove('active'));
   button.classList.add('active'); state.period = button.dataset.period; draw();
