@@ -1158,6 +1158,21 @@ function setupNavSearch(){
     }
     return rowsCache;
   };
+  const compactSearchText = value => String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const searchScore = (row, query, compactQuery) => {
+    const symbol = String(row.symbol || '');
+    const symbolLower = symbol.toLowerCase();
+    const nameLower = String(row.name || '').toLowerCase();
+    const compactSymbol = compactSearchText(symbol);
+    const compactName = compactSearchText(row.name || '');
+    if(symbolLower === query) return 0;
+    if(compactQuery && compactSymbol === compactQuery) return 1;
+    if(symbolLower.startsWith(query)) return 2;
+    if(compactQuery && compactSymbol.startsWith(compactQuery)) return 3;
+    if(nameLower.includes(query)) return 4;
+    if(compactQuery && compactName.includes(compactQuery)) return 5;
+    return 99;
+  };
   const closeResults = () => {
     results.classList.remove('open');
     results.innerHTML = '';
@@ -1178,10 +1193,17 @@ function setupNavSearch(){
     results.classList.add('open');
   };
   const updateResults = async () => {
-    const query = (input.value || '').trim().toLowerCase();
+    const queryRaw = (input.value || '').trim();
+    const query = queryRaw.toLowerCase();
     if(!query){ closeResults(); return; }
+    const compactQuery = compactSearchText(queryRaw);
     const rows = await loadRows();
-    currentMatches = rows.filter(row => row.symbol.toLowerCase().includes(query) || String(row.name).toLowerCase().includes(query)).slice(0, 10);
+    currentMatches = rows
+      .map(row => ({ row, score: searchScore(row, query, compactQuery) }))
+      .filter(item => item.score < 99)
+      .sort((a,b) => a.score - b.score || a.row.symbol.localeCompare(b.row.symbol))
+      .slice(0, 20)
+      .map(item => item.row);
     activeIndex = currentMatches.length ? Math.max(0, Math.min(activeIndex, currentMatches.length - 1)) : -1;
     paintResults();
   };

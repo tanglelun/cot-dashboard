@@ -308,6 +308,8 @@ def is_common_stock(symbol, name, is_etf, is_test):
     if re.search(r"[.-](W|WS|WT|R|U)$", symbol, re.I):
         return False
     clean_name = str(name or "")
+    if re.search(r"\b-\s*Units?\b", clean_name, re.I):
+        return False
     return not NON_COMMON_NAME_RE.search(clean_name)
 
 

@@ -763,6 +763,23 @@ function setupNavSearch(){
     });
     return rows;
   }
+  function compactSearchText(value){
+    return String(value||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+  }
+  function searchScore(row, normalized, compact){
+    var symbol=String(row.symbol||'');
+    var symbolLower=symbol.toLowerCase();
+    var nameLower=String(row.name||'').toLowerCase();
+    var compactSymbol=compactSearchText(symbol);
+    var compactName=compactSearchText(row.name||'');
+    if(symbolLower===normalized)return 0;
+    if(compact&&compactSymbol===compact)return 1;
+    if(symbolLower.indexOf(normalized)===0)return 2;
+    if(compact&&compactSymbol.indexOf(compact)===0)return 3;
+    if(nameLower.indexOf(normalized)>=0)return 4;
+    if(compact&&compactName.indexOf(compact)>=0)return 5;
+    return 99;
+  }
   function loadSearchRows(){
     if(rowsCache)return Promise.resolve(rowsCache);
     return fetch('market_data/index.json',{cache:'no-store'})
@@ -801,9 +818,14 @@ function setupNavSearch(){
     if(!query){closeResults();return;}
     loadSearchRows().then(function(rows){
       var normalized=query.toLowerCase();
-      var matches=rows.filter(function(row){
-        return row.symbol.toLowerCase().includes(normalized)||String(row.name||'').toLowerCase().includes(normalized);
-      }).slice(0,10);
+      var compact=compactSearchText(query);
+      var matches=rows.map(function(row){
+        return {row:row,score:searchScore(row,normalized,compact)};
+      }).filter(function(item){
+        return item.score<99;
+      }).sort(function(a,b){
+        return a.score-b.score||a.row.symbol.localeCompare(b.row.symbol);
+      }).slice(0,20).map(function(item){return item.row;});
       activeIndex=matches.length?Math.max(0,Math.min(activeIndex,matches.length-1)):-1;
       paintResults(matches);
     });
