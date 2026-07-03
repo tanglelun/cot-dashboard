@@ -1,0 +1,67 @@
+Updated: 2026-06-29 12:44 UTC
+Countries: 20 (AR, AU, BR, CA, CN, FR, DE, IN, ID, IT, JP, MX, RU, SA, ZA, KR, TR, GB, US, EU)
+
+gdp_growth | GDP Growth Rate
+  periods=377 kinds={'quarterly': 313, 'annual': 64} mixed_frequency=True
+  WARNING: mixed annual/monthly/quarterly periods caused by country-level fallback data.
+
+interest_rate | Interest Rate
+  periods=878 kinds={'monthly': 863, 'annual': 15} mixed_frequency=True
+  WARNING: mixed annual/monthly/quarterly periods caused by country-level fallback data.
+  AR: coverage=2% nulls=863 min=10.56 max=95.89 latest=61.71@2024 flags=low_coverage
+  FR: coverage=98% nulls=21 min=-0.58 max=19.93 latest=1.93@2026-05 flags=zero_values=1
+  DE: coverage=91% nulls=81 min=-0.58 max=15.78 latest=1.93@2026-05 flags=zero_values=1
+  IT: coverage=37% nulls=549 min=-0.58 max=5.06 latest=1.93@2026-05 flags=zero_values=1
+  JP: coverage=56% nulls=387 min=-0.07 max=8.28 latest=0.73@2026-05 flags=zero_values=55
+  SA: coverage=0% nulls=878 min=None max=None latest=None@None flags=low_coverage
+  EU: coverage=0% nulls=878 min=None max=None latest=None@None flags=low_coverage
+
+inflation | Inflation Rate
+  periods=1337 kinds={'monthly': 1337} mixed_frequency=False
+  AR: coverage=8% nulls=1235 min=24.8 max=289.4 latest=33.2@2026-05 flags=low_coverage, very_high_inflation_history
+  AU: coverage=1% nulls=1323 min=1.89 max=4.57 latest=3.96@2026-05 flags=low_coverage
+  BR: coverage=41% nulls=791 min=1.65 max=6816.96 latest=4.72@2026-05 flags=very_high_inflation_history
+  CA: coverage=100% nulls=0 min=-17.8 max=21.65 latest=3.23@2026-05 flags=zero_values=82
+  CN: coverage=35% nulls=864 min=-2.68 max=28.4 latest=1.2@2026-05 flags=zero_values=7
+  DE: coverage=63% nulls=492 min=-1.04 max=8.82 latest=2.63@2026-05 flags=zero_values=11
+  IN: coverage=61% nulls=517 min=-11.29 max=34.64 latest=4.46@2026-04 flags=zero_values=6
+  IT: coverage=63% nulls=497 min=-2.01 max=25.24 latest=1.16@2025-12 flags=zero_values=4
+  JP: coverage=59% nulls=551 min=-2.5 max=24.9 latest=-0.5@2021-06 flags=zero_values=22
+  MX: coverage=50% nulls=670 min=2.13 max=179.73 latest=5.57@2024-07 flags=very_high_inflation_history
+  RU: coverage=26% nulls=986 min=2.2 max=1065.57 latest=16.7@2022-03 flags=very_high_inflation_history
+  SA: coverage=27% nulls=982 min=-3.23 max=11.08 latest=2.14@2025-07 flags=zero_values=10
+  KR: coverage=55% nulls=600 min=-0.43 max=32.51 latest=3.14@2026-05 flags=zero_values=1
+  TR: coverage=63% nulls=497 min=-3.03 max=125.89 latest=30.89@2025-12 flags=zero_values=3, very_high_inflation_history
+  GB: coverage=63% nulls=492 min=-0.82 max=26.87 latest=3.0@2026-05 flags=zero_values=1
+  EU: coverage=0% nulls=1337 min=None max=None latest=None@None flags=low_coverage
+
+unemployment | Unemployment Rate
+  periods=892 kinds={'monthly': 857, 'annual': 35} mixed_frequency=True
+  WARNING: mixed annual/monthly/quarterly periods caused by country-level fallback data.
+  AR: coverage=4% nulls=857 min=5.44 max=19.59 latest=7.14@2025 flags=low_coverage
+  BR: coverage=4% nulls=857 min=5.97 max=13.7 latest=5.97@2025 flags=low_coverage
+  CN: coverage=4% nulls=857 min=2.37 max=5.0 latest=4.62@2025 flags=low_coverage
+  IN: coverage=4% nulls=857 min=4.17 max=7.86 latest=4.22@2025 flags=low_coverage
+  ID: coverage=4% nulls=857 min=2.62 max=8.06 latest=3.24@2025 flags=low_coverage
+  RU: coverage=4% nulls=857 min=2.13 max=13.26 latest=2.13@2025 flags=low_coverage
+  SA: coverage=4% nulls=857 min=3.04 max=7.66 latest=3.04@2025 flags=low_coverage
+  ZA: coverage=4% nulls=857 min=22.26 max=34.01 latest=32.39@2025 flags=low_coverage
+
+government_debt | Government Debt to GDP
+  periods=36 kinds={'annual': 36} mixed_frequency=False
+  AR: coverage=0% nulls=36 min=None max=None latest=None@None flags=low_coverage
+  CN: coverage=0% nulls=36 min=None max=None latest=None@None flags=low_coverage
+  FR: coverage=0% nulls=36 min=None max=None latest=None@None flags=low_coverage
+  DE: coverage=3% nulls=35 min=20.85 max=20.85 latest=20.85@1990 flags=low_coverage
+  IT: coverage=6% nulls=34 min=71.26 max=77.29 latest=77.29@1992 flags=low_coverage
+  JP: coverage=0% nulls=36 min=None max=None latest=None@None flags=low_coverage
+  SA: coverage=0% nulls=36 min=None max=None latest=None@None flags=low_coverage
+  EU: coverage=0% nulls=36 min=None max=None latest=None@None flags=low_coverage
+
+balance_trade | Balance of Trade
+  periods=857 kinds={'monthly': 857} mixed_frequency=False
+  SA: coverage=14% nulls=737 min=-0.7 max=24.3 latest=6.9@2026-04 flags=low_coverage
+
+current_account | Current Account to GDP
+  periods=285 kinds={'quarterly': 285} mixed_frequency=False
+  EU: coverage=0% nulls=285 min=None max=None latest=None@None flags=low_coverage

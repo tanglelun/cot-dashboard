@@ -195,7 +195,10 @@ function buildSeries(countryCode, indicatorKey){
   const indicator = getIndicator(indicatorKey);
   const labels = indicator.dates || indicator.years || [];
   const values = (indicator.series && indicator.series[countryCode]) || [];
-  return labels.map((label, index) => ({ label, x:parseX(label), value:Number(values[index]) }))
+  return labels.map((label, index) => {
+      const rawValue = values[index];
+      return { label, x:parseX(label), value:rawValue === null || rawValue === undefined ? null : Number(rawValue) };
+    })
     .filter(point => Number.isFinite(point.x) && Number.isFinite(point.value))
     .sort((a,b) => a.x - b.x);
 }
