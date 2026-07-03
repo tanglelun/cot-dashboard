@@ -165,6 +165,7 @@ const els = {
 };
 const ctx = els.chart.getContext('2d');
 const colors = { a:'#1277ff', b:'#00b8a9', blue:'#1277ff', teal:'#00b8a9', grid:'#e5e7eb', text:'#7a7d86', ink:'#111' };
+const INDEX_INDICATOR_PREFIX = 'index:';
 
 function parseX(label){
   const text = String(label || '');
@@ -185,6 +186,8 @@ function formatNumber(value, decimals=2, unit=''){
 }
 function getIndicator(key){ return state.data.indicators.find(item => item.key === key) || state.data.indicators[0]; }
 function getCountry(code){ return state.data.countries.find(item => item.code === code) || state.data.countries[0]; }
+function isIndexIndicator(key){ return String(key || '').startsWith(INDEX_INDICATOR_PREFIX); }
+function indexIndicatorSymbol(key){ return String(key || '').slice(INDEX_INDICATOR_PREFIX.length); }
 function eligibleIndicators(){
   return state.data.indicators.filter(item => item.series && item.kind !== 'rating');
 }
@@ -219,6 +222,23 @@ function buildIndexSeries(history){
   return (history.prices || []).map(candle => ({ label:candle.time, x:parseX(candle.time), value:Number(candle.close) }))
     .filter(point => Number.isFinite(point.x) && Number.isFinite(point.value))
     .sort((a,b) => a.x - b.x);
+}
+async function resolveIndicatorSelection(countryCode, indicatorKey){
+  if(isIndexIndicator(indicatorKey)){
+    const symbol = indexIndicatorSymbol(indicatorKey);
+    const row = getIndexRow(symbol);
+    const history = await loadIndexHistory(symbol);
+    return {
+      series: buildIndexSeries(history),
+      meta: { code:row.country || '', label:row.fullName || row.name, short:row.name, unit:row.unit || 'Index Points', decimals:2 }
+    };
+  }
+  const indicator = getIndicator(indicatorKey);
+  const country = getCountry(countryCode);
+  return {
+    series: buildSeries(countryCode, indicatorKey),
+    meta: { code:country.code, label:indicator.label, short:indicator.short || indicator.label, unit:indicator.unit, decimals:indicator.decimals }
+  };
 }
 function applyPeriod(seriesA, seriesB){
   const all = seriesA.concat(seriesB);
@@ -268,8 +288,12 @@ function setupOptions(){
   const indicators = eligibleIndicators();
   const countryOptions = countries.map(country => `<option value="${country.code}">${country.code} - ${country.name}</option>`).join('');
   const indicatorOptions = indicators.map(indicator => `<option value="${indicator.key}">${indicator.label}</option>`).join('');
+  const us500 = indexRows().find(item => item.name === 'US500' || item.symbol === '^GSPC');
+  const marketIndicatorOptions = us500
+    ? `<optgroup label="Market Indexes"><option value="${INDEX_INDICATOR_PREFIX}${us500.symbol}">US500 - ${us500.fullName || 'S&P 500 Index'}</option></optgroup>`
+    : '';
   [els.countryA, els.countryB].forEach(select => select.innerHTML = countryOptions);
-  [els.indicatorA, els.indicatorB].forEach(select => select.innerHTML = indicatorOptions);
+  [els.indicatorA, els.indicatorB].forEach(select => select.innerHTML = indicatorOptions + marketIndicatorOptions);
   els.countryA.value = params.get('aCountry') || 'US';
   els.countryB.value = params.get('bCountry') || 'US';
   els.indicatorA.value = params.get('aIndicator') || 'gdp_growth';
@@ -337,12 +361,15 @@ async function draw(){
       metaA = { code:rowA.country || '', label:rowA.fullName || rowA.name, short:rowA.name, unit:rowA.unit || 'Index Points', decimals:2 };
       metaB = { code:rowB.country || '', label:rowB.fullName || rowB.name, short:rowB.name, unit:rowB.unit || 'Index Points', decimals:2 };
     } else {
-      const indA = getIndicator(els.indicatorA.value), indB = getIndicator(els.indicatorB.value);
-      const countryA = getCountry(els.countryA.value), countryB = getCountry(els.countryB.value);
-      a = buildSeries(els.countryA.value, els.indicatorA.value);
-      b = buildSeries(els.countryB.value, els.indicatorB.value);
-      metaA = { code:countryA.code, label:indA.label, short:indA.short || indA.label, unit:indA.unit, decimals:indA.decimals };
-      metaB = { code:countryB.code, label:indB.label, short:indB.short || indB.label, unit:indB.unit, decimals:indB.decimals };
+      const [seriesA, seriesB] = await Promise.all([
+        resolveIndicatorSelection(els.countryA.value, els.indicatorA.value),
+        resolveIndicatorSelection(els.countryB.value, els.indicatorB.value)
+      ]);
+      if(drawToken !== state.drawToken) return;
+      a = seriesA.series;
+      b = seriesB.series;
+      metaA = seriesA.meta;
+      metaB = seriesB.meta;
     }
   }catch(error){
     els.empty.style.display = 'flex';
