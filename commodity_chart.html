@@ -29,8 +29,14 @@ body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-t
 .brand-mark::before{content:"";position:absolute;left:7px;top:1px;width:10px;height:24px;background:#fff;border-radius:10px 10px 10px 1px;transform:skew(-18deg) rotate(22deg);transform-origin:center}
 .brand-mark::after{content:"";position:absolute;left:2px;bottom:2px;width:13px;height:3px;background:#fff;border-radius:999px;transform:rotate(-34deg)}
 .nav-check{position:absolute;opacity:0;pointer-events:none}
-.nav-toggle{display:none;width:38px;height:38px;border:1px solid #2a2e39;border-radius:999px;align-items:center;justify-content:center;flex-direction:column;gap:4px;cursor:pointer;margin-left:auto}
+.nav-toggle{display:none;width:38px;height:38px;border:1px solid #2a2e39;border-radius:999px;align-items:center;justify-content:center;flex-direction:column;gap:4px;cursor:pointer;margin-left:0}
 .nav-toggle span{width:16px;height:2px;background:#fff;border-radius:999px}
+.nav-search-icon{width:42px;height:42px;border:1px solid #2a2e39;border-radius:999px;background:#090c12;display:inline-flex;align-items:center;justify-content:center;position:relative;flex:0 0 auto;margin-left:auto;text-decoration:none}
+.nav-search-icon::before{content:"";width:13px;height:13px;border:2px solid #b8ff00;border-radius:50%}
+.nav-search-icon::after{content:"";position:absolute;width:7px;height:2px;background:#b8ff00;border-radius:999px;transform:translate(9px,9px) rotate(45deg)}
+.nav-search-icon:hover{border-color:#b8ff00;background:#101820}
+.nav-search-icon span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
 .nav-links{display:flex;align-items:center;gap:28px;flex:0 1 auto}
 .nav-link{position:relative;color:#f3f4f6;text-decoration:none;font-size:15px;font-weight:650;white-space:nowrap}
 .nav-link:hover{color:#b8ff00}
@@ -155,6 +161,14 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
   .topbar{border-bottom:none}
   .hint{display:none}
 }
+
+@media(max-width:720px){
+  .site-brand{order:1}
+  .nav-search-icon{order:2;width:38px;height:38px;margin-left:auto}
+  .nav-toggle{order:3;margin-left:0}
+  .nav-links{order:4}
+}
+
 </style>
 </head>
 <body>
@@ -179,10 +193,7 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
     <a class="nav-link" href="economy.html">Indicators</a>
     <a class="nav-link" href="calendar.html">Calendar</a>
   </div>
-  <form class="nav-search" role="search" data-root="">
-    <span class="nav-search-mark" aria-hidden="true"></span>
-    <input type="search" name="q" placeholder="Search commodities" autocomplete="off" aria-label="Search commodities">
-  </form>
+  <a class="nav-search-icon" href="search.html" aria-label="Search"><span aria-hidden="true"></span></a>
 </nav>
 
 <main class="container">

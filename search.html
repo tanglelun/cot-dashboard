@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search - Net Data</title>
+<style>
+:root{
+  --tv-bg:#000;
+  --tv-panel:#050709;
+  --tv-panel-2:#090d12;
+  --tv-border:#202932;
+  --tv-border-soft:#111820;
+  --tv-text:#d1d4dc;
+  --tv-muted:#787b86;
+  --tv-faint:#5d606b;
+  --tv-green:#00d109;
+  --tv-red:#ff4d00;
+  --tv-hover:#101820;
+  --tv-accent:#00d109;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-text);min-height:100vh}
+.search-page{min-height:100vh;background:#000}
+.search-top{height:66px;display:flex;align-items:center;gap:10px;padding:0 18px;border-bottom:1px solid var(--tv-border);background:#000;position:sticky;top:0;z-index:10}
+.back-btn{width:38px;height:38px;border:1px solid var(--tv-border);border-radius:999px;background:var(--tv-panel-2);color:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto}
+.back-btn::before{content:"";width:10px;height:10px;border-left:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translate(1px,-1px)}
+.back-btn:hover{border-color:var(--tv-accent);background:var(--tv-hover)}
+.search-box{position:relative;flex:1;min-width:0}
+.search-box::before{content:"";position:absolute;left:15px;top:50%;width:13px;height:13px;border:2px solid var(--tv-accent);border-radius:50%;transform:translateY(-50%)}
+.search-box::after{content:"";position:absolute;left:28px;top:50%;width:7px;height:2px;background:var(--tv-accent);border-radius:999px;transform:translateY(6px) rotate(45deg)}
+.search-input{width:100%;height:42px;border:1px solid var(--tv-border);border-radius:999px;background:var(--tv-panel-2);color:#fff;padding:0 15px 0 42px;font-size:15px;font-weight:750;outline:none}
+.search-input:focus{border-color:var(--tv-accent);box-shadow:0 0 0 1px rgba(0,209,9,.18)}
+.search-input::placeholder{color:var(--tv-muted)}
+.search-body{width:100%;max-width:860px;margin:0 auto;padding:14px 14px 28px}
+.status{font-size:12px;color:var(--tv-muted);padding:10px 2px}
+.status strong{color:var(--tv-accent)}
+.section{margin-top:12px}
+.section-title{height:32px;display:flex;align-items:center;color:var(--tv-muted);font-size:11px;font-weight:850;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid var(--tv-border)}
+.result-list{display:grid;gap:0}
+.result-row{width:100%;height:56px;border:0;border-bottom:1px solid var(--tv-border-soft);background:#000;color:var(--tv-text);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;text-align:left;cursor:pointer;text-decoration:none;padding:0 4px}
+.result-row:hover,.result-row:focus{background:var(--tv-hover);outline:none}
+.result-main{min-width:0;display:flex;align-items:baseline;gap:6px;overflow:hidden}
+.result-symbol{font-size:15px;font-weight:900;color:#f3f4f6;white-space:nowrap}
+.result-name{font-size:13px;font-weight:700;color:var(--tv-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.result-meta{display:flex;align-items:center;gap:8px;justify-content:flex-end;min-width:0}
+.result-type{height:22px;padding:0 8px;border:1px solid var(--tv-border);border-radius:5px;color:var(--tv-muted);font-size:11px;font-weight:850;display:inline-flex;align-items:center}
+.result-change{font-family:Inter,Arial,sans-serif;font-size:13px;font-weight:900;white-space:nowrap}
+.result-change.up{color:var(--tv-green)}
+.result-change.down{color:var(--tv-red)}
+.empty{padding:28px 4px;color:var(--tv-muted);font-size:13px}
+@media(max-width:720px){
+  .search-top{height:62px;padding:0 12px}
+  .back-btn{width:36px;height:36px}
+  .search-input{height:40px;font-size:14px}
+  .search-body{padding:10px 12px 24px}
+  .result-row{height:54px;grid-template-columns:minmax(0,1fr) auto}
+  .result-symbol{font-size:14px}
+  .result-name{font-size:12px}
+  .result-type{display:none}
+}
+</style>
+</head>
+<body>
+<main class="search-page">
+  <header class="search-top">
+    <button class="back-btn" id="backBtn" type="button" aria-label="Back"></button>
+    <div class="search-box">
+      <input class="search-input" id="searchInput" type="search" placeholder="Search stocks, indexes, commodities" autocomplete="off" autofocus>
+    </div>
+  </header>
+  <section class="search-body">
+    <div class="status" id="status">Loading market data...</div>
+    <div id="results"></div>
+  </section>
+</main>
+<script>
+const input = document.getElementById('searchInput');
+const statusEl = document.getElementById('status');
+const resultsEl = document.getElementById('results');
+let allRows = [];
+
+function compactText(value){
+  return String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+function numberValue(value){
+  const num = Number(value);
+  return Number.isFinite(num) ? num : 0;
+}
+function escapeHtml(value){
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#39;'
+  }[char]));
+}
+function scoreRow(row, query, compactQuery){
+  const symbol = String(row.symbol || '').toLowerCase();
+  const display = String(row.displaySymbol || '').toLowerCase();
+  const name = String(row.name || '').toLowerCase();
+  const searchText = String(row.searchText || '').toLowerCase();
+  const compactSymbol = compactText(row.symbol);
+  const compactDisplay = compactText(row.displaySymbol);
+  const compactName = compactText(row.name);
+  const compactSearch = compactText(row.searchText);
+  if(symbol === query) return 0;
+  if(display === query) return 1;
+  if(compactQuery && (compactSymbol === compactQuery || compactDisplay === compactQuery)) return 2;
+  if(symbol.startsWith(query)) return 2;
+  if(compactQuery && compactSymbol.startsWith(compactQuery)) return 3;
+  if(name.includes(query)) return 4;
+  if(searchText.includes(query)) return 5;
+  if(compactQuery && (compactName.includes(compactQuery) || compactSearch.includes(compactQuery))) return 6;
+  return 99;
+}
+function stockUrl(row){
+  const params = new URLSearchParams();
+  params.set('symbol', row.symbol);
+  params.set('name', row.chartName || row.name || row.symbol);
+  return 'stock_chart.html?' + params.toString();
+}
+function indexUrl(row){
+  const params = new URLSearchParams();
+  params.set('symbol', row.symbol);
+  params.set('name', row.chartName || row.name || row.symbol);
+  return 'index_chart.html?' + params.toString();
+}
+function commodityUrl(row){
+  const params = new URLSearchParams();
+  params.set('symbol', row.symbol);
+  params.set('name', row.chartName || row.name || row.symbol);
+  return 'commodity_chart.html?' + params.toString();
+}
+function flattenIndexRows(index){
+  if(!index) return [];
+  if(Array.isArray(index.indexes)) return index.indexes;
+  if(Array.isArray(index.stocks)) return index.stocks;
+  if(Array.isArray(index.groups)) return index.groups.flatMap(group => group.indexes || group.stocks || []);
+  const groups = index.groups || {};
+  return Object.values(groups).flatMap(group => group.indexes || group.stocks || []);
+}
+async function readJson(path){
+  const response = await fetch(path, { cache:'no-store' });
+  if(!response.ok) throw new Error(path);
+  return response.json();
+}
+async function loadSearchData(){
+  const [stocksRes, indexesRes, commoditiesRes] = await Promise.allSettled([
+    readJson('market_data/index.json'),
+    readJson('indexes_data.json'),
+    readJson('commodities_data.json')
+  ]);
+  const rows = [];
+  if(stocksRes.status === 'fulfilled'){
+    const seen = new Set();
+    (stocksRes.value.stocks || []).forEach(row => {
+      const symbol = String(row.symbol || row.t || '').toUpperCase();
+      if(!symbol || seen.has(symbol)) return;
+      seen.add(symbol);
+      rows.push({
+        type:'Stock',
+        symbol,
+        displaySymbol:symbol,
+        name: row.name || row.n || symbol,
+        chartName: row.name || row.n || symbol,
+        searchText: symbol + ' ' + (row.name || row.n || ''),
+        change: numberValue(row.d),
+        url: stockUrl
+      });
+    });
+  }
+  if(indexesRes.status === 'fulfilled'){
+    flattenIndexRows(indexesRes.value).forEach(row => {
+      const symbol = String(row.symbol || row.safeSymbol || row.name || '').toUpperCase();
+      if(!symbol) return;
+      rows.push({
+        type:'Index',
+        symbol,
+        displaySymbol: row.name || row.safeSymbol || symbol,
+        name: row.fullName || row.name || symbol,
+        chartName: row.fullName || row.name || symbol,
+        searchText: [symbol, row.safeSymbol, row.name, row.fullName, row.country].join(' '),
+        change: numberValue(row.pct ?? row.d ?? row.day),
+        url: indexUrl
+      });
+    });
+  }
+  if(commoditiesRes.status === 'fulfilled'){
+    const source = commoditiesRes.value.stocks || flattenIndexRows(commoditiesRes.value);
+    source.forEach(row => {
+      const symbol = String(row.symbol || row.safeSymbol || row.name || '').toUpperCase();
+      if(!symbol) return;
+      rows.push({
+        type:'Commodity',
+        symbol,
+        displaySymbol: row.name || symbol,
+        name: row.sector || row.unit || symbol,
+        chartName: row.name || symbol,
+        searchText: [symbol, row.safeSymbol, row.name, row.sector, row.unit].join(' '),
+        change: numberValue(row.d ?? row.pct),
+        url: commodityUrl
+      });
+    });
+  }
+  allRows = rows;
+  statusEl.innerHTML = 'Ready · <strong>' + rows.length.toLocaleString('en-US') + '</strong> results available';
+  updateResults();
+}
+function groupLabel(type){
+  return type === 'Stock' ? 'Stocks' : type === 'Index' ? 'Indexes' : 'Commodities';
+}
+function renderRows(rows){
+  if(!rows.length){
+    resultsEl.innerHTML = '<div class="empty">No results</div>';
+    return;
+  }
+  const groups = rows.reduce((acc, row) => {
+    (acc[row.type] || (acc[row.type] = [])).push(row);
+    return acc;
+  }, {});
+  resultsEl.innerHTML = Object.keys(groups).map(type => {
+    return '<section class="section"><div class="section-title">' + groupLabel(type) + '</div><div class="result-list">' +
+      groups[type].map(row => {
+        const cls = row.change >= 0 ? 'up' : 'down';
+        const sign = row.change > 0 ? '+' : '';
+        return '<a class="result-row" href="' + escapeHtml(row.url(row)) + '">' +
+          '<span class="result-main"><span class="result-symbol">' + escapeHtml(row.displaySymbol || row.symbol) + '</span><span class="result-name">' + escapeHtml(row.name) + '</span></span>' +
+          '<span class="result-meta"><span class="result-type">' + escapeHtml(row.type) + '</span><span class="result-change ' + cls + '">' + sign + row.change.toFixed(2) + '%</span></span>' +
+          '</a>';
+      }).join('') +
+    '</div></section>';
+  }).join('');
+}
+function updateResults(){
+  const raw = input.value.trim();
+  if(!raw){
+    resultsEl.innerHTML = '';
+    return;
+  }
+  const query = raw.toLowerCase();
+  const compactQuery = compactText(raw);
+  const rows = allRows
+    .map(row => ({ row, score: scoreRow(row, query, compactQuery) }))
+    .filter(item => item.score < 99)
+    .sort((a,b) => a.score - b.score || a.row.type.localeCompare(b.row.type) || a.row.symbol.localeCompare(b.row.symbol))
+    .slice(0, 60)
+    .map(item => item.row);
+  renderRows(rows);
+}
+document.getElementById('backBtn').addEventListener('click', () => {
+  if(history.length > 1) history.back();
+  else window.location.href = 'index.html';
+});
+input.addEventListener('input', updateResults);
+input.addEventListener('keydown', event => {
+  if(event.key !== 'Enter') return;
+  const first = resultsEl.querySelector('.result-row');
+  if(first){
+    event.preventDefault();
+    window.location.href = first.href;
+  }
+});
+loadSearchData().catch(() => {
+  statusEl.textContent = 'Unable to load search data';
+});
+</script>
+</body>
+</html>
