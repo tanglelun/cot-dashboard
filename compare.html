@@ -140,7 +140,7 @@ const els = {
   modeBtn: document.getElementById('modeBtn')
 };
 const ctx = els.chart.getContext('2d');
-const colors = { a:'#1277ff', b:'#00b8a9', grid:'#e5e7eb', text:'#7a7d86', ink:'#111' };
+const colors = { a:'#1277ff', b:'#00b8a9', blue:'#1277ff', teal:'#00b8a9', grid:'#e5e7eb', text:'#7a7d86', ink:'#111' };
 
 function parseX(label){
   const text = String(label || '');
@@ -177,6 +177,16 @@ function applyPeriod(seriesA, seriesB){
   const minX = maxX - Number(state.period) * 12;
   return [seriesA.filter(point => point.x >= minX), seriesB.filter(point => point.x >= minX)];
 }
+function trimToOverlap(seriesA, seriesB){
+  if(!seriesA.length || !seriesB.length) return [[], []];
+  const minX = Math.max(seriesA[0].x, seriesB[0].x);
+  const maxX = Math.min(seriesA[seriesA.length - 1].x, seriesB[seriesB.length - 1].x);
+  if(maxX < minX) return [[], []];
+  return [
+    seriesA.filter(point => point.x >= minX && point.x <= maxX),
+    seriesB.filter(point => point.x >= minX && point.x <= maxX)
+  ];
+}
 function indexed(series){
   const first = series.find(point => Number.isFinite(point.value) && point.value !== 0);
   if(!first) return series;
@@ -195,8 +205,9 @@ function nearest(series, x){
   return series.reduce((best, point) => Math.abs(point.x - x) < Math.abs(best.x - x) ? point : best, series[0]);
 }
 function niceLabel(x){
-  const year = Math.floor(x / 12);
-  const month = x % 12;
+  const rounded = Math.round(x);
+  const year = Math.floor(rounded / 12);
+  const month = rounded % 12;
   if(month === 0) return String(year);
   return `${year}-${String(month + 1).padStart(2,'0')}`;
 }
@@ -225,11 +236,14 @@ function drawLine(series, xFor, yFor, color){
   if(series.length < 2) return;
   ctx.save();
   ctx.strokeStyle = color;
-  ctx.lineWidth = 2.2;
+  ctx.lineWidth = 3;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
   ctx.beginPath();
   series.forEach((point, index) => {
     const x = xFor(point.x), y = yFor(point.value);
-    if(index === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    const previous = series[index - 1];
+    if(index === 0 || (previous && point.x - previous.x > 15)) ctx.moveTo(x, y); else ctx.lineTo(x, y);
   });
   ctx.stroke();
   ctx.restore();
@@ -245,6 +259,7 @@ function draw(){
   ctx.clearRect(0,0,width,height);
   let a = buildSeries(els.countryA.value, els.indicatorA.value);
   let b = buildSeries(els.countryB.value, els.indicatorB.value);
+  [a,b] = trimToOverlap(a,b);
   [a,b] = applyPeriod(a,b);
   const rawA = a, rawB = b;
   if(state.indexed){ a = indexed(a); b = indexed(b); }
