@@ -32,9 +32,9 @@ body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-t
 .nav-toggle{display:none;width:38px;height:38px;border:1px solid #2a2e39;border-radius:999px;align-items:center;justify-content:center;flex-direction:column;gap:4px;cursor:pointer;margin-left:0}
 .nav-toggle span{width:16px;height:2px;background:#fff;border-radius:999px}
 .nav-search-icon{width:42px;height:42px;border:1px solid #2a2e39;border-radius:999px;background:#090c12;display:inline-flex;align-items:center;justify-content:center;position:relative;flex:0 0 auto;margin-left:auto;text-decoration:none}
-.nav-search-icon::before{content:"";width:13px;height:13px;border:2px solid #b8ff00;border-radius:50%}
-.nav-search-icon::after{content:"";position:absolute;width:7px;height:2px;background:#b8ff00;border-radius:999px;transform:translate(9px,9px) rotate(45deg)}
-.nav-search-icon:hover{border-color:#b8ff00;background:#101820}
+.nav-search-icon::before{content:"";width:13px;height:13px;border:2px solid #d1d4dc;border-radius:50%}
+.nav-search-icon::after{content:"";position:absolute;width:7px;height:2px;background:#d1d4dc;border-radius:999px;transform:translate(9px,9px) rotate(45deg)}
+.nav-search-icon:hover{border-color:#d1d4dc;background:#101820}
 .nav-search-icon span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
 .nav-links{display:flex;align-items:center;gap:28px;flex:0 1 auto}
@@ -50,11 +50,11 @@ body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-t
 .market-menu-link:hover,.market-menu-link.active{background:rgba(0,209,9,.16);color:#fff}
 .market-menu-link.active::after{content:"";width:7px;height:12px;border-right:2px solid var(--tv-accent);border-bottom:2px solid var(--tv-accent);transform:rotate(45deg) translateY(-1px)}
 .nav-search{position:relative;flex:0 1 360px;min-width:220px;margin-left:auto}
-.nav-search input{width:100%;height:42px;border:1px solid #2a2e39;border-radius:999px;background:#090c12;color:#fff;padding:0 16px 0 42px;font-size:15px;font-weight:650;outline:none}
+.nav-search input{width:100%;height:42px;border:1px solid #2a2e39;border-radius:999px;background:#090c12;color:#fff;padding:0 16px 0 42px;font-size:16px;font-weight:650;outline:none}
 .nav-search input::placeholder{color:#787b86}
-.nav-search input:focus{border-color:#b8ff00;box-shadow:0 0 0 1px rgba(184,255,0,.24)}
-.nav-search-mark{position:absolute;left:16px;top:50%;width:13px;height:13px;border:2px solid #b8ff00;border-radius:50%;transform:translateY(-50%);pointer-events:none}
-.nav-search-mark::after{content:"";position:absolute;width:7px;height:2px;background:#b8ff00;border-radius:999px;right:-6px;bottom:-4px;transform:rotate(45deg)}
+.nav-search input:focus{border-color:#3a4654;box-shadow:0 0 0 1px rgba(209,212,220,.14)}
+.nav-search-mark{position:absolute;left:16px;top:50%;width:13px;height:13px;border:2px solid #d1d4dc;border-radius:50%;transform:translateY(-50%);pointer-events:none}
+.nav-search-mark::after{content:"";position:absolute;width:7px;height:2px;background:#d1d4dc;border-radius:999px;right:-6px;bottom:-4px;transform:rotate(45deg)}
 .nav-search-results{position:absolute;left:0;right:0;top:calc(100% + 8px);max-height:320px;overflow:auto;padding:6px;border:1px solid #26313d;border-radius:8px;background:rgba(9,13,18,.98);box-shadow:0 18px 48px rgba(0,0,0,.48);display:none;z-index:80;scrollbar-color:#2a3440 #080c12;scrollbar-width:thin}
 .nav-search-results.open{display:block}
 .nav-result{width:100%;border:0;background:transparent;color:var(--tv-text);display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px;border-radius:5px;cursor:pointer;text-align:left}
@@ -152,7 +152,7 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
   .market-menu::before{display:none}
   .market-menu-link{height:34px;font-size:13px}
   .nav-search{order:4;min-width:0;margin-left:0;padding-top:8px}
-  .nav-search input{height:40px;font-size:14px}
+  .nav-search input{height:40px;font-size:16px}
   .nav-search-results{top:calc(100% + 4px)}
   .container{padding:0}
   .page-layout{display:block;border:none}
