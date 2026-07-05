@@ -7,6 +7,7 @@ import os
 
 HISTORY_FILE = 'cot_noncommercial_history.csv'
 LOOKBACK_YEARS = 10
+REQUEST_HEADERS = {'User-Agent': 'Mozilla/5.0 NetData COT updater'}
 
 def get_all_futures():
     return [
@@ -71,15 +72,32 @@ def parse_position(val):
 def download_legacy_data_for_year(year):
     base_url = "https://www.cftc.gov/files/dea/history/"
     url = f"{base_url}deacot{year}.zip"
-    response = requests.get(url)
-    if response.status_code != 200:
-        print(f"Failed to download {year}: {response.status_code}")
+    local_zip = f"deacot{year}.zip"
+    content = None
+
+    for attempt in range(1, 4):
+        try:
+            response = requests.get(url, headers=REQUEST_HEADERS, timeout=60)
+            if response.status_code == 200:
+                content = response.content
+                break
+            print(f"Failed to download {year}: {response.status_code} (attempt {attempt}/3)")
+        except requests.RequestException as exc:
+            print(f"Failed to download {year}: {exc} (attempt {attempt}/3)")
+
+    if content is None and os.path.exists(local_zip):
+        print(f"Using cached {local_zip}")
+        with open(local_zip, 'rb') as f:
+            content = f.read()
+
+    if content is None:
+        print(f"Skipping {year}: no downloadable or cached CFTC file")
         return None
-    
-    with zipfile.ZipFile(io.BytesIO(response.content)) as z:
+
+    with zipfile.ZipFile(io.BytesIO(content)) as z:
         for fname in z.namelist():
             if fname.endswith('.txt'):
-                df = pd.read_csv(z.open(fname))
+                df = pd.read_csv(z.open(fname), low_memory=False)
                 return df
     return None
 

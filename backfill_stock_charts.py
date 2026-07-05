@@ -18,6 +18,7 @@ from update_market import (
 INDEX_FILE = MARKET_DATA_DIR / "index.json"
 BACKFILL_LIMIT = int(os.getenv("MARKET_CHART_BACKFILL_LIMIT", "250") or 0)
 BACKFILL_OFFSET = int(os.getenv("MARKET_CHART_BACKFILL_OFFSET", "0") or 0)
+BACKFILL_RETRY_MISSING = os.getenv("MARKET_CHART_RETRY_MISSING", "0") == "1"
 BACKFILL_SYMBOLS = [
     symbol.strip().upper()
     for symbol in os.getenv("MARKET_CHART_SYMBOLS", "").split(",")
@@ -97,7 +98,12 @@ def main():
 
     symbols = [row["symbol"] for row in selected]
     print(f"Backfilling {len(symbols)} stock chart files")
-    frames = get_price_frame_map(symbols, period=CHART_PERIOD, chunk_size=80, retry_missing=True)
+    frames = get_price_frame_map(
+        symbols,
+        period=CHART_PERIOD,
+        chunk_size=80,
+        retry_missing=BACKFILL_RETRY_MISSING,
+    )
 
     written = 0
     missing = []

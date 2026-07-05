@@ -6,6 +6,8 @@ on:
     # CFTC reports are typically released Friday afternoon US Eastern time.
     # This runs every Saturday at 02:30 UTC.
     - cron: "30 2 * * 6"
+    # Run again on Monday in case the report is delayed by holidays or outages.
+    - cron: "30 8 * * 1"
 
 permissions:
   contents: write
