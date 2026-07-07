@@ -19,6 +19,7 @@ INDEX_FILE = MARKET_DATA_DIR / "index.json"
 BACKFILL_LIMIT = int(os.getenv("MARKET_CHART_BACKFILL_LIMIT", "250") or 0)
 BACKFILL_OFFSET = int(os.getenv("MARKET_CHART_BACKFILL_OFFSET", "0") or 0)
 BACKFILL_RETRY_MISSING = os.getenv("MARKET_CHART_RETRY_MISSING", "0") == "1"
+BACKFILL_FALLBACK_PERIOD = os.getenv("MARKET_CHART_FALLBACK_PERIOD", "5d")
 BACKFILL_SYMBOLS = [
     symbol.strip().upper()
     for symbol in os.getenv("MARKET_CHART_SYMBOLS", "").split(",")
@@ -104,6 +105,17 @@ def main():
         chunk_size=80,
         retry_missing=BACKFILL_RETRY_MISSING,
     )
+    if BACKFILL_FALLBACK_PERIOD:
+        missing_after_primary = [symbol for symbol in symbols if symbol not in frames]
+        if missing_after_primary:
+            print(f"Trying fallback period {BACKFILL_FALLBACK_PERIOD} for {len(missing_after_primary)} symbols")
+            fallback_frames = get_price_frame_map(
+                missing_after_primary,
+                period=BACKFILL_FALLBACK_PERIOD,
+                chunk_size=80,
+                retry_missing=False,
+            )
+            frames.update(fallback_frames)
 
     written = 0
     missing = []
