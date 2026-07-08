@@ -1,6 +1,9 @@
 import io
 import json
+import os
+import time
 from datetime import datetime, timezone
+from html.parser import HTMLParser
 from pathlib import Path
 
 import pandas as pd
@@ -12,6 +15,12 @@ OUTPUT_FILE = Path("market_pulse_data.json")
 MARKET_DATA_DIR = Path("market_data")
 INDEXES_DATA_DIR = Path("indexes_data")
 MIN_BREADTH_SAMPLE = 200
+SP500_CONSTITUENTS_URL = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+SP500_CONSTITUENTS_CACHE = Path("sp500_constituents.json")
+BREADTH_LOOKBACK_YEARS = int(os.getenv("MARKET_PULSE_BREADTH_YEARS", "20") or 20)
+BREADTH_DOWNLOAD_YEARS = BREADTH_LOOKBACK_YEARS + 2
+BREADTH_CHUNK_SIZE = int(os.getenv("MARKET_PULSE_BREADTH_CHUNK_SIZE", "80") or 80)
+BREADTH_DOWNLOAD_SLEEP = float(os.getenv("MARKET_PULSE_BREADTH_SLEEP", "0.5") or 0)
 CNN_FEAR_GREED_URL = "https://production.dataviz.cnn.io/index/fearandgreed/graphdata"
 CNN_HEADERS = {
     "User-Agent": (
@@ -118,11 +127,15 @@ def rounded(value, digits=4):
 
 
 def clean_points(points):
-    return [
-        {"date": item["date"], "value": rounded(item["value"])}
-        for item in points
-        if item.get("date") and item.get("value") is not None and pd.notna(item.get("value"))
-    ]
+    cleaned = []
+    for item in points:
+        if not item.get("date") or item.get("value") is None or pd.isna(item.get("value")):
+            continue
+        point = {"date": item["date"], "value": rounded(item["value"])}
+        if item.get("sample") is not None and pd.notna(item.get("sample")):
+            point["sample"] = int(item["sample"])
+        cleaned.append(point)
+    return cleaned
 
 
 def series_payload(item, points, source):
@@ -390,6 +403,230 @@ def compute_breadth():
     ]
 
 
+def normalize_yahoo_symbol(symbol):
+    return str(symbol).strip().replace(".", "-")
+
+
+class ConstituentsTableParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.in_constituents = False
+        self.in_cell = False
+        self.cell = []
+        self.row = []
+        self.rows = []
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag == "table" and attrs.get("id") == "constituents":
+            self.in_constituents = True
+        if self.in_constituents and tag in {"td", "th"}:
+            self.in_cell = True
+            self.cell = []
+
+    def handle_endtag(self, tag):
+        if not self.in_constituents:
+            return
+        if tag in {"td", "th"} and self.in_cell:
+            text = " ".join("".join(self.cell).split())
+            self.row.append(text)
+            self.in_cell = False
+        elif tag == "tr":
+            if self.row:
+                self.rows.append(self.row)
+            self.row = []
+        elif tag == "table":
+            self.in_constituents = False
+
+    def handle_data(self, data):
+        if self.in_cell:
+            self.cell.append(data)
+
+
+def parse_sp500_constituents_html(html):
+    parser = ConstituentsTableParser()
+    parser.feed(html)
+    if not parser.rows:
+        return []
+    headers = parser.rows[0]
+    try:
+        symbol_index = headers.index("Symbol")
+        name_index = headers.index("Security")
+    except ValueError:
+        return []
+    rows = []
+    for row in parser.rows[1:]:
+        if len(row) <= max(symbol_index, name_index):
+            continue
+        symbol = normalize_yahoo_symbol(row[symbol_index])
+        if not symbol:
+            continue
+        rows.append({"symbol": symbol, "name": row[name_index]})
+    return rows
+
+
+def load_sp500_constituent_cache():
+    if not SP500_CONSTITUENTS_CACHE.exists():
+        return []
+    try:
+        return json.loads(SP500_CONSTITUENTS_CACHE.read_text())
+    except Exception:
+        return []
+
+
+def fetch_sp500_constituents():
+    try:
+        response = requests.get(
+            SP500_CONSTITUENTS_URL,
+            headers={"User-Agent": CNN_HEADERS["User-Agent"]},
+            timeout=30,
+        )
+        response.raise_for_status()
+        rows = parse_sp500_constituents_html(response.text)
+        if rows:
+            SP500_CONSTITUENTS_CACHE.write_text(
+                json.dumps(
+                    {
+                        "updated": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+                        "source": SP500_CONSTITUENTS_URL,
+                        "items": rows,
+                    },
+                    ensure_ascii=False,
+                    indent=2,
+                )
+            )
+            return rows
+    except Exception as exc:
+        print(f"S&P 500 constituents fetch failed: {exc}")
+
+    cached = load_sp500_constituent_cache()
+    if isinstance(cached, dict):
+        cached = cached.get("items") or []
+    return cached
+
+
+def close_frame_from_download(data, symbols):
+    if data.empty:
+        return pd.DataFrame()
+    close = pd.DataFrame()
+    if isinstance(data.columns, pd.MultiIndex):
+        level0 = data.columns.get_level_values(0)
+        level1 = data.columns.get_level_values(1)
+        if "Close" in level0:
+            close = data["Close"].copy()
+        elif "Adj Close" in level0:
+            close = data["Adj Close"].copy()
+        elif "Close" in level1:
+            frames = []
+            for symbol in symbols:
+                if symbol in level0:
+                    frame = data[symbol]
+                    if "Close" in frame.columns:
+                        frames.append(frame["Close"].rename(symbol))
+            close = pd.concat(frames, axis=1) if frames else pd.DataFrame()
+    elif "Close" in data.columns:
+        close = data[["Close"]].copy()
+        if len(symbols) == 1:
+            close.columns = [symbols[0]]
+
+    if close.empty:
+        return close
+    close = close.apply(pd.to_numeric, errors="coerce")
+    close = close.loc[:, ~close.columns.duplicated()]
+    return close.dropna(axis=1, how="all")
+
+
+def download_sp500_closes(symbols):
+    frames = []
+    for start in range(0, len(symbols), BREADTH_CHUNK_SIZE):
+        chunk = symbols[start : start + BREADTH_CHUNK_SIZE]
+        try:
+            data = yf.download(
+                chunk,
+                period=f"{BREADTH_DOWNLOAD_YEARS}y",
+                interval="1d",
+                group_by="ticker",
+                auto_adjust=True,
+                progress=False,
+                threads=True,
+                timeout=60,
+            )
+            frame = close_frame_from_download(data, chunk)
+            if not frame.empty:
+                frames.append(frame)
+            print(
+                f"S&P 500 breadth chunk {start + 1}-{start + len(chunk)}: "
+                f"{frame.shape[1] if not frame.empty else 0} symbols"
+            )
+        except Exception as exc:
+            print(f"S&P 500 breadth chunk {start + 1}-{start + len(chunk)} failed: {exc}")
+        if BREADTH_DOWNLOAD_SLEEP:
+            time.sleep(BREADTH_DOWNLOAD_SLEEP)
+    if not frames:
+        return pd.DataFrame()
+    closes = pd.concat(frames, axis=1).sort_index()
+    closes = closes.loc[:, ~closes.columns.duplicated()]
+    return closes.dropna(axis=1, how="all")
+
+
+def breadth_points_from_closes(closes, window):
+    if closes.empty:
+        return []
+    moving_average = closes.rolling(window=window, min_periods=window).mean()
+    valid = closes.notna() & moving_average.notna()
+    sample = valid.sum(axis=1)
+    above = ((closes > moving_average) & valid).sum(axis=1)
+    start_date = pd.Timestamp.now(tz=None).normalize() - pd.DateOffset(years=BREADTH_LOOKBACK_YEARS)
+    points = []
+    for timestamp in closes.index:
+        date = pd.Timestamp(timestamp).tz_localize(None)
+        current_sample = int(sample.loc[timestamp])
+        if date < start_date or current_sample < MIN_BREADTH_SAMPLE:
+            continue
+        points.append(
+            {
+                "date": date.strftime("%Y-%m-%d"),
+                "value": (float(above.loc[timestamp]) / current_sample) * 100,
+                "sample": current_sample,
+            }
+        )
+    return points
+
+
+def compute_sp500_breadth():
+    constituents = fetch_sp500_constituents()
+    symbols = [item["symbol"] for item in constituents if item.get("symbol")]
+    closes = download_sp500_closes(symbols)
+    if closes.empty:
+        print("S&P 500 breadth failed: no close data, using local breadth fallback")
+        return compute_breadth()
+    source = "Current S&P 500 constituents via Wikipedia and Yahoo Finance"
+    return [
+        series_payload(
+            {
+                "key": "above_ma50",
+                "label": "S&P 500 Stocks above MA50",
+                "category": "Breadth",
+                "unit": "%",
+                "color": "#76d7c4",
+            },
+            breadth_points_from_closes(closes, 50),
+            source,
+        ),
+        series_payload(
+            {
+                "key": "above_ma200",
+                "label": "S&P 500 Stocks above MA200",
+                "category": "Breadth",
+                "unit": "%",
+                "color": "#ff4d00",
+            },
+            breadth_points_from_closes(closes, 200),
+            source,
+        ),
+    ]
+
+
 def fetch_sp500_pe_snapshot():
     for symbol in ("SPY", "^GSPC"):
         try:
@@ -425,17 +662,17 @@ def main():
     cnn_series, cnn_snapshot = fetch_cnn_fear_greed()
     series.extend(cnn_series)
     series.extend(fetch_yahoo_series())
-    series.extend(compute_breadth())
+    series.extend(compute_sp500_breadth())
     series.extend(fetch_fred_series())
     snapshots = [fetch_sp500_pe_snapshot()]
     if cnn_snapshot:
         snapshots.insert(0, cnn_snapshot)
     payload = {
         "updated": updated,
-        "source": "CNN Fear & Greed, Yahoo Finance, FRED, local US stock chart history",
+        "source": "CNN Fear & Greed, Yahoo Finance, FRED, S&P 500 constituents",
         "notes": [
             "Fear & Greed uses CNN's public JSON data when available, with local calculation as fallback.",
-            "Breadth is calculated from locally tracked US stock chart history.",
+            "Breadth is calculated from current S&P 500 constituents using Yahoo Finance history.",
             "S&P 500 PE is a valuation snapshot when available, not a licensed historical valuation series.",
         ],
         "series": series,
