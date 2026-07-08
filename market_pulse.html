@@ -44,25 +44,22 @@ h1{margin:0;color:#fff;font-size:32px;line-height:1;font-weight:950}
 .hero{display:grid;grid-template-columns:420px minmax(0,1fr);gap:12px}
 .gauge-card,.chart-card,.metric-card{border:1px solid var(--line);background:#000}
 .fear-board{position:relative;min-height:560px;padding:18px}
-.fear-mode{position:absolute;right:18px;top:16px;display:inline-flex;padding:3px;border:1px solid var(--line);border-radius:999px;background:#101419;z-index:2}
-.fear-mode-btn{height:28px;border:0;border-radius:999px;background:transparent;color:var(--muted);padding:0 16px;font:850 12px Inter,Arial,sans-serif;cursor:pointer}
-.fear-mode-btn.active{background:#fff;color:#000}
-.fear-overview{display:grid;grid-template-columns:minmax(360px,1fr) minmax(280px,420px);gap:28px;align-items:center;min-height:520px;padding-top:18px}
-.fear-timeline{padding-top:42px}
+.fear-overview{display:grid;grid-template-columns:minmax(360px,520px) minmax(420px,1fr);gap:24px;align-items:stretch;min-height:520px}
+.fear-chart-panel{border-left:1px solid var(--line-soft);padding-left:18px;min-width:0}
 .gauge-card{border:0;background:transparent;padding:0;min-height:auto;display:flex;flex-direction:column}
 .gauge-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
 .section-title{font-size:13px;color:#fff;text-transform:uppercase;letter-spacing:.05em;font-weight:900}
 .pill{height:26px;display:inline-flex;align-items:center;padding:0 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:11px}
-.gauge-wrap{position:relative;min-height:340px;margin:22px 0 0}
+.gauge-wrap{position:relative;min-height:350px;margin:10px 0 0}
 .gauge-svg{display:block;width:100%;height:auto}
-.gauge-value{position:absolute;left:50%;bottom:32px;transform:translateX(-50%);font-size:58px;line-height:1;color:#fff;font-weight:950}
-.gauge-state{text-align:center;color:#fff;font-size:26px;font-weight:950;margin-top:0}
+.gauge-value{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);font-size:42px;line-height:1;color:#fff;font-weight:950;letter-spacing:0}
+.gauge-state{text-align:center;color:#fff;font-size:20px;font-weight:950;margin-top:-4px}
 .gauge-copy{text-align:center;color:var(--muted);font-size:12px;line-height:1.5;margin:8px auto 18px;max-width:310px}
 .score-list{margin-top:auto;border-top:1px solid var(--line-soft)}
 .score-row{display:grid;grid-template-columns:1fr auto;gap:14px;padding:12px 0;border-bottom:1px solid var(--line-soft);font-size:12px}
 .score-row span:first-child{color:var(--muted)}
 .score-row strong{color:#fff}
-.previous-list{display:flex;flex-direction:column;gap:34px;padding:38px 8px 20px}
+.previous-list{display:none}
 .previous-row{display:grid;grid-template-columns:138px 1fr auto;align-items:center;gap:12px;color:var(--muted)}
 .previous-label{font-size:14px;font-weight:760}
 .previous-rating{color:#fff;font-size:17px;font-weight:950}
@@ -77,6 +74,8 @@ h1{margin:0;color:#fff;font-size:32px;line-height:1;font-weight:950}
 .dot{width:9px;height:9px;border-radius:50%;background:var(--c)}
 .range{color:var(--muted);font-size:12px}
 .canvas-wrap{position:relative;height:500px}
+.chart-tooltip{position:absolute;left:0;top:0;display:none;min-width:132px;padding:8px 10px;border:1px solid var(--line);border-radius:5px;background:rgba(9,13,18,.96);box-shadow:0 10px 28px rgba(0,0,0,.35);color:#fff;font-size:12px;font-weight:850;pointer-events:none;z-index:5}
+.chart-tooltip .muted{display:block;color:var(--muted);font-size:11px;margin-bottom:4px}
 canvas{display:block;width:100%;height:100%}
 .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
 .metric-card{padding:12px;min-height:82px}
@@ -89,7 +88,7 @@ canvas{display:block;width:100%;height:100%}
   .hero{grid-template-columns:1fr}
   .gauge-card{min-height:auto}
   .fear-overview{grid-template-columns:1fr}
-  .previous-list{padding-top:0}
+  .fear-chart-panel{border-left:0;border-top:1px solid var(--line-soft);padding-left:0;padding-top:14px}
   .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:720px){
@@ -106,13 +105,10 @@ canvas{display:block;width:100%;height:100%}
   h1{font-size:25px}
   .tab{height:38px;padding:0 12px;font-size:13px}
   .fear-board{padding:14px}
-  .fear-mode{position:static;margin-left:auto;margin-bottom:12px;width:max-content}
   .fear-overview{display:block;min-height:auto;padding-top:0}
-  .gauge-wrap{min-height:260px}
-  .gauge-value{font-size:44px}
-  .gauge-state{font-size:22px}
-  .previous-list{gap:18px}
-  .previous-row{grid-template-columns:108px 1fr auto}
+  .gauge-wrap{min-height:245px}
+  .gauge-value{font-size:38px;bottom:18px}
+  .gauge-state{font-size:18px}
   .canvas-wrap{height:410px}
   .metrics{grid-template-columns:1fr}
 }
@@ -160,10 +156,6 @@ canvas{display:block;width:100%;height:100%}
   </section>
 
   <section class="chart-card fear-board" id="fearView">
-    <div class="fear-mode" id="fearMode">
-      <button class="fear-mode-btn active" data-fear-mode="overview">Overview</button>
-      <button class="fear-mode-btn" data-fear-mode="timeline">Timeline</button>
-    </div>
     <div class="fear-overview" id="fearOverview">
       <div class="gauge-card">
         <div class="gauge-title">
@@ -171,36 +163,31 @@ canvas{display:block;width:100%;height:100%}
           <span class="pill" id="fearDate">--</span>
         </div>
         <div class="gauge-wrap">
-          <svg class="gauge-svg" viewBox="0 0 520 310" aria-hidden="true">
-            <path d="M60 260 A200 200 0 0 1 460 260" fill="none" stroke="#101820" stroke-width="58" stroke-linecap="round"/>
-            <path d="M60 260 A200 200 0 0 1 145 105" fill="none" stroke="#2a1110" stroke-width="58" stroke-linecap="round"/>
-            <path d="M145 105 A200 200 0 0 1 260 60" fill="none" stroke="#4a240b" stroke-width="58" stroke-linecap="butt"/>
-            <path d="M260 60 A200 200 0 0 1 375 105" fill="none" stroke="#143717" stroke-width="58" stroke-linecap="butt"/>
-            <path d="M375 105 A200 200 0 0 1 460 260" fill="none" stroke="#035d18" stroke-width="58" stroke-linecap="round"/>
-            <path id="activeArc" d="M145 105 A200 200 0 0 1 260 60" fill="none" stroke="#ff4d00" stroke-width="60" stroke-linecap="butt" opacity=".42"/>
-            <line id="needle" x1="260" y1="260" x2="260" y2="90" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
-            <circle cx="260" cy="260" r="16" fill="#fff"/>
-            <text x="61" y="290" fill="#787b86" font-size="20" font-weight="900">0</text>
-            <text x="248" y="117" fill="#787b86" font-size="20" font-weight="900">50</text>
-            <text x="430" y="290" fill="#787b86" font-size="20" font-weight="900">100</text>
-            <text x="78" y="190" fill="#787b86" font-size="22" font-weight="950" transform="rotate(-62 78 190)">EXTREME FEAR</text>
-            <text x="142" y="118" fill="#d1d4dc" font-size="25" font-weight="950" transform="rotate(-34 142 118)">FEAR</text>
-            <text x="225" y="69" fill="#787b86" font-size="24" font-weight="950" transform="rotate(-8 225 69)">NEUTRAL</text>
-            <text x="330" y="100" fill="#787b86" font-size="24" font-weight="950" transform="rotate(30 330 100)">GREED</text>
-            <text x="402" y="182" fill="#787b86" font-size="21" font-weight="950" transform="rotate(60 402 182)">EXTREME GREED</text>
+          <svg class="gauge-svg" viewBox="0 0 560 330" aria-hidden="true">
+            <g id="gaugeSegments"></g>
+            <g id="gaugeTicks"></g>
+            <g id="gaugeLabels"></g>
+            <line id="needle" x1="280" y1="246" x2="280" y2="96" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="280" cy="246" r="13" fill="#fff"/>
+            <text x="80" y="274" fill="#787b86" font-size="17" font-weight="850">0</text>
+            <text x="269" y="120" fill="#787b86" font-size="17" font-weight="850">50</text>
+            <text x="456" y="274" fill="#787b86" font-size="17" font-weight="850">100</text>
           </svg>
           <div class="gauge-value" id="fearScore">--</div>
         </div>
         <div class="gauge-state" id="fearState">Loading</div>
+        <div class="previous-list" id="fearPrevious"></div>
       </div>
-      <div class="previous-list" id="fearPrevious"></div>
-    </div>
-    <div class="fear-timeline hidden" id="fearTimeline">
-      <div class="chart-head">
-        <div class="legend" id="fearLegend"></div>
-        <div class="range" id="fearRange">All available history</div>
+      <div class="fear-chart-panel">
+        <div class="chart-head">
+          <div class="legend" id="fearLegend"></div>
+          <div class="range" id="fearRange">All available history</div>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="fearChart"></canvas>
+          <div class="chart-tooltip" id="fearTooltip"></div>
+        </div>
       </div>
-      <div class="canvas-wrap"><canvas id="fearChart"></canvas></div>
     </div>
   </section>
 
@@ -229,7 +216,7 @@ canvas{display:block;width:100%;height:100%}
   <div class="note" id="notes"></div>
 </main>
 <script>
-const state = { data:null, view:'fear', fearMode:'overview' };
+const state = { data:null, view:'fear' };
 const $ = id => document.getElementById(id);
 const seriesByKey = key => state.data.series.find(item => item.key === key);
 const fmt = (value, unit='') => {
@@ -377,6 +364,7 @@ function drawLineChart(canvas, inputSeries, options={}){
     ctx.stroke();
     ctx.globalAlpha = 1;
   });
+  return {left,right,top,bottom,width,height,minX,maxX,minY,maxY,xFor,yFor,rows};
 }
 function setLegend(id, items){
   $(id).innerHTML = items.map(item => `<div class="legend-item"><span class="dot" style="--c:${item.color}"></span><span>${item.label}</span></div>`).join('');
@@ -390,17 +378,87 @@ function renderMetrics(items){
     </div>
   `).join('');
 }
+function polar(cx, cy, radius, angle){
+  const radians = (angle - 90) * Math.PI / 180;
+  return {x:cx + radius * Math.cos(radians), y:cy + radius * Math.sin(radians)};
+}
+function annularSector(cx, cy, outer, inner, start, end){
+  const startOuter = polar(cx, cy, outer, start);
+  const endOuter = polar(cx, cy, outer, end);
+  const startInner = polar(cx, cy, inner, start);
+  const endInner = polar(cx, cy, inner, end);
+  const largeArc = end - start > 180 ? 1 : 0;
+  return [
+    `M ${startOuter.x.toFixed(2)} ${startOuter.y.toFixed(2)}`,
+    `A ${outer} ${outer} 0 ${largeArc} 1 ${endOuter.x.toFixed(2)} ${endOuter.y.toFixed(2)}`,
+    `L ${endInner.x.toFixed(2)} ${endInner.y.toFixed(2)}`,
+    `A ${inner} ${inner} 0 ${largeArc} 0 ${startInner.x.toFixed(2)} ${startInner.y.toFixed(2)}`,
+    'Z'
+  ].join(' ');
+}
+function drawGauge(score){
+  const cx = 280, cy = 246, outer = 238, inner = 154;
+  const slices = [
+    {name:'EXTREME FEAR', start:-90, end:-54, color:'#121820', active:'#1b2b38', rotate:-64, size:16},
+    {name:'FEAR', start:-52, end:-18, color:'#151413', active:'#4a240b', rotate:-35, size:22},
+    {name:'NEUTRAL', start:-16, end:16, color:'#151820', active:'#363a22', rotate:0, size:20},
+    {name:'GREED', start:18, end:52, color:'#101c15', active:'#123717', rotate:35, size:20},
+    {name:'EXTREME GREED', start:54, end:90, color:'#0a1711', active:'#035d18', rotate:64, size:16},
+  ];
+  const value = Math.max(0, Math.min(100, Number(score) || 0));
+  const activeIndex = Math.min(4, Math.floor(value / 20));
+  $('gaugeSegments').innerHTML = slices.map((slice, index) => `
+    <path d="${annularSector(cx, cy, outer, inner, slice.start, slice.end)}" fill="${index === activeIndex ? slice.active : slice.color}" stroke="#000" stroke-width="5"/>
+  `).join('');
+  $('gaugeLabels').innerHTML = slices.map((slice, index) => {
+    const angle = (slice.start + slice.end) / 2;
+    const point = polar(cx, cy, 198, angle);
+    const color = index === activeIndex ? '#fff' : '#8d9099';
+    return `<text x="${point.x.toFixed(2)}" y="${point.y.toFixed(2)}" fill="${color}" font-size="${slice.size}" font-weight="950" text-anchor="middle" dominant-baseline="middle" transform="rotate(${slice.rotate} ${point.x.toFixed(2)} ${point.y.toFixed(2)})">${slice.name}</text>`;
+  }).join('');
+  const dots = [];
+  for(let i=0;i<=20;i++){
+    const angle = lerp(-82, 82, i / 20);
+    const point = polar(cx, cy, 139, angle);
+    dots.push(`<circle cx="${point.x.toFixed(2)}" cy="${point.y.toFixed(2)}" r="2.5" fill="#787b86"/>`);
+  }
+  $('gaugeTicks').innerHTML = dots.join('');
+  $('needle').setAttribute('transform', `rotate(${lerp(-82, 82, value / 100)} ${cx} ${cy})`);
+}
+function attachFearHover(layout, points){
+  const canvas = $('fearChart');
+  const tooltip = $('fearTooltip');
+  const times = points.map(point => new Date(point.date).getTime());
+  canvas.onmouseleave = () => { tooltip.style.display = 'none'; };
+  canvas.onmousemove = event => {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const target = layout.minX + ((x - layout.left) / Math.max(1, layout.width - layout.left - layout.right)) * (layout.maxX - layout.minX);
+    let best = 0;
+    let bestDist = Infinity;
+    times.forEach((time, index) => {
+      const dist = Math.abs(time - target);
+      if(dist < bestDist){ bestDist = dist; best = index; }
+    });
+    const point = points[best];
+    if(!point) return;
+    tooltip.innerHTML = `<span class="muted">${point.date}</span>Fear & Greed <strong>${fmt(point.value)}</strong>`;
+    const left = Math.min(layout.width - 146, Math.max(8, x + 12));
+    const top = Math.max(8, Math.min(layout.height - 54, event.clientY - rect.top - 44));
+    tooltip.style.transform = `translate(${left}px, ${top}px)`;
+    tooltip.style.display = 'block';
+  };
+}
 function renderFear(){
   const cnnSeries = seriesByKey('cnn_fear_greed');
   const cnnSnapshot = cnnFearSnapshot();
   const history = cnnSeries && cnnSeries.points.length ? cnnSeries.points : buildFearHistory();
   const last = history[history.length - 1];
   const score = cnnSnapshot && Number.isFinite(Number(cnnSnapshot.value)) ? cnnSnapshot.value : (last ? last.value : null);
-  $('fearScore').textContent = score ?? '--';
+  $('fearScore').textContent = score === null ? '--' : Math.round(score);
   $('fearState').textContent = score === null ? 'Unavailable' : ratingText(cnnSnapshot?.rating, score);
   $('fearDate').textContent = cnnSnapshot?.date || (last ? last.date : '--');
-  $('needle').setAttribute('transform', `rotate(${lerp(-90, 90, (score || 0) / 100)} 260 260)`);
-  $('activeArc').setAttribute('stroke', fearClass(score) === 'greed' ? '#00d109' : fearClass(score) === 'neutral' ? '#787b86' : '#ff4d00');
+  drawGauge(score);
   const previousRows = [
     ['Previous close', cnnSnapshot?.previous_close],
     ['1 week ago', cnnSnapshot?.previous_1_week],
@@ -416,16 +474,12 @@ function renderFear(){
   `).join('');
   const points = history.map(point => ({date:point.date, value:point.value}));
   const fearLabel = cnnSeries ? 'CNN Fear & Greed Index' : 'Fear & Greed Estimate';
-  setLegend('fearLegend', [{label:fearLabel, color:'#00d109'}, {label:'S&P 500', color:'#d1d4dc'}]);
+  setLegend('fearLegend', [{label:fearLabel, color:'#00b8a9'}]);
   $('fearRange').textContent = points.length ? `${points[0].date} to ${points[points.length - 1].date}` : 'No data';
-  const sp = seriesByKey('us500');
-  $('fearOverview').classList.toggle('hidden', state.fearMode !== 'overview');
-  $('fearTimeline').classList.toggle('hidden', state.fearMode !== 'timeline');
-  if(state.fearMode === 'timeline'){
-    drawLineChart($('fearChart'), [
-      {label:fearLabel, color:'#00b8a9', points, width:2.7},
-    ], {minY:0, maxY:100});
-  }
+  const layout = drawLineChart($('fearChart'), [
+    {label:fearLabel, color:'#00b8a9', points, width:2.7},
+  ], {minY:0, maxY:100});
+  if(layout) attachFearHover(layout, points);
 }
 function renderBreadth(){
   const sp = seriesByKey('us500');
@@ -497,13 +551,6 @@ $('tabs').addEventListener('click', event => {
   state.view = button.dataset.view;
   document.querySelectorAll('.tab').forEach(tab => tab.classList.toggle('active', tab === button));
   render();
-});
-$('fearMode').addEventListener('click', event => {
-  const button = event.target.closest('button[data-fear-mode]');
-  if(!button) return;
-  state.fearMode = button.dataset.fearMode;
-  document.querySelectorAll('.fear-mode-btn').forEach(item => item.classList.toggle('active', item === button));
-  renderFear();
 });
 fetch('market_pulse_data.json', {cache:'no-store'})
   .then(response => response.json())
