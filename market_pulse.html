@@ -400,22 +400,26 @@ function drawGauge(score){
   const cx = 280, cy = 246, outer = 238, inner = 154;
   const angleForScore = value => lerp(-82, 82, Math.max(0, Math.min(100, value)) / 100);
   const slices = [
-    {name:'EXTREME FEAR', min:0, max:24, start:angleForScore(0), end:angleForScore(24), active:'#8b1e1e', rotate:-64, size:12},
-    {name:'FEAR', min:25, max:44, start:angleForScore(25), end:angleForScore(44), active:'#ff4d00', rotate:-35, size:17},
-    {name:'NEUTRAL', min:45, max:54, start:angleForScore(45), end:angleForScore(54), active:'#d7a900', rotate:0, size:16},
-    {name:'GREED', min:55, max:74, start:angleForScore(55), end:angleForScore(74), active:'#00d109', rotate:35, size:16},
-    {name:'EXTREME GREED', min:75, max:100, start:angleForScore(75), end:angleForScore(100), active:'#007a2f', rotate:64, size:12},
+    {name:'EXTREME FEAR', lines:['EXTREME','FEAR'], min:0, max:24, start:angleForScore(0), end:angleForScore(24), active:'#8b1e1e', rotate:-64},
+    {name:'FEAR', lines:['FEAR'], min:25, max:44, start:angleForScore(25), end:angleForScore(44), active:'#ff4d00', rotate:-35},
+    {name:'NEUTRAL', lines:['NEUTRAL'], min:45, max:54, start:angleForScore(45), end:angleForScore(54), active:'#d7a900', rotate:0},
+    {name:'GREED', lines:['GREED'], min:55, max:74, start:angleForScore(55), end:angleForScore(74), active:'#00d109', rotate:35},
+    {name:'EXTREME GREED', lines:['EXTREME','GREED'], min:75, max:100, start:angleForScore(75), end:angleForScore(100), active:'#007a2f', rotate:64},
   ];
   const value = Math.max(0, Math.min(100, Number(score) || 0));
   const activeIndex = slices.findIndex(slice => value >= slice.min && value <= slice.max);
   $('gaugeSegments').innerHTML = slices.map((slice, index) => `
-    <path d="${annularSector(cx, cy, outer, inner, slice.start, slice.end)}" fill="${index === activeIndex ? slice.active : '#151515'}" stroke="#000" stroke-width="5"/>
+    <path d="${annularSector(cx, cy, outer, inner, slice.start, slice.end)}" fill="${index === activeIndex ? slice.active : '#151515'}" stroke="#000" stroke-width="4"/>
   `).join('');
   $('gaugeLabels').innerHTML = slices.map((slice, index) => {
     const angle = (slice.start + slice.end) / 2;
     const point = polar(cx, cy, 198, angle);
     const color = index === activeIndex ? '#fff' : '#8d9099';
-    return `<text x="${point.x.toFixed(2)}" y="${point.y.toFixed(2)}" fill="${color}" font-size="${slice.size}" font-weight="950" text-anchor="middle" dominant-baseline="middle" transform="rotate(${slice.rotate} ${point.x.toFixed(2)} ${point.y.toFixed(2)})">${slice.name}</text>`;
+    const lines = slice.lines.map((line, lineIndex) => {
+      const dy = slice.lines.length === 1 ? '0' : (lineIndex === 0 ? '-0.42em' : '1.08em');
+      return `<tspan x="${point.x.toFixed(2)}" dy="${dy}">${line}</tspan>`;
+    }).join('');
+    return `<text x="${point.x.toFixed(2)}" y="${point.y.toFixed(2)}" fill="${color}" font-size="13" font-weight="950" text-anchor="middle" dominant-baseline="middle" transform="rotate(${slice.rotate} ${point.x.toFixed(2)} ${point.y.toFixed(2)})">${lines}</text>`;
   }).join('');
   const dots = [];
   for(let i=0;i<=20;i++){
