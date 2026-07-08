@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Pulse - Net Data</title>
+<style>
+:root{
+  --tv-bg:#000;--tv-panel:#050709;--tv-panel-2:#090d12;--tv-border:#202932;
+  --tv-border-soft:#111820;--tv-text:#d1d4dc;--tv-muted:#787b86;--tv-faint:#5d606b;
+  --tv-green:#00d109;--tv-red:#ff4d00;--tv-blue:#2962ff;--tv-accent:#00d109;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tv-bg);color:var(--tv-text);font-family:Inter,Arial,sans-serif;font-weight:750}
+.site-nav{min-height:64px;display:flex;align-items:center;gap:28px;padding:0 24px;background:#000;border-bottom:1px solid #1b1f2a;position:relative;z-index:30}
+.site-brand{display:inline-flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-size:25px;font-weight:900;white-space:nowrap}
+.brand-mark{position:relative;width:22px;height:26px;display:inline-block}
+.brand-mark::before{content:"";position:absolute;left:7px;top:1px;width:10px;height:24px;background:#fff;border-radius:10px 10px 10px 1px;transform:skew(-18deg) rotate(22deg);transform-origin:center}
+.brand-mark::after{content:"";position:absolute;left:2px;bottom:2px;width:13px;height:3px;background:#fff;border-radius:999px;transform:rotate(-34deg)}
+.nav-check{position:absolute;opacity:0;pointer-events:none}
+.nav-toggle{display:none;width:38px;height:38px;border:1px solid #2a2e39;border-radius:999px;align-items:center;justify-content:center;flex-direction:column;gap:4px;cursor:pointer;margin-left:0}
+.nav-toggle span{width:16px;height:2px;background:#fff;border-radius:999px}
+.nav-links{display:flex;align-items:center;gap:28px;flex:0 1 auto}
+.nav-link{position:relative;color:#f3f4f6;text-decoration:none;font-size:15px;font-weight:800;white-space:nowrap}
+.nav-link:hover,.nav-link.active{color:#b8ff00}
+.nav-market{position:relative;display:flex;align-items:center}
+.market-menu{position:absolute;left:50%;top:calc(100% + 14px);min-width:190px;padding:8px;border:1px solid #26313d;border-radius:8px;background:rgba(9,13,18,.96);box-shadow:0 18px 48px rgba(0,0,0,.48);transform:translateX(-50%) translateY(6px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .14s ease,transform .14s ease,visibility .14s ease;z-index:50}
+.market-menu::before{content:"";position:absolute;left:0;right:0;top:-15px;height:15px}
+.nav-market:hover .market-menu,.nav-market:focus-within .market-menu{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.market-menu-link{display:flex;align-items:center;justify-content:space-between;height:34px;padding:0 10px;border-radius:5px;color:var(--tv-text);font-size:13px;font-weight:850;text-decoration:none;white-space:nowrap}
+.market-menu-link:hover{background:rgba(0,209,9,.16);color:#fff}
+.nav-search-icon{width:42px;height:42px;border:1px solid #2a2e39;border-radius:999px;background:#090c12;display:inline-flex;align-items:center;justify-content:center;position:relative;flex:0 0 auto;margin-left:auto;text-decoration:none}
+.nav-search-icon::before{content:"";width:13px;height:13px;border:2px solid #d1d4dc;border-radius:50%}
+.nav-search-icon::after{content:"";position:absolute;width:7px;height:2px;background:#d1d4dc;border-radius:999px;transform:translate(9px,9px) rotate(45deg)}
+.wrap{width:100%;padding:14px clamp(10px,1.3vw,24px) 28px}
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:14px;flex-wrap:wrap}
+.eyebrow{font-size:11px;color:var(--tv-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+h1{margin:0;color:#fff;font-size:30px;line-height:1;font-weight:900}
+.sub{margin-top:8px;color:var(--tv-muted);font-size:12px}
+.filters{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.btn{height:34px;border:1px solid var(--tv-border);background:var(--tv-panel-2);color:var(--tv-muted);border-radius:5px;padding:0 12px;font:850 12px Inter,Arial,sans-serif;cursor:pointer}
+.btn:hover{background:#101820;color:#fff}
+.btn.active{background:var(--tv-accent);border-color:var(--tv-accent);color:#001b03}
+.cards{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-bottom:10px}
+.card{border:1px solid var(--tv-border);background:#000;padding:12px;border-radius:0;min-height:96px;cursor:pointer}
+.card:hover,.card.active{background:#071018;border-color:#2b3845}
+.card-title{display:flex;align-items:center;gap:7px;color:var(--tv-muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--series-color)}
+.card-value{color:#fff;font-size:24px;font-weight:900;line-height:1.1}
+.card-meta{margin-top:5px;color:var(--tv-muted);font-size:11px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:10px}
+.chart-shell{border:1px solid var(--tv-border);background:#000;min-height:560px}
+.chart-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid var(--tv-border);color:var(--tv-muted);font-size:12px;flex-wrap:wrap}
+.legend{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:7px}
+.canvas-wrap{position:relative;height:520px}
+canvas{display:block;width:100%;height:100%}
+.side{display:flex;flex-direction:column;gap:10px}
+.panel{border:1px solid var(--tv-border);background:#000;padding:12px}
+.panel h2{font-size:13px;color:#fff;margin:0 0 10px;text-transform:uppercase;letter-spacing:.04em}
+.score{display:flex;align-items:center;gap:12px}
+.score-number{width:74px;height:74px;border:1px solid var(--tv-border);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:27px;font-weight:900;background:#070b10}
+.score-label{font-size:18px;color:#fff;font-weight:900}
+.score-copy{font-size:12px;color:var(--tv-muted);line-height:1.5;margin-top:4px}
+.row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--tv-border-soft);font-size:12px}
+.row:first-child{border-top:0}
+.row span:first-child{color:var(--tv-muted)}
+.row strong{color:#fff;text-align:right}
+.empty{min-height:480px;display:flex;align-items:center;justify-content:center;color:var(--tv-muted);font-size:13px}
+@media(max-width:980px){
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid{grid-template-columns:1fr}
+}
+@media(max-width:720px){
+  .site-nav{min-height:58px;padding:10px 14px;gap:10px;flex-wrap:wrap}
+  .site-brand{font-size:21px;order:1}
+  .nav-search-icon{order:2;width:38px;height:38px;margin-left:auto}
+  .nav-toggle{display:flex;order:3;margin-left:0}
+  .nav-links{display:none;order:4;flex:0 0 100%;width:100%;flex-direction:column;align-items:stretch;gap:4px;padding-top:8px}
+  .nav-check:checked ~ .nav-links{display:flex}
+  .nav-link{height:40px;display:flex;align-items:center;font-size:14px}
+  .nav-market{display:block}
+  .market-menu{position:static;opacity:1;visibility:visible;pointer-events:auto;transform:none;box-shadow:none;background:transparent;border:0;padding:0 0 0 12px}
+  .market-menu::before{display:none}
+  h1{font-size:24px}
+  .cards{grid-template-columns:1fr}
+  .canvas-wrap{height:420px}
+}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="Primary">
+  <a class="site-brand" href="index.html" aria-label="Net Data home"><span class="brand-mark" aria-hidden="true"></span><span>Net Data</span></a>
+  <input class="nav-check" type="checkbox" id="navMenu">
+  <label class="nav-toggle" for="navMenu" aria-label="Toggle navigation"><span></span><span></span><span></span></label>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Non-Commercial</a>
+    <div class="nav-market">
+      <a class="nav-link" href="russell2000_top100.html">Market</a>
+      <div class="market-menu" aria-label="Market sections">
+        <a class="market-menu-link" href="russell2000_top100.html?market=stock">Tops</a>
+        <a class="market-menu-link" href="russell2000_top100.html?market=commodities">Commodities</a>
+        <a class="market-menu-link" href="russell2000_top100.html?market=indexes">Indexes</a>
+        <a class="market-menu-link" href="russell2000_top100.html?market=shares">Stock</a>
+        <a class="market-menu-link" href="russell2000_top100.html?market=currencies">Currencies</a>
+        <a class="market-menu-link" href="russell2000_top100.html?market=crypto">Crypto</a>
+        <a class="market-menu-link" href="russell2000_top100.html?market=bonds">Bonds</a>
+      </div>
+    </div>
+    <a class="nav-link" href="economy.html">Indicators</a>
+    <a class="nav-link active" href="market_pulse.html">Market Pulse</a>
+    <a class="nav-link" href="compare.html">Compare</a>
+    <a class="nav-link" href="calendar.html">Calendar</a>
+  </div>
+  <a class="nav-search-icon" href="search.html" aria-label="Search"><span aria-hidden="true"></span></a>
+</nav>
+<main class="wrap">
+  <section class="head">
+    <div>
+      <div class="eyebrow">Market Direction</div>
+      <h1>Market Pulse</h1>
+      <div class="sub" id="meta">Loading market direction data...</div>
+    </div>
+    <div class="filters" id="filters">
+      <button class="btn active" data-category="All">All</button>
+      <button class="btn" data-category="Trend">Trend</button>
+      <button class="btn" data-category="Breadth">Breadth</button>
+      <button class="btn" data-category="Sentiment">Sentiment</button>
+      <button class="btn" data-category="Liquidity">Liquidity</button>
+      <button class="btn" data-category="Valuation">Valuation</button>
+    </div>
+  </section>
+  <section class="cards" id="cards"></section>
+  <section class="grid">
+    <div class="chart-shell">
+      <div class="chart-top">
+        <div class="legend" id="legend"></div>
+        <div id="rangeText">All available history</div>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="chart"></canvas>
+        <div class="empty" id="empty" hidden>No data available.</div>
+      </div>
+    </div>
+    <aside class="side">
+      <div class="panel">
+        <h2>Direction Score</h2>
+        <div class="score">
+          <div class="score-number" id="scoreNumber">--</div>
+          <div>
+            <div class="score-label" id="scoreLabel">Loading</div>
+            <div class="score-copy" id="scoreCopy">Combines trend, breadth, volatility and credit stress.</div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Snapshots</h2>
+        <div id="snapshots"></div>
+      </div>
+      <div class="panel">
+        <h2>Notes</h2>
+        <div id="notes" class="score-copy"></div>
+      </div>
+    </aside>
+  </section>
+</main>
+<script>
+const state = { data:null, category:'All', selected:null };
+const els = {
+  meta:document.getElementById('meta'), cards:document.getElementById('cards'), legend:document.getElementById('legend'),
+  chart:document.getElementById('chart'), empty:document.getElementById('empty'), rangeText:document.getElementById('rangeText'),
+  scoreNumber:document.getElementById('scoreNumber'), scoreLabel:document.getElementById('scoreLabel'), scoreCopy:document.getElementById('scoreCopy'),
+  snapshots:document.getElementById('snapshots'), notes:document.getElementById('notes')
+};
+const ctx = els.chart.getContext('2d');
+
+function fmt(value, unit){
+  if(value === null || value === undefined || !Number.isFinite(Number(value))) return '--';
+  const num = Number(value);
+  const digits = Math.abs(num) >= 1000 ? 0 : Math.abs(num) >= 100 ? 1 : 2;
+  return `${num.toLocaleString('en-US',{maximumFractionDigits:digits})}${unit === '%' ? '%' : unit === 'x' ? 'x' : ''}`;
+}
+function pointValue(series){ return series.latest ? series.latest.value : null; }
+function visibleSeries(){
+  if(!state.data) return [];
+  let list = state.data.series.filter(item => item.points && item.points.length);
+  if(state.category !== 'All') list = list.filter(item => item.category === state.category);
+  if(state.selected) list = list.filter(item => item.key === state.selected);
+  return list;
+}
+function scoreFromData(){
+  const byKey = Object.fromEntries(state.data.series.map(item => [item.key, item]));
+  const vix = pointValue(byKey.vix);
+  const ma50 = pointValue(byKey.above_ma50);
+  const ma200 = pointValue(byKey.above_ma200);
+  const hy = pointValue(byKey.hy_spread);
+  const us500 = byKey.us500 && byKey.us500.points || [];
+  let score = 50;
+  if(Number.isFinite(ma50)) score += (ma50 - 50) * 0.35;
+  if(Number.isFinite(ma200)) score += (ma200 - 50) * 0.25;
+  if(Number.isFinite(vix)) score += vix < 16 ? 12 : vix < 22 ? 4 : vix < 30 ? -8 : -18;
+  if(Number.isFinite(hy)) score += hy < 4 ? 8 : hy < 6 ? 1 : hy < 8 ? -7 : -16;
+  if(us500.length > 200){
+    const latest = us500[us500.length - 1].value;
+    const base = us500[Math.max(0, us500.length - 201)].value;
+    if(base) score += latest > base ? 8 : -8;
+  }
+  return Math.max(0, Math.min(100, Math.round(score)));
+}
+function scoreLabel(score){
+  if(score >= 75) return 'Strong Risk-On';
+  if(score >= 60) return 'Risk-On';
+  if(score >= 40) return 'Neutral';
+  if(score >= 25) return 'Risk-Off';
+  return 'Stress';
+}
+function renderCards(){
+  const selected = state.selected;
+  const cards = state.data.series.filter(item => item.latest).slice(0, 8);
+  els.cards.innerHTML = cards.map(item => `
+    <button class="card ${selected === item.key ? 'active' : ''}" data-key="${item.key}" style="--series-color:${item.color}">
+      <div class="card-title"><span class="dot"></span><span>${item.label}</span></div>
+      <div class="card-value">${fmt(item.latest.value, item.unit)}</div>
+      <div class="card-meta">${item.latest.date} · ${item.category}</div>
+    </button>
+  `).join('');
+  els.cards.querySelectorAll('.card').forEach(card => card.addEventListener('click', () => {
+    state.selected = state.selected === card.dataset.key ? null : card.dataset.key;
+    render();
+  }));
+}
+function renderSide(){
+  const score = scoreFromData();
+  els.scoreNumber.textContent = score;
+  els.scoreLabel.textContent = scoreLabel(score);
+  els.scoreCopy.textContent = 'Based on available trend, breadth, volatility and credit conditions.';
+  els.snapshots.innerHTML = (state.data.snapshots || []).map(item => `
+    <div class="row"><span>${item.label}</span><strong>${fmt(item.value, item.unit)}</strong></div>
+  `).join('') || '<div class="row"><span>No valuation snapshot</span><strong>--</strong></div>';
+  els.notes.textContent = (state.data.notes || []).join(' ');
+}
+function draw(){
+  const series = visibleSeries();
+  const rect = els.chart.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const width = Math.max(320, Math.floor(rect.width));
+  const height = Math.max(320, Math.floor(rect.height));
+  els.chart.width = Math.floor(width * dpr);
+  els.chart.height = Math.floor(height * dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,width,height);
+  els.empty.hidden = series.length > 0;
+  if(!series.length) return;
+  const left = 52, right = 26, top = 28, bottom = 34;
+  const allPoints = series.flatMap(item => item.points.map(point => ({...point, item})));
+  const xs = allPoints.map(point => new Date(point.date).getTime()).filter(Number.isFinite);
+  const minX = Math.min(...xs), maxX = Math.max(...xs);
+  els.rangeText.textContent = `${new Date(minX).getFullYear()} to ${new Date(maxX).getFullYear()}`;
+  function normalize(item, value){
+    if(state.category !== 'All' && series.length <= 2) return value;
+    const first = item.points.find(point => Number.isFinite(point.value) && point.value !== 0);
+    return first ? (value / first.value) * 100 : value;
+  }
+  const normalized = series.flatMap(item => item.points.map(point => normalize(item, point.value)).filter(Number.isFinite));
+  let minY = Math.min(...normalized), maxY = Math.max(...normalized);
+  if(minY === maxY){ minY -= 1; maxY += 1; }
+  const pad = (maxY - minY) * 0.08;
+  minY -= pad; maxY += pad;
+  const xFor = date => left + ((new Date(date).getTime() - minX) / Math.max(1, maxX - minX)) * (width - left - right);
+  const yFor = value => top + (1 - ((value - minY) / Math.max(1, maxY - minY))) * (height - top - bottom);
+  ctx.strokeStyle = 'rgba(209,212,220,.13)';
+  ctx.lineWidth = 1;
+  for(let i=0;i<=6;i++){
+    const y = top + i * (height - top - bottom) / 6;
+    ctx.beginPath(); ctx.moveTo(left,y); ctx.lineTo(width-right,y); ctx.stroke();
+  }
+  for(let i=0;i<=6;i++){
+    const x = left + i * (width - left - right) / 6;
+    ctx.beginPath(); ctx.moveTo(x,top); ctx.lineTo(x,height-bottom); ctx.stroke();
+  }
+  ctx.fillStyle = '#787b86';
+  ctx.font = '11px Inter, Arial, sans-serif';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  for(let i=0;i<=4;i++){
+    const value = minY + i * (maxY - minY) / 4;
+    ctx.fillText(fmt(value, state.category === 'All' ? '' : (series[0].unit || '')), left - 8, yFor(value));
+  }
+  series.forEach(item => {
+    ctx.strokeStyle = item.color;
+    ctx.lineWidth = item.key === 'us500' ? 2.4 : 1.9;
+    ctx.beginPath();
+    item.points.forEach((point, index) => {
+      const x = xFor(point.date);
+      const y = yFor(normalize(item, point.value));
+      if(index === 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+  });
+  els.legend.innerHTML = series.map(item => `
+    <div class="legend-item"><span class="dot" style="background:${item.color}"></span><span>${item.label}</span></div>
+  `).join('');
+}
+function render(){
+  renderCards();
+  renderSide();
+  draw();
+}
+document.getElementById('filters').addEventListener('click', event => {
+  const button = event.target.closest('button[data-category]');
+  if(!button) return;
+  document.querySelectorAll('.btn[data-category]').forEach(item => item.classList.toggle('active', item === button));
+  state.category = button.dataset.category;
+  state.selected = null;
+  render();
+});
+fetch('market_pulse_data.json', {cache:'no-store'})
+  .then(response => response.json())
+  .then(data => {
+    state.data = data;
+    els.meta.textContent = `Updated ${data.updated} · ${data.source}`;
+    render();
+  })
+  .catch(error => {
+    els.meta.textContent = `Unable to load market pulse data: ${error.message}`;
+    els.empty.hidden = false;
+  });
+window.addEventListener('resize', () => state.data && draw());
+</script>
+</body>
+</html>
