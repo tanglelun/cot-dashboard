@@ -43,19 +43,33 @@ h1{margin:0;color:#fff;font-size:32px;line-height:1;font-weight:950}
 .tab.active{background:var(--green);border-color:var(--green);color:#001b03}
 .hero{display:grid;grid-template-columns:420px minmax(0,1fr);gap:12px}
 .gauge-card,.chart-card,.metric-card{border:1px solid var(--line);background:#000}
-.gauge-card{padding:18px;min-height:560px;display:flex;flex-direction:column}
+.fear-board{position:relative;min-height:560px;padding:18px}
+.fear-mode{position:absolute;right:18px;top:16px;display:inline-flex;padding:3px;border:1px solid var(--line);border-radius:999px;background:#101419;z-index:2}
+.fear-mode-btn{height:28px;border:0;border-radius:999px;background:transparent;color:var(--muted);padding:0 16px;font:850 12px Inter,Arial,sans-serif;cursor:pointer}
+.fear-mode-btn.active{background:#fff;color:#000}
+.fear-overview{display:grid;grid-template-columns:minmax(360px,1fr) minmax(280px,420px);gap:28px;align-items:center;min-height:520px;padding-top:18px}
+.fear-timeline{padding-top:42px}
+.gauge-card{border:0;background:transparent;padding:0;min-height:auto;display:flex;flex-direction:column}
 .gauge-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
 .section-title{font-size:13px;color:#fff;text-transform:uppercase;letter-spacing:.05em;font-weight:900}
 .pill{height:26px;display:inline-flex;align-items:center;padding:0 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:11px}
-.gauge-wrap{position:relative;min-height:250px;margin:20px 0 8px}
+.gauge-wrap{position:relative;min-height:340px;margin:22px 0 0}
 .gauge-svg{display:block;width:100%;height:auto}
-.gauge-value{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);font-size:52px;line-height:1;color:#fff;font-weight:950}
+.gauge-value{position:absolute;left:50%;bottom:32px;transform:translateX(-50%);font-size:58px;line-height:1;color:#fff;font-weight:950}
 .gauge-state{text-align:center;color:#fff;font-size:26px;font-weight:950;margin-top:0}
 .gauge-copy{text-align:center;color:var(--muted);font-size:12px;line-height:1.5;margin:8px auto 18px;max-width:310px}
 .score-list{margin-top:auto;border-top:1px solid var(--line-soft)}
 .score-row{display:grid;grid-template-columns:1fr auto;gap:14px;padding:12px 0;border-bottom:1px solid var(--line-soft);font-size:12px}
 .score-row span:first-child{color:var(--muted)}
 .score-row strong{color:#fff}
+.previous-list{display:flex;flex-direction:column;gap:34px;padding:38px 8px 20px}
+.previous-row{display:grid;grid-template-columns:138px 1fr auto;align-items:center;gap:12px;color:var(--muted)}
+.previous-label{font-size:14px;font-weight:760}
+.previous-rating{color:#fff;font-size:17px;font-weight:950}
+.previous-line{height:1px;border-top:1px dashed #26313d}
+.previous-score{min-width:40px;height:40px;border:2px solid var(--green);border-radius:999px;display:flex;align-items:center;justify-content:center;color:#fff;background:rgba(0,209,9,.12);font-size:16px;font-weight:950}
+.previous-score.fear{border-color:var(--red);background:rgba(255,77,0,.14)}
+.previous-score.neutral{border-color:#787b86;background:rgba(120,123,134,.14)}
 .chart-card{min-height:560px}
 .chart-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
 .legend{display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:12px}
@@ -74,6 +88,8 @@ canvas{display:block;width:100%;height:100%}
 @media(max-width:1080px){
   .hero{grid-template-columns:1fr}
   .gauge-card{min-height:auto}
+  .fear-overview{grid-template-columns:1fr}
+  .previous-list{padding-top:0}
   .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:720px){
@@ -89,8 +105,14 @@ canvas{display:block;width:100%;height:100%}
   .market-menu::before{display:none}
   h1{font-size:25px}
   .tab{height:38px;padding:0 12px;font-size:13px}
+  .fear-board{padding:14px}
+  .fear-mode{position:static;margin-left:auto;margin-bottom:12px;width:max-content}
+  .fear-overview{display:block;min-height:auto;padding-top:0}
+  .gauge-wrap{min-height:260px}
   .gauge-value{font-size:44px}
   .gauge-state{font-size:22px}
+  .previous-list{gap:18px}
+  .previous-row{grid-template-columns:108px 1fr auto}
   .canvas-wrap{height:410px}
   .metrics{grid-template-columns:1fr}
 }
@@ -137,32 +159,43 @@ canvas{display:block;width:100%;height:100%}
     </div>
   </section>
 
-  <section class="hero" id="fearView">
-    <div class="gauge-card">
-      <div class="gauge-title">
-        <div class="section-title">Fear & Greed Estimate</div>
-        <span class="pill" id="fearDate">--</span>
-      </div>
-      <div class="gauge-wrap">
-        <svg class="gauge-svg" viewBox="0 0 360 220" aria-hidden="true">
-          <path d="M40 180 A140 140 0 0 1 320 180" fill="none" stroke="#101820" stroke-width="42" stroke-linecap="round"/>
-          <path d="M40 180 A140 140 0 0 1 100 72" fill="none" stroke="#51210f" stroke-width="42" stroke-linecap="round"/>
-          <path d="M100 72 A140 140 0 0 1 180 40" fill="none" stroke="#574000" stroke-width="42" stroke-linecap="butt"/>
-          <path d="M180 40 A140 140 0 0 1 260 72" fill="none" stroke="#1f4a17" stroke-width="42" stroke-linecap="butt"/>
-          <path d="M260 72 A140 140 0 0 1 320 180" fill="none" stroke="#035d18" stroke-width="42" stroke-linecap="round"/>
-          <line id="needle" x1="180" y1="180" x2="180" y2="68" stroke="#fff" stroke-width="8" stroke-linecap="round" transform-origin="180 180"/>
-          <circle cx="180" cy="180" r="13" fill="#fff"/>
-          <text x="42" y="205" fill="#787b86" font-size="18" font-weight="900">0</text>
-          <text x="173" y="32" fill="#787b86" font-size="18" font-weight="900">50</text>
-          <text x="300" y="205" fill="#787b86" font-size="18" font-weight="900">100</text>
-        </svg>
-        <div class="gauge-value" id="fearScore">--</div>
-      </div>
-      <div class="gauge-state" id="fearState">Loading</div>
-      <div class="gauge-copy">A local estimate inspired by the same idea: market trend, breadth, volatility and credit stress are combined into one risk appetite score.</div>
-      <div class="score-list" id="fearComponents"></div>
+  <section class="chart-card fear-board" id="fearView">
+    <div class="fear-mode" id="fearMode">
+      <button class="fear-mode-btn active" data-fear-mode="overview">Overview</button>
+      <button class="fear-mode-btn" data-fear-mode="timeline">Timeline</button>
     </div>
-    <div class="chart-card">
+    <div class="fear-overview" id="fearOverview">
+      <div class="gauge-card">
+        <div class="gauge-title">
+          <div class="section-title">CNN Fear & Greed Index</div>
+          <span class="pill" id="fearDate">--</span>
+        </div>
+        <div class="gauge-wrap">
+          <svg class="gauge-svg" viewBox="0 0 520 310" aria-hidden="true">
+            <path d="M60 260 A200 200 0 0 1 460 260" fill="none" stroke="#101820" stroke-width="58" stroke-linecap="round"/>
+            <path d="M60 260 A200 200 0 0 1 145 105" fill="none" stroke="#2a1110" stroke-width="58" stroke-linecap="round"/>
+            <path d="M145 105 A200 200 0 0 1 260 60" fill="none" stroke="#4a240b" stroke-width="58" stroke-linecap="butt"/>
+            <path d="M260 60 A200 200 0 0 1 375 105" fill="none" stroke="#143717" stroke-width="58" stroke-linecap="butt"/>
+            <path d="M375 105 A200 200 0 0 1 460 260" fill="none" stroke="#035d18" stroke-width="58" stroke-linecap="round"/>
+            <path id="activeArc" d="M145 105 A200 200 0 0 1 260 60" fill="none" stroke="#ff4d00" stroke-width="60" stroke-linecap="butt" opacity=".42"/>
+            <line id="needle" x1="260" y1="260" x2="260" y2="90" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
+            <circle cx="260" cy="260" r="16" fill="#fff"/>
+            <text x="61" y="290" fill="#787b86" font-size="20" font-weight="900">0</text>
+            <text x="248" y="117" fill="#787b86" font-size="20" font-weight="900">50</text>
+            <text x="430" y="290" fill="#787b86" font-size="20" font-weight="900">100</text>
+            <text x="78" y="190" fill="#787b86" font-size="22" font-weight="950" transform="rotate(-62 78 190)">EXTREME FEAR</text>
+            <text x="142" y="118" fill="#d1d4dc" font-size="25" font-weight="950" transform="rotate(-34 142 118)">FEAR</text>
+            <text x="225" y="69" fill="#787b86" font-size="24" font-weight="950" transform="rotate(-8 225 69)">NEUTRAL</text>
+            <text x="330" y="100" fill="#787b86" font-size="24" font-weight="950" transform="rotate(30 330 100)">GREED</text>
+            <text x="402" y="182" fill="#787b86" font-size="21" font-weight="950" transform="rotate(60 402 182)">EXTREME GREED</text>
+          </svg>
+          <div class="gauge-value" id="fearScore">--</div>
+        </div>
+        <div class="gauge-state" id="fearState">Loading</div>
+      </div>
+      <div class="previous-list" id="fearPrevious"></div>
+    </div>
+    <div class="fear-timeline hidden" id="fearTimeline">
       <div class="chart-head">
         <div class="legend" id="fearLegend"></div>
         <div class="range" id="fearRange">All available history</div>
@@ -196,7 +229,7 @@ canvas{display:block;width:100%;height:100%}
   <div class="note" id="notes"></div>
 </main>
 <script>
-const state = { data:null, view:'fear' };
+const state = { data:null, view:'fear', fearMode:'overview' };
 const $ = id => document.getElementById(id);
 const seriesByKey = key => state.data.series.find(item => item.key === key);
 const fmt = (value, unit='') => {
@@ -267,6 +300,18 @@ function fearState(score){
   if(score >= 45) return 'Neutral';
   if(score >= 25) return 'Fear';
   return 'Extreme Fear';
+}
+function cnnFearSnapshot(){
+  return (state.data.snapshots || []).find(item => item.key === 'cnn_fear_greed');
+}
+function fearClass(score){
+  if(score >= 55) return 'greed';
+  if(score >= 45) return 'neutral';
+  return 'fear';
+}
+function ratingText(rating, score){
+  if(rating) return rating.replace(/\b\w/g, c => c.toUpperCase());
+  return fearState(score || 0);
 }
 function drawLineChart(canvas, inputSeries, options={}){
   const ctx = canvas.getContext('2d');
@@ -346,39 +391,41 @@ function renderMetrics(items){
   `).join('');
 }
 function renderFear(){
-  const history = buildFearHistory();
+  const cnnSeries = seriesByKey('cnn_fear_greed');
+  const cnnSnapshot = cnnFearSnapshot();
+  const history = cnnSeries && cnnSeries.points.length ? cnnSeries.points : buildFearHistory();
   const last = history[history.length - 1];
-  const score = last ? last.value : null;
+  const score = cnnSnapshot && Number.isFinite(Number(cnnSnapshot.value)) ? cnnSnapshot.value : (last ? last.value : null);
   $('fearScore').textContent = score ?? '--';
-  $('fearState').textContent = score === null ? 'Unavailable' : fearState(score);
-  $('fearDate').textContent = last ? last.date : '--';
-  $('needle').setAttribute('transform', `rotate(${lerp(-90, 90, (score || 0) / 100)})`);
-  const c = last ? last.components : {};
-  $('fearComponents').innerHTML = [
-    ['Trend', c.trend],
-    ['Momentum', c.momentum],
-    ['Breadth', c.breadth],
-    ['Volatility', c.volatility],
-    ['Credit', c.credit],
-  ].map(([label, value]) => `<div class="score-row"><span>${label}</span><strong>${fmt(value)}</strong></div>`).join('');
+  $('fearState').textContent = score === null ? 'Unavailable' : ratingText(cnnSnapshot?.rating, score);
+  $('fearDate').textContent = cnnSnapshot?.date || (last ? last.date : '--');
+  $('needle').setAttribute('transform', `rotate(${lerp(-90, 90, (score || 0) / 100)} 260 260)`);
+  $('activeArc').setAttribute('stroke', fearClass(score) === 'greed' ? '#00d109' : fearClass(score) === 'neutral' ? '#787b86' : '#ff4d00');
+  const previousRows = [
+    ['Previous close', cnnSnapshot?.previous_close],
+    ['1 week ago', cnnSnapshot?.previous_1_week],
+    ['1 month ago', cnnSnapshot?.previous_1_month],
+    ['1 year ago', cnnSnapshot?.previous_1_year],
+  ];
+  $('fearPrevious').innerHTML = previousRows.map(([label, value]) => `
+    <div class="previous-row">
+      <div class="previous-label">${label}</div>
+      <div><div class="previous-rating">${ratingText(null, value)}</div><div class="previous-line"></div></div>
+      <div class="previous-score ${fearClass(value)}">${fmt(value)}</div>
+    </div>
+  `).join('');
   const points = history.map(point => ({date:point.date, value:point.value}));
-  setLegend('fearLegend', [{label:'Fear & Greed Estimate', color:'#00d109'}, {label:'S&P 500', color:'#d1d4dc'}]);
+  const fearLabel = cnnSeries ? 'CNN Fear & Greed Index' : 'Fear & Greed Estimate';
+  setLegend('fearLegend', [{label:fearLabel, color:'#00d109'}, {label:'S&P 500', color:'#d1d4dc'}]);
   $('fearRange').textContent = points.length ? `${points[0].date} to ${points[points.length - 1].date}` : 'No data';
   const sp = seriesByKey('us500');
-  drawLineChart($('fearChart'), [
-    {label:'Fear & Greed Estimate', color:'#00d109', points, width:2.4},
-    {label:'S&P 500', color:'#d1d4dc', points:sp.points, width:1.8, alpha:.42},
-  ], {
-    minY:0,
-    maxY:100,
-    normalize: (row, value) => row.label === 'S&P 500' ? ((value / row.points[0].value) * 100) : value
-  });
-  renderMetrics([
-    {label:'Score', value:score, note:fearState(score || 0), color:'#fff'},
-    {label:'VIX', value:latest(seriesByKey('vix')), note:'Volatility', color:'#ff4d00'},
-    {label:'Above MA50', value:latest(seriesByKey('above_ma50')), unit:'%', note:'US stock breadth', color:'#00b8a9'},
-    {label:'HY Spread', value:latest(seriesByKey('hy_spread')), unit:'%', note:'Credit stress', color:'#ef5350'},
-  ]);
+  $('fearOverview').classList.toggle('hidden', state.fearMode !== 'overview');
+  $('fearTimeline').classList.toggle('hidden', state.fearMode !== 'timeline');
+  if(state.fearMode === 'timeline'){
+    drawLineChart($('fearChart'), [
+      {label:fearLabel, color:'#00b8a9', points, width:2.7},
+    ], {minY:0, maxY:100});
+  }
 }
 function renderBreadth(){
   const sp = seriesByKey('us500');
@@ -435,6 +482,8 @@ function renderValuation(){
 function render(){
   document.querySelectorAll('[id$="View"]').forEach(view => view.classList.add('hidden'));
   $(`${state.view}View`).classList.remove('hidden');
+  $('metrics').classList.toggle('hidden', state.view === 'fear');
+  $('notes').classList.toggle('hidden', state.view === 'fear');
   const titleMap = {fear:'Fear & Greed', breadth:'S&P 500 Breadth', liquidity:'Liquidity', valuation:'Valuation'};
   $('pageTitle').textContent = titleMap[state.view];
   if(state.view === 'fear') renderFear();
@@ -448,6 +497,13 @@ $('tabs').addEventListener('click', event => {
   state.view = button.dataset.view;
   document.querySelectorAll('.tab').forEach(tab => tab.classList.toggle('active', tab === button));
   render();
+});
+$('fearMode').addEventListener('click', event => {
+  const button = event.target.closest('button[data-fear-mode]');
+  if(!button) return;
+  state.fearMode = button.dataset.fearMode;
+  document.querySelectorAll('.fear-mode-btn').forEach(item => item.classList.toggle('active', item === button));
+  renderFear();
 });
 fetch('market_pulse_data.json', {cache:'no-store'})
   .then(response => response.json())

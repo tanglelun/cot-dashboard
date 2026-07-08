@@ -12,6 +12,25 @@ OUTPUT_FILE = Path("market_pulse_data.json")
 MARKET_DATA_DIR = Path("market_data")
 INDEXES_DATA_DIR = Path("indexes_data")
 MIN_BREADTH_SAMPLE = 200
+CNN_FEAR_GREED_URL = "https://production.dataviz.cnn.io/index/fearandgreed/graphdata"
+CNN_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+    ),
+    "Accept": "application/json,text/plain,*/*",
+    "Referer": "https://edition.cnn.com/markets/fear-and-greed",
+    "Origin": "https://edition.cnn.com",
+}
+CNN_COMPONENTS = [
+    ("market_momentum_sp500", "Market Momentum"),
+    ("stock_price_strength", "Stock Price Strength"),
+    ("stock_price_breadth", "Stock Price Breadth"),
+    ("put_call_options", "Put/Call Options"),
+    ("market_volatility_vix", "Market Volatility"),
+    ("junk_bond_demand", "Junk Bond Demand"),
+    ("safe_haven_demand", "Safe Haven Demand"),
+]
 
 YAHOO_SERIES = [
     {
@@ -118,6 +137,77 @@ def series_payload(item, points, source):
         "latest": points[-1] if points else None,
         "points": points,
     }
+
+
+def date_from_cnn_timestamp(value):
+    if value is None:
+        return None
+    if isinstance(value, str):
+        try:
+            return datetime.fromisoformat(value.replace("Z", "+00:00")).strftime("%Y-%m-%d")
+        except ValueError:
+            return None
+    timestamp = float(value)
+    if timestamp > 10_000_000_000:
+        timestamp = timestamp / 1000
+    return datetime.fromtimestamp(timestamp, timezone.utc).strftime("%Y-%m-%d")
+
+
+def fetch_cnn_fear_greed():
+    try:
+        response = requests.get(CNN_FEAR_GREED_URL, headers=CNN_HEADERS, timeout=30)
+        response.raise_for_status()
+        data = response.json()
+    except Exception as exc:
+        print(f"CNN Fear & Greed failed: {exc}")
+        return [], None
+
+    historical = data.get("fear_and_greed_historical") or {}
+    points = [
+        {"date": date_from_cnn_timestamp(point.get("x")), "value": point.get("y")}
+        for point in historical.get("data", [])
+        if point.get("x") is not None and point.get("y") is not None
+    ]
+    series = series_payload(
+        {
+            "key": "cnn_fear_greed",
+            "label": "CNN Fear & Greed Index",
+            "category": "Sentiment",
+            "unit": "",
+            "color": "#00d109",
+        },
+        points,
+        "CNN Fear & Greed Index",
+    )
+
+    current = data.get("fear_and_greed") or {}
+    snapshot = {
+        "key": "cnn_fear_greed",
+        "label": "CNN Fear & Greed Index",
+        "category": "Sentiment",
+        "unit": "",
+        "value": rounded(current.get("score"), 2),
+        "rating": current.get("rating"),
+        "date": date_from_cnn_timestamp(current.get("timestamp")) or datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        "source": "CNN Fear & Greed Index",
+        "previous_close": rounded(current.get("previous_close"), 2),
+        "previous_1_week": rounded(current.get("previous_1_week"), 2),
+        "previous_1_month": rounded(current.get("previous_1_month"), 2),
+        "previous_1_year": rounded(current.get("previous_1_year"), 2),
+        "components": [],
+    }
+    for key, label in CNN_COMPONENTS:
+        item = data.get(key) or {}
+        snapshot["components"].append(
+            {
+                "key": key,
+                "label": label,
+                "score": rounded(item.get("score"), 2),
+                "rating": item.get("rating"),
+                "date": date_from_cnn_timestamp(item.get("timestamp")),
+            }
+        )
+    return [series], snapshot
 
 
 def close_from_download(data, symbol):
@@ -332,18 +422,24 @@ def fetch_sp500_pe_snapshot():
 def main():
     updated = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     series = []
+    cnn_series, cnn_snapshot = fetch_cnn_fear_greed()
+    series.extend(cnn_series)
     series.extend(fetch_yahoo_series())
     series.extend(compute_breadth())
     series.extend(fetch_fred_series())
+    snapshots = [fetch_sp500_pe_snapshot()]
+    if cnn_snapshot:
+        snapshots.insert(0, cnn_snapshot)
     payload = {
         "updated": updated,
-        "source": "Yahoo Finance, FRED, local US stock chart history",
+        "source": "CNN Fear & Greed, Yahoo Finance, FRED, local US stock chart history",
         "notes": [
+            "Fear & Greed uses CNN's public JSON data when available, with local calculation as fallback.",
             "Breadth is calculated from locally tracked US stock chart history.",
             "S&P 500 PE is a valuation snapshot when available, not a licensed historical valuation series.",
         ],
         "series": series,
-        "snapshots": [fetch_sp500_pe_snapshot()],
+        "snapshots": snapshots,
     }
     OUTPUT_FILE.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
     print(f"Wrote {OUTPUT_FILE} with {len(series)} series")
