@@ -6,12 +6,12 @@
 <title>Market Pulse - Net Data</title>
 <style>
 :root{
-  --tv-bg:#000;--tv-panel:#050709;--tv-panel-2:#090d12;--tv-border:#202932;
-  --tv-border-soft:#111820;--tv-text:#d1d4dc;--tv-muted:#787b86;--tv-faint:#5d606b;
-  --tv-green:#00d109;--tv-red:#ff4d00;--tv-blue:#2962ff;--tv-accent:#00d109;
+  --bg:#000;--panel:#050709;--panel-2:#090d12;--line:#1d2730;--line-soft:#101820;
+  --text:#d1d4dc;--muted:#787b86;--faint:#5d606b;--green:#00d109;--red:#ff4d00;
+  --blue:#2962ff;--teal:#00b8a9;--orange:#ff9f0a;--white:#fff;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--tv-bg);color:var(--tv-text);font-family:Inter,Arial,sans-serif;font-weight:750}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif;font-weight:760}
 .site-nav{min-height:64px;display:flex;align-items:center;gap:28px;padding:0 24px;background:#000;border-bottom:1px solid #1b1f2a;position:relative;z-index:30}
 .site-brand{display:inline-flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-size:25px;font-weight:900;white-space:nowrap}
 .brand-mark{position:relative;width:22px;height:26px;display:inline-block}
@@ -21,55 +21,60 @@ body{margin:0;background:var(--tv-bg);color:var(--tv-text);font-family:Inter,Ari
 .nav-toggle{display:none;width:38px;height:38px;border:1px solid #2a2e39;border-radius:999px;align-items:center;justify-content:center;flex-direction:column;gap:4px;cursor:pointer;margin-left:0}
 .nav-toggle span{width:16px;height:2px;background:#fff;border-radius:999px}
 .nav-links{display:flex;align-items:center;gap:28px;flex:0 1 auto}
-.nav-link{position:relative;color:#f3f4f6;text-decoration:none;font-size:15px;font-weight:800;white-space:nowrap}
+.nav-link{position:relative;color:#f3f4f6;text-decoration:none;font-size:15px;font-weight:850;white-space:nowrap}
 .nav-link:hover,.nav-link.active{color:#b8ff00}
 .nav-market{position:relative;display:flex;align-items:center}
 .market-menu{position:absolute;left:50%;top:calc(100% + 14px);min-width:190px;padding:8px;border:1px solid #26313d;border-radius:8px;background:rgba(9,13,18,.96);box-shadow:0 18px 48px rgba(0,0,0,.48);transform:translateX(-50%) translateY(6px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .14s ease,transform .14s ease,visibility .14s ease;z-index:50}
 .market-menu::before{content:"";position:absolute;left:0;right:0;top:-15px;height:15px}
 .nav-market:hover .market-menu,.nav-market:focus-within .market-menu{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
-.market-menu-link{display:flex;align-items:center;justify-content:space-between;height:34px;padding:0 10px;border-radius:5px;color:var(--tv-text);font-size:13px;font-weight:850;text-decoration:none;white-space:nowrap}
+.market-menu-link{display:flex;align-items:center;justify-content:space-between;height:34px;padding:0 10px;border-radius:5px;color:var(--text);font-size:13px;font-weight:850;text-decoration:none;white-space:nowrap}
 .market-menu-link:hover{background:rgba(0,209,9,.16);color:#fff}
 .nav-search-icon{width:42px;height:42px;border:1px solid #2a2e39;border-radius:999px;background:#090c12;display:inline-flex;align-items:center;justify-content:center;position:relative;flex:0 0 auto;margin-left:auto;text-decoration:none}
 .nav-search-icon::before{content:"";width:13px;height:13px;border:2px solid #d1d4dc;border-radius:50%}
 .nav-search-icon::after{content:"";position:absolute;width:7px;height:2px;background:#d1d4dc;border-radius:999px;transform:translate(9px,9px) rotate(45deg)}
-.wrap{width:100%;padding:14px clamp(10px,1.3vw,24px) 28px}
-.head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:14px;flex-wrap:wrap}
-.eyebrow{font-size:11px;color:var(--tv-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
-h1{margin:0;color:#fff;font-size:30px;line-height:1;font-weight:900}
-.sub{margin-top:8px;color:var(--tv-muted);font-size:12px}
-.filters{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.btn{height:34px;border:1px solid var(--tv-border);background:var(--tv-panel-2);color:var(--tv-muted);border-radius:5px;padding:0 12px;font:850 12px Inter,Arial,sans-serif;cursor:pointer}
-.btn:hover{background:#101820;color:#fff}
-.btn.active{background:var(--tv-accent);border-color:var(--tv-accent);color:#001b03}
-.cards{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-bottom:10px}
-.card{border:1px solid var(--tv-border);background:#000;padding:12px;border-radius:0;min-height:96px;cursor:pointer}
-.card:hover,.card.active{background:#071018;border-color:#2b3845}
-.card-title{display:flex;align-items:center;gap:7px;color:var(--tv-muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px}
-.dot{width:9px;height:9px;border-radius:50%;background:var(--series-color)}
-.card-value{color:#fff;font-size:24px;font-weight:900;line-height:1.1}
-.card-meta{margin-top:5px;color:var(--tv-muted);font-size:11px}
-.grid{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:10px}
-.chart-shell{border:1px solid var(--tv-border);background:#000;min-height:560px}
-.chart-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid var(--tv-border);color:var(--tv-muted);font-size:12px;flex-wrap:wrap}
-.legend{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.wrap{width:100%;padding:16px clamp(10px,1.3vw,24px) 28px}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.eyebrow{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;margin-bottom:6px}
+h1{margin:0;color:#fff;font-size:32px;line-height:1;font-weight:950}
+.sub{margin-top:8px;color:var(--muted);font-size:12px}
+.tabs{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.tab{height:42px;border:1px solid var(--line);background:var(--panel-2);color:var(--muted);border-radius:6px;padding:0 18px;font:900 14px Inter,Arial,sans-serif;cursor:pointer}
+.tab:hover{background:#101820;color:#fff}
+.tab.active{background:var(--green);border-color:var(--green);color:#001b03}
+.hero{display:grid;grid-template-columns:420px minmax(0,1fr);gap:12px}
+.gauge-card,.chart-card,.metric-card{border:1px solid var(--line);background:#000}
+.gauge-card{padding:18px;min-height:560px;display:flex;flex-direction:column}
+.gauge-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.section-title{font-size:13px;color:#fff;text-transform:uppercase;letter-spacing:.05em;font-weight:900}
+.pill{height:26px;display:inline-flex;align-items:center;padding:0 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:11px}
+.gauge-wrap{position:relative;min-height:250px;margin:20px 0 8px}
+.gauge-svg{display:block;width:100%;height:auto}
+.gauge-value{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);font-size:52px;line-height:1;color:#fff;font-weight:950}
+.gauge-state{text-align:center;color:#fff;font-size:26px;font-weight:950;margin-top:0}
+.gauge-copy{text-align:center;color:var(--muted);font-size:12px;line-height:1.5;margin:8px auto 18px;max-width:310px}
+.score-list{margin-top:auto;border-top:1px solid var(--line-soft)}
+.score-row{display:grid;grid-template-columns:1fr auto;gap:14px;padding:12px 0;border-bottom:1px solid var(--line-soft);font-size:12px}
+.score-row span:first-child{color:var(--muted)}
+.score-row strong{color:#fff}
+.chart-card{min-height:560px}
+.chart-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.legend{display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:12px}
 .legend-item{display:flex;align-items:center;gap:7px}
-.canvas-wrap{position:relative;height:520px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--c)}
+.range{color:var(--muted);font-size:12px}
+.canvas-wrap{position:relative;height:500px}
 canvas{display:block;width:100%;height:100%}
-.side{display:flex;flex-direction:column;gap:10px}
-.panel{border:1px solid var(--tv-border);background:#000;padding:12px}
-.panel h2{font-size:13px;color:#fff;margin:0 0 10px;text-transform:uppercase;letter-spacing:.04em}
-.score{display:flex;align-items:center;gap:12px}
-.score-number{width:74px;height:74px;border:1px solid var(--tv-border);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:27px;font-weight:900;background:#070b10}
-.score-label{font-size:18px;color:#fff;font-weight:900}
-.score-copy{font-size:12px;color:var(--tv-muted);line-height:1.5;margin-top:4px}
-.row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--tv-border-soft);font-size:12px}
-.row:first-child{border-top:0}
-.row span:first-child{color:var(--tv-muted)}
-.row strong{color:#fff;text-align:right}
-.empty{min-height:480px;display:flex;align-items:center;justify-content:center;color:var(--tv-muted);font-size:13px}
-@media(max-width:980px){
-  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .grid{grid-template-columns:1fr}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+.metric-card{padding:12px;min-height:82px}
+.metric-label{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:8px}
+.metric-value{font-size:23px;line-height:1.1;color:#fff;font-weight:950}
+.metric-note{font-size:11px;color:var(--muted);margin-top:6px}
+.hidden{display:none}
+.note{margin-top:10px;color:var(--muted);font-size:12px;line-height:1.55}
+@media(max-width:1080px){
+  .hero{grid-template-columns:1fr}
+  .gauge-card{min-height:auto}
+  .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:720px){
   .site-nav{min-height:58px;padding:10px 14px;gap:10px;flex-wrap:wrap}
@@ -82,9 +87,12 @@ canvas{display:block;width:100%;height:100%}
   .nav-market{display:block}
   .market-menu{position:static;opacity:1;visibility:visible;pointer-events:auto;transform:none;box-shadow:none;background:transparent;border:0;padding:0 0 0 12px}
   .market-menu::before{display:none}
-  h1{font-size:24px}
-  .cards{grid-template-columns:1fr}
-  .canvas-wrap{height:420px}
+  h1{font-size:25px}
+  .tab{height:38px;padding:0 12px;font-size:13px}
+  .gauge-value{font-size:44px}
+  .gauge-state{font-size:22px}
+  .canvas-wrap{height:410px}
+  .metrics{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -115,163 +123,179 @@ canvas{display:block;width:100%;height:100%}
   <a class="nav-search-icon" href="search.html" aria-label="Search"><span aria-hidden="true"></span></a>
 </nav>
 <main class="wrap">
-  <section class="head">
+  <section class="top">
     <div>
       <div class="eyebrow">Market Direction</div>
-      <h1>Market Pulse</h1>
-      <div class="sub" id="meta">Loading market direction data...</div>
+      <h1 id="pageTitle">Fear & Greed</h1>
+      <div class="sub" id="meta">Loading market pulse data...</div>
     </div>
-    <div class="filters" id="filters">
-      <button class="btn active" data-category="All">All</button>
-      <button class="btn" data-category="Trend">Trend</button>
-      <button class="btn" data-category="Breadth">Breadth</button>
-      <button class="btn" data-category="Sentiment">Sentiment</button>
-      <button class="btn" data-category="Liquidity">Liquidity</button>
-      <button class="btn" data-category="Valuation">Valuation</button>
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-view="fear">Fear & Greed</button>
+      <button class="tab" data-view="breadth">S&P 500 Breadth</button>
+      <button class="tab" data-view="liquidity">Liquidity</button>
+      <button class="tab" data-view="valuation">Valuation</button>
     </div>
   </section>
-  <section class="cards" id="cards"></section>
-  <section class="grid">
-    <div class="chart-shell">
-      <div class="chart-top">
-        <div class="legend" id="legend"></div>
-        <div id="rangeText">All available history</div>
+
+  <section class="hero" id="fearView">
+    <div class="gauge-card">
+      <div class="gauge-title">
+        <div class="section-title">Fear & Greed Estimate</div>
+        <span class="pill" id="fearDate">--</span>
       </div>
-      <div class="canvas-wrap">
-        <canvas id="chart"></canvas>
-        <div class="empty" id="empty" hidden>No data available.</div>
+      <div class="gauge-wrap">
+        <svg class="gauge-svg" viewBox="0 0 360 220" aria-hidden="true">
+          <path d="M40 180 A140 140 0 0 1 320 180" fill="none" stroke="#101820" stroke-width="42" stroke-linecap="round"/>
+          <path d="M40 180 A140 140 0 0 1 100 72" fill="none" stroke="#51210f" stroke-width="42" stroke-linecap="round"/>
+          <path d="M100 72 A140 140 0 0 1 180 40" fill="none" stroke="#574000" stroke-width="42" stroke-linecap="butt"/>
+          <path d="M180 40 A140 140 0 0 1 260 72" fill="none" stroke="#1f4a17" stroke-width="42" stroke-linecap="butt"/>
+          <path d="M260 72 A140 140 0 0 1 320 180" fill="none" stroke="#035d18" stroke-width="42" stroke-linecap="round"/>
+          <line id="needle" x1="180" y1="180" x2="180" y2="68" stroke="#fff" stroke-width="8" stroke-linecap="round" transform-origin="180 180"/>
+          <circle cx="180" cy="180" r="13" fill="#fff"/>
+          <text x="42" y="205" fill="#787b86" font-size="18" font-weight="900">0</text>
+          <text x="173" y="32" fill="#787b86" font-size="18" font-weight="900">50</text>
+          <text x="300" y="205" fill="#787b86" font-size="18" font-weight="900">100</text>
+        </svg>
+        <div class="gauge-value" id="fearScore">--</div>
       </div>
+      <div class="gauge-state" id="fearState">Loading</div>
+      <div class="gauge-copy">A local estimate inspired by the same idea: market trend, breadth, volatility and credit stress are combined into one risk appetite score.</div>
+      <div class="score-list" id="fearComponents"></div>
     </div>
-    <aside class="side">
-      <div class="panel">
-        <h2>Direction Score</h2>
-        <div class="score">
-          <div class="score-number" id="scoreNumber">--</div>
-          <div>
-            <div class="score-label" id="scoreLabel">Loading</div>
-            <div class="score-copy" id="scoreCopy">Combines trend, breadth, volatility and credit stress.</div>
-          </div>
-        </div>
+    <div class="chart-card">
+      <div class="chart-head">
+        <div class="legend" id="fearLegend"></div>
+        <div class="range" id="fearRange">All available history</div>
       </div>
-      <div class="panel">
-        <h2>Snapshots</h2>
-        <div id="snapshots"></div>
-      </div>
-      <div class="panel">
-        <h2>Notes</h2>
-        <div id="notes" class="score-copy"></div>
-      </div>
-    </aside>
+      <div class="canvas-wrap"><canvas id="fearChart"></canvas></div>
+    </div>
   </section>
+
+  <section class="chart-card hidden" id="breadthView">
+    <div class="chart-head">
+      <div class="legend" id="breadthLegend"></div>
+      <div class="range" id="breadthRange">All available history</div>
+    </div>
+    <div class="canvas-wrap"><canvas id="breadthChart"></canvas></div>
+  </section>
+
+  <section class="chart-card hidden" id="liquidityView">
+    <div class="chart-head">
+      <div class="legend" id="liquidityLegend"></div>
+      <div class="range" id="liquidityRange">All available history</div>
+    </div>
+    <div class="canvas-wrap"><canvas id="liquidityChart"></canvas></div>
+  </section>
+
+  <section class="hidden" id="valuationView">
+    <div class="metrics" id="valuationMetrics"></div>
+    <div class="note">Historical S&P 500 PE is not included yet because a stable free source still needs to be selected. The current value is kept as a snapshot.</div>
+  </section>
+
+  <section class="metrics" id="metrics"></section>
+  <div class="note" id="notes"></div>
 </main>
 <script>
-const state = { data:null, category:'All', selected:null };
-const els = {
-  meta:document.getElementById('meta'), cards:document.getElementById('cards'), legend:document.getElementById('legend'),
-  chart:document.getElementById('chart'), empty:document.getElementById('empty'), rangeText:document.getElementById('rangeText'),
-  scoreNumber:document.getElementById('scoreNumber'), scoreLabel:document.getElementById('scoreLabel'), scoreCopy:document.getElementById('scoreCopy'),
-  snapshots:document.getElementById('snapshots'), notes:document.getElementById('notes')
-};
-const ctx = els.chart.getContext('2d');
-
-function fmt(value, unit){
+const state = { data:null, view:'fear' };
+const $ = id => document.getElementById(id);
+const seriesByKey = key => state.data.series.find(item => item.key === key);
+const fmt = (value, unit='') => {
   if(value === null || value === undefined || !Number.isFinite(Number(value))) return '--';
   const num = Number(value);
   const digits = Math.abs(num) >= 1000 ? 0 : Math.abs(num) >= 100 ? 1 : 2;
-  return `${num.toLocaleString('en-US',{maximumFractionDigits:digits})}${unit === '%' ? '%' : unit === 'x' ? 'x' : ''}`;
-}
-function pointValue(series){ return series.latest ? series.latest.value : null; }
-function visibleSeries(){
-  if(!state.data) return [];
-  let list = state.data.series.filter(item => item.points && item.points.length);
-  if(state.category !== 'All') list = list.filter(item => item.category === state.category);
-  if(state.selected) list = list.filter(item => item.key === state.selected);
-  return list;
-}
-function scoreFromData(){
-  const byKey = Object.fromEntries(state.data.series.map(item => [item.key, item]));
-  const vix = pointValue(byKey.vix);
-  const ma50 = pointValue(byKey.above_ma50);
-  const ma200 = pointValue(byKey.above_ma200);
-  const hy = pointValue(byKey.hy_spread);
-  const us500 = byKey.us500 && byKey.us500.points || [];
-  let score = 50;
-  if(Number.isFinite(ma50)) score += (ma50 - 50) * 0.35;
-  if(Number.isFinite(ma200)) score += (ma200 - 50) * 0.25;
-  if(Number.isFinite(vix)) score += vix < 16 ? 12 : vix < 22 ? 4 : vix < 30 ? -8 : -18;
-  if(Number.isFinite(hy)) score += hy < 4 ? 8 : hy < 6 ? 1 : hy < 8 ? -7 : -16;
-  if(us500.length > 200){
-    const latest = us500[us500.length - 1].value;
-    const base = us500[Math.max(0, us500.length - 201)].value;
-    if(base) score += latest > base ? 8 : -8;
+  const text = num.toLocaleString('en-US', {maximumFractionDigits:digits});
+  if(unit === '%') return `${text}%`;
+  if(unit === 'x') return `${text}x`;
+  return text;
+};
+const lerp = (a,b,t) => a + (b-a) * t;
+const clamp = (v,min,max) => Math.max(min, Math.min(max, v));
+
+function latest(series){ return series && series.latest ? series.latest.value : null; }
+function nearestPoint(points, date, maxLagDays=7){
+  const target = new Date(date).getTime();
+  let best = null, dist = Infinity;
+  for(const point of points || []){
+    const d = Math.abs(new Date(point.date).getTime() - target);
+    if(d < dist){ dist = d; best = point; }
   }
-  return Math.max(0, Math.min(100, Math.round(score)));
+  return dist <= maxLagDays * 86400000 ? best : null;
 }
-function scoreLabel(score){
-  if(score >= 75) return 'Strong Risk-On';
-  if(score >= 60) return 'Risk-On';
-  if(score >= 40) return 'Neutral';
-  if(score >= 25) return 'Risk-Off';
-  return 'Stress';
+function percentileScore(value, low, high, inverse=false){
+  if(!Number.isFinite(value)) return null;
+  const raw = clamp((value - low) / Math.max(1e-9, high - low), 0, 1) * 100;
+  return inverse ? 100 - raw : raw;
 }
-function renderCards(){
-  const selected = state.selected;
-  const cards = state.data.series.filter(item => item.latest).slice(0, 8);
-  els.cards.innerHTML = cards.map(item => `
-    <button class="card ${selected === item.key ? 'active' : ''}" data-key="${item.key}" style="--series-color:${item.color}">
-      <div class="card-title"><span class="dot"></span><span>${item.label}</span></div>
-      <div class="card-value">${fmt(item.latest.value, item.unit)}</div>
-      <div class="card-meta">${item.latest.date} · ${item.category}</div>
-    </button>
-  `).join('');
-  els.cards.querySelectorAll('.card').forEach(card => card.addEventListener('click', () => {
-    state.selected = state.selected === card.dataset.key ? null : card.dataset.key;
-    render();
-  }));
+function buildFearHistory(){
+  const sp = seriesByKey('us500');
+  const vix = seriesByKey('vix');
+  const ma50 = seriesByKey('above_ma50');
+  const ma200 = seriesByKey('above_ma200');
+  const hy = seriesByKey('hy_spread');
+  if(!sp || !vix || !ma50 || !ma200) return [];
+  const spPoints = sp.points || [];
+  const out = [];
+  const ma200Map = new Map();
+  const ma50Map = new Map();
+  spPoints.forEach((point, index) => {
+    const closes = spPoints.slice(Math.max(0, index - 199), index + 1).map(item => item.value);
+    if(closes.length === 200) ma200Map.set(point.date, closes.reduce((a,b) => a + b, 0) / closes.length);
+    const closes50 = spPoints.slice(Math.max(0, index - 49), index + 1).map(item => item.value);
+    if(closes50.length === 50) ma50Map.set(point.date, closes50.reduce((a,b) => a + b, 0) / closes50.length);
+  });
+  for(const point of spPoints){
+    const p50 = nearestPoint(ma50.points, point.date, 4);
+    const p200 = nearestPoint(ma200.points, point.date, 4);
+    const pvix = nearestPoint(vix.points, point.date, 4);
+    const phy = hy ? nearestPoint(hy.points, point.date, 7) : null;
+    const m50 = ma50Map.get(point.date);
+    const m200 = ma200Map.get(point.date);
+    if(!p50 || !p200 || !pvix || !m50 || !m200) continue;
+    const trend = clamp(((point.value / m200) - 0.92) / 0.20 * 100, 0, 100);
+    const momentum = clamp(((point.value / m50) - 0.94) / 0.14 * 100, 0, 100);
+    const breadth = clamp((p50.value * 0.55) + (p200.value * 0.45), 0, 100);
+    const volatility = percentileScore(pvix.value, 12, 40, true);
+    const credit = phy ? percentileScore(phy.value, 2.5, 8.5, true) : 50;
+    const score = Math.round((trend * 0.25) + (momentum * 0.15) + (breadth * 0.35) + (volatility * 0.15) + (credit * 0.10));
+    out.push({date:point.date, value:clamp(score, 0, 100), components:{trend,momentum,breadth,volatility,credit}});
+  }
+  return out;
 }
-function renderSide(){
-  const score = scoreFromData();
-  els.scoreNumber.textContent = score;
-  els.scoreLabel.textContent = scoreLabel(score);
-  els.scoreCopy.textContent = 'Based on available trend, breadth, volatility and credit conditions.';
-  els.snapshots.innerHTML = (state.data.snapshots || []).map(item => `
-    <div class="row"><span>${item.label}</span><strong>${fmt(item.value, item.unit)}</strong></div>
-  `).join('') || '<div class="row"><span>No valuation snapshot</span><strong>--</strong></div>';
-  els.notes.textContent = (state.data.notes || []).join(' ');
+function fearState(score){
+  if(score >= 75) return 'Extreme Greed';
+  if(score >= 55) return 'Greed';
+  if(score >= 45) return 'Neutral';
+  if(score >= 25) return 'Fear';
+  return 'Extreme Fear';
 }
-function draw(){
-  const series = visibleSeries();
-  const rect = els.chart.getBoundingClientRect();
+function drawLineChart(canvas, inputSeries, options={}){
+  const ctx = canvas.getContext('2d');
+  const rect = canvas.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
   const width = Math.max(320, Math.floor(rect.width));
-  const height = Math.max(320, Math.floor(rect.height));
-  els.chart.width = Math.floor(width * dpr);
-  els.chart.height = Math.floor(height * dpr);
+  const height = Math.max(300, Math.floor(rect.height));
+  canvas.width = width * dpr;
+  canvas.height = height * dpr;
   ctx.setTransform(dpr,0,0,dpr,0,0);
   ctx.clearRect(0,0,width,height);
-  els.empty.hidden = series.length > 0;
-  if(!series.length) return;
-  const left = 52, right = 26, top = 28, bottom = 34;
-  const allPoints = series.flatMap(item => item.points.map(point => ({...point, item})));
-  const xs = allPoints.map(point => new Date(point.date).getTime()).filter(Number.isFinite);
+  const left = 54, right = 58, top = 30, bottom = 36;
+  const rows = inputSeries.filter(item => item.points && item.points.length);
+  if(!rows.length) return;
+  const xs = rows.flatMap(item => item.points.map(point => new Date(point.date).getTime()).filter(Number.isFinite));
   const minX = Math.min(...xs), maxX = Math.max(...xs);
-  els.rangeText.textContent = `${new Date(minX).getFullYear()} to ${new Date(maxX).getFullYear()}`;
-  function normalize(item, value){
-    if(state.category !== 'All' && series.length <= 2) return value;
-    const first = item.points.find(point => Number.isFinite(point.value) && point.value !== 0);
-    return first ? (value / first.value) * 100 : value;
-  }
-  const normalized = series.flatMap(item => item.points.map(point => normalize(item, point.value)).filter(Number.isFinite));
-  let minY = Math.min(...normalized), maxY = Math.max(...normalized);
+  const allValues = rows.flatMap(item => item.points.map(point => options.normalize ? options.normalize(item, point.value) : point.value).filter(Number.isFinite));
+  let minY = options.minY ?? Math.min(...allValues);
+  let maxY = options.maxY ?? Math.max(...allValues);
   if(minY === maxY){ minY -= 1; maxY += 1; }
   const pad = (maxY - minY) * 0.08;
-  minY -= pad; maxY += pad;
+  if(options.minY === undefined) minY -= pad;
+  if(options.maxY === undefined) maxY += pad;
   const xFor = date => left + ((new Date(date).getTime() - minX) / Math.max(1, maxX - minX)) * (width - left - right);
   const yFor = value => top + (1 - ((value - minY) / Math.max(1, maxY - minY))) * (height - top - bottom);
   ctx.strokeStyle = 'rgba(209,212,220,.13)';
   ctx.lineWidth = 1;
-  for(let i=0;i<=6;i++){
-    const y = top + i * (height - top - bottom) / 6;
+  for(let i=0;i<=5;i++){
+    const y = top + i * (height - top - bottom) / 5;
     ctx.beginPath(); ctx.moveTo(left,y); ctx.lineTo(width-right,y); ctx.stroke();
   }
   for(let i=0;i<=6;i++){
@@ -280,52 +304,163 @@ function draw(){
   }
   ctx.fillStyle = '#787b86';
   ctx.font = '11px Inter, Arial, sans-serif';
-  ctx.textAlign = 'right';
   ctx.textBaseline = 'middle';
-  for(let i=0;i<=4;i++){
-    const value = minY + i * (maxY - minY) / 4;
-    ctx.fillText(fmt(value, state.category === 'All' ? '' : (series[0].unit || '')), left - 8, yFor(value));
+  for(let i=0;i<=5;i++){
+    const value = minY + i * (maxY - minY) / 5;
+    const y = yFor(value);
+    ctx.textAlign = 'right';
+    ctx.fillText(fmt(value, options.unit || ''), left - 8, y);
   }
-  series.forEach(item => {
-    ctx.strokeStyle = item.color;
-    ctx.lineWidth = item.key === 'us500' ? 2.4 : 1.9;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  for(let i=0;i<=4;i++){
+    const time = minX + i * (maxX - minX) / 4;
+    const label = new Date(time).getFullYear();
+    ctx.fillText(label, left + i * (width - left - right) / 4, height - bottom + 12);
+  }
+  rows.forEach(row => {
+    ctx.strokeStyle = row.color;
+    ctx.lineWidth = row.width || 2;
+    ctx.globalAlpha = row.alpha || 1;
     ctx.beginPath();
-    item.points.forEach((point, index) => {
+    row.points.forEach((point, index) => {
+      const value = options.normalize ? options.normalize(row, point.value) : point.value;
       const x = xFor(point.date);
-      const y = yFor(normalize(item, point.value));
+      const y = yFor(value);
       if(index === 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
     });
     ctx.stroke();
+    ctx.globalAlpha = 1;
   });
-  els.legend.innerHTML = series.map(item => `
-    <div class="legend-item"><span class="dot" style="background:${item.color}"></span><span>${item.label}</span></div>
+}
+function setLegend(id, items){
+  $(id).innerHTML = items.map(item => `<div class="legend-item"><span class="dot" style="--c:${item.color}"></span><span>${item.label}</span></div>`).join('');
+}
+function renderMetrics(items){
+  $('metrics').innerHTML = items.map(item => `
+    <div class="metric-card">
+      <div class="metric-label">${item.label}</div>
+      <div class="metric-value" style="color:${item.color || '#fff'}">${fmt(item.value, item.unit)}</div>
+      <div class="metric-note">${item.note || ''}</div>
+    </div>
   `).join('');
 }
-function render(){
-  renderCards();
-  renderSide();
-  draw();
+function renderFear(){
+  const history = buildFearHistory();
+  const last = history[history.length - 1];
+  const score = last ? last.value : null;
+  $('fearScore').textContent = score ?? '--';
+  $('fearState').textContent = score === null ? 'Unavailable' : fearState(score);
+  $('fearDate').textContent = last ? last.date : '--';
+  $('needle').setAttribute('transform', `rotate(${lerp(-90, 90, (score || 0) / 100)})`);
+  const c = last ? last.components : {};
+  $('fearComponents').innerHTML = [
+    ['Trend', c.trend],
+    ['Momentum', c.momentum],
+    ['Breadth', c.breadth],
+    ['Volatility', c.volatility],
+    ['Credit', c.credit],
+  ].map(([label, value]) => `<div class="score-row"><span>${label}</span><strong>${fmt(value)}</strong></div>`).join('');
+  const points = history.map(point => ({date:point.date, value:point.value}));
+  setLegend('fearLegend', [{label:'Fear & Greed Estimate', color:'#00d109'}, {label:'S&P 500', color:'#d1d4dc'}]);
+  $('fearRange').textContent = points.length ? `${points[0].date} to ${points[points.length - 1].date}` : 'No data';
+  const sp = seriesByKey('us500');
+  drawLineChart($('fearChart'), [
+    {label:'Fear & Greed Estimate', color:'#00d109', points, width:2.4},
+    {label:'S&P 500', color:'#d1d4dc', points:sp.points, width:1.8, alpha:.42},
+  ], {
+    minY:0,
+    maxY:100,
+    normalize: (row, value) => row.label === 'S&P 500' ? ((value / row.points[0].value) * 100) : value
+  });
+  renderMetrics([
+    {label:'Score', value:score, note:fearState(score || 0), color:'#fff'},
+    {label:'VIX', value:latest(seriesByKey('vix')), note:'Volatility', color:'#ff4d00'},
+    {label:'Above MA50', value:latest(seriesByKey('above_ma50')), unit:'%', note:'US stock breadth', color:'#00b8a9'},
+    {label:'HY Spread', value:latest(seriesByKey('hy_spread')), unit:'%', note:'Credit stress', color:'#ef5350'},
+  ]);
 }
-document.getElementById('filters').addEventListener('click', event => {
-  const button = event.target.closest('button[data-category]');
+function renderBreadth(){
+  const sp = seriesByKey('us500');
+  const ma50 = seriesByKey('above_ma50');
+  const ma200 = seriesByKey('above_ma200');
+  const items = [
+    {label:'S&P 500 Index', color:'#d1d4dc', points:sp.points, width:2.4},
+    {label:'Stocks Above MA50', color:'#76d7c4', points:ma50.points, width:1.8},
+    {label:'Stocks Above MA200', color:'#ff4d00', points:ma200.points, width:1.8},
+  ];
+  setLegend('breadthLegend', items);
+  $('breadthRange').textContent = `${ma200.points[0].date} to ${sp.points[sp.points.length - 1].date}`;
+  drawLineChart($('breadthChart'), items, {
+    minY:0,
+    maxY:100,
+    normalize:(row, value) => row.label === 'S&P 500 Index' ? ((value / row.points[0].value) * 100) : value,
+    unit:'%'
+  });
+  renderMetrics([
+    {label:'S&P 500', value:latest(sp), note:sp.latest?.date, color:'#fff'},
+    {label:'Above MA50', value:latest(ma50), unit:'%', note:ma50.latest?.date, color:'#76d7c4'},
+    {label:'Above MA200', value:latest(ma200), unit:'%', note:ma200.latest?.date, color:'#ff4d00'},
+    {label:'Sample', value:ma50.points?.at(-1)?.sample, note:'Local stocks', color:'#fff'},
+  ]);
+}
+function renderLiquidity(){
+  const items = [
+    {label:'US 10Y Yield', color:'#00b8a9', points:seriesByKey('dgs10').points, width:2},
+    {label:'10Y-2Y Spread', color:'#8b5cf6', points:seriesByKey('t10y2y').points, width:2},
+    {label:'Fed Funds Rate', color:'#ff4d00', points:seriesByKey('dff').points, width:2},
+    {label:'High Yield Spread', color:'#ef5350', points:seriesByKey('hy_spread').points, width:2},
+  ];
+  setLegend('liquidityLegend', items);
+  $('liquidityRange').textContent = 'All available history';
+  drawLineChart($('liquidityChart'), items, {unit:'%'});
+  renderMetrics(items.map(item => ({label:item.label, value:item.points.at(-1)?.value, unit:'%', note:item.points.at(-1)?.date, color:item.color})));
+}
+function renderValuation(){
+  const snapshots = state.data.snapshots || [];
+  $('valuationMetrics').innerHTML = snapshots.map(item => `
+    <div class="metric-card">
+      <div class="metric-label">${item.label}</div>
+      <div class="metric-value">${fmt(item.value, item.unit)}</div>
+      <div class="metric-note">${item.date} · ${item.source}</div>
+    </div>
+  `).join('');
+  renderMetrics([
+    {label:'S&P 500', value:latest(seriesByKey('us500')), note:seriesByKey('us500').latest?.date},
+    {label:'US 10Y Yield', value:latest(seriesByKey('dgs10')), unit:'%', note:seriesByKey('dgs10').latest?.date},
+    {label:'Fed Funds', value:latest(seriesByKey('dff')), unit:'%', note:seriesByKey('dff').latest?.date},
+    {label:'VIX', value:latest(seriesByKey('vix')), note:seriesByKey('vix').latest?.date},
+  ]);
+}
+function render(){
+  document.querySelectorAll('[id$="View"]').forEach(view => view.classList.add('hidden'));
+  $(`${state.view}View`).classList.remove('hidden');
+  const titleMap = {fear:'Fear & Greed', breadth:'S&P 500 Breadth', liquidity:'Liquidity', valuation:'Valuation'};
+  $('pageTitle').textContent = titleMap[state.view];
+  if(state.view === 'fear') renderFear();
+  if(state.view === 'breadth') renderBreadth();
+  if(state.view === 'liquidity') renderLiquidity();
+  if(state.view === 'valuation') renderValuation();
+}
+$('tabs').addEventListener('click', event => {
+  const button = event.target.closest('button[data-view]');
   if(!button) return;
-  document.querySelectorAll('.btn[data-category]').forEach(item => item.classList.toggle('active', item === button));
-  state.category = button.dataset.category;
-  state.selected = null;
+  state.view = button.dataset.view;
+  document.querySelectorAll('.tab').forEach(tab => tab.classList.toggle('active', tab === button));
   render();
 });
 fetch('market_pulse_data.json', {cache:'no-store'})
   .then(response => response.json())
   .then(data => {
     state.data = data;
-    els.meta.textContent = `Updated ${data.updated} · ${data.source}`;
+    $('meta').textContent = `Updated ${data.updated} · ${data.source}`;
+    $('notes').textContent = (data.notes || []).join(' ');
     render();
   })
   .catch(error => {
-    els.meta.textContent = `Unable to load market pulse data: ${error.message}`;
-    els.empty.hidden = false;
+    $('meta').textContent = `Unable to load market pulse data: ${error.message}`;
   });
-window.addEventListener('resize', () => state.data && draw());
+window.addEventListener('resize', () => state.data && render());
 </script>
 </body>
 </html>
