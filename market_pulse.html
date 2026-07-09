@@ -126,6 +126,9 @@ canvas{display:block;width:100%;height:100%}
   .fear-mode-tab{height:30px;padding:0 14px;font-size:12px}
   .fear-chart-panel{width:100vw;margin-top:16px}
   .fear-chart-panel .chart-head{border-bottom:0;padding:10px 16px}
+  #breadthView{width:100vw;margin:0}
+  #breadthView .chart-head{padding:10px 4px 12px}
+  #breadthView .canvas-wrap{width:100vw;margin:0;height:calc(100vh - 188px);min-height:560px}
   .gauge-wrap{min-height:245px}
   .gauge-value{font-size:38px;bottom:18px}
   .gauge-state{font-size:18px}
@@ -225,13 +228,13 @@ canvas{display:block;width:100%;height:100%}
       <div class="chart-tools">
         <div class="range-tabs" id="breadthRanges" aria-label="Breadth range">
           <span class="zoom-label">Zoom</span>
-          <button class="range-tab active" data-range="all">All</button>
+          <button class="range-tab" data-range="all">All</button>
           <button class="range-tab" data-range="6m">6m</button>
           <button class="range-tab" data-range="ytd">YTD</button>
           <button class="range-tab" data-range="1y">1y</button>
           <button class="range-tab" data-range="2y">2y</button>
           <button class="range-tab" data-range="3y">3y</button>
-          <button class="range-tab" data-range="5y">5y</button>
+          <button class="range-tab active" data-range="5y">5y</button>
           <button class="range-tab" data-range="10y">10y</button>
         </div>
         <div class="range" id="breadthRange">All available history</div>
@@ -257,7 +260,7 @@ canvas{display:block;width:100%;height:100%}
   <div class="note" id="notes"></div>
 </main>
 <script>
-const state = { data:null, view:'fear', fearMode:'overview', breadthRange:'all' };
+const state = { data:null, view:'fear', fearMode:'overview', breadthRange:'5y' };
 const $ = id => document.getElementById(id);
 const seriesByKey = key => state.data.series.find(item => item.key === key);
 const fmt = (value, unit='') => {
@@ -457,7 +460,11 @@ function drawBreadthChart(canvas, rows){
   canvas.height = height * dpr;
   ctx.setTransform(dpr,0,0,dpr,0,0);
   ctx.clearRect(0,0,width,height);
-  const left = 70, right = 70, top = 26, bottom = 42;
+  const compact = window.matchMedia('(max-width: 720px)').matches;
+  const left = compact ? 46 : 70;
+  const right = compact ? 34 : 70;
+  const top = compact ? 22 : 26;
+  const bottom = compact ? 34 : 42;
   const sp = rows.find(row => row.kind === 'index');
   const breadthRows = rows.filter(row => row.kind === 'breadth');
   if(!sp || !sp.points.length || !breadthRows.every(row => row.points.length)) return null;
