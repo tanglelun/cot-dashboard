@@ -103,6 +103,7 @@ canvas{display:block;width:100%;height:100%}
   .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:720px){
+  .wrap{padding:0}
   .site-nav{min-height:58px;padding:10px 14px;gap:10px;flex-wrap:wrap}
   .site-brand{font-size:21px;order:1}
   .nav-search-icon{order:2;width:38px;height:38px;margin-left:auto}
@@ -113,18 +114,22 @@ canvas{display:block;width:100%;height:100%}
   .nav-market{display:block}
   .market-menu{position:static;opacity:1;visibility:visible;pointer-events:auto;transform:none;box-shadow:none;background:transparent;border:0;padding:0 0 0 12px}
   .market-menu::before{display:none}
+  .top{padding:14px;margin-bottom:0}
   h1{font-size:25px}
   .tab{height:38px;padding:0 12px;font-size:13px}
-  .fear-board{padding:14px}
+  .chart-card{border:0;min-height:0}
+  .fear-board{padding:0}
   .fear-overview{display:block;min-height:auto;padding-top:0}
-  .fear-mode-tabs{margin-bottom:14px}
+  .fear-mode-tabs{margin:14px 16px}
   .fear-mode-tab{height:30px;padding:0 14px;font-size:12px}
+  .fear-chart-panel{width:100vw}
+  .fear-chart-panel .chart-head{border-bottom:0;padding:10px 16px}
   .gauge-wrap{min-height:245px}
   .gauge-value{font-size:38px;bottom:18px}
   .gauge-state{font-size:18px}
   .previous-list{gap:26px;padding:22px 0 4px;min-height:auto}
   .previous-row{grid-template-columns:112px minmax(60px,1fr) auto;gap:9px}
-  .canvas-wrap{height:410px}
+  .canvas-wrap{height:calc(100vh - 178px);min-height:520px}
   .metrics{grid-template-columns:1fr}
 }
 </style>
