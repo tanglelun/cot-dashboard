@@ -73,15 +73,13 @@ h1{margin:0;color:#fff;font-size:32px;line-height:1;font-weight:950}
 .previous-score.fear{border-color:var(--red);background:rgba(255,77,0,.14)}
 .previous-score.neutral{border-color:#787b86;background:rgba(120,123,134,.14)}
 .chart-card{min-height:560px}
-.chart-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.chart-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-top:1px solid var(--line);flex-wrap:wrap}
 .chart-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-left:auto}
 .range-tabs{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .range-tab{height:30px;border:1px solid var(--line);background:#000;color:var(--muted);border-radius:5px;padding:0 10px;font:900 12px Inter,Arial,sans-serif;cursor:pointer}
 .range-tab:hover{background:#101820;color:#fff}
 .range-tab.active{background:var(--green);border-color:var(--green);color:#001b03}
 .zoom-label{color:var(--muted);font-size:13px;font-weight:850}
-.breadth-title{text-align:center;color:#fff;font-size:18px;font-weight:850;line-height:1.25;margin:12px 0 2px}
-.breadth-source{text-align:center;color:var(--muted);font-size:12px;margin-bottom:10px}
 .legend{display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:12px}
 .legend-item{display:flex;align-items:center;gap:7px}
 .dot{width:9px;height:9px;border-radius:50%;background:var(--c)}
@@ -89,6 +87,10 @@ h1{margin:0;color:#fff;font-size:32px;line-height:1;font-weight:950}
 .canvas-wrap{position:relative;height:500px}
 .chart-tooltip{position:absolute;left:0;top:0;display:none;min-width:132px;padding:8px 10px;border:1px solid var(--line);border-radius:5px;background:rgba(9,13,18,.96);box-shadow:0 10px 28px rgba(0,0,0,.35);color:#fff;font-size:12px;font-weight:850;pointer-events:none;z-index:5}
 .chart-tooltip .muted{display:block;color:var(--muted);font-size:11px;margin-bottom:4px}
+.tooltip-row{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:5px;white-space:nowrap}
+.tooltip-row span{display:flex;align-items:center;gap:7px;color:var(--text)}
+.tooltip-row i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--c);flex:0 0 auto}
+.tooltip-row strong{color:#fff}
 .chart-crosshair{position:absolute;top:0;bottom:0;width:1px;background:rgba(209,212,220,.36);display:none;pointer-events:none;z-index:4}
 canvas{display:block;width:100%;height:100%}
 .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
@@ -125,10 +127,13 @@ canvas{display:block;width:100%;height:100%}
   .fear-mode-tabs{display:none}
   .fear-mode-tab{height:30px;padding:0 14px;font-size:12px}
   .fear-chart-panel{width:100vw;margin-top:16px}
-  .fear-chart-panel .chart-head{border-bottom:0;padding:10px 16px}
+  .fear-chart-panel .chart-head{padding:10px 16px}
   #breadthView{width:100vw;margin:0}
   #breadthView .chart-head{padding:10px 4px 12px}
   #breadthView .canvas-wrap{width:100vw;margin:0;height:calc(100vh - 188px);min-height:560px}
+  #liquidityView{width:100vw;margin:0}
+  #liquidityView .chart-head{padding:10px 4px 12px}
+  #liquidityView .canvas-wrap{width:100vw;margin:0;height:calc(100vh - 188px);min-height:560px}
   .gauge-wrap{min-height:245px}
   .gauge-value{font-size:38px;bottom:18px}
   .gauge-state{font-size:18px}
@@ -209,20 +214,22 @@ canvas{display:block;width:100%;height:100%}
       <div class="previous-list" id="fearPrevious"></div>
     </div>
     <div class="fear-chart-panel hidden" id="fearTimeline">
-      <div class="chart-head">
-        <div class="legend" id="fearLegend"></div>
-        <div class="range" id="fearRange">All available history</div>
-      </div>
       <div class="canvas-wrap">
         <canvas id="fearChart"></canvas>
         <div class="chart-tooltip" id="fearTooltip"></div>
+      </div>
+      <div class="chart-head">
+        <div class="legend" id="fearLegend"></div>
+        <div class="range" id="fearRange">All available history</div>
       </div>
     </div>
   </section>
 
   <section class="chart-card hidden" id="breadthView">
-    <div class="breadth-title">S&amp;P 500 Breadth</div>
-    <div class="breadth-source">Net Data | S&amp;P 500 constituents</div>
+    <div class="canvas-wrap">
+      <canvas id="breadthChart"></canvas>
+      <div class="chart-tooltip" id="breadthTooltip"></div>
+    </div>
     <div class="chart-head">
       <div class="legend" id="breadthLegend"></div>
       <div class="chart-tools">
@@ -240,15 +247,30 @@ canvas{display:block;width:100%;height:100%}
         <div class="range" id="breadthRange">All available history</div>
       </div>
     </div>
-    <div class="canvas-wrap"><canvas id="breadthChart"></canvas></div>
   </section>
 
   <section class="chart-card hidden" id="liquidityView">
+    <div class="canvas-wrap">
+      <canvas id="liquidityChart"></canvas>
+      <div class="chart-tooltip" id="liquidityTooltip"></div>
+    </div>
     <div class="chart-head">
       <div class="legend" id="liquidityLegend"></div>
-      <div class="range" id="liquidityRange">All available history</div>
+      <div class="chart-tools">
+        <div class="range-tabs" id="liquidityRanges" aria-label="Liquidity range">
+          <span class="zoom-label">Zoom</span>
+          <button class="range-tab" data-range="all">All</button>
+          <button class="range-tab" data-range="6m">6m</button>
+          <button class="range-tab" data-range="ytd">YTD</button>
+          <button class="range-tab" data-range="1y">1y</button>
+          <button class="range-tab" data-range="2y">2y</button>
+          <button class="range-tab" data-range="3y">3y</button>
+          <button class="range-tab active" data-range="5y">5y</button>
+          <button class="range-tab" data-range="10y">10y</button>
+        </div>
+        <div class="range" id="liquidityRange">All available history</div>
+      </div>
     </div>
-    <div class="canvas-wrap"><canvas id="liquidityChart"></canvas></div>
   </section>
 
   <section class="hidden" id="valuationView">
@@ -260,7 +282,7 @@ canvas{display:block;width:100%;height:100%}
   <div class="note" id="notes"></div>
 </main>
 <script>
-const state = { data:null, view:'fear', fearMode:'overview', breadthRange:'5y' };
+const state = { data:null, view:'fear', fearMode:'overview', breadthRange:'5y', liquidityRange:'5y' };
 const $ = id => document.getElementById(id);
 const seriesByKey = key => state.data.series.find(item => item.key === key);
 const fmt = (value, unit='') => {
@@ -310,6 +332,19 @@ function alignSeriesByDate(rows){
   return rows.map((row, rowIndex) => ({
     ...row,
     points: commonDates.map(date => ({...maps[rowIndex].get(date), date}))
+  }));
+}
+function trimSeriesToSharedWindow(rows){
+  const starts = rows.map(row => (row.points || []).find(point => Number.isFinite(Number(point.value)))?.date).filter(Boolean).map(dateMs);
+  const ends = rows.map(row => [...(row.points || [])].reverse().find(point => Number.isFinite(Number(point.value)))?.date).filter(Boolean).map(dateMs);
+  if(starts.length !== rows.length || ends.length !== rows.length){
+    return rows.map(row => ({...row, points:[]}));
+  }
+  const min = Math.max(...starts);
+  const max = Math.min(...ends);
+  return rows.map(row => ({
+    ...row,
+    points: (row.points || []).filter(point => Number.isFinite(Number(point.value)) && dateMs(point.date) >= min && dateMs(point.date) <= max)
   }));
 }
 function nearestPoint(points, date, maxLagDays=7){
@@ -598,6 +633,40 @@ function attachChartCrosshair(canvas, layout, points, onSelect){
   canvas.ontouchmove = move;
   canvas.ontouchend = hide;
 }
+function pointMapByDate(points){
+  return new Map((points || []).map(point => [normalizeDate(point.date), point]));
+}
+function tooltipValue(row, point, defaultUnit=''){
+  if(!point || !Number.isFinite(Number(point.value))) return '--';
+  const unit = row.unit || defaultUnit || (row.kind === 'breadth' ? '%' : '');
+  return fmt(point.value, unit);
+}
+function attachSeriesTooltip(canvas, tooltipId, layout, rows, points, defaultUnit=''){
+  const tooltip = $(tooltipId);
+  if(!tooltip){
+    attachChartCrosshair(canvas, layout, points);
+    return;
+  }
+  const indexedRows = rows.map(row => ({...row, pointsByDate:pointMapByDate(row.points)}));
+  const hideTooltip = () => { tooltip.style.display = 'none'; };
+  attachChartCrosshair(canvas, layout, points, (point, x, y) => {
+    if(!point) return;
+    const date = normalizeDate(point.date);
+    const lines = indexedRows.map(row => {
+      const rowPoint = row.pointsByDate.get(date);
+      return `<div class="tooltip-row"><span><i style="background:${row.color}"></i>${row.label}</span><strong>${tooltipValue(row, rowPoint, defaultUnit)}</strong></div>`;
+    }).join('');
+    tooltip.innerHTML = `<span class="muted">${date}</span>${lines}`;
+    const left = Math.min(Math.max(8, layout.width - 260), Math.max(8, x + 12));
+    const top = Math.min(Math.max(8, layout.height - 132), Math.max(8, y - 56));
+    tooltip.style.transform = `translate(${left}px, ${top}px)`;
+    tooltip.style.display = 'block';
+  });
+  const oldLeave = canvas.onmouseleave;
+  const oldTouchEnd = canvas.ontouchend;
+  canvas.onmouseleave = event => { if(oldLeave) oldLeave(event); hideTooltip(); };
+  canvas.ontouchend = event => { if(oldTouchEnd) oldTouchEnd(event); hideTooltip(); };
+}
 function renderMetrics(items){
   $('metrics').innerHTML = items.map(item => `
     <div class="metric-card">
@@ -750,7 +819,7 @@ function renderBreadth(){
   });
   $('breadthRange').textContent = items[0].points.length ? `${items[0].points[0].date} to ${items[0].points[items[0].points.length - 1].date}` : 'No shared dates';
   const layout = drawBreadthChart($('breadthChart'), items);
-  if(layout) attachChartCrosshair($('breadthChart'), layout, items[0].points);
+  if(layout) attachSeriesTooltip($('breadthChart'), 'breadthTooltip', layout, items, items[0].points);
   renderMetrics([
     {label:'S&P 500', value:latest(sp), note:sp.latest?.date, color:'#fff'},
     {label:'Above MA50', value:latest(ma50), unit:'%', note:ma50.latest?.date, color:'#76d7c4'},
@@ -765,10 +834,23 @@ function renderLiquidity(){
     {label:'Fed Funds Rate', color:'#ff4d00', points:seriesByKey('dff').points, width:2},
     {label:'High Yield Spread', color:'#ef5350', points:seriesByKey('hy_spread').points, width:2},
   ];
-  setLegend('liquidityLegend', items);
-  $('liquidityRange').textContent = 'All available history';
-  const layout = drawLineChart($('liquidityChart'), items, {unit:'%'});
-  if(layout) attachChartCrosshair($('liquidityChart'), layout, items[0].points);
+  const sharedItems = trimSeriesToSharedWindow(items);
+  const rangedPoints = applyRange(sharedItems[0].points, state.liquidityRange);
+  const visibleStart = rangedPoints[0]?.date;
+  const visibleEnd = rangedPoints.at(-1)?.date;
+  const min = visibleStart ? dateMs(visibleStart) : null;
+  const max = visibleEnd ? dateMs(visibleEnd) : null;
+  const chartItems = sharedItems.map(row => ({
+    ...row,
+    points: min === null || max === null ? [] : row.points.filter(point => dateMs(point.date) >= min && dateMs(point.date) <= max)
+  }));
+  setLegend('liquidityLegend', chartItems);
+  document.querySelectorAll('#liquidityRanges .range-tab').forEach(button => {
+    button.classList.toggle('active', button.dataset.range === state.liquidityRange);
+  });
+  $('liquidityRange').textContent = chartItems[0].points.length ? `${chartItems[0].points[0].date} to ${chartItems[0].points[chartItems[0].points.length - 1].date}` : 'No shared dates';
+  const layout = drawLineChart($('liquidityChart'), chartItems, {unit:'%'});
+  if(layout) attachSeriesTooltip($('liquidityChart'), 'liquidityTooltip', layout, chartItems, chartItems[0].points, '%');
   renderMetrics(items.map(item => ({label:item.label, value:item.points.at(-1)?.value, unit:'%', note:item.points.at(-1)?.date, color:item.color})));
 }
 function renderValuation(){
@@ -817,6 +899,12 @@ $('breadthRanges').addEventListener('click', event => {
   if(!button) return;
   state.breadthRange = button.dataset.range;
   renderBreadth();
+});
+$('liquidityRanges').addEventListener('click', event => {
+  const button = event.target.closest('button[data-range]');
+  if(!button) return;
+  state.liquidityRange = button.dataset.range;
+  renderLiquidity();
 });
 fetch('market_pulse_data.json', {cache:'no-store'})
   .then(response => response.json())
