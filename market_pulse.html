@@ -44,8 +44,12 @@ h1{margin:0;color:#fff;font-size:32px;line-height:1;font-weight:950}
 .hero{display:grid;grid-template-columns:420px minmax(0,1fr);gap:12px}
 .gauge-card,.chart-card,.metric-card{border:1px solid var(--line);background:#000}
 .fear-board{position:relative;min-height:560px;padding:18px}
-.fear-overview{display:grid;grid-template-columns:minmax(360px,520px) minmax(420px,1fr);gap:24px;align-items:stretch;min-height:520px}
-.fear-chart-panel{border-left:1px solid var(--line-soft);padding-left:18px;min-width:0}
+.fear-mode-tabs{display:inline-flex;align-items:center;gap:4px;margin-bottom:18px;padding:4px;border:1px solid var(--line);border-radius:999px;background:var(--panel-2)}
+.fear-mode-tab{height:32px;border:0;background:transparent;color:var(--muted);border-radius:999px;padding:0 18px;font:900 13px Inter,Arial,sans-serif;cursor:pointer}
+.fear-mode-tab:hover{color:#fff}
+.fear-mode-tab.active{background:#fff;color:#000}
+.fear-overview{display:grid;grid-template-columns:minmax(360px,520px) minmax(360px,1fr);gap:28px;align-items:stretch;min-height:500px}
+.fear-chart-panel{min-width:0}
 .gauge-card{border:0;background:transparent;padding:0;min-height:auto;display:flex;flex-direction:column}
 .gauge-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
 .section-title{font-size:13px;color:#fff;text-transform:uppercase;letter-spacing:.05em;font-weight:900}
@@ -59,10 +63,10 @@ h1{margin:0;color:#fff;font-size:32px;line-height:1;font-weight:950}
 .score-row{display:grid;grid-template-columns:1fr auto;gap:14px;padding:12px 0;border-bottom:1px solid var(--line-soft);font-size:12px}
 .score-row span:first-child{color:var(--muted)}
 .score-row strong{color:#fff}
-.previous-list{display:none}
-.previous-row{display:grid;grid-template-columns:138px 1fr auto;align-items:center;gap:12px;color:var(--muted)}
-.previous-label{font-size:14px;font-weight:760}
-.previous-rating{color:#fff;font-size:17px;font-weight:950}
+.previous-list{display:flex;flex-direction:column;justify-content:center;gap:42px;padding:20px 8px 20px 18px;min-height:410px}
+.previous-row{display:grid;grid-template-columns:128px minmax(80px,1fr) auto;align-items:center;gap:12px;color:var(--muted)}
+.previous-label{font-size:14px;font-weight:760;line-height:1.2}
+.previous-rating{color:#fff;font-size:16px;font-weight:950;line-height:1.15}
 .previous-line{height:1px;border-top:1px dashed #26313d}
 .previous-score{min-width:40px;height:40px;border:2px solid var(--green);border-radius:999px;display:flex;align-items:center;justify-content:center;color:#fff;background:rgba(0,209,9,.12);font-size:16px;font-weight:950}
 .previous-score.fear{border-color:var(--red);background:rgba(255,77,0,.14)}
@@ -96,7 +100,6 @@ canvas{display:block;width:100%;height:100%}
   .hero{grid-template-columns:1fr}
   .gauge-card{min-height:auto}
   .fear-overview{grid-template-columns:1fr}
-  .fear-chart-panel{border-left:0;border-top:1px solid var(--line-soft);padding-left:0;padding-top:14px}
   .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:720px){
@@ -114,9 +117,13 @@ canvas{display:block;width:100%;height:100%}
   .tab{height:38px;padding:0 12px;font-size:13px}
   .fear-board{padding:14px}
   .fear-overview{display:block;min-height:auto;padding-top:0}
+  .fear-mode-tabs{margin-bottom:14px}
+  .fear-mode-tab{height:30px;padding:0 14px;font-size:12px}
   .gauge-wrap{min-height:245px}
   .gauge-value{font-size:38px;bottom:18px}
   .gauge-state{font-size:18px}
+  .previous-list{gap:26px;padding:22px 0 4px;min-height:auto}
+  .previous-row{grid-template-columns:112px minmax(60px,1fr) auto;gap:9px}
   .canvas-wrap{height:410px}
   .metrics{grid-template-columns:1fr}
 }
@@ -164,6 +171,10 @@ canvas{display:block;width:100%;height:100%}
   </section>
 
   <section class="chart-card fear-board" id="fearView">
+    <div class="fear-mode-tabs" id="fearModeTabs" aria-label="Fear and greed view mode">
+      <button class="fear-mode-tab active" data-fear-mode="overview">Overview</button>
+      <button class="fear-mode-tab" data-fear-mode="timeline">Timeline</button>
+    </div>
     <div class="fear-overview" id="fearOverview">
       <div class="gauge-card">
         <div class="gauge-title">
@@ -184,17 +195,17 @@ canvas{display:block;width:100%;height:100%}
           <div class="gauge-value" id="fearScore">--</div>
         </div>
         <div class="gauge-state" id="fearState">Loading</div>
-        <div class="previous-list" id="fearPrevious"></div>
       </div>
-      <div class="fear-chart-panel">
-        <div class="chart-head">
-          <div class="legend" id="fearLegend"></div>
-          <div class="range" id="fearRange">All available history</div>
-        </div>
-        <div class="canvas-wrap">
-          <canvas id="fearChart"></canvas>
-          <div class="chart-tooltip" id="fearTooltip"></div>
-        </div>
+      <div class="previous-list" id="fearPrevious"></div>
+    </div>
+    <div class="fear-chart-panel hidden" id="fearTimeline">
+      <div class="chart-head">
+        <div class="legend" id="fearLegend"></div>
+        <div class="range" id="fearRange">All available history</div>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="fearChart"></canvas>
+        <div class="chart-tooltip" id="fearTooltip"></div>
       </div>
     </div>
   </section>
@@ -239,7 +250,7 @@ canvas{display:block;width:100%;height:100%}
   <div class="note" id="notes"></div>
 </main>
 <script>
-const state = { data:null, view:'fear', breadthRange:'all' };
+const state = { data:null, view:'fear', fearMode:'overview', breadthRange:'all' };
 const $ = id => document.getElementById(id);
 const seriesByKey = key => state.data.series.find(item => item.key === key);
 const fmt = (value, unit='') => {
@@ -624,6 +635,12 @@ function attachFearHover(layout, points){
   };
 }
 function renderFear(){
+  const isTimeline = state.fearMode === 'timeline';
+  $('fearOverview').classList.toggle('hidden', isTimeline);
+  $('fearTimeline').classList.toggle('hidden', !isTimeline);
+  document.querySelectorAll('#fearModeTabs .fear-mode-tab').forEach(button => {
+    button.classList.toggle('active', button.dataset.fearMode === state.fearMode);
+  });
   const cnnSeries = seriesByKey('cnn_fear_greed');
   const cnnSnapshot = cnnFearSnapshot();
   const history = cnnSeries && cnnSeries.points.length ? cnnSeries.points : buildFearHistory();
@@ -648,6 +665,7 @@ function renderFear(){
   `).join('');
   const points = history.map(point => ({date:point.date, value:point.value}));
   const fearLabel = cnnSeries ? 'CNN Fear & Greed Index' : 'Fear & Greed Estimate';
+  if(!isTimeline) return;
   setLegend('fearLegend', [{label:fearLabel, color:'#00b8a9'}]);
   $('fearRange').textContent = points.length ? `${points[0].date} to ${points[points.length - 1].date}` : 'No data';
   const layout = drawLineChart($('fearChart'), [
@@ -730,6 +748,12 @@ $('tabs').addEventListener('click', event => {
   state.view = button.dataset.view;
   document.querySelectorAll('.tab').forEach(tab => tab.classList.toggle('active', tab === button));
   render();
+});
+$('fearModeTabs').addEventListener('click', event => {
+  const button = event.target.closest('button[data-fear-mode]');
+  if(!button) return;
+  state.fearMode = button.dataset.fearMode;
+  renderFear();
 });
 $('breadthRanges').addEventListener('click', event => {
   const button = event.target.closest('button[data-range]');
