@@ -48,7 +48,7 @@ h1{margin:0;color:#fff;font-size:32px;line-height:1;font-weight:950}
 .fear-mode-tab{height:32px;border:0;background:transparent;color:var(--muted);border-radius:999px;padding:0 18px;font:900 13px Inter,Arial,sans-serif;cursor:pointer}
 .fear-mode-tab:hover{color:#fff}
 .fear-mode-tab.active{background:#fff;color:#000}
-.fear-overview{display:grid;grid-template-columns:minmax(360px,520px) minmax(360px,1fr);gap:28px;align-items:stretch;min-height:500px}
+.fear-overview{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:28px;align-items:stretch;min-height:500px}
 .fear-chart-panel{min-width:0}
 .gauge-card{border:0;background:transparent;padding:0;min-height:auto;display:flex;flex-direction:column}
 .gauge-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
@@ -665,7 +665,7 @@ function renderFear(){
     <div class="previous-row">
       <div class="previous-label">${label}</div>
       <div><div class="previous-rating">${ratingText(null, value)}</div><div class="previous-line"></div></div>
-      <div class="previous-score ${fearClass(value)}">${fmt(value)}</div>
+      <div class="previous-score ${fearClass(value)}">${Number.isFinite(Number(value)) ? Math.round(Number(value)) : '--'}</div>
     </div>
   `).join('');
   const points = history.map(point => ({date:point.date, value:point.value}));
