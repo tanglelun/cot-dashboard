@@ -11,7 +11,16 @@
   --blue:#2962ff;--teal:#00b8a9;--orange:#ff9f0a;--white:#fff;
 }
 *{box-sizing:border-box}
+html,body{overscroll-behavior-x:none}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif;font-weight:760}
+.tabs,.tab,.fear-mode-tabs,.fear-mode-tab,.gauge-card,.chart-card,.fear-board,.legend,.range-tabs,.range-tab,.canvas-wrap,canvas{
+  -webkit-user-select:none;
+  user-select:none;
+  -webkit-touch-callout:none;
+  -webkit-tap-highlight-color:transparent;
+}
+button,a,canvas{-webkit-tap-highlight-color:transparent}
+.canvas-wrap,canvas{touch-action:none}
 .site-nav{min-height:64px;display:flex;align-items:center;gap:28px;padding:0 24px;background:#000;border-bottom:1px solid #1b1f2a;position:relative;z-index:30}
 .site-brand{display:inline-flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-size:25px;font-weight:900;white-space:nowrap}
 .brand-mark{position:relative;width:22px;height:26px;display:inline-block}
@@ -613,8 +622,15 @@ function nearestPointByX(layout, points, x){
 }
 function attachChartCrosshair(canvas, layout, points, onSelect){
   const line = ensureCrosshair(canvas);
-  const hide = () => { line.style.display = 'none'; };
+  const stopNativeSelection = event => {
+    if(event && event.cancelable) event.preventDefault();
+  };
+  const hide = event => {
+    stopNativeSelection(event);
+    line.style.display = 'none';
+  };
   const move = event => {
+    stopNativeSelection(event);
     const source = event.touches ? event.touches[0] : event;
     if(!source) return;
     const rect = canvas.getBoundingClientRect();
@@ -632,6 +648,10 @@ function attachChartCrosshair(canvas, layout, points, onSelect){
   canvas.ontouchstart = move;
   canvas.ontouchmove = move;
   canvas.ontouchend = hide;
+  canvas.oncontextmenu = event => {
+    event.preventDefault();
+    return false;
+  };
 }
 function pointMapByDate(points){
   return new Map((points || []).map(point => [normalizeDate(point.date), point]));
