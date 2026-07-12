@@ -46,6 +46,7 @@ COMMODITIES = [
     {"name": "Live Cattle", "symbol": "LE=F", "category": "Livestock", "unit": "USd/lb"},
     {"name": "Lean Hogs", "symbol": "HE=F", "category": "Livestock", "unit": "USd/lb"},
     {"name": "Feeder Cattle", "symbol": "GF=F", "category": "Livestock", "unit": "USd/lb"},
+    {"name": "S&P 500 Micro", "symbol": "MES=F", "category": "Indexes", "unit": "Index Points"},
 ]
 
 

@@ -1,7 +1,7 @@
 {
   "updated": "2026-07-10",
   "source": "Yahoo Finance futures quotes via yfinance",
-  "generatedAt": "2026-07-12T00:13:24Z",
+  "generatedAt": "2026-07-12T00:58:40Z",
   "commodities": [
     {
       "name": "Cocoa",
@@ -312,6 +312,20 @@
       "date": "2026-07-10"
     },
     {
+      "name": "S&P 500 Micro",
+      "symbol": "MES=F",
+      "category": "Indexes",
+      "unit": "Index Points",
+      "price": 7620.25,
+      "day": 0.42,
+      "week": 1.22,
+      "month": 3.08,
+      "ytd": 10.56,
+      "year": 20.82,
+      "previous": 7588.75,
+      "date": "2026-07-10"
+    },
+    {
       "name": "SSE Commodity Index",
       "symbol": "000066.SS",
       "category": "Indexes",
@@ -609,6 +623,20 @@
           "y": 11.89,
           "year": 42.46,
           "rank": 9
+        },
+        {
+          "symbol": "MES=F",
+          "safeSymbol": "MES-F",
+          "name": "S&P 500 Micro",
+          "sector": "Indexes",
+          "unit": "Index Points",
+          "price": 7620.25,
+          "d": 0.42,
+          "w": 1.22,
+          "m": 3.08,
+          "y": 10.56,
+          "year": 20.82,
+          "rank": 35
         }
       ]
     },
@@ -1459,6 +1487,20 @@
       "y": 1.24,
       "year": 10.65,
       "rank": 34
+    },
+    {
+      "symbol": "MES=F",
+      "safeSymbol": "MES-F",
+      "name": "S&P 500 Micro",
+      "sector": "Indexes",
+      "unit": "Index Points",
+      "price": 7620.25,
+      "d": 0.42,
+      "w": 1.22,
+      "m": 3.08,
+      "y": 10.56,
+      "year": 20.82,
+      "rank": 35
     }
   ]
 }

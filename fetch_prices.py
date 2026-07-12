@@ -1,10 +1,9 @@
 import pandas as pd
 import yfinance as yf
-from datetime import datetime, timedelta
 import os
 
 PRICE_FILE = 'price_history.csv'
-LOOKBACK_MONTHS = 124
+HISTORY_PERIOD = 'max'
 
 commodity_tickers = {
     'Corn': 'ZC=F',
@@ -51,12 +50,9 @@ commodity_tickers = {
     '30-Year T-Bond': 'US=F',
 }
 
-def get_price_data(ticker, months=LOOKBACK_MONTHS):
+def get_price_data(ticker):
     try:
-        end_date = datetime.now()
-        start_date = end_date - timedelta(days=months*30)
-        
-        data = yf.download(ticker, start=start_date, end=end_date, progress=False)
+        data = yf.download(ticker, period=HISTORY_PERIOD, interval='1d', progress=False)
         
         if data.empty:
             return None
