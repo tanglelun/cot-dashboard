@@ -23,4 +23,14 @@
 .site-nav .nav-links,.nav .nav-links{display:flex;align-items:center;gap:28px!important}
 .site-nav .nav-link,.nav .nav-link{height:auto!important;padding:0!important;color:#f3f4f6!important;text-decoration:none!important;font-family:Inter,Arial,sans-serif!important;font-size:15px!important;font-weight:650!important;line-height:1.2!important;white-space:nowrap!important}
 .site-nav .nav-link:hover,.site-nav .nav-link.active,.nav .nav-link:hover,.nav .nav-link.active{color:#b8ff00!important}
-.site-nav .nav-link.active::after,.nav .nav-link.active::after{display:none!important}
+.site-nav .nav-link.active:not(.market-trigger)::after,.nav .nav-link.active:not(.market-trigger)::after{display:none!important}
+.site-nav .market-trigger::after,.nav .market-trigger::after{display:block!important;flex:0 0 7px!important}
+
+/* Keep responsive rules after the desktop normalization so they win. */
+@media(max-width:900px){
+  .site-nav,.nav{height:auto!important;min-height:58px!important;padding:10px 14px!important;gap:10px!important;flex-wrap:wrap!important}
+  .site-brand,.brand{font-size:21px!important}
+  .site-nav .nav-links,.nav .nav-links{display:none!important;flex:0 0 100%!important;width:100%!important;flex-direction:column!important;align-items:stretch!important;gap:4px!important}
+  .site-nav .nav-check:checked ~ .nav-links,.nav .nav-check:checked ~ .nav-links{display:flex!important}
+  .site-nav .nav-link,.nav .nav-link{height:40px!important;display:flex!important;align-items:center!important;padding:0 4px!important;font-size:14px!important}
+}
