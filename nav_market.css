@@ -7,7 +7,20 @@
 .market-menu-link{display:flex;align-items:center;justify-content:space-between;gap:16px;height:34px;padding:0 10px;border-radius:5px;color:#d1d4dc;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap}
 .market-menu-link:hover,.market-menu-link.active{background:rgba(0,209,9,.16);color:#fff}
 @media(max-width:900px){
+  .site-nav,.nav{min-height:58px!important;padding:10px 14px!important;gap:10px!important;flex-wrap:wrap!important}
+  .site-brand,.brand{font-size:21px!important}
+  .site-nav .nav-links,.nav .nav-links{flex-direction:column;align-items:stretch;gap:4px!important}
+  .site-nav .nav-link,.nav .nav-link{height:40px!important;display:flex!important;align-items:center!important;padding:0 4px!important;font-size:14px!important}
   .nav-market{display:block}
   .market-menu{position:static;opacity:1;visibility:visible;pointer-events:auto;transform:none;box-shadow:none;background:transparent;border:0;padding:0 0 0 12px;margin-top:0}
   .market-menu::before{display:none}
 }
+.site-nav,.nav{height:auto!important;min-height:64px!important;display:flex!important;align-items:center!important;gap:28px!important;padding:0 24px!important;background:#000!important;border-bottom:1px solid #1b1f2a!important;color:#fff!important;font-family:Inter,Arial,sans-serif!important}
+.site-brand,.brand{display:inline-flex!important;align-items:center!important;gap:10px!important;color:#fff!important;text-decoration:none!important;font-size:25px!important;font-weight:800!important;letter-spacing:0!important;white-space:nowrap!important}
+.site-brand .brand-mark,.brand .logo{position:relative!important;width:22px!important;height:26px!important;display:inline-block!important;flex:0 0 22px!important;background:transparent!important;border-radius:0!important;transform:none!important}
+.site-brand .brand-mark::before,.brand .logo::before{content:""!important;position:absolute!important;left:7px!important;top:1px!important;width:10px!important;height:24px!important;background:#fff!important;border:0!important;border-radius:10px 10px 10px 1px!important;transform:skew(-18deg) rotate(22deg)!important}
+.site-brand .brand-mark::after,.brand .logo::after{content:""!important;position:absolute!important;left:2px!important;bottom:2px!important;width:13px!important;height:3px!important;background:#fff!important;border:0!important;border-radius:999px!important;transform:rotate(-34deg)!important}
+.site-nav .nav-links,.nav .nav-links{display:flex;align-items:center;gap:28px!important}
+.site-nav .nav-link,.nav .nav-link{height:auto!important;padding:0!important;color:#f3f4f6!important;text-decoration:none!important;font-family:Inter,Arial,sans-serif!important;font-size:15px!important;font-weight:650!important;line-height:1.2!important;white-space:nowrap!important}
+.site-nav .nav-link:hover,.site-nav .nav-link.active,.nav .nav-link:hover,.nav .nav-link.active{color:#b8ff00!important}
+.site-nav .nav-link.active::after,.nav .nav-link.active::after{display:none!important}
