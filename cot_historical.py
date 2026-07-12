@@ -7,7 +7,12 @@ import os
 
 HISTORY_FILE = 'cot_noncommercial_history.csv'
 LOOKBACK_YEARS = 10
+EARLIEST_ARCHIVE_YEAR = 1986
 REQUEST_HEADERS = {'User-Agent': 'Mozilla/5.0 NetData COT updater'}
+
+PRIORITY_HISTORY_MARKETS = [
+    'Coffee', 'Cocoa', 'Cotton', 'Sugar', 'S&P 500 Micro', 'Soybean Oil', 'Copper',
+]
 
 def get_all_futures():
     return [
@@ -71,8 +76,9 @@ def parse_position(val):
 
 def download_legacy_data_for_year(year):
     base_url = "https://www.cftc.gov/files/dea/history/"
-    url = f"{base_url}deacot{year}.zip"
-    local_zip = f"deacot{year}.zip"
+    archive_name = f"deacot{year}.zip"
+    url = f"{base_url}{archive_name}"
+    local_zip = archive_name
     content = None
 
     for attempt in range(1, 4):
@@ -96,7 +102,8 @@ def download_legacy_data_for_year(year):
 
     with zipfile.ZipFile(io.BytesIO(content)) as z:
         for fname in z.namelist():
-            if fname.endswith('.txt'):
+            # Older CFTC archives use upper-case .TXT names.
+            if fname.lower().endswith(('.txt', '.csv')):
                 df = pd.read_csv(z.open(fname), low_memory=False)
                 return df
     return None
@@ -135,16 +142,61 @@ def parse_legacy_year(df, futures_list, cutoff):
 
     return records
 
-def collect_historical_data(years_back=LOOKBACK_YEARS, history_file=HISTORY_FILE):
+def merge_history_records(records, history_file):
+    downloaded_df = pd.DataFrame(records)
+    if downloaded_df.empty:
+        return pd.DataFrame()
+    if os.path.exists(history_file):
+        existing_df = pd.read_csv(history_file)
+        existing_df = existing_df[~existing_df.set_index(['Date', 'Commodity']).index.isin(
+            downloaded_df.set_index(['Date', 'Commodity']).index
+        )]
+        result_df = pd.concat([existing_df, downloaded_df], ignore_index=True)
+    else:
+        result_df = downloaded_df
+    result_df['Date'] = pd.to_datetime(result_df['Date']).dt.strftime('%Y-%m-%d')
+    result_df = result_df.drop_duplicates(['Date', 'Commodity'], keep='last')
+    result_df = result_df.sort_values(['Date', 'Commodity'], ascending=[False, True])
+    result_df = result_df[['Date', 'Commodity', 'NonComm Long', 'NonComm Short', 'NonComm Net', 'Code']]
+    result_df.to_csv(history_file, index=False)
+    return result_df
+
+def collect_historical_data(years_back=LOOKBACK_YEARS, history_file=HISTORY_FILE,
+                            commodity_names=None, start_year=None):
     print("=" * 80)
-    print(f"CFTC COT - Historical Data Collection (Past {years_back} Years)")
+    period = f"from {start_year}" if start_year is not None else f"Past {years_back} Years"
+    print(f"CFTC COT - Historical Data Collection ({period})")
     print("=" * 80)
 
     current_year = datetime.now().year
     futures_list = get_all_futures()
-    cutoff = datetime.now() - timedelta(days=366 * years_back)
-    years = range(current_year - years_back, current_year + 1)
+    if commodity_names is not None:
+        wanted = set(commodity_names)
+        futures_list = [item for item in futures_list if item[0] in wanted]
+        missing = wanted - {item[0] for item in futures_list}
+        if missing:
+            raise ValueError(f"Unknown commodities: {', '.join(sorted(missing))}")
+
+    if start_year is not None:
+        start_year = max(EARLIEST_ARCHIVE_YEAR, int(start_year))
+        cutoff = datetime(start_year, 1, 1)
+        years = range(start_year, current_year + 1)
+    else:
+        cutoff = datetime.now() - timedelta(days=366 * years_back)
+        years = range(current_year - years_back, current_year + 1)
     downloaded_records = []
+
+    if start_year is not None and start_year <= 2016:
+        print("\nDownloading combined archive 1986_2016...")
+        df = download_legacy_data_for_year('1986_2016')
+        if df is not None:
+            records = parse_legacy_year(df, futures_list, cutoff)
+            downloaded_records.extend(records)
+            merge_history_records(records, history_file)
+            report_dates = sorted({record['Date'] for record in records})
+            print(f"  Matched records: {len(records)}")
+            print(f"  Report dates: {len(report_dates)}")
+        years = range(2017, current_year + 1)
 
     for year in years:
         print(f"\nDownloading year {year}...")
@@ -152,6 +204,7 @@ def collect_historical_data(years_back=LOOKBACK_YEARS, history_file=HISTORY_FILE
         if df is not None:
             records = parse_legacy_year(df, futures_list, cutoff)
             downloaded_records.extend(records)
+            merge_history_records(records, history_file)
             report_dates = sorted({record['Date'] for record in records})
             print(f"  Matched records: {len(records)}")
             print(f"  Report dates: {len(report_dates)}")
@@ -188,4 +241,16 @@ def collect_historical_data(years_back=LOOKBACK_YEARS, history_file=HISTORY_FILE
     return result_df
 
 if __name__ == "__main__":
-    collect_historical_data()
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Backfill CFTC legacy COT history')
+    parser.add_argument('--all-history', action='store_true',
+                        help=f'fetch archives from {EARLIEST_ARCHIVE_YEAR}')
+    parser.add_argument('--priority-markets', action='store_true',
+                        help='only fetch Coffee/Cocoa/Cotton/Sugar/MES/Soybean Oil/Copper')
+    args = parser.parse_args()
+
+    collect_historical_data(
+        commodity_names=PRIORITY_HISTORY_MARKETS if args.priority_markets else None,
+        start_year=EARLIEST_ARCHIVE_YEAR if args.all_history else None,
+    )

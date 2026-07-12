@@ -109,7 +109,21 @@ def frame_from_download(data, symbol):
     columns = [column for column in ("Open", "High", "Low", "Close", "Volume") if column in frame.columns]
     if not {"Open", "High", "Low", "Close"}.issubset(columns):
         return pd.DataFrame()
-    return frame[columns].dropna(subset=["Open", "High", "Low", "Close"])
+    frame = frame[columns].dropna(subset=["Open", "High", "Low", "Close"]).copy()
+    # Yahoo occasionally returns a partially shifted futures candle around a
+    # contract roll.  Reject rows that violate the basic OHLC envelope instead
+    # of letting one bad observation distort the entire chart.
+    # Futures Close can be an official settlement outside the session's traded
+    # high/low range.  Open, however, must remain inside that range.
+    valid_ohlc = (
+        (frame["High"] >= frame["Open"])
+        & (frame["Low"] <= frame["Open"])
+        & (frame["High"] >= frame["Low"])
+    )
+    invalid_count = int((~valid_ohlc).sum())
+    if invalid_count:
+        print(f"Ignoring {invalid_count} invalid OHLC row(s) for {symbol}")
+    return frame.loc[valid_ohlc]
 
 
 def history_payload(item, frame, updated):
@@ -210,6 +224,13 @@ def main():
     rows_by_symbol = {row["symbol"]: row for row in rows}
     for item in COMMODITIES:
         frame = frame_from_download(history_data, item["symbol"])
+        # The bulk "max" response can contain stale/shifted rows near a futures
+        # contract roll.  Prefer the separately fetched recent-period candles
+        # for overlapping dates.
+        recent_frame = frame_from_download(summary_data, item["symbol"])
+        if not recent_frame.empty:
+            frame = pd.concat([frame, recent_frame])
+            frame = frame[~frame.index.duplicated(keep="last")].sort_index()
         if frame.empty:
             frame = fallback_history_frame(item["symbol"])
         if frame.empty:

@@ -1,0 +1,13 @@
+.nav-market{position:relative;display:flex;align-items:center}
+.market-trigger{display:inline-flex;align-items:center;gap:7px;border:0;background:transparent;cursor:pointer;font:inherit}
+.market-trigger::after{content:"";width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px)}
+.market-menu{position:absolute;left:50%;top:100%;min-width:190px;margin-top:8px;padding:8px;border:1px solid #26313d;border-radius:8px;background:rgba(9,13,18,.98);box-shadow:0 18px 48px rgba(0,0,0,.48);transform:translateX(-50%) translateY(6px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .14s ease,transform .14s ease,visibility .14s ease;z-index:80}
+.market-menu::before{content:"";position:absolute;left:0;right:0;top:-9px;height:9px}
+.nav-market:hover .market-menu,.nav-market:focus-within .market-menu{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.market-menu-link{display:flex;align-items:center;justify-content:space-between;gap:16px;height:34px;padding:0 10px;border-radius:5px;color:#d1d4dc;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap}
+.market-menu-link:hover,.market-menu-link.active{background:rgba(0,209,9,.16);color:#fff}
+@media(max-width:900px){
+  .nav-market{display:block}
+  .market-menu{position:static;opacity:1;visibility:visible;pointer-events:auto;transform:none;box-shadow:none;background:transparent;border:0;padding:0 0 0 12px;margin-top:0}
+  .market-menu::before{display:none}
+}
