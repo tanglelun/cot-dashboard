@@ -1,6 +1,7 @@
 import json
 import csv
 import io
+import sys
 import time
 from datetime import date, datetime, timezone
 from functools import lru_cache
@@ -435,6 +436,8 @@ def build_credit_payload():
 
 
 def build_payload():
+    if len(sys.argv) > 1 and sys.argv[1] == "--offline":
+        return json.loads(Path("economic_data.json").read_text(encoding="utf-8"))
     previous_indicators = load_previous_indicators()
     indicators = []
     for config in INDICATORS:
@@ -543,6 +546,19 @@ body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--ink);pa
 .rating-box{height:92px;margin-top:auto;display:flex;align-items:center;gap:14px}
 .rating-pill{min-width:82px;height:42px;border:1px solid #ddd;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;background:#fafafa}
 .rating-note{color:#777;font-size:15px}
+.indicator-list-section{margin-top:34px}
+.indicator-tabs{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 16px}
+.indicator-tab{height:38px;border:1px solid var(--line);border-radius:999px;background:#f6f6f6;color:#555;padding:0 15px;font-size:14px;font-weight:800;cursor:pointer}
+.indicator-tab.active{background:#111;color:#fff;border-color:#111}
+.indicator-table-wrap{border:1px solid var(--line);border-radius:14px;background:#fff;overflow:auto}
+.indicator-table{width:100%;border-collapse:collapse;min-width:1080px}
+.indicator-table th,.indicator-table td{height:48px;border-bottom:1px solid var(--line);padding:0 18px;text-align:left;white-space:nowrap;font-size:15px}
+.indicator-table th{height:42px;color:#777;text-transform:uppercase;letter-spacing:.04em;font-size:12px;font-weight:850;background:#fafafa}
+.indicator-table td{font-weight:650;color:#222}
+.indicator-table tr:last-child td{border-bottom:none}
+.indicator-name-link{color:#111;text-decoration:none;font-weight:850}
+.indicator-name-link:hover{color:#006cff}
+.indicator-empty{text-align:center!important;color:#777!important;height:74px!important}
 .detail{display:none}
 .detail-head{display:grid;grid-template-columns:224px minmax(0,1fr);gap:28px;align-items:center;padding-bottom:34px}
 .detail-flag{width:212px;height:212px;border-radius:50%;font-size:150px}
@@ -606,6 +622,13 @@ body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--ink);pa
   .range-panel{height:92px}
   .quick-ranges{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
   .range-btn{height:48px;font-size:16px}
+  .indicator-list-section{margin-top:22px}
+  .indicator-tabs{gap:8px;overflow:auto;flex-wrap:nowrap;padding-bottom:2px}
+  .indicator-tab{height:34px;flex:0 0 auto;font-size:13px;padding:0 13px}
+  .indicator-table-wrap{border-radius:10px;margin-left:-14px;margin-right:-14px;border-left:none;border-right:none}
+  .indicator-table{min-width:900px}
+  .indicator-table th,.indicator-table td{height:44px;padding:0 14px;font-size:14px}
+  .indicator-table th{font-size:11px}
 }
 </style>
 </head>
@@ -639,6 +662,26 @@ body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--ink);pa
       </div>
     </header>
     <section class="cards" id="indicatorCards"></section>
+    <section class="indicator-list-section" aria-label="Indicator list">
+      <div class="indicator-tabs" id="indicatorTabs"></div>
+      <div class="indicator-table-wrap">
+        <table class="indicator-table">
+          <thead>
+            <tr>
+              <th>Indicator</th>
+              <th>Last</th>
+              <th>Previous</th>
+              <th>Observation</th>
+              <th>Unit</th>
+              <th>Frequency</th>
+              <th>Next release</th>
+              <th>Forecast</th>
+            </tr>
+          </thead>
+          <tbody id="indicatorTableBody"></tbody>
+        </table>
+      </div>
+    </section>
   </section>
 
   <section class="detail" id="detailView">
@@ -680,11 +723,26 @@ body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--ink);pa
 <script>
 const ECONOMIC_DATA = __DATA__;
 const params = new URLSearchParams(window.location.search);
+const INDICATOR_CATEGORIES = [
+  { key:'gdp', label:'GDP' }, { key:'labor', label:'Labor' }, { key:'prices', label:'Prices' },
+  { key:'health', label:'Health' }, { key:'money', label:'Money' }, { key:'trade', label:'Trade' },
+  { key:'government', label:'Government' }, { key:'business', label:'Business' }, { key:'consumer', label:'Consumer' },
+  { key:'housing', label:'Housing' }, { key:'taxes', label:'Taxes' }, { key:'energy', label:'Energy' },
+  { key:'climate', label:'Climate' }
+];
+const INDICATOR_CATEGORY_BY_KEY = {
+  gdp_growth:'gdp', interest_rate:'money', inflation:'prices', unemployment:'labor',
+  balance_trade:'trade', current_account:'trade', government_debt:'government', credit_rating:'government'
+};
+let activeIndicatorCategory = params.get('category') || 'gdp';
+if(!INDICATOR_CATEGORIES.some(category => category.key === activeIndicatorCategory)) activeIndicatorCategory = 'gdp';
 const homeView = document.getElementById('homeView');
 const detailView = document.getElementById('detailView');
 const countrySelect = document.getElementById('countrySelect');
 const homeFlag = document.getElementById('homeFlag');
 const indicatorCards = document.getElementById('indicatorCards');
+const indicatorTabs = document.getElementById('indicatorTabs');
+const indicatorTableBody = document.getElementById('indicatorTableBody');
 const detailFlag = document.getElementById('detailFlag');
 const detailTitle = document.getElementById('detailTitle');
 const detailCode = document.getElementById('detailCode');
@@ -729,6 +787,64 @@ function latestPoint(country, indicator){
 function seriesFor(country, indicator){
   if(indicator.kind === 'rating') return [];
   return (indicator.dates || indicator.years || []).map((year, index) => ({ year, value:(indicator.series[country.code] || [])[index] ?? null }));
+}
+function previousPoint(country, indicator){
+  if(indicator.kind === 'rating') return { year:null, value:null };
+  const values = indicator.series[country.code] || [];
+  const years = indicator.dates || indicator.years || [];
+  let skippedLatest = false;
+  for(let index = values.length - 1; index >= 0; index -= 1){
+    const value = values[index];
+    if(value === null || value === undefined) continue;
+    if(!skippedLatest){ skippedLatest = true; continue; }
+    return { year: years[index], value };
+  }
+  return { year:null, value:null };
+}
+function observationLabel(point){
+  if(!point || point.year === null || point.year === undefined) return '-';
+  return String(point.year);
+}
+function tableValue(point, indicator){
+  if(indicator.kind === 'rating') return point && point.value ? point.value : '-';
+  if(!point || point.value === null || point.value === undefined) return '-';
+  return valueText(point.value, indicator);
+}
+function frequencyLabel(indicator){
+  if(indicator.kind === 'rating') return 'Current';
+  return indicator.frequency || (indicator.dates ? 'Monthly' : 'Annual');
+}
+function categoryForIndicator(indicator){
+  return INDICATOR_CATEGORY_BY_KEY[indicator.key] || 'business';
+}
+function indicatorsForCategory(country, categoryKey){
+  return ECONOMIC_DATA.indicators.filter(indicator => categoryForIndicator(indicator) === categoryKey && latestPoint(country, indicator).value !== null);
+}
+function renderIndicatorTabs(country){
+  indicatorTabs.innerHTML = INDICATOR_CATEGORIES.map(category => {
+    const active = category.key === activeIndicatorCategory ? ' active' : '';
+    return `<button class="indicator-tab${active}" type="button" data-category="${category.key}">${category.label}</button>`;
+  }).join('');
+  indicatorTabs.querySelectorAll('.indicator-tab').forEach(button => {
+    button.addEventListener('click', () => {
+      activeIndicatorCategory = button.dataset.category;
+      renderIndicatorTabs(country);
+      renderIndicatorTable(country);
+    });
+  });
+}
+function renderIndicatorTable(country){
+  const rows = indicatorsForCategory(country, activeIndicatorCategory);
+  if(!rows.length){
+    indicatorTableBody.innerHTML = `<tr><td class="indicator-empty" colspan="8">No indicators available yet</td></tr>`;
+    return;
+  }
+  indicatorTableBody.innerHTML = rows.map(indicator => {
+    const latest = latestPoint(country, indicator);
+    const previous = previousPoint(country, indicator);
+    const url = `economy.html?country=${encodeURIComponent(country.code)}&indicator=${encodeURIComponent(indicator.key)}`;
+    return `<tr><td><a class="indicator-name-link" href="${url}">${indicator.label}</a></td><td>${tableValue(latest, indicator)}</td><td>${tableValue(previous, indicator)}</td><td>${observationLabel(latest)}</td><td>${displayUnit(indicator) || '-'}</td><td>${frequencyLabel(indicator)}</td><td>-</td><td>-</td></tr>`;
+  }).join('');
 }
 function setupNavSearch(){
   const form = document.querySelector('.nav-search');
@@ -828,6 +944,8 @@ function renderHome(country){
     const canvas = card.querySelector('canvas');
     if(canvas) drawMini(canvas, seriesFor(country, indicator).map((point, index) => ({...point, index})));
   });
+  renderIndicatorTabs(country);
+  renderIndicatorTable(country);
 }
 function resizeCanvas(canvas){
   const width = canvas.clientWidth || 1000;

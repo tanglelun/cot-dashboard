@@ -12,6 +12,9 @@ REQUEST_HEADERS = {'User-Agent': 'Mozilla/5.0 NetData COT updater'}
 
 PRIORITY_HISTORY_MARKETS = [
     'Coffee', 'Cocoa', 'Cotton', 'Sugar', 'S&P 500 Micro', 'Soybean Oil', 'Copper',
+    'Corn', 'Soybeans', 'Soybean Meal', 'Wheat', 'Crude Oil', 'Gold', 'Silver',
+    'Platinum', 'Palladium', 'Orange Juice', 'Live Cattle', 'Lean Hogs',
+    'Feeder Cattle', 'Euro FX', 'Japanese Yen', 'Swiss Franc', 'U.S. Dollar Index',
 ]
 
 def get_all_futures():
@@ -48,7 +51,7 @@ def get_all_futures():
         ('Australian Dollar', 'AUSTRALIAN DOLLAR'),
         ('Canadian Dollar', 'CANADIAN DOLLAR'),
         ('Mexican Peso', 'MEXICAN PESO'),
-        ('U.S. Dollar Index', 'USD INDEX'),
+        ('U.S. Dollar Index', 'DOLLAR INDEX'),
         ('S&P 500', 'S&P 500'),
         ('Nasdaq 100', 'NASDAQ-100'),
         ('Dow Jones', 'DOW JONES'),
@@ -247,7 +250,7 @@ if __name__ == "__main__":
     parser.add_argument('--all-history', action='store_true',
                         help=f'fetch archives from {EARLIEST_ARCHIVE_YEAR}')
     parser.add_argument('--priority-markets', action='store_true',
-                        help='only fetch Coffee/Cocoa/Cotton/Sugar/MES/Soybean Oil/Copper')
+                        help='only fetch requested full-history COT dashboard markets')
     args = parser.parse_args()
 
     collect_historical_data(
