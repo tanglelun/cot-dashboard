@@ -695,7 +695,12 @@ for category, comms in categories.items():
 
 print(f"Generated {len(os.listdir('charts'))} chart files")
 
-dates = sorted(df['Date'].unique(), reverse=True)
+# Keep the overview intentionally compact. Rendering ten years twice (Net and
+# All) creates an 8+ MB document and tens of thousands of table cells, which is
+# especially expensive for mobile Safari. Full history remains in each
+# commodity's chart page.
+OVERVIEW_WEEKS = 52
+dates = sorted(df['Date'].unique(), reverse=True)[:OVERVIEW_WEEKS]
 
 def get_commodity(comm):
     return df[df['Commodity'] == comm]
@@ -889,7 +894,7 @@ html = f'''<!DOCTYPE html>
     <div class="container">
         <div class="page-head">
             <h1>CFTC Non-Commercial Positions</h1>
-            <p class="subtitle">Legacy COT Report | Full Available History</p>
+            <p class="subtitle">Legacy COT Report | Latest {OVERVIEW_WEEKS} Weeks · Select a commodity for full history</p>
             
             <div class="tabs">
                 <button class="tab active" onclick="showTab('net')">Net</button>
