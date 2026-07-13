@@ -43,7 +43,21 @@
         .nav-search input:focus { border-color: #b8ff00; box-shadow: 0 0 0 1px rgba(184,255,0,.24); }
         .nav-search-mark { position: absolute; left: 16px; top: 50%; width: 13px; height: 13px; border: 2px solid #b8ff00; border-radius: 50%; transform: translateY(-50%); pointer-events: none; }
         .nav-search-mark::after { content: ""; position: absolute; width: 7px; height: 2px; background: #b8ff00; border-radius: 999px; right: -6px; bottom: -4px; transform: rotate(45deg); }
-        .page { max-width: 1600px; height: calc(100vh - 84px); margin: 10px auto 0; width: calc(100% - 20px); display: flex; flex-direction: column; gap: 8px; }
+        .page { max-width: 1960px; height: calc(100vh - 84px); margin: 10px auto 0; width: calc(100% - 20px); display: grid; grid-template-columns: 248px minmax(0, 1fr); gap: 8px; }
+        .commodity-sidebar { min-height: 0; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; overflow: hidden; display: flex; flex-direction: column; }
+        .commodity-sidebar-head { min-height: 46px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0 12px; border-bottom: 1px solid var(--tv-border-soft); }
+        .commodity-sidebar-title { color: #fff; font-size: 13px; font-weight: 800; }
+        .commodity-sidebar-count { color: var(--tv-muted); font-size: 11px; font-weight: 700; }
+        .commodity-list { overflow: auto; padding: 8px; scrollbar-color: #35424f transparent; }
+        .commodity-group { padding: 3px 0 8px; }
+        .commodity-group-title { color: var(--tv-muted); font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 8px 5px; }
+        .commodity-link { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 32px; padding: 0 8px; border-radius: 5px; color: var(--tv-text); text-decoration: none; font-size: 12px; font-weight: 650; }
+        .commodity-link:hover { background: var(--tv-hover); color: #fff; }
+        .commodity-link.active { background: rgba(184, 255, 0, 0.12); color: #b8ff00; }
+        .commodity-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .commodity-code { color: var(--tv-muted); font-size: 11px; font-weight: 800; }
+        .commodity-link.active .commodity-code { color: #b8ff00; }
+        .chart-panel { min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 8px; }
         .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 58px; padding: 8px 12px; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; }
         .toolbar-main { min-width: 0; }
         h1 { margin: 0; font-size: 20px; font-weight: 800; color: #fff; letter-spacing: 0; }
@@ -62,6 +76,10 @@
         .value-pos { color: var(--tv-green); }
         .value-neg { color: var(--tv-red); }
         .dragging { cursor: grabbing; }
+        @media (max-width: 900px) {
+            .page { display: flex; flex-direction: column; }
+            .commodity-sidebar { display: none; }
+        }
         @media (max-width: 640px) {
             .site-nav { min-height: 58px; padding: 10px 14px; gap: 10px; flex-wrap: wrap; }
             .site-brand { font-size: 21px; }
@@ -102,24 +120,35 @@
         </form>
     </nav>
     <main class="page">
-        <div class="toolbar">
-            <div class="toolbar-main">
-                <h1>Spring Wheat Mpls (MWE)</h1>
-                <div class="legend-inline">
-                    <span class="legend-item"><span class="legend-swatch legend-bar"></span>Non-Commercial Net</span>
-                    <span class="legend-item"><span class="legend-swatch legend-line"></span>Futures Index (base=100)</span>
+        <aside class="commodity-sidebar" aria-label="Commodity charts">
+            <div class="commodity-sidebar-head">
+                <div class="commodity-sidebar-title">Commodities</div>
+                <div class="commodity-sidebar-count">42</div>
+            </div>
+            <nav class="commodity-list">
+                <div class="commodity-group"><div class="commodity-group-title">Grains</div><a class="commodity-link" href="ZC.html"><span class="commodity-name">Corn</span><span class="commodity-code">ZC</span></a><a class="commodity-link" href="ZS.html"><span class="commodity-name">Soybeans</span><span class="commodity-code">ZS</span></a><a class="commodity-link" href="ZM.html"><span class="commodity-name">Soybean Meal</span><span class="commodity-code">ZM</span></a><a class="commodity-link" href="ZL.html"><span class="commodity-name">Soybean Oil</span><span class="commodity-code">ZL</span></a><a class="commodity-link" href="ZW.html"><span class="commodity-name">Wheat</span><span class="commodity-code">ZW</span></a><a class="commodity-link" href="KE.html"><span class="commodity-name">Hard Red Winter Wheat</span><span class="commodity-code">KE</span></a><a class="commodity-link active" href="MWE.html" aria-current="page"><span class="commodity-name">Spring Wheat Mpls</span><span class="commodity-code">MWE</span></a><a class="commodity-link" href="ZR.html"><span class="commodity-name">Rough Rice</span><span class="commodity-code">ZR</span></a><a class="commodity-link" href="RS.html"><span class="commodity-name">Canola</span><span class="commodity-code">RS</span></a><a class="commodity-link" href="ZO.html"><span class="commodity-name">Oats</span><span class="commodity-code">ZO</span></a></div><div class="commodity-group"><div class="commodity-group-title">Energies</div><a class="commodity-link" href="CL.html"><span class="commodity-name">Crude Oil</span><span class="commodity-code">CL</span></a><a class="commodity-link" href="NG.html"><span class="commodity-name">Natural Gas</span><span class="commodity-code">NG</span></a></div><div class="commodity-group"><div class="commodity-group-title">Metals</div><a class="commodity-link" href="GC.html"><span class="commodity-name">Gold</span><span class="commodity-code">GC</span></a><a class="commodity-link" href="SI.html"><span class="commodity-name">Silver</span><span class="commodity-code">SI</span></a><a class="commodity-link" href="HG.html"><span class="commodity-name">Copper</span><span class="commodity-code">HG</span></a><a class="commodity-link" href="PL.html"><span class="commodity-name">Platinum</span><span class="commodity-code">PL</span></a><a class="commodity-link" href="PA.html"><span class="commodity-name">Palladium</span><span class="commodity-code">PA</span></a></div><div class="commodity-group"><div class="commodity-group-title">Softs</div><a class="commodity-link" href="KC.html"><span class="commodity-name">Coffee</span><span class="commodity-code">KC</span></a><a class="commodity-link" href="SB.html"><span class="commodity-name">Sugar</span><span class="commodity-code">SB</span></a><a class="commodity-link" href="CC.html"><span class="commodity-name">Cocoa</span><span class="commodity-code">CC</span></a><a class="commodity-link" href="CT.html"><span class="commodity-name">Cotton</span><span class="commodity-code">CT</span></a><a class="commodity-link" href="OJ.html"><span class="commodity-name">Orange Juice</span><span class="commodity-code">OJ</span></a></div><div class="commodity-group"><div class="commodity-group-title">Livestock</div><a class="commodity-link" href="LE.html"><span class="commodity-name">Live Cattle</span><span class="commodity-code">LE</span></a><a class="commodity-link" href="HE.html"><span class="commodity-name">Lean Hogs</span><span class="commodity-code">HE</span></a><a class="commodity-link" href="GF.html"><span class="commodity-name">Feeder Cattle</span><span class="commodity-code">GF</span></a></div><div class="commodity-group"><div class="commodity-group-title">Currencies</div><a class="commodity-link" href="EC.html"><span class="commodity-name">Euro FX</span><span class="commodity-code">EC</span></a><a class="commodity-link" href="BP.html"><span class="commodity-name">British Pound</span><span class="commodity-code">BP</span></a><a class="commodity-link" href="JY.html"><span class="commodity-name">Japanese Yen</span><span class="commodity-code">JY</span></a><a class="commodity-link" href="SF.html"><span class="commodity-name">Swiss Franc</span><span class="commodity-code">SF</span></a><a class="commodity-link" href="AD.html"><span class="commodity-name">Australian Dollar</span><span class="commodity-code">AD</span></a><a class="commodity-link" href="CD.html"><span class="commodity-name">Canadian Dollar</span><span class="commodity-code">CD</span></a><a class="commodity-link" href="MP.html"><span class="commodity-name">Mexican Peso</span><span class="commodity-code">MP</span></a><a class="commodity-link" href="DX.html"><span class="commodity-name">U.S. Dollar Index</span><span class="commodity-code">DX</span></a></div><div class="commodity-group"><div class="commodity-group-title">Indices</div><a class="commodity-link" href="ES.html"><span class="commodity-name">S&amp;P 500</span><span class="commodity-code">ES</span></a><a class="commodity-link" href="MES.html"><span class="commodity-name">S&amp;P 500 Micro</span><span class="commodity-code">MES</span></a><a class="commodity-link" href="NQ.html"><span class="commodity-name">Nasdaq 100</span><span class="commodity-code">NQ</span></a><a class="commodity-link" href="YM.html"><span class="commodity-name">Dow Jones</span><span class="commodity-code">YM</span></a><a class="commodity-link" href="RTY.html"><span class="commodity-name">Russell 2000</span><span class="commodity-code">RTY</span></a></div><div class="commodity-group"><div class="commodity-group-title">Treasuries</div><a class="commodity-link" href="TY.html"><span class="commodity-name">10-Year T-Note</span><span class="commodity-code">TY</span></a><a class="commodity-link" href="FV.html"><span class="commodity-name">5-Year T-Note</span><span class="commodity-code">FV</span></a><a class="commodity-link" href="TU.html"><span class="commodity-name">2-Year T-Note</span><span class="commodity-code">TU</span></a><a class="commodity-link" href="US.html"><span class="commodity-name">30-Year T-Bond</span><span class="commodity-code">US</span></a></div>
+            </nav>
+        </aside>
+        <section class="chart-panel">
+            <div class="toolbar">
+                <div class="toolbar-main">
+                    <h1>Spring Wheat Mpls (MWE)</h1>
+                    <div class="legend-inline">
+                        <span class="legend-item"><span class="legend-swatch legend-bar"></span>Non-Commercial Net</span>
+                        <span class="legend-item"><span class="legend-swatch legend-line"></span>Futures Index (base=100)</span>
+                    </div>
                 </div>
+                <div class="commodity-actions" aria-label="Switch commodity">
+                    <button class="commodity-btn" id="prevCommodity" type="button" title="Previous commodity" aria-label="Previous commodity">‹</button>
+                    <button class="commodity-btn" id="nextCommodity" type="button" title="Next commodity" aria-label="Next commodity">›</button>
+                </div>
+                <div id="meta" class="meta">Non-Commercial Net | Weekly bars | Last 71 reports</div>
             </div>
-            <div class="commodity-actions" aria-label="Switch commodity">
-                <button class="commodity-btn" id="prevCommodity" type="button" title="Previous commodity" aria-label="Previous commodity">‹</button>
-                <button class="commodity-btn" id="nextCommodity" type="button" title="Next commodity" aria-label="Next commodity">›</button>
+            <div class="chart-wrap">
+                <canvas id="chart"></canvas>
+                <div id="tooltip" class="tooltip"></div>
             </div>
-            <div id="meta" class="meta">Non-Commercial Net | Weekly bars | Last 71 reports</div>
-        </div>
-        <div class="chart-wrap">
-            <canvas id="chart"></canvas>
-            <div id="tooltip" class="tooltip"></div>
-        </div>
+        </section>
     </main>
     <script>
         const points = [{"date": "2024-11-26", "value": -25313, "index": null}, {"date": "2024-12-03", "value": -27397, "index": null}, {"date": "2024-12-10", "value": -25861, "index": null}, {"date": "2024-12-17", "value": -23147, "index": null}, {"date": "2024-12-24", "value": -25653, "index": null}, {"date": "2024-12-31", "value": -25185, "index": null}, {"date": "2025-01-07", "value": -28093, "index": null}, {"date": "2025-01-14", "value": -27101, "index": null}, {"date": "2025-01-21", "value": -23428, "index": null}, {"date": "2025-01-28", "value": -18776, "index": null}, {"date": "2025-02-04", "value": -12038, "index": null}, {"date": "2025-02-11", "value": -9093, "index": null}, {"date": "2025-02-18", "value": -5153, "index": null}, {"date": "2025-02-25", "value": -3339, "index": null}, {"date": "2025-03-04", "value": -16285, "index": null}, {"date": "2025-03-11", "value": -23119, "index": null}, {"date": "2025-03-18", "value": -17772, "index": null}, {"date": "2025-03-25", "value": -19387, "index": null}, {"date": "2025-04-01", "value": -24364, "index": null}, {"date": "2025-04-08", "value": -25115, "index": null}, {"date": "2025-04-15", "value": 0, "index": null}, {"date": "2025-04-22", "value": 0, "index": null}, {"date": "2025-04-29", "value": 0, "index": null}, {"date": "2025-05-06", "value": 0, "index": null}, {"date": "2025-05-13", "value": 0, "index": null}, {"date": "2025-05-20", "value": 0, "index": null}, {"date": "2025-05-27", "value": 0, "index": null}, {"date": "2025-06-03", "value": 0, "index": null}, {"date": "2025-06-10", "value": 0, "index": null}, {"date": "2025-06-17", "value": 0, "index": null}, {"date": "2025-06-24", "value": 0, "index": null}, {"date": "2025-07-01", "value": 0, "index": null}, {"date": "2025-07-08", "value": 0, "index": null}, {"date": "2025-07-15", "value": 0, "index": null}, {"date": "2025-07-22", "value": 0, "index": null}, {"date": "2025-07-29", "value": 0, "index": null}, {"date": "2025-08-05", "value": 0, "index": null}, {"date": "2025-08-12", "value": 0, "index": null}, {"date": "2025-08-19", "value": 0, "index": null}, {"date": "2025-08-26", "value": 0, "index": null}, {"date": "2025-09-02", "value": 0, "index": null}, {"date": "2025-09-09", "value": 0, "index": null}, {"date": "2025-09-16", "value": 0, "index": null}, {"date": "2025-09-23", "value": 0, "index": null}, {"date": "2025-09-30", "value": 0, "index": null}, {"date": "2025-10-07", "value": 0, "index": null}, {"date": "2025-10-14", "value": 0, "index": null}, {"date": "2025-10-21", "value": 0, "index": null}, {"date": "2025-10-28", "value": 0, "index": null}, {"date": "2025-11-04", "value": 0, "index": null}, {"date": "2025-11-10", "value": 0, "index": null}, {"date": "2025-11-18", "value": 0, "index": null}, {"date": "2025-11-25", "value": 0, "index": null}, {"date": "2025-12-02", "value": 0, "index": null}, {"date": "2025-12-09", "value": 0, "index": null}, {"date": "2025-12-16", "value": 0, "index": null}, {"date": "2025-12-23", "value": 0, "index": null}, {"date": "2025-12-30", "value": 0, "index": null}, {"date": "2026-01-06", "value": 0, "index": null}, {"date": "2026-01-13", "value": 0, "index": null}, {"date": "2026-01-20", "value": 0, "index": null}, {"date": "2026-01-27", "value": 0, "index": null}, {"date": "2026-02-03", "value": 0, "index": null}, {"date": "2026-02-10", "value": 0, "index": null}, {"date": "2026-02-17", "value": 0, "index": null}, {"date": "2026-02-24", "value": 0, "index": null}, {"date": "2026-03-03", "value": 0, "index": null}, {"date": "2026-03-10", "value": 0, "index": null}, {"date": "2026-03-17", "value": 0, "index": null}, {"date": "2026-03-24", "value": 0, "index": null}, {"date": "2026-03-31", "value": 0, "index": null}];

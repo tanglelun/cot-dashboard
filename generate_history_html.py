@@ -77,8 +77,35 @@ def get_futures_index_data(comm, chart_dates):
     index_values = (aligned['Price'] / base_price * 100).round(2)
     return [None if pd.isna(value) else float(value) for value in index_values]
 
+def build_commodity_sidebar(current_comm):
+    groups = []
+    for category, comms in categories.items():
+        links = []
+        for item in comms:
+            code = code_map.get(item)
+            if not code or get_commodity_data(item).empty:
+                continue
+            active = item == current_comm
+            class_name = 'commodity-link active' if active else 'commodity-link'
+            aria_current = ' aria-current="page"' if active else ''
+            links.append(
+                f'<a class="{class_name}" href="{code}.html"{aria_current}>'
+                f'<span class="commodity-name">{escape(item)}</span>'
+                f'<span class="commodity-code">{escape(code)}</span>'
+                '</a>'
+            )
+        if links:
+            groups.append(
+                '<div class="commodity-group">'
+                f'<div class="commodity-group-title">{escape(category)}</div>'
+                f'{"".join(links)}'
+                '</div>'
+            )
+    return ''.join(groups)
+
 def write_chart_html(comm, code, chart_dates, net_values, filename):
     safe_title = escape(f"{comm} ({code})")
+    sidebar_html = build_commodity_sidebar(comm)
     index_values = get_futures_index_data(comm, chart_dates)
     chart_points = []
     for date, value, index_value in zip(chart_dates, net_values, index_values):
@@ -137,7 +164,21 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         .nav-search input:focus {{ border-color: #b8ff00; box-shadow: 0 0 0 1px rgba(184,255,0,.24); }}
         .nav-search-mark {{ position: absolute; left: 16px; top: 50%; width: 13px; height: 13px; border: 2px solid #b8ff00; border-radius: 50%; transform: translateY(-50%); pointer-events: none; }}
         .nav-search-mark::after {{ content: ""; position: absolute; width: 7px; height: 2px; background: #b8ff00; border-radius: 999px; right: -6px; bottom: -4px; transform: rotate(45deg); }}
-        .page {{ max-width: 1600px; height: calc(100vh - 84px); margin: 10px auto 0; width: calc(100% - 20px); display: flex; flex-direction: column; gap: 8px; }}
+        .page {{ max-width: 1960px; height: calc(100vh - 84px); margin: 10px auto 0; width: calc(100% - 20px); display: grid; grid-template-columns: 248px minmax(0, 1fr); gap: 8px; }}
+        .commodity-sidebar {{ min-height: 0; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; overflow: hidden; display: flex; flex-direction: column; }}
+        .commodity-sidebar-head {{ min-height: 46px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0 12px; border-bottom: 1px solid var(--tv-border-soft); }}
+        .commodity-sidebar-title {{ color: #fff; font-size: 13px; font-weight: 800; }}
+        .commodity-sidebar-count {{ color: var(--tv-muted); font-size: 11px; font-weight: 700; }}
+        .commodity-list {{ overflow: auto; padding: 8px; scrollbar-color: #35424f transparent; }}
+        .commodity-group {{ padding: 3px 0 8px; }}
+        .commodity-group-title {{ color: var(--tv-muted); font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 8px 5px; }}
+        .commodity-link {{ display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 32px; padding: 0 8px; border-radius: 5px; color: var(--tv-text); text-decoration: none; font-size: 12px; font-weight: 650; }}
+        .commodity-link:hover {{ background: var(--tv-hover); color: #fff; }}
+        .commodity-link.active {{ background: rgba(184, 255, 0, 0.12); color: #b8ff00; }}
+        .commodity-name {{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }}
+        .commodity-code {{ color: var(--tv-muted); font-size: 11px; font-weight: 800; }}
+        .commodity-link.active .commodity-code {{ color: #b8ff00; }}
+        .chart-panel {{ min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 8px; }}
         .toolbar {{ display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 58px; padding: 8px 12px; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; }}
         .toolbar-main {{ min-width: 0; }}
         h1 {{ margin: 0; font-size: 20px; font-weight: 800; color: #fff; letter-spacing: 0; }}
@@ -156,6 +197,10 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         .value-pos {{ color: var(--tv-green); }}
         .value-neg {{ color: var(--tv-red); }}
         .dragging {{ cursor: grabbing; }}
+        @media (max-width: 900px) {{
+            .page {{ display: flex; flex-direction: column; }}
+            .commodity-sidebar {{ display: none; }}
+        }}
         @media (max-width: 640px) {{
             .site-nav {{ min-height: 58px; padding: 10px 14px; gap: 10px; flex-wrap: wrap; }}
             .site-brand {{ font-size: 21px; }}
@@ -196,24 +241,35 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         </form>
     </nav>
     <main class="page">
-        <div class="toolbar">
-            <div class="toolbar-main">
-                <h1>{safe_title}</h1>
-                <div class="legend-inline">
-                    <span class="legend-item"><span class="legend-swatch legend-bar"></span>Non-Commercial Net</span>
-                    <span class="legend-item"><span class="legend-swatch legend-line"></span>Futures Index (base=100)</span>
+        <aside class="commodity-sidebar" aria-label="Commodity charts">
+            <div class="commodity-sidebar-head">
+                <div class="commodity-sidebar-title">Commodities</div>
+                <div class="commodity-sidebar-count">{len(chart_items)}</div>
+            </div>
+            <nav class="commodity-list">
+                {sidebar_html}
+            </nav>
+        </aside>
+        <section class="chart-panel">
+            <div class="toolbar">
+                <div class="toolbar-main">
+                    <h1>{safe_title}</h1>
+                    <div class="legend-inline">
+                        <span class="legend-item"><span class="legend-swatch legend-bar"></span>Non-Commercial Net</span>
+                        <span class="legend-item"><span class="legend-swatch legend-line"></span>Futures Index (base=100)</span>
+                    </div>
                 </div>
+                <div class="commodity-actions" aria-label="Switch commodity">
+                    <button class="commodity-btn" id="prevCommodity" type="button" title="Previous commodity" aria-label="Previous commodity">‹</button>
+                    <button class="commodity-btn" id="nextCommodity" type="button" title="Next commodity" aria-label="Next commodity">›</button>
+                </div>
+                <div id="meta" class="meta">Non-Commercial Net | Weekly bars | Last {len(chart_points)} reports</div>
             </div>
-            <div class="commodity-actions" aria-label="Switch commodity">
-                <button class="commodity-btn" id="prevCommodity" type="button" title="Previous commodity" aria-label="Previous commodity">‹</button>
-                <button class="commodity-btn" id="nextCommodity" type="button" title="Next commodity" aria-label="Next commodity">›</button>
+            <div class="chart-wrap">
+                <canvas id="chart"></canvas>
+                <div id="tooltip" class="tooltip"></div>
             </div>
-            <div id="meta" class="meta">Non-Commercial Net | Weekly bars | Last {len(chart_points)} reports</div>
-        </div>
-        <div class="chart-wrap">
-            <canvas id="chart"></canvas>
-            <div id="tooltip" class="tooltip"></div>
-        </div>
+        </section>
     </main>
     <script>
         const points = {json.dumps(chart_points, ensure_ascii=True)};
