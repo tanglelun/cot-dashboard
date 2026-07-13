@@ -317,7 +317,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
                 runSearch();
             }});
         }}
-        const defaultWeeks = Math.min(52, points.length);
+        const defaultWeeks = Math.min(260, points.length);
         const state = {{
             hoverIndex: -1,
             start: Math.max(0, points.length - defaultWeeks),
