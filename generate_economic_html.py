@@ -35,6 +35,7 @@ COUNTRIES = [
 
 COUNTRY_BY_API_ID = {country["code"]: country["code"] for country in COUNTRIES}
 COUNTRY_BY_API_ID.update({country["api"]: country["code"] for country in COUNTRIES})
+COUNTRY_BY_API_ID.update({country["oecd"]: country["code"] for country in COUNTRIES})
 COUNTRY_BY_API_ID["EUU"] = "EU"
 COUNTRY_BY_OECD = {country["oecd"]: country["code"] for country in COUNTRIES}
 
@@ -43,6 +44,7 @@ INDICATORS = [
         "key": "gdp_growth",
         "label": "GDP Growth Rate",
         "short": "GDP",
+        "category": "gdp",
         "unit": "%",
         "decimals": 2,
         "oecd": ["{area}.Q.B1GQ_Q.GR._T.Y.GY", "{area}.Q.B1GQ_Q.GR._T.Y.G1"],
@@ -54,6 +56,7 @@ INDICATORS = [
         "key": "interest_rate",
         "label": "Interest Rate",
         "short": "Rate",
+        "category": "money",
         "unit": "%",
         "decimals": 2,
         "oecd": ["{area}.M.IRSTCI.PA._Z._Z._Z", "{area}.M.IR3TIB.PA._Z._Z._Z", "{area}.M.IRLT.PA._Z._Z._Z"],
@@ -65,6 +68,7 @@ INDICATORS = [
         "key": "inflation",
         "label": "Inflation Rate",
         "short": "CPI",
+        "category": "prices",
         "unit": "%",
         "decimals": 2,
         "oecd": ["{area}.M.CP.GR._Z._Z.GY"],
@@ -76,6 +80,7 @@ INDICATORS = [
         "key": "unemployment",
         "label": "Unemployment Rate",
         "short": "Jobs",
+        "category": "labor",
         "unit": "%",
         "decimals": 2,
         "oecd": ["{area}.M.UNEMP.PT_LF._T.Y._Z"],
@@ -87,6 +92,7 @@ INDICATORS = [
         "key": "government_debt",
         "label": "Government Debt to GDP",
         "short": "Debt",
+        "category": "government",
         "unit": "%",
         "decimals": 2,
         "world_bank": "GC.DOD.TOTL.GD.ZS",
@@ -97,6 +103,7 @@ INDICATORS = [
         "key": "balance_trade",
         "label": "Balance of Trade",
         "short": "Trade",
+        "category": "trade",
         "unit": "$B",
         "decimals": 1,
         "derived": "oecd_exports_minus_imports",
@@ -108,6 +115,7 @@ INDICATORS = [
         "key": "current_account",
         "label": "Current Account to GDP",
         "short": "Account",
+        "category": "trade",
         "unit": "%",
         "decimals": 2,
         "oecd": ["{area}.Q.CA_GDP.PT_B1GQ._T.Y._Z"],
@@ -116,6 +124,35 @@ INDICATORS = [
         "note": "Quarterly current account balance as a share of GDP where available.",
     },
 ]
+
+GDP_EXPANDED_INDICATORS = [
+    {"key":"gdp_annual_growth","label":"GDP Annual Growth Rate","short":"GDP YoY","unit":"%","decimals":2,"world_bank":"NY.GDP.MKTP.KD.ZG","category":"gdp","source":"World Bank WDI API","note":"Annual World Bank series."},
+    {"key":"gdp","label":"GDP","short":"GDP","unit":"USD","decimals":0,"world_bank":"NY.GDP.MKTP.CD","category":"gdp","source":"World Bank WDI API","note":"Gross domestic product at current US dollars."},
+    {"key":"gdp_constant_prices","label":"GDP Constant Prices","short":"GDP Constant","unit":"USD","decimals":0,"world_bank":"NY.GDP.MKTP.KD","category":"gdp","source":"World Bank WDI API","note":"GDP in constant 2015 US dollars."},
+    {"key":"gross_national_product","label":"Gross National Product","short":"GNP","unit":"USD","decimals":0,"world_bank":"NY.GNP.MKTP.CD","category":"gdp","source":"World Bank WDI API","note":"Gross national product at current US dollars."},
+    {"key":"gross_fixed_capital_formation","label":"Gross Fixed Capital Formation","short":"GFCF","unit":"USD","decimals":0,"world_bank":"NE.GDI.FTOT.CD","category":"gdp","source":"World Bank WDI API","note":"Gross fixed capital formation at current US dollars."},
+    {"key":"gdp_per_capita","label":"GDP per Capita","short":"GDP/Capita","unit":"USD","decimals":0,"world_bank":"NY.GDP.PCAP.CD","category":"gdp","source":"World Bank WDI API","note":"GDP per capita at current US dollars."},
+    {"key":"gdp_per_capita_ppp","label":"GDP per Capita PPP","short":"GDP/Capita PPP","unit":"USD","decimals":0,"world_bank":"NY.GDP.PCAP.PP.CD","category":"gdp","source":"World Bank WDI API","note":"GDP per capita based on purchasing power parity."},
+    {"key":"full_year_gdp_growth","label":"Full Year GDP Growth","short":"Full Year","unit":"%","decimals":2,"world_bank":"NY.GDP.MKTP.KD.ZG","category":"gdp","source":"World Bank WDI API","note":"Annual GDP growth rate."},
+    {"key":"gdp_growth_contribution_consumer_spending","label":"GDP Growth Contribution Consumer Spending","short":"Consumer","unit":"%","decimals":2,"category":"gdp","source":"Public catalog item","note":"No comparable public historical series is available yet."},
+    {"key":"gdp_growth_contribution_exports","label":"GDP Growth Contribution Exports","short":"Exports","unit":"%","decimals":2,"category":"gdp","source":"Public catalog item","note":"No comparable public historical series is available yet."},
+    {"key":"gdp_growth_contribution_government","label":"GDP Growth Contribution Government","short":"Government","unit":"%","decimals":2,"category":"gdp","source":"Public catalog item","note":"No comparable public historical series is available yet."},
+    {"key":"gdp_growth_contribution_imports","label":"GDP Growth Contribution Imports","short":"Imports","unit":"%","decimals":2,"category":"gdp","source":"Public catalog item","note":"No comparable public historical series is available yet."},
+    {"key":"gdp_growth_contribution_investment","label":"GDP Growth Contribution Investment","short":"Investment","unit":"%","decimals":2,"category":"gdp","source":"Public catalog item","note":"No comparable public historical series is available yet."},
+    {"key":"gdp_sales_qoq","label":"GDP Sales QoQ","short":"GDP Sales","unit":"%","decimals":2,"category":"gdp","source":"Public catalog item","note":"No comparable public historical series is available yet."},
+    {"key":"real_consumer_spending","label":"Real Consumer Spending","short":"Consumer Spending","unit":"%","decimals":2,"category":"gdp","source":"Public catalog item","note":"No comparable public historical series is available yet."},
+    {"key":"weekly_economic_index","label":"Weekly Economic Index","short":"WEI","unit":"Index","decimals":2,"category":"gdp","source":"Public catalog item","note":"No comparable public historical series is available yet."},
+    {"key":"gdp_from_agriculture","label":"GDP from Agriculture","short":"Agriculture","unit":"USD","decimals":0,"world_bank":"NV.AGR.TOTL.CD","category":"gdp","source":"World Bank WDI API","note":"Agriculture, forestry and fishing value added at current US dollars."},
+    {"key":"gdp_from_construction","label":"GDP from Construction","short":"Construction","unit":"USD","decimals":0,"category":"gdp","source":"Public catalog item","note":"No comparable public historical series is available yet."},
+    {"key":"gdp_from_manufacturing","label":"GDP from Manufacturing","short":"Manufacturing","unit":"USD","decimals":0,"world_bank":"NV.IND.MANF.CD","category":"gdp","source":"World Bank WDI API","note":"Manufacturing value added at current US dollars."},
+    {"key":"gdp_from_mining","label":"GDP from Mining","short":"Mining","unit":"USD","decimals":0,"category":"gdp","source":"Public catalog item","note":"No comparable public historical series is available yet."},
+    {"key":"gdp_from_public_administration","label":"GDP from Public Administration","short":"Public Administration","unit":"USD","decimals":0,"category":"gdp","source":"Public catalog item","note":"No comparable public historical series is available yet."},
+    {"key":"gdp_from_services","label":"GDP from Services","short":"Services","unit":"USD","decimals":0,"world_bank":"NV.SRV.TOTL.CD","category":"gdp","source":"World Bank WDI API","note":"Services value added at current US dollars."},
+    {"key":"gdp_from_transport","label":"GDP from Transport","short":"Transport","unit":"USD","decimals":0,"category":"gdp","source":"Public catalog item","note":"No comparable public historical series is available yet."},
+    {"key":"gdp_from_utilities","label":"GDP from Utilities","short":"Utilities","unit":"USD","decimals":0,"category":"gdp","source":"Public catalog item","note":"No comparable public historical series is available yet."},
+]
+
+INDICATOR_CONFIG_BY_KEY = {item["key"]: item for item in INDICATORS + GDP_EXPANDED_INDICATORS}
 
 CREDIT_RATINGS = {
     "AR": "CCC",
@@ -387,6 +424,7 @@ def build_indicator_payload(config, values_by_country):
         "key": config["key"],
         "label": config["label"],
         "short": config["short"],
+        "category": config.get("category"),
         "unit": config["unit"],
         "decimals": config["decimals"],
         "source": config["source"],
@@ -397,6 +435,10 @@ def build_indicator_payload(config, values_by_country):
         "series": series,
         "latest": latest,
     }
+
+
+def empty_indicator_values():
+    return {country["code"]: {} for country in COUNTRIES}
 
 
 def build_oecd_indicator_values(config):
@@ -437,7 +479,18 @@ def build_credit_payload():
 
 def build_payload():
     if len(sys.argv) > 1 and sys.argv[1] == "--offline":
-        return json.loads(Path("economic_data.json").read_text(encoding="utf-8"))
+        payload = json.loads(Path("economic_data.json").read_text(encoding="utf-8"))
+        for item in payload.get("indicators", []):
+            config = INDICATOR_CONFIG_BY_KEY.get(item.get("key"))
+            if config:
+                item["category"] = config.get("category")
+        existing = {item.get("key") for item in payload.get("indicators", [])}
+        for config in GDP_EXPANDED_INDICATORS:
+            if config["key"] not in existing:
+                payload.setdefault("indicators", []).append(
+                    build_indicator_payload(config, empty_indicator_values())
+                )
+        return payload
     previous_indicators = load_previous_indicators()
     indicators = []
     for config in INDICATORS:
@@ -456,6 +509,15 @@ def build_payload():
             previous = previous_indicators.get(config["key"])
             if previous:
                 print(f"Reused cached indicator {config['key']} because no fresh rows were available")
+                payload = previous
+        indicators.append(payload)
+
+    for config in GDP_EXPANDED_INDICATORS:
+        values = fetch_world_bank_series(config["world_bank"]) if config.get("world_bank") else empty_indicator_values()
+        payload = build_indicator_payload(config, values)
+        if not payload["dates"]:
+            previous = previous_indicators.get(config["key"])
+            if previous:
                 payload = previous
         indicators.append(payload)
 
@@ -815,10 +877,10 @@ function frequencyLabel(indicator){
   return indicator.frequency || (indicator.dates ? 'Monthly' : 'Annual');
 }
 function categoryForIndicator(indicator){
-  return INDICATOR_CATEGORY_BY_KEY[indicator.key] || 'business';
+  return indicator.category || INDICATOR_CATEGORY_BY_KEY[indicator.key] || 'business';
 }
 function indicatorsForCategory(country, categoryKey){
-  return ECONOMIC_DATA.indicators.filter(indicator => categoryForIndicator(indicator) === categoryKey && latestPoint(country, indicator).value !== null);
+  return ECONOMIC_DATA.indicators.filter(indicator => categoryForIndicator(indicator) === categoryKey && indicator.kind !== 'rating');
 }
 function renderIndicatorTabs(country){
   indicatorTabs.innerHTML = INDICATOR_CATEGORIES.map(category => {
