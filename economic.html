@@ -430,12 +430,24 @@ function drawMini(canvas, points){
   ctx.arc(last.index * xStep, yFor(last.value), 6, 0, Math.PI * 2);
   ctx.fill();
 }
+const CORE_CARD_LABELS = new Set([
+  'GDP Growth Rate',
+  'Interest Rate',
+  'Inflation Rate',
+  'Unemployment Rate',
+  'Government Debt to GDP',
+  'Balance of Trade',
+  'Current Account to GDP'
+]);
+
 function renderHome(country){
   homeView.style.display = 'block';
   detailView.style.display = 'none';
   homeFlag.textContent = countryFlag(country.code);
   populateCountrySelect(country.code);
-  indicatorCards.innerHTML = ECONOMIC_DATA.indicators.map(indicator => {
+  indicatorCards.innerHTML = ECONOMIC_DATA.indicators
+    .filter(indicator => CORE_CARD_LABELS.has(indicator.label))
+    .map(indicator => {
     const latest = latestPoint(country, indicator);
     const url = `economy.html?country=${encodeURIComponent(country.code)}&indicator=${encodeURIComponent(indicator.key)}`;
     if(indicator.kind === 'rating'){
