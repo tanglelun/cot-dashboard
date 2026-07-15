@@ -75,7 +75,26 @@ def get_futures_index_data(comm, chart_dates):
 
     base_price = first_price.iloc[0]
     index_values = (aligned['Price'] / base_price * 100).round(2)
-    return [None if pd.isna(value) else float(value) for value in index_values]
+    values = [None if pd.isna(value) else float(value) for value in index_values]
+    return clean_isolated_index_spikes(values)
+
+def clean_isolated_index_spikes(values):
+    cleaned = list(values)
+    for idx in range(1, len(values) - 1):
+        prev_value = values[idx - 1]
+        value = values[idx]
+        next_value = values[idx + 1]
+        if prev_value is None or value is None or next_value is None:
+            continue
+        if prev_value <= 0 or value <= 0 or next_value <= 0:
+            continue
+
+        neighbor_gap = abs(next_value - prev_value) / max(min(prev_value, next_value), 1e-9)
+        is_high_spike = value > max(prev_value, next_value) * 1.55
+        is_low_spike = value < min(prev_value, next_value) * 0.45
+        if neighbor_gap <= 0.35 and (is_high_spike or is_low_spike):
+            cleaned[idx] = round((prev_value + next_value) / 2, 2)
+    return cleaned
 
 def build_commodity_sidebar(current_comm):
     groups = []
@@ -109,6 +128,8 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
     index_values = get_futures_index_data(comm, chart_dates)
     chart_points = []
     for date, value, index_value in zip(chart_dates, net_values, index_values):
+        if index_value is None:
+            continue
         try:
             numeric_value = int(value)
         except (TypeError, ValueError):

@@ -50,7 +50,7 @@ def get_all_futures():
         ('Oats', 'OATS'),
         ('Rice', 'RICE'),
         ('Crude Oil', 'CRUDE OIL'),
-        ('Natural Gas', 'NATURAL GAS'),
+        ('Natural Gas', ['NAT GAS NYME', 'NATURAL GAS']),
         ('Gold', 'GOLD'),
         ('Silver', 'SILVER'),
         ('Copper', 'COPPER'),
@@ -82,9 +82,12 @@ def get_all_futures():
     ]
 
 def find_contract(df, market_col, code):
-    matches = df[df[market_col].str.upper().str.contains(code, na=False)]
-    if not matches.empty:
-        return matches.iloc[0]
+    codes = code if isinstance(code, (list, tuple)) else [code]
+    market_names = df[market_col].astype(str).str.upper()
+    for item in codes:
+        matches = df[market_names.str.contains(str(item).upper(), na=False, regex=False)]
+        if not matches.empty:
+            return matches.iloc[0]
     return None
 
 def parse_position(val):
@@ -131,7 +134,7 @@ def create_barchart_table(df, futures_list, use_disaggregated=True):
         
         results.append({
             'Commodity': name,
-            'Code': code,
+            'Code': code[0] if isinstance(code, (list, tuple)) else code,
             'NonComm Long': long_val,
             'NonComm Short': short_val,
             'NonComm Net': net_val,
