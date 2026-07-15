@@ -307,8 +307,9 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
         <div class="actions" id="ranges">
           <button class="btn" data-range="63">3M</button>
           <button class="btn" data-range="126">6M</button>
-          <button class="btn" data-range="252">1Y</button>
-          <button class="btn active" data-range="all">All</button>
+          <button class="btn active" data-range="252">1Y</button>
+          <button class="btn" data-range="504">2Y</button>
+          <button class="btn" data-range="1260">5Y</button>
         </div>
         <div class="ma-group" id="maGroup">
           <button class="ma-toggle" id="maToggle" type="button" aria-label="Expand moving averages" aria-expanded="false" title="Expand moving averages">
@@ -359,7 +360,8 @@ const UNIVERSE_LABELS = { r2kRaw:'Russell 2000', spRaw:'S&P 500', ndqRaw:'Nasdaq
 const SORT_LABELS = { gain:'Gain', rank:'Rank', price:'Price', marketCapNum:'Market Cap', symbol:'Symbol' };
 const METRIC_LABELS = { d:'1D', w:'1W', m:'1M', m2:'2M', q:'3M', h:'6M', y:'YTD' };
 const DIRECTION_LABELS = { desc:'High to low', asc:'Low to high' };
-const DEFAULT_VISIBLE_CANDLES = 220;
+const DESKTOP_DEFAULT_RANGE = '252';
+const MOBILE_DEFAULT_RANGE = '63';
 const TOUCH_INSPECT_DELAY = 350;
 const TOUCH_PAN_THRESHOLD = 7;
 const STOCK_SWIPE_THRESHOLD = 72;
@@ -368,7 +370,7 @@ const state = {
   pinching: false, pinchDistance: 0, pinchStart: 0, pinchEnd: 0, pinchRatio: 0.5,
   touchMode: 'idle', touchTimer: null, touchStartX: 0, touchStartY: 0, touchCurrentX: 0, touchCurrentY: 0,
   maCollapsed: true, showVolume: true, showMacd: true,
-  marketIndex: null, stockRows: [], activeRange: 'all',
+  marketIndex: null, stockRows: [], activeRange: null,
   universe: params.get('universe') || 'r2kRaw',
   metric: params.get('metric') || 'd',
   sortKey: normalizeSortKey(params.get('sort') || 'gain'),
@@ -423,16 +425,21 @@ function setStatusHtml(html){
   statusEl.innerHTML = html || '';
 }
 
+function defaultChartRange(){
+  return window.matchMedia && window.matchMedia('(max-width: 768px)').matches ? MOBILE_DEFAULT_RANGE : DESKTOP_DEFAULT_RANGE;
+}
+
 function setRange(range){
   const total = state.candles.length;
-  const count = range === 'all' ? Math.min(total, DEFAULT_VISIBLE_CANDLES) : Math.min(total, Number(range));
-  state.activeRange = range;
+  const normalizedRange = String(range || defaultChartRange());
+  const count = Math.min(total, Number(normalizedRange));
+  state.activeRange = normalizedRange;
   state.end = total;
   state.start = Math.max(0, total - count);
   state.hover = -1;
   state.hoverY = null;
   updateHeaderPrice(total - 1);
-  document.querySelectorAll('#ranges .btn').forEach(item => item.classList.toggle('active', item.dataset.range === range));
+  document.querySelectorAll('#ranges .btn').forEach(item => item.classList.toggle('active', item.dataset.range === normalizedRange));
   draw();
 }
 
@@ -1482,7 +1489,7 @@ async function loadChart(){
     calculateMacd(state.candles);
     renderHeader(data);
     setStatus('');
-    setRange(state.activeRange || 'all');
+    setRange(state.activeRange || defaultChartRange());
   }catch(error){
     if(requestId !== activeChartRequest || symbol !== currentSymbol) return;
     if(String(error.message || '').includes('No chart data found')){
