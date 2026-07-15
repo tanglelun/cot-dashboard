@@ -8,9 +8,9 @@
     <style>
         :root {
             --tv-bg: #000;
-            --tv-panel: #050709;
+            --tv-panel: #020607;
             --tv-panel-2: #090d12;
-            --tv-border: #202932;
+            --tv-border: #263746;
             --tv-border-soft: #111820;
             --tv-text: #d1d4dc;
             --tv-muted: #787b86;
@@ -62,7 +62,7 @@
         .commodity-code { color: #8b909c; font-size: 14px; font-weight: 900; }
         .commodity-link.active .commodity-code { color: #9bff00; }
         .chart-panel { min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 8px; }
-        .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 58px; padding: 8px 12px; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; }
+        .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 58px; padding: 8px 12px; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 8px; }
         .toolbar-main { min-width: 0; }
         h1 { margin: 0; font-size: 20px; font-weight: 800; color: #fff; letter-spacing: 0; }
         .legend-inline { display: flex; align-items: center; gap: 14px; margin-top: 4px; color: var(--tv-muted); font-size: 12px; }
@@ -71,7 +71,7 @@
         .legend-bar { background: var(--tv-green); }
         .legend-line { background: var(--tv-blue); }
         .chart-wrap { position: relative; flex: 1; min-height: 420px; }
-        canvas { display: block; width: 100%; height: 100%; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; }
+        canvas { display: block; width: 100%; height: 100%; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 8px; }
         .tooltip { position: fixed; pointer-events: none; display: none; background: rgba(19, 23, 34, 0.96); color: var(--tv-text); padding: 8px 10px; border-radius: 4px; border: 1px solid var(--tv-border); font-size: 12px; line-height: 1.35; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35); }
         .value-pos { color: var(--tv-green); }
         .value-neg { color: var(--tv-red); }
@@ -301,7 +301,7 @@
             const step = plotW / visibleCount;
             const barW = Math.max(2, Math.min(22, step * 0.72));
 
-            ctx.fillStyle = '#131722';
+            ctx.fillStyle = '#020607';
             ctx.fillRect(0, 0, width, height);
 
             ctx.strokeStyle = '#2a2e39';
