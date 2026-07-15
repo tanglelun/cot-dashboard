@@ -247,7 +247,8 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         <input class="nav-check" type="checkbox" id="navMenu">
         <label class="nav-toggle" for="navMenu" aria-label="Toggle navigation"><span></span><span></span><span></span></label>
         <div class="nav-links">
-            <a class="nav-link active" href="../index.html">Non-Commercial</a>
+            <a class="nav-link" href="../index.html">Home</a>
+            <a class="nav-link active" href="../cot_noncommercial_history.html">Non-Commercial</a>
             <div class="nav-market"><button class="nav-link market-trigger" type="button" aria-haspopup="true">Market</button><div class="market-menu" aria-label="Market sections"><a class="market-menu-link" href="../russell2000_top100.html?market=stock">Tops</a><a class="market-menu-link" href="../russell2000_top100.html?market=commodities">Commodities</a><a class="market-menu-link" href="../russell2000_top100.html?market=indexes">Indexes</a><a class="market-menu-link" href="../russell2000_top100.html?market=shares">Stock</a><a class="market-menu-link" href="../russell2000_top100.html?market=currencies">Currencies</a><a class="market-menu-link" href="../russell2000_top100.html?market=crypto">Crypto</a><a class="market-menu-link" href="../russell2000_top100.html?market=bonds">Bonds</a></div></div>
             <a class="nav-link" href="../economy.html">Indicators</a>
             <a class="nav-link" href="../market_pulse.html">Market Pulse</a>
@@ -935,7 +936,8 @@ html = f'''<!DOCTYPE html>
         <input class="nav-check" type="checkbox" id="navMenu">
         <label class="nav-toggle" for="navMenu" aria-label="Toggle navigation"><span></span><span></span><span></span></label>
         <div class="nav-links">
-            <a class="nav-link active" href="index.html">Non-Commercial</a>
+            <a class="nav-link" href="index.html">Home</a>
+            <a class="nav-link active" href="cot_noncommercial_history.html">Non-Commercial</a>
             <div class="nav-market"><button class="nav-link market-trigger" type="button" aria-haspopup="true">Market</button><div class="market-menu" aria-label="Market sections"><a class="market-menu-link" href="russell2000_top100.html?market=stock">Tops</a><a class="market-menu-link" href="russell2000_top100.html?market=commodities">Commodities</a><a class="market-menu-link" href="russell2000_top100.html?market=indexes">Indexes</a><a class="market-menu-link" href="russell2000_top100.html?market=shares">Stock</a><a class="market-menu-link" href="russell2000_top100.html?market=currencies">Currencies</a><a class="market-menu-link" href="russell2000_top100.html?market=crypto">Crypto</a><a class="market-menu-link" href="russell2000_top100.html?market=bonds">Bonds</a></div></div>
             <a class="nav-link" href="economy.html">Indicators</a>
             <a class="nav-link" href="market_pulse.html">Market Pulse</a>
@@ -1034,8 +1036,7 @@ html = f'''<!DOCTYPE html>
 </body>
 </html>'''
 
-for output_file in ('index.html', 'cot_noncommercial_history.html'):
-    with open(output_file, 'w', encoding='utf-8') as f:
-        f.write(html)
+with open('cot_noncommercial_history.html', 'w', encoding='utf-8') as f:
+    f.write(html)
 
-print("✓ Generated: index.html and cot_noncommercial_history.html with Net and All tabs")
+print("✓ Generated: cot_noncommercial_history.html with Net and All tabs")
