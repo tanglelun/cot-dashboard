@@ -186,15 +186,11 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         .toolbar {{ display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 58px; padding: 8px 12px; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; }}
         .toolbar-main {{ min-width: 0; }}
         h1 {{ margin: 0; font-size: 20px; font-weight: 800; color: #fff; letter-spacing: 0; }}
-        .meta {{ color: var(--tv-muted); font-size: 12px; white-space: nowrap; }}
         .legend-inline {{ display: flex; align-items: center; gap: 14px; margin-top: 4px; color: var(--tv-muted); font-size: 12px; }}
         .legend-item {{ display: inline-flex; align-items: center; gap: 6px; }}
         .legend-swatch {{ width: 18px; height: 3px; border-radius: 999px; display: inline-block; }}
         .legend-bar {{ background: var(--tv-green); }}
         .legend-line {{ background: var(--tv-blue); }}
-        .commodity-actions {{ display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }}
-        .commodity-btn {{ height: 34px; min-width: 42px; border: 1px solid var(--tv-border); border-radius: 5px; background: var(--tv-panel-2); color: var(--tv-text); cursor: pointer; font-size: 18px; font-weight: 800; line-height: 1; }}
-        .commodity-btn:hover {{ background: var(--tv-hover); color: #fff; border-color: #35424f; }}
         .chart-wrap {{ position: relative; flex: 1; min-height: 420px; }}
         canvas {{ display: block; width: 100%; height: 100%; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 6px; }}
         .tooltip {{ position: fixed; pointer-events: none; display: none; background: rgba(19, 23, 34, 0.96); color: var(--tv-text); padding: 8px 10px; border-radius: 4px; border: 1px solid var(--tv-border); font-size: 12px; line-height: 1.35; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35); }}
@@ -219,8 +215,6 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             .nav-search {{ order: 4; min-width: 0; margin-left: 0; padding-top: 8px; }}
             .nav-search input {{ height: 40px; font-size: 14px; }}
             .toolbar {{ align-items: stretch; flex-direction: column; gap: 8px; }}
-            .commodity-actions {{ justify-content: flex-end; }}
-            .meta {{ white-space: normal; }}
             .page {{ height: calc(100dvh - 78px); }}
             .chart-wrap {{ min-height: 360px; }}
         }}
@@ -263,11 +257,6 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
                         <span class="legend-item"><span class="legend-swatch legend-line"></span>Futures Index (base=100)</span>
                     </div>
                 </div>
-                <div class="commodity-actions" aria-label="Switch commodity">
-                    <button class="commodity-btn" id="prevCommodity" type="button" title="Previous commodity" aria-label="Previous commodity">‹</button>
-                    <button class="commodity-btn" id="nextCommodity" type="button" title="Next commodity" aria-label="Next commodity">›</button>
-                </div>
-                <div id="meta" class="meta">Non-Commercial Net | Weekly bars | Last {len(chart_points)} reports</div>
             </div>
             <div class="chart-wrap">
                 <canvas id="chart"></canvas>
@@ -281,7 +270,6 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         const chartItems = {json.dumps(chart_items, ensure_ascii=True)};
         const canvas = document.getElementById('chart');
         const tooltip = document.getElementById('tooltip');
-        const meta = document.getElementById('meta');
         const ctx = canvas.getContext('2d');
         function setupNavSearch() {{
             const form = document.querySelector('.nav-search');
@@ -350,8 +338,6 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         }}
 
         function setupCommoditySwitching() {{
-            document.getElementById('prevCommodity').addEventListener('click', () => switchCommodity(-1));
-            document.getElementById('nextCommodity').addEventListener('click', () => switchCommodity(1));
             window.addEventListener('keydown', event => {{
                 if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
                 if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
@@ -377,16 +363,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             state.start = nextStart;
             state.end = nextEnd;
             state.hoverIndex = -1;
-            updateMeta();
             draw();
-        }}
-
-        function updateMeta() {{
-            if (!points.length) return;
-            const weeks = state.end - state.start + 1;
-            const hasIndex = points.some(point => point.index !== null);
-            const suffix = hasIndex ? ' | Futures Index base=100' : '';
-            meta.textContent = `Non-Commercial Net | Weekly bars | ${{points[state.start].date}} to ${{points[state.end].date}} | ${{weeks}} weeks${{suffix}}`;
         }}
 
         function resizeCanvas() {{
@@ -732,7 +709,6 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         window.addEventListener('resize', resizeCanvas);
         setupCommoditySwitching();
         setupNavSearch();
-        updateMeta();
         resizeCanvas();
     </script>
 </body>
