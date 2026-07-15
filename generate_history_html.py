@@ -769,14 +769,12 @@ html_rows_net = ''
 html_rows_all = ''
 
 for category, comms in categories.items():
-    html_rows_net += f'<tr class="category"><th colspan="{len(dates)+1}">{category}</th></tr>\n'
-    html_rows_net += '<tr><th>Commodity</th>'
+    html_rows_net += f'<tr><th>{category}</th>'
     for d in dates:
         html_rows_net += f'<th>{d[5:]}</th>'
     html_rows_net += '</tr>\n'
     
-    html_rows_all += f'<tr class="category"><th colspan="{len(dates)*3+1}">{category}</th></tr>\n'
-    html_rows_all += '<tr><th>Commodity</th>'
+    html_rows_all += f'<tr><th>{category}</th>'
     for d in dates:
         html_rows_all += f'<th colspan="3">{d[5:]}</th>'
     html_rows_all += '</tr>\n'
