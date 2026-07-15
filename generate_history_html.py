@@ -769,12 +769,12 @@ html_rows_net = ''
 html_rows_all = ''
 
 for category, comms in categories.items():
-    html_rows_net += f'<tr><th>{category}</th>'
+    html_rows_net += f'<tr class="group-head"><th>{category}</th>'
     for d in dates:
         html_rows_net += f'<th>{d[5:]}</th>'
     html_rows_net += '</tr>\n'
     
-    html_rows_all += f'<tr><th>{category}</th>'
+    html_rows_all += f'<tr class="group-head"><th>{category}</th>'
     for d in dates:
         html_rows_all += f'<th colspan="3">{d[5:]}</th>'
     html_rows_all += '</tr>\n'
@@ -889,6 +889,7 @@ html = f'''<!DOCTYPE html>
         .table-scroll {{ width: 100%; max-width: 100%; overflow-x: auto; overflow-y: visible; overscroll-behavior-x: contain; border: 1px solid var(--tv-border); background: #000; }}
         table {{ width: max-content; min-width: 100%; border: 0; border-collapse: separate; border-spacing: 0; border-radius: 0; font-size: 12px; background: #000; }}
         th {{ background: var(--tv-panel-2); color: var(--tv-muted); padding: 6px; text-align: center; font-weight: 800; position: sticky; top: 0; border-bottom: 1px solid var(--tv-border); }}
+        .group-head th {{ height: 40px; padding-top: 10px; padding-bottom: 10px; vertical-align: middle; }}
         th:first-child {{ text-align: left; position: sticky; left: 0; min-width: 150px; max-width: 210px; background: var(--tv-panel-2); z-index: 10; white-space: normal; }}
         td {{ padding: 6px; text-align: center; border-top: 1px solid var(--tv-border-soft); font-family: Inter, Arial, sans-serif; font-size: 11px; }}
         td:first-child {{ text-align: left; position: sticky; left: 0; min-width: 150px; max-width: 210px; background: #000; font-weight: 800; z-index: 5; white-space: normal; }}
@@ -963,12 +964,6 @@ html = f'''<!DOCTYPE html>
         <div id="net" class="tab-content active">
             <div class="table-scroll">
             <table>
-                <thead>
-                    <tr>
-                        <th>Commodity</th>
-                        {''.join(f'<th>{d[5:]}</th>' for d in dates)}
-                    </tr>
-                </thead>
                 <tbody>
 {html_rows_net}                </tbody>
             </table>
@@ -978,12 +973,6 @@ html = f'''<!DOCTYPE html>
         <div id="all" class="tab-content">
             <div class="table-scroll">
             <table>
-                <thead>
-                    <tr>
-                        <th>Commodity</th>
-                        {''.join(f'<th>L</th><th>S</th><th>N</th>' for d in dates)}
-                    </tr>
-                </thead>
                 <tbody>
 {html_rows_all}                </tbody>
             </table>
