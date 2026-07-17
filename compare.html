@@ -139,7 +139,7 @@ canvas{width:100%;height:100%;display:block}
         <div><label for="indicatorB">Indicator</label><select id="indicatorB"></select></div>
       </div>
       <div class="field-grid single index-fields hidden">
-        <div><label for="indexB">Index</label><select id="indexB"></select></div>
+        <div><label for="indexB">Macro</label><select id="indexB"></select></div>
       </div>
     </div>
   </section>
@@ -157,7 +157,7 @@ canvas{width:100%;height:100%;display:block}
 </main>
 <script src="economic_data_embed.js"></script>
 <script>
-const state = { data:null, indexData:null, indexHistory:{}, type:'indicators', period:'all', indexed:false, hover:null, drawToken:0 };
+const state = { data:null, indexData:null, pulseData:null, indexHistory:{}, type:'indicators', period:'all', indexed:false, hover:null, drawToken:0 };
 const els = {
   countryA: document.getElementById('countryA'), indicatorA: document.getElementById('indicatorA'),
   countryB: document.getElementById('countryB'), indicatorB: document.getElementById('indicatorB'),
@@ -169,6 +169,8 @@ const els = {
 const ctx = els.chart.getContext('2d');
 const colors = { a:'#1277ff', b:'#00b8a9', blue:'#1277ff', teal:'#00b8a9', grid:'#e5e7eb', text:'#7a7d86', ink:'#111' };
 const INDEX_INDICATOR_PREFIX = 'index:';
+const PULSE_MACRO_PREFIX = 'pulse:';
+const ECONOMIC_MACRO_PREFIX = 'econ:';
 
 function parseX(label){
   const text = String(label || '');
@@ -191,6 +193,10 @@ function getIndicator(key){ return state.data.indicators.find(item => item.key =
 function getCountry(code){ return state.data.countries.find(item => item.code === code) || state.data.countries[0]; }
 function isIndexIndicator(key){ return String(key || '').startsWith(INDEX_INDICATOR_PREFIX); }
 function indexIndicatorSymbol(key){ return String(key || '').slice(INDEX_INDICATOR_PREFIX.length); }
+function isPulseMacro(key){ return String(key || '').startsWith(PULSE_MACRO_PREFIX); }
+function pulseMacroKey(key){ return String(key || '').slice(PULSE_MACRO_PREFIX.length); }
+function isEconomicMacro(key){ return String(key || '').startsWith(ECONOMIC_MACRO_PREFIX); }
+function economicMacroParts(key){ return String(key || '').slice(ECONOMIC_MACRO_PREFIX.length).split(':'); }
 function eligibleIndicators(){
   return state.data.indicators.filter(item => item.series && item.kind !== 'rating');
 }
@@ -228,6 +234,30 @@ function buildIndexSeries(history){
   return (history.prices || []).map(candle => ({ label:candle.time, x:parseX(candle.time), value:Number(candle.close) }))
     .filter(point => Number.isFinite(point.x) && Number.isFinite(point.value))
     .sort((a,b) => a.x - b.x);
+}
+function buildPulseSeries(key){
+  const item = (state.pulseData && state.pulseData.series ? state.pulseData.series : []).find(series => series.key === key);
+  if(!item) return { series:[], meta:{ code:'', label:key, short:key, unit:'', decimals:2 } };
+  return {
+    series: (item.points || []).map(point => ({ label:point.date, x:parseX(point.date), value:Number(point.value) }))
+      .filter(point => Number.isFinite(point.x) && Number.isFinite(point.value))
+      .sort((a,b) => a.x - b.x),
+    meta: { code:'', label:item.label, short:item.label, unit:item.unit || '', decimals:item.unit === '%' ? 2 : 2 }
+  };
+}
+function buildEconomicMacroSeries(value){
+  const [countryCode, indicatorKey] = economicMacroParts(value);
+  const indicator = getIndicator(indicatorKey);
+  const country = getCountry(countryCode || 'US');
+  return {
+    series: buildSeries(country.code, indicatorKey),
+    meta: { code:country.code, label:indicator.label, short:indicator.short || indicator.label, unit:indicator.unit, decimals:indicator.decimals }
+  };
+}
+function resolveMacroSelection(value){
+  if(isPulseMacro(value)) return buildPulseSeries(pulseMacroKey(value));
+  if(isEconomicMacro(value)) return buildEconomicMacroSeries(value);
+  return null;
 }
 async function resolveIndicatorSelection(countryCode, indicatorKey){
   if(isIndexIndicator(indicatorKey)){
@@ -305,9 +335,18 @@ function setupOptions(){
   els.indicatorA.value = params.get('aIndicator') || 'gdp_growth';
   els.indicatorB.value = params.get('bIndicator') || (indicators.find(item => item.key === 'inflation') || indicators[1]).key;
   const indexOptions = indexRows().map(item => `<option value="${item.symbol}">${item.name} - ${item.fullName || item.name}</option>`).join('');
-  [els.indexA, els.indexB].forEach(select => select.innerHTML = indexOptions);
+  const macroOptions = [
+    `<option value="${PULSE_MACRO_PREFIX}cnn_fear_greed">CNN Fear & Greed</option>`,
+    `<option value="${PULSE_MACRO_PREFIX}dgs10">US 10Y Yield</option>`,
+    `<option value="${PULSE_MACRO_PREFIX}dff">Fed Funds Rate</option>`,
+    `<option value="${ECONOMIC_MACRO_PREFIX}US:interest_rate">US Interest Rate</option>`,
+    `<option value="${ECONOMIC_MACRO_PREFIX}US:inflation">US Inflation</option>`
+  ].join('');
+  els.indexA.innerHTML = indexOptions;
+  els.indexB.innerHTML = macroOptions;
   els.indexA.value = params.get('aIndex') || '^GSPC';
-  els.indexB.value = params.get('bIndex') || '^NDX';
+  els.indexB.value = params.get('bIndex') || `${PULSE_MACRO_PREFIX}cnn_fear_greed`;
+  if(!els.indexB.value) els.indexB.value = `${PULSE_MACRO_PREFIX}cnn_fear_greed`;
   syncTypeUi();
 }
 function syncTypeUi(){
@@ -359,13 +398,13 @@ async function draw(){
   try{
     if(state.type === 'indexes'){
       const rowA = getIndexRow(els.indexA.value);
-      const rowB = getIndexRow(els.indexB.value);
-      const [historyA, historyB] = await Promise.all([loadIndexHistory(rowA.symbol), loadIndexHistory(rowB.symbol)]);
+      const macroB = resolveMacroSelection(els.indexB.value);
+      const [historyA] = await Promise.all([loadIndexHistory(rowA.symbol)]);
       if(drawToken !== state.drawToken) return;
       a = buildIndexSeries(historyA);
-      b = buildIndexSeries(historyB);
+      b = macroB ? macroB.series : [];
       metaA = { code:rowA.country || '', label:rowA.fullName || rowA.name, short:rowA.name, unit:rowA.unit || 'Index Points', decimals:2 };
-      metaB = { code:rowB.country || '', label:rowB.fullName || rowB.name, short:rowB.name, unit:rowB.unit || 'Index Points', decimals:2 };
+      metaB = macroB ? macroB.meta : { code:'', label:'Macro', short:'Macro', unit:'', decimals:2 };
     } else {
       const [seriesA, seriesB] = await Promise.all([
         resolveIndicatorSelection(els.countryA.value, els.indicatorA.value),
@@ -459,6 +498,8 @@ async function init(){
     }
     const indexResponse = await fetch('indexes_data.json', { cache:'no-store' });
     state.indexData = await indexResponse.json();
+    const pulseResponse = await fetch('market_pulse_data.json', { cache:'no-store' });
+    state.pulseData = await pulseResponse.json();
     setupOptions();
     draw();
   }catch(error){
