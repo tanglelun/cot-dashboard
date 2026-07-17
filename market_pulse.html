@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trend - Net Data</title>
+<title>Insight - Net Data</title>
 <link rel="stylesheet" href="nav_market.css">
 <style>
 :root{
@@ -181,7 +181,7 @@ canvas{display:block;width:100%;height:100%}
       </div>
     </div>
     <a class="nav-link" href="economy.html">Indicators</a>
-    <a class="nav-link active" href="market_pulse.html">Trend</a>
+    <a class="nav-link active" href="market_pulse.html">Insight</a>
     <a class="nav-link" href="compare.html">Compare</a>
     <a class="nav-link" href="calendar.html">Calendar</a>
   </div>
@@ -934,7 +934,7 @@ $('liquidityRanges').addEventListener('click', event => {
   state.liquidityRange = button.dataset.range;
   renderLiquidity();
 });
-fetch('market_pulse_data.json', {cache:'no-store'})
+fetch('market_pulse_view.json', {cache:'no-store'})
   .then(response => response.json())
   .then(data => {
     state.data = data;

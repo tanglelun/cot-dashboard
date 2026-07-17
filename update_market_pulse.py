@@ -12,6 +12,7 @@ import yfinance as yf
 
 
 OUTPUT_FILE = Path("market_pulse_data.json")
+VIEW_OUTPUT_FILE = Path("market_pulse_view.json")
 MARKET_DATA_DIR = Path("market_data")
 INDEXES_DATA_DIR = Path("indexes_data")
 MIN_BREADTH_SAMPLE = 200
@@ -24,6 +25,14 @@ BREADTH_DOWNLOAD_SLEEP = float(os.getenv("MARKET_PULSE_BREADTH_SLEEP", "0.5") or
 CNN_FEAR_GREED_URL = "https://production.dataviz.cnn.io/index/fearandgreed/graphdata"
 CNN_FEAR_GREED_START_DATE = os.getenv("CNN_FEAR_GREED_START_DATE", "2021-02-01")
 CNN_FEAR_GREED_MIN_VALID_DATE = os.getenv("CNN_FEAR_GREED_MIN_VALID_DATE", CNN_FEAR_GREED_START_DATE)
+VIEW_SERIES_KEYS = {"cnn_fear_greed", "us500", "vix", "above_ma50", "above_ma200", "dgs10", "t10y2y", "dff", "hy_spread", "walcl"}
+VIEW_MIN_DATES = {
+    "us500": "2000-01-01",
+    "vix": "2000-01-01",
+    "dgs10": "2000-01-01",
+    "t10y2y": "2000-01-01",
+    "dff": "2000-01-01",
+}
 CNN_HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -193,6 +202,50 @@ def merge_existing_payload(payload):
         return payload
     payload["series"] = merge_series(existing.get("series"), payload.get("series"))
     return payload
+
+
+def build_view_payload(payload):
+    def five_year_cutoff(points):
+        if not points:
+            return None
+        latest_date = points[-1].get("date")
+        try:
+            latest = datetime.strptime(latest_date, "%Y-%m-%d")
+            return latest.replace(year=latest.year - 5).strftime("%Y-%m-%d")
+        except Exception:
+            return None
+
+    def thin_points_for_view(key, points):
+        if key == "cnn_fear_greed":
+            return points
+        cutoff = five_year_cutoff(points)
+        if not cutoff:
+            return points
+        monthly = {}
+        recent = []
+        for point in points:
+            date = point.get("date", "")
+            if date >= cutoff:
+                recent.append(point)
+            else:
+                monthly[date[:7]] = point
+        return [monthly[month] for month in sorted(monthly)] + recent
+
+    view = {key: value for key, value in payload.items() if key != "series"}
+    series = []
+    for item in payload.get("series", []):
+        key = item.get("key")
+        if key not in VIEW_SERIES_KEYS:
+            continue
+        min_date = VIEW_MIN_DATES.get(key)
+        points = item.get("points", [])
+        if min_date:
+            points = [point for point in points if point.get("date", "") >= min_date]
+        points = thin_points_for_view(key, points)
+        compact = {**item, "points": points, "latest": points[-1] if points else item.get("latest")}
+        series.append(compact)
+    view["series"] = series
+    return view
 
 
 def date_from_cnn_timestamp(value):
@@ -724,7 +777,9 @@ def main():
     }
     payload = merge_existing_payload(payload)
     OUTPUT_FILE.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
+    VIEW_OUTPUT_FILE.write_text(json.dumps(build_view_payload(payload), ensure_ascii=False, separators=(",", ":")))
     print(f"Wrote {OUTPUT_FILE} with {len(series)} series")
+    print(f"Wrote {VIEW_OUTPUT_FILE}")
 
 
 if __name__ == "__main__":
