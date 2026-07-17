@@ -576,8 +576,8 @@ function visibleRangeYears(candles){
 
 function shouldUseLineMode(candles, step){
   const isMobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
-  if(isMobile) return step < DENSE_LINE_STEP;
-  return visibleRangeYears(candles) >= 5;
+  const years = visibleRangeYears(candles);
+  return years >= (isMobile ? 2 : 5);
 }
 
 function isDenseLineMode(){
