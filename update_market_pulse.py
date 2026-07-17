@@ -22,6 +22,8 @@ BREADTH_DOWNLOAD_YEARS = BREADTH_LOOKBACK_YEARS + 2
 BREADTH_CHUNK_SIZE = int(os.getenv("MARKET_PULSE_BREADTH_CHUNK_SIZE", "80") or 80)
 BREADTH_DOWNLOAD_SLEEP = float(os.getenv("MARKET_PULSE_BREADTH_SLEEP", "0.5") or 0)
 CNN_FEAR_GREED_URL = "https://production.dataviz.cnn.io/index/fearandgreed/graphdata"
+CNN_FEAR_GREED_START_DATE = os.getenv("CNN_FEAR_GREED_START_DATE", "2021-02-01")
+CNN_FEAR_GREED_MIN_VALID_DATE = os.getenv("CNN_FEAR_GREED_MIN_VALID_DATE", CNN_FEAR_GREED_START_DATE)
 CNN_HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -152,6 +154,47 @@ def series_payload(item, points, source):
     }
 
 
+def merge_points(existing_points, new_points):
+    by_date = {}
+    for point in clean_points(existing_points or []):
+        by_date[point["date"]] = point
+    for point in clean_points(new_points or []):
+        by_date[point["date"]] = point
+    return [by_date[date] for date in sorted(by_date)]
+
+
+def merge_series(existing_series, new_series):
+    existing_by_key = {item.get("key"): item for item in existing_series or [] if item.get("key")}
+    merged = []
+    seen = set()
+    for item in new_series or []:
+        key = item.get("key")
+        old = existing_by_key.get(key)
+        if old:
+            points = merge_points(old.get("points"), item.get("points"))
+            if key == "cnn_fear_greed" and CNN_FEAR_GREED_MIN_VALID_DATE:
+                points = [point for point in points if point["date"] >= CNN_FEAR_GREED_MIN_VALID_DATE]
+            item = {**old, **item, "points": points, "latest": points[-1] if points else item.get("latest")}
+        merged.append(item)
+        seen.add(key)
+    for key, item in existing_by_key.items():
+        if key not in seen:
+            merged.append(item)
+    return merged
+
+
+def merge_existing_payload(payload):
+    if not OUTPUT_FILE.exists():
+        return payload
+    try:
+        existing = json.loads(OUTPUT_FILE.read_text())
+    except Exception as exc:
+        print(f"Could not read existing {OUTPUT_FILE}: {exc}")
+        return payload
+    payload["series"] = merge_series(existing.get("series"), payload.get("series"))
+    return payload
+
+
 def date_from_cnn_timestamp(value):
     if value is None:
         return None
@@ -168,7 +211,8 @@ def date_from_cnn_timestamp(value):
 
 def fetch_cnn_fear_greed():
     try:
-        response = requests.get(CNN_FEAR_GREED_URL, headers=CNN_HEADERS, timeout=30)
+        url = f"{CNN_FEAR_GREED_URL}/{CNN_FEAR_GREED_START_DATE}" if CNN_FEAR_GREED_START_DATE else CNN_FEAR_GREED_URL
+        response = requests.get(url, headers=CNN_HEADERS, timeout=30)
         response.raise_for_status()
         data = response.json()
     except Exception as exc:
@@ -678,6 +722,7 @@ def main():
         "series": series,
         "snapshots": snapshots,
     }
+    payload = merge_existing_payload(payload)
     OUTPUT_FILE.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
     print(f"Wrote {OUTPUT_FILE} with {len(series)} series")
 

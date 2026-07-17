@@ -207,7 +207,7 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
       </div>
     </div>
     <a class="nav-link" href="economy.html">Indicators</a>
-    <a class="nav-link" href="market_pulse.html">Market Pulse</a>
+    <a class="nav-link" href="market_pulse.html">Trend</a>
     <a class="nav-link" href="compare.html">Compare</a>
     <a class="nav-link" href="calendar.html">Calendar</a>
   </div>
@@ -378,8 +378,11 @@ const state = {
   sortDir: params.get('dir') === 'asc' ? 'asc' : 'desc'
 };
 const chartCache = new Map();
+const stockRowDataBySymbol = new Map();
+const stockButtonBySymbol = new Map();
 let activeChartRequest = 0;
 let pendingLayoutRedraw = false;
+let activeStockButton = null;
 
 document.getElementById('symbol').textContent = currentSymbol || 'UNKNOWN';
 document.getElementById('name').textContent = fallbackName || 'Stock chart';
@@ -1359,8 +1362,12 @@ function syncControls(){
 function renderStockList(){
   syncControls();
   state.stockRows = sortedRows();
+  stockRowDataBySymbol.clear();
+  stockButtonBySymbol.clear();
+  activeStockButton = null;
   stockListEl.innerHTML = state.stockRows.map((row, index) => {
     const symbol = rowSymbol(row);
+    stockRowDataBySymbol.set(symbol, row);
     const active = symbol === currentSymbol ? ' active' : '';
     const metric = rowMetric(row);
     const valueClass = metric >= 0 ? ' up' : ' down';
@@ -1370,21 +1377,28 @@ function renderStockList(){
       '<span class="stock-value'+valueClass+'">'+fmtPct(metric)+'</span>' +
       '</button>';
   }).join('');
+  stockListEl.querySelectorAll('.stock-row[data-symbol]').forEach(button => {
+    stockButtonBySymbol.set(button.dataset.symbol, button);
+  });
   markActiveStockRow(true);
 }
 
 function markActiveStockRow(scroll=false){
-  stockListEl.querySelectorAll('.stock-row.active').forEach(item => item.classList.remove('active'));
+  if(activeStockButton){
+    activeStockButton.classList.remove('active');
+    activeStockButton = null;
+  }
   if(!currentSymbol) return;
-  const active = stockListEl.querySelector('.stock-row[data-symbol="'+CSS.escape(currentSymbol)+'"]');
+  const active = stockButtonBySymbol.get(currentSymbol);
   if(active){
     active.classList.add('active');
+    activeStockButton = active;
     if(scroll) active.scrollIntoView({ block:'nearest' });
   }
 }
 
 function currentRow(){
-  return state.stockRows.find(row => rowSymbol(row) === currentSymbol);
+  return stockRowDataBySymbol.get(currentSymbol);
 }
 
 function updateUrl(row){
@@ -1399,14 +1413,20 @@ function updateUrl(row){
 }
 
 async function switchStock(symbol){
-  const row = state.stockRows.find(item => rowSymbol(item) === symbol);
+  symbol = String(symbol || '').toUpperCase();
+  if(!symbol || symbol === currentSymbol) return;
+  const row = stockRowDataBySymbol.get(symbol);
   currentSymbol = symbol;
   fallbackName = row ? rowName(row) : symbol;
-  markActiveStockRow(true);
+  if(window.matchMedia('(max-width: 768px)').matches){
+    stockPanel.classList.remove('open');
+    markActiveStockRow(false);
+  }else{
+    markActiveStockRow(true);
+  }
   renderHeaderFromRow(row);
   updateUrl(row);
-  loadChart();
-  stockPanel.classList.remove('open');
+  requestAnimationFrame(() => loadChart());
 }
 
 function moveStock(offset){
@@ -1440,9 +1460,17 @@ function setupStockControls(){
     }
   });
   document.getElementById('mobileListToggle').addEventListener('click', () => stockPanel.classList.toggle('open'));
+  stockListEl.addEventListener('pointerdown', event => {
+    const button = event.target.closest('.stock-row[data-symbol]');
+    if(!button) return;
+    if(event.pointerType === 'mouse') return;
+    event.preventDefault();
+    switchStock(button.dataset.symbol);
+  });
   stockListEl.addEventListener('click', event => {
     const button = event.target.closest('.stock-row[data-symbol]');
-    if(button) switchStock(button.dataset.symbol);
+    if(!button) return;
+    switchStock(button.dataset.symbol);
   });
   universeSelect.addEventListener('change', () => { state.universe = universeSelect.value; renderStockList(); updateUrl(currentRow()); });
   sortSelect.addEventListener('change', () => { state.sortKey = normalizeSortKey(sortSelect.value); renderStockList(); updateUrl(currentRow()); });
