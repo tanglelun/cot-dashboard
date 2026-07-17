@@ -366,6 +366,7 @@ const MOBILE_DEFAULT_RANGE = '63';
 const TOUCH_INSPECT_DELAY = 350;
 const TOUCH_PAN_THRESHOLD = 7;
 const STOCK_SWIPE_THRESHOLD = 72;
+const DENSE_LINE_STEP = 5;
 const state = {
   candles: [], start: 0, end: 0, hover: -1, hoverY: null, dragging: false, dragX: 0, dragStart: 0, dragEnd: 0,
   pinching: false, pinchDistance: 0, pinchStart: 0, pinchEnd: 0, pinchRatio: 0.5,
@@ -397,6 +398,11 @@ function normalizeSortKey(key){
 function fmt(value, digits=2){
   if(value === null || value === undefined || Number.isNaN(Number(value))) return '--';
   return Number(value).toFixed(digits);
+}
+
+function fmtAxisPrice(value){
+  if(value === null || value === undefined || Number.isNaN(Number(value))) return '--';
+  return Math.round(Number(value)).toLocaleString('en-US');
 }
 
 function fmtPct(value){
@@ -560,13 +566,20 @@ function calculateMacd(candles){
   });
 }
 
+function isDenseLineMode(){
+  const rect = canvas.getBoundingClientRect();
+  const count = Math.max(1, visibleCandles().length);
+  return plotWidthFor(rect.width) / count < DENSE_LINE_STEP;
+}
+
 function renderMaLegend(candle){
   const target = document.getElementById('maLegend');
-  maGroup.classList.toggle('collapsed', state.maCollapsed);
-  maToggle.setAttribute('aria-expanded', String(!state.maCollapsed));
-  maToggle.setAttribute('aria-label', state.maCollapsed ? 'Expand moving averages' : 'Collapse moving averages');
-  maToggle.title = state.maCollapsed ? 'Expand moving averages' : 'Collapse moving averages';
-  if(state.maCollapsed){
+  const denseLineMode = isDenseLineMode();
+  maGroup.classList.toggle('collapsed', state.maCollapsed || denseLineMode);
+  maToggle.setAttribute('aria-expanded', String(!state.maCollapsed && !denseLineMode));
+  maToggle.setAttribute('aria-label', state.maCollapsed || denseLineMode ? 'Expand moving averages' : 'Collapse moving averages');
+  maToggle.title = denseLineMode ? 'Moving averages hidden in dense line mode' : (state.maCollapsed ? 'Expand moving averages' : 'Collapse moving averages');
+  if(state.maCollapsed || denseLineMode){
     target.innerHTML = '';
     return;
   }
@@ -619,7 +632,7 @@ function drawGrid(left, top, right, priceBottom, bottom, width, height, minPrice
       ctx.lineTo(width - right + 4, Math.round(y) + 0.5);
       ctx.stroke();
     }
-    ctx.fillText(fmt(price), width - 8, y);
+    ctx.fillText(fmtAxisPrice(price), width - 8, y);
   }
   ctx.strokeStyle = 'rgba(110, 116, 128, 0.28)';
   ctx.textAlign = 'center';
@@ -805,12 +818,15 @@ function draw(){
   const macdBottom = state.showMacd ? height - bottom : 0;
   const plotWidth = width - left - right;
   const step = plotWidth / candles.length;
+  const denseLineMode = step < DENSE_LINE_STEP;
   const bodyWidth = Math.max(3, Math.min(13, step * 0.62));
   const wickWidth = Math.max(2, Math.min(7, bodyWidth * 0.36));
   const maValues = [];
-  candles.forEach(c => MOVING_AVERAGES.forEach(ma => { if(c[ma.key]) maValues.push(c[ma.key]); }));
-  const highs = candles.map(c => c.high).concat(maValues);
-  const lows = candles.map(c => c.low).concat(maValues);
+  if(!denseLineMode){
+    candles.forEach(c => MOVING_AVERAGES.forEach(ma => { if(c[ma.key]) maValues.push(c[ma.key]); }));
+  }
+  const highs = candles.map(c => denseLineMode ? c.close : c.high).concat(maValues);
+  const lows = candles.map(c => denseLineMode ? c.close : c.low).concat(maValues);
   let maxPrice = Math.max(...highs);
   let minPrice = Math.min(...lows);
   const pad = (maxPrice - minPrice || maxPrice || 1) * 0.06;
@@ -822,20 +838,34 @@ function draw(){
 
   drawGrid(left, top, right, priceBottom, bottom, width, height, minPrice, maxPrice, candles, xFor);
 
-  candles.forEach((c, i) => {
-    const x = xFor(i);
-    const up = c.close >= c.open;
-    const color = up ? '#00d109' : '#ff4d00';
-    const yOpen = yFor(c.open), yClose = yFor(c.close), yHigh = yFor(c.high), yLow = yFor(c.low);
-    const bodyTop = Math.min(yOpen, yClose);
-    const bodyHeight = Math.max(1, Math.abs(yOpen - yClose));
-    ctx.fillStyle = '#5e686f';
-    ctx.fillRect(x - wickWidth / 2, yHigh, wickWidth, Math.max(1, yLow - yHigh));
-    ctx.fillStyle = color;
-    ctx.fillRect(x - bodyWidth / 2, bodyTop, bodyWidth, bodyHeight);
-  });
-
-  MOVING_AVERAGES.forEach(ma => drawMovingAverage(ma, candles, xFor, yFor));
+  if(denseLineMode){
+    const trendUp = Number(candles[candles.length - 1].close) >= Number(candles[0].close);
+    ctx.strokeStyle = trendUp ? '#00d109' : '#ff4d00';
+    ctx.lineWidth = 2;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    candles.forEach((c, i) => {
+      const x = xFor(i);
+      const y = yFor(c.close);
+      if(i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+  }else{
+    candles.forEach((c, i) => {
+      const x = xFor(i);
+      const up = c.close >= c.open;
+      const color = up ? '#00d109' : '#ff4d00';
+      const yOpen = yFor(c.open), yClose = yFor(c.close), yHigh = yFor(c.high), yLow = yFor(c.low);
+      const bodyTop = Math.min(yOpen, yClose);
+      const bodyHeight = Math.max(1, Math.abs(yOpen - yClose));
+      ctx.fillStyle = '#5e686f';
+      ctx.fillRect(x - wickWidth / 2, yHigh, wickWidth, Math.max(1, yLow - yHigh));
+      ctx.fillStyle = color;
+      ctx.fillRect(x - bodyWidth / 2, bodyTop, bodyWidth, bodyHeight);
+    });
+    MOVING_AVERAGES.forEach(ma => drawMovingAverage(ma, candles, xFor, yFor));
+  }
   if(state.showVolume) drawVolumePanel(candles, xFor, step, volumeTop, volumeBottom, maxVolume, height);
   if(state.showMacd) drawMacdPanel(candles, xFor, step, macdTop, macdBottom, width);
 
@@ -854,7 +884,7 @@ function draw(){
     ctx.stroke();
     ctx.setLineDash([]);
     const hoverPrice = maxPrice - ((y - top) / Math.max(1, priceBottom - top)) * (maxPrice - minPrice);
-    const priceText = fmt(hoverPrice);
+    const priceText = fmtAxisPrice(hoverPrice);
     drawAxisLabel(priceText, width - 4, y, {
       align:'right',
       background:'#202735',

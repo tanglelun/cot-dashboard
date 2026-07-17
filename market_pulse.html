@@ -105,7 +105,9 @@ h1{margin:0;color:#fff;font-size:32px;line-height:1;font-weight:950}
 .tooltip-row span{display:flex;align-items:center;gap:7px;color:var(--text)}
 .tooltip-row i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--c);flex:0 0 auto}
 .tooltip-row strong{color:#fff}
-.chart-crosshair{position:absolute;top:0;bottom:0;width:1px;background:rgba(209,212,220,.36);display:none;pointer-events:none;z-index:4}
+.chart-crosshair-x,.chart-crosshair-y{position:absolute;display:none;pointer-events:none;z-index:4}
+.chart-crosshair-x{top:0;bottom:0;width:1px;background:rgba(209,212,220,.42)}
+.chart-crosshair-y{left:0;right:0;height:0;border-top:1px dashed rgba(209,212,220,.62)}
 canvas{display:block;width:100%;height:100%}
 .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
 .metric-card{padding:12px;min-height:82px}
@@ -609,13 +611,19 @@ function setLegend(id, items){
 }
 function ensureCrosshair(canvas){
   const wrap = canvas.parentElement;
-  let line = wrap.querySelector('.chart-crosshair');
-  if(!line){
-    line = document.createElement('div');
-    line.className = 'chart-crosshair';
-    wrap.appendChild(line);
+  let xLine = wrap.querySelector('.chart-crosshair-x');
+  let yLine = wrap.querySelector('.chart-crosshair-y');
+  if(!xLine){
+    xLine = document.createElement('div');
+    xLine.className = 'chart-crosshair-x';
+    wrap.appendChild(xLine);
   }
-  return line;
+  if(!yLine){
+    yLine = document.createElement('div');
+    yLine.className = 'chart-crosshair-y';
+    wrap.appendChild(yLine);
+  }
+  return {xLine, yLine};
 }
 function nearestPointByX(layout, points, x){
   const target = layout.minX + ((x - layout.left) / Math.max(1, layout.width - layout.left - layout.right)) * (layout.maxX - layout.minX);
@@ -629,13 +637,14 @@ function nearestPointByX(layout, points, x){
   return points[best];
 }
 function attachChartCrosshair(canvas, layout, points, onSelect){
-  const line = ensureCrosshair(canvas);
+  const {xLine, yLine} = ensureCrosshair(canvas);
   const stopNativeSelection = event => {
     if(event && event.cancelable) event.preventDefault();
   };
   const hide = event => {
     stopNativeSelection(event);
-    line.style.display = 'none';
+    xLine.style.display = 'none';
+    yLine.style.display = 'none';
   };
   const move = event => {
     stopNativeSelection(event);
@@ -645,11 +654,18 @@ function attachChartCrosshair(canvas, layout, points, onSelect){
     const rawX = source.clientX - rect.left;
     const x = clamp(rawX, layout.left, layout.width - layout.right);
     const point = nearestPointByX(layout, points, x);
-    line.style.left = `${x}px`;
-    line.style.top = `${layout.top}px`;
-    line.style.height = `${layout.height - layout.top - layout.bottom}px`;
-    line.style.display = 'block';
-    if(onSelect) onSelect(point, x, source.clientY - rect.top);
+    const snappedX = point && layout.xFor ? layout.xFor(point.date) : x;
+    const value = point && Number.isFinite(Number(point.value)) ? Number(point.value) : null;
+    const y = value !== null && layout.yFor ? layout.yFor(value) : source.clientY - rect.top;
+    xLine.style.left = `${snappedX}px`;
+    xLine.style.top = `${layout.top}px`;
+    xLine.style.height = `${layout.height - layout.top - layout.bottom}px`;
+    xLine.style.display = 'block';
+    yLine.style.left = `${layout.left}px`;
+    yLine.style.top = `${clamp(y, layout.top, layout.height - layout.bottom)}px`;
+    yLine.style.width = `${layout.width - layout.left - layout.right}px`;
+    yLine.style.display = 'block';
+    if(onSelect) onSelect(point, snappedX, y);
   };
   canvas.onmouseleave = hide;
   canvas.onmousemove = move;
