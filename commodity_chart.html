@@ -520,10 +520,26 @@ function calculateMacd(candles){
   });
 }
 
+function visibleRangeYears(candles){
+  if(!candles || candles.length < 2) return 0;
+  const first = new Date(candles[0].time).getTime();
+  const last = new Date(candles[candles.length - 1].time).getTime();
+  if(!Number.isFinite(first) || !Number.isFinite(last)) return 0;
+  return Math.abs(last - first) / (365.25 * 24 * 60 * 60 * 1000);
+}
+
+function shouldUseLineMode(candles, step){
+  const isMobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+  if(isMobile) return step < DENSE_LINE_STEP;
+  return visibleRangeYears(candles) >= 5;
+}
+
 function isDenseLineMode(){
   const rect = canvas.getBoundingClientRect();
-  const count = Math.max(1, visibleCandles().length);
-  return plotWidthFor(rect.width) / count < DENSE_LINE_STEP;
+  const candles = visibleCandles();
+  const count = Math.max(1, candles.length);
+  const step = plotWidthFor(rect.width) / count;
+  return shouldUseLineMode(candles, step);
 }
 
 function renderMaLegend(candle){
@@ -772,7 +788,7 @@ function draw(){
   const macdBottom = state.showMacd ? height - bottom : 0;
   const plotWidth = width - left - right;
   const step = plotWidth / candles.length;
-  const denseLineMode = step < DENSE_LINE_STEP;
+  const denseLineMode = shouldUseLineMode(candles, step);
   const bodyWidth = Math.max(3, Math.min(13, step * 0.62));
   const wickWidth = Math.max(2, Math.min(7, bodyWidth * 0.36));
   const maValues = [];
