@@ -125,6 +125,14 @@ h1{font-size:22px;color:#fff;font-weight:800;letter-spacing:0}
 .chart-shell{background:#000;border:none;border-radius:0;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:520px}
 .chart-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 10px;border-bottom:none;flex-wrap:wrap}
 .toolbar-left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.indicator-control{position:relative}
+.indicator-trigger{height:30px;display:inline-flex;align-items:center;gap:7px}
+.indicator-trigger::after{content:"";width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px)}
+.indicator-menu{position:absolute;left:0;top:calc(100% + 7px);z-index:30;width:220px;padding:7px;border:1px solid var(--tv-border);border-radius:6px;background:rgba(9,13,18,.98);box-shadow:0 16px 40px rgba(0,0,0,.48);display:none}
+.indicator-control.open .indicator-menu{display:block}
+.indicator-option{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:34px;padding:0 9px;border-radius:4px;color:var(--tv-text);font-size:12px;font-weight:750;cursor:pointer}
+.indicator-option:hover{background:var(--tv-hover)}
+.indicator-option input{accent-color:var(--tv-accent);width:15px;height:15px}
 .ma-group{display:flex;align-items:center;gap:8px;min-height:24px}
 .ma-toggle{height:30px;border:1px solid var(--tv-border);background:var(--tv-panel-2);color:var(--tv-muted);border-radius:4px;padding:7px 10px;display:inline-flex;align-items:center;gap:7px;cursor:pointer;font-size:12px;font-weight:700;line-height:1}
 .ma-toggle:hover{background:var(--tv-hover);color:var(--tv-text)}
@@ -312,6 +320,17 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
           <button class="btn" data-range="504">2Y</button>
           <button class="btn" data-range="1260">5Y</button>
         </div>
+        <div class="indicator-control" id="indicatorControl">
+          <button class="btn indicator-trigger" id="indicatorTrigger" type="button" aria-haspopup="true" aria-expanded="false">Indicators</button>
+          <div class="indicator-menu" id="indicatorMenu">
+            <label class="indicator-option"><span>Moving Averages (MA)</span><input type="checkbox" data-indicator="showMa" checked></label>
+            <label class="indicator-option"><span>Exponential MA (EMA)</span><input type="checkbox" data-indicator="showEma"></label>
+            <label class="indicator-option"><span>Bollinger Bands</span><input type="checkbox" data-indicator="showBollinger"></label>
+            <label class="indicator-option"><span>Volume</span><input type="checkbox" data-indicator="showVolume" checked></label>
+            <label class="indicator-option"><span>RSI (14)</span><input type="checkbox" data-indicator="showRsi"></label>
+            <label class="indicator-option"><span>MACD</span><input type="checkbox" data-indicator="showMacd" checked></label>
+          </div>
+        </div>
         <div class="ma-group" id="maGroup">
           <button class="ma-toggle" id="maToggle" type="button" aria-label="Expand moving averages" aria-expanded="false" title="Expand moving averages">
             <span>MA</span>
@@ -342,6 +361,8 @@ const ctx = canvas.getContext('2d');
 const statusEl = document.getElementById('status');
 const maGroup = document.getElementById('maGroup');
 const maToggle = document.getElementById('maToggle');
+const indicatorControl = document.getElementById('indicatorControl');
+const indicatorTrigger = document.getElementById('indicatorTrigger');
 const pageLayout = document.getElementById('pageLayout');
 const stockPanel = document.getElementById('stockPanel');
 const stockListEl = document.getElementById('stockList');
@@ -371,7 +392,8 @@ const state = {
   candles: [], start: 0, end: 0, hover: -1, hoverY: null, dragging: false, dragX: 0, dragStart: 0, dragEnd: 0,
   pinching: false, pinchDistance: 0, pinchStart: 0, pinchEnd: 0, pinchRatio: 0.5,
   touchMode: 'idle', touchTimer: null, touchStartX: 0, touchStartY: 0, touchCurrentX: 0, touchCurrentY: 0,
-  maCollapsed: true, showVolume: true, showMacd: true,
+  maCollapsed: true, showMa: true, showEma: false, showBollinger: false,
+  showVolume: true, showRsi: false, showMacd: true,
   marketIndex: null, stockRows: [], activeRange: null,
   universe: params.get('universe') || 'r2kRaw',
   metric: params.get('metric') || 'd',
@@ -415,10 +437,12 @@ function chartRegions(width, height){
   const padBox = chartPadding(width);
   const bottom = padBox.bottom;
   const volumeHeight = state.showVolume ? Math.max(54, Math.min(82, height * 0.14)) : 0;
+  const rsiHeight = state.showRsi ? Math.max(68, Math.min(96, height * 0.15)) : 0;
   const macdHeight = state.showMacd ? Math.max(72, Math.min(108, height * 0.17)) : 0;
-  const lowerGap = state.showVolume && state.showMacd ? 12 : 0;
-  const panelGap = (state.showVolume || state.showMacd) ? 16 : 0;
-  const lowerHeight = volumeHeight + macdHeight + lowerGap;
+  const activePanels = [volumeHeight, rsiHeight, macdHeight].filter(Boolean).length;
+  const lowerGap = Math.max(0, activePanels - 1) * 10;
+  const panelGap = activePanels ? 16 : 0;
+  const lowerHeight = volumeHeight + rsiHeight + macdHeight + lowerGap;
   return {
     indicatorTop: height - bottom - lowerHeight,
     priceBottom: height - bottom - lowerHeight - panelGap
@@ -563,6 +587,38 @@ function calculateMacd(candles){
     candle.macd = macd;
     candle.macdSignal = signal;
     candle.macdHist = macd - signal;
+  });
+}
+
+function calculateTechnicalIndicators(candles){
+  let ema20 = null, ema50 = null;
+  const k20 = 2 / 21, k50 = 2 / 51;
+  let avgGain = 0, avgLoss = 0;
+  candles.forEach((candle, index) => {
+    const close = Number(candle.close);
+    ema20 = ema20 === null ? close : close * k20 + ema20 * (1 - k20);
+    ema50 = ema50 === null ? close : close * k50 + ema50 * (1 - k50);
+    candle.ema20 = ema20;
+    candle.ema50 = ema50;
+    if(index >= 19){
+      const window = candles.slice(index - 19, index + 1).map(item => Number(item.close));
+      const mean = window.reduce((sum, value) => sum + value, 0) / 20;
+      const deviation = Math.sqrt(window.reduce((sum, value) => sum + Math.pow(value - mean, 2), 0) / 20);
+      candle.bbMiddle = mean;
+      candle.bbUpper = mean + deviation * 2;
+      candle.bbLower = mean - deviation * 2;
+    }
+    if(index === 0){ candle.rsi = null; return; }
+    const change = close - Number(candles[index - 1].close);
+    const gain = Math.max(change, 0), loss = Math.max(-change, 0);
+    if(index <= 14){
+      avgGain += gain / 14; avgLoss += loss / 14;
+      candle.rsi = index === 14 ? (avgLoss === 0 ? 100 : 100 - 100 / (1 + avgGain / avgLoss)) : null;
+    }else{
+      avgGain = (avgGain * 13 + gain) / 14;
+      avgLoss = (avgLoss * 13 + loss) / 14;
+      candle.rsi = avgLoss === 0 ? 100 : 100 - 100 / (1 + avgGain / avgLoss);
+    }
   });
 }
 
@@ -745,6 +801,28 @@ function drawMacdPanel(candles, xFor, step, top, bottom, width){
   });
 }
 
+function drawIndicatorLine(candles, key, xFor, yFor, color, alpha=0.85, width=1.3){
+  ctx.strokeStyle = color; ctx.lineWidth = width; ctx.globalAlpha = alpha; ctx.beginPath();
+  let started = false;
+  candles.forEach((candle, index) => {
+    const value = candle[key];
+    if(!Number.isFinite(value)){ started = false; return; }
+    const x = xFor(index), y = yFor(value);
+    if(!started){ ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
+  });
+  ctx.stroke(); ctx.globalAlpha = 1;
+}
+
+function drawRsiPanel(candles, xFor, top, bottom, width){
+  drawPanelLabel('RSI 14', top);
+  const panelTop = top + 16, panelBottom = bottom - 2;
+  const yForRsi = value => panelTop + (100 - value) / 100 * (panelBottom - panelTop);
+  ctx.strokeStyle = '#26323b'; ctx.lineWidth = 1; ctx.setLineDash([4,4]);
+  [30,70].forEach(level => { const y=yForRsi(level); ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(width,y); ctx.stroke(); });
+  ctx.setLineDash([]);
+  drawIndicatorLine(candles, 'rsi', xFor, yForRsi, '#b26cff', 0.9, 1.4);
+}
+
 function roundedRectPath(x, y, width, height, radius){
   const r = Math.min(radius, width / 2, height / 2);
   ctx.beginPath();
@@ -822,14 +900,18 @@ function draw(){
   const left = padBox.left, right = padBox.right, top = padBox.top, bottom = padBox.bottom;
   const regions = chartRegions(width, height);
   const volumeHeight = state.showVolume ? Math.max(54, Math.min(82, height * 0.14)) : 0;
+  const rsiHeight = state.showRsi ? Math.max(68, Math.min(96, height * 0.15)) : 0;
   const macdHeight = state.showMacd ? Math.max(72, Math.min(108, height * 0.17)) : 0;
-  const lowerGap = state.showVolume && state.showMacd ? 12 : 0;
-  const panelGap = (state.showVolume || state.showMacd) ? 16 : 0;
+  const activePanels = [volumeHeight, rsiHeight, macdHeight].filter(Boolean).length;
+  const panelGap = activePanels ? 16 : 0;
   const priceBottom = regions.priceBottom;
   let panelTop = priceBottom + panelGap;
   const volumeTop = state.showVolume ? panelTop : 0;
   const volumeBottom = state.showVolume ? volumeTop + volumeHeight : 0;
-  if(state.showVolume) panelTop = volumeBottom + (state.showMacd ? lowerGap : 0);
+  if(state.showVolume) panelTop = volumeBottom + ((state.showRsi || state.showMacd) ? 10 : 0);
+  const rsiTop = state.showRsi ? panelTop : 0;
+  const rsiBottom = state.showRsi ? rsiTop + rsiHeight : 0;
+  if(state.showRsi) panelTop = rsiBottom + (state.showMacd ? 10 : 0);
   const macdTop = state.showMacd ? panelTop : 0;
   const macdBottom = state.showMacd ? height - bottom : 0;
   const plotWidth = width - left - right;
@@ -838,9 +920,11 @@ function draw(){
   const bodyWidth = Math.max(3, Math.min(13, step * 0.62));
   const wickWidth = Math.max(2, Math.min(7, bodyWidth * 0.36));
   const maValues = [];
-  if(!denseLineMode){
+  if(!denseLineMode && state.showMa){
     candles.forEach(c => MOVING_AVERAGES.forEach(ma => { if(c[ma.key]) maValues.push(c[ma.key]); }));
   }
+  if(state.showEma) candles.forEach(c => { if(c.ema20) maValues.push(c.ema20); if(c.ema50) maValues.push(c.ema50); });
+  if(state.showBollinger) candles.forEach(c => { if(c.bbUpper) maValues.push(c.bbUpper); if(c.bbLower) maValues.push(c.bbLower); });
   const highs = candles.map(c => denseLineMode ? c.close : c.high).concat(maValues);
   const lows = candles.map(c => denseLineMode ? c.close : c.low).concat(maValues);
   let maxPrice = Math.max(...highs);
@@ -880,9 +964,19 @@ function draw(){
       ctx.fillStyle = color;
       ctx.fillRect(x - bodyWidth / 2, bodyTop, bodyWidth, bodyHeight);
     });
-    MOVING_AVERAGES.forEach(ma => drawMovingAverage(ma, candles, xFor, yFor));
+    if(state.showMa) MOVING_AVERAGES.forEach(ma => drawMovingAverage(ma, candles, xFor, yFor));
+    if(state.showEma){
+      drawIndicatorLine(candles, 'ema20', xFor, yFor, '#ffcc00', 0.9, 1.4);
+      drawIndicatorLine(candles, 'ema50', xFor, yFor, '#ff6b6b', 0.8, 1.4);
+    }
+    if(state.showBollinger){
+      drawIndicatorLine(candles, 'bbUpper', xFor, yFor, '#00bcd4', 0.65, 1.2);
+      drawIndicatorLine(candles, 'bbMiddle', xFor, yFor, '#7b8794', 0.45, 1);
+      drawIndicatorLine(candles, 'bbLower', xFor, yFor, '#00bcd4', 0.65, 1.2);
+    }
   }
   if(state.showVolume) drawVolumePanel(candles, xFor, step, volumeTop, volumeBottom, maxVolume, height);
+  if(state.showRsi) drawRsiPanel(candles, xFor, rsiTop, rsiBottom, width);
   if(state.showMacd) drawMacdPanel(candles, xFor, step, macdTop, macdBottom, width);
 
   if(state.hover >= state.start && state.hover < state.end){
@@ -1189,6 +1283,23 @@ document.getElementById('ranges').addEventListener('click', event => {
 maToggle.addEventListener('click', () => {
   state.maCollapsed = !state.maCollapsed;
   draw();
+});
+
+indicatorTrigger.addEventListener('click', event => {
+  event.stopPropagation();
+  const open = indicatorControl.classList.toggle('open');
+  indicatorTrigger.setAttribute('aria-expanded', String(open));
+});
+document.getElementById('indicatorMenu').addEventListener('change', event => {
+  const input = event.target.closest('input[data-indicator]');
+  if(!input) return;
+  state[input.dataset.indicator] = input.checked;
+  draw();
+});
+document.addEventListener('click', event => {
+  if(indicatorControl.contains(event.target)) return;
+  indicatorControl.classList.remove('open');
+  indicatorTrigger.setAttribute('aria-expanded', 'false');
 });
 
 function setupNavSearch(){
@@ -1562,6 +1673,7 @@ async function loadChart(){
     state.candles = data.prices;
     calculateMovingAverages(state.candles);
     calculateMacd(state.candles);
+    calculateTechnicalIndicators(state.candles);
     renderHeader(data);
     setStatus('');
     setRange(state.activeRange || defaultChartRange());
