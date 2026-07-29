@@ -2,10 +2,13 @@ import pandas as pd
 import os
 import json
 from html import escape
+from pathlib import Path
 
-df = pd.read_csv('cot_noncommercial_history.csv')
-if os.path.exists('price_history.csv'):
-    df_prices = pd.read_csv('price_history.csv')
+BASE_DIR = Path(__file__).resolve().parent
+
+df = pd.read_csv(BASE_DIR / 'cot_noncommercial_history.csv')
+if (BASE_DIR / 'price_history.csv').exists():
+    df_prices = pd.read_csv(BASE_DIR / 'price_history.csv')
 else:
     df_prices = pd.DataFrame(columns=['Date', 'Commodity', 'Price'])
 
@@ -736,7 +739,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
 </body>
 </html>'''
 
-    with open(filename, 'w', encoding='utf-8') as f:
+    with open(BASE_DIR / filename, 'w', encoding='utf-8') as f:
         f.write(html)
 
 for category, comms in categories.items():
@@ -1036,7 +1039,7 @@ html = f'''<!DOCTYPE html>
 </body>
 </html>'''
 
-with open('cot_noncommercial_history.html', 'w', encoding='utf-8') as f:
+with open(BASE_DIR / 'cot_noncommercial_history.html', 'w', encoding='utf-8') as f:
     f.write(html)
 
 print("✓ Generated: cot_noncommercial_history.html with Net and All tabs")

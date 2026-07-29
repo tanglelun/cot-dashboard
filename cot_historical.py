@@ -4,8 +4,10 @@ import io
 from datetime import datetime, timedelta
 import zipfile
 import os
+from pathlib import Path
 
-HISTORY_FILE = 'cot_noncommercial_history.csv'
+BASE_DIR = Path(__file__).resolve().parent
+HISTORY_FILE = BASE_DIR / 'cot_noncommercial_history.csv'
 LOOKBACK_YEARS = 10
 EARLIEST_ARCHIVE_YEAR = 1986
 REQUEST_HEADERS = {'User-Agent': 'Mozilla/5.0 NetData COT updater'}
@@ -87,7 +89,7 @@ def download_legacy_data_for_year(year):
     base_url = "https://www.cftc.gov/files/dea/history/"
     archive_name = f"deacot{year}.zip"
     url = f"{base_url}{archive_name}"
-    local_zip = archive_name
+    local_zip = BASE_DIR / archive_name
     content = None
 
     for attempt in range(1, 4):

@@ -1,8 +1,10 @@
 import pandas as pd
 import yfinance as yf
 import os
+from pathlib import Path
 
-PRICE_FILE = 'price_history.csv'
+BASE_DIR = Path(__file__).resolve().parent
+PRICE_FILE = BASE_DIR / 'price_history.csv'
 HISTORY_PERIOD = 'max'
 
 commodity_tickers = {

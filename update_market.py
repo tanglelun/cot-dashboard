@@ -11,8 +11,9 @@ import requests
 import yfinance as yf
 
 
-MARKET_FILE = "russell2000_top100.html"
-MARKET_DATA_DIR = Path("market_data")
+BASE_DIR = Path(__file__).resolve().parent
+MARKET_FILE = BASE_DIR / "russell2000_top100.html"
+MARKET_DATA_DIR = BASE_DIR / "market_data"
 CHART_PERIOD = "max"
 CHART_MAX_ROWS = int(os.getenv("MARKET_CHART_MAX_ROWS", "1600") or 0)
 SUMMARY_PERIOD = os.getenv("MARKET_SUMMARY_PERIOD", "1y")

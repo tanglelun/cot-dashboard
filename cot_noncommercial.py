@@ -3,6 +3,9 @@ import pandas as pd
 import io
 from datetime import datetime
 import zipfile
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
 
 def download_disaggregated_data():
     base_url = "https://www.cftc.gov/files/dea/history/"
@@ -178,7 +181,7 @@ def main():
         print("-" * 80)
         
         output_file = 'cot_noncommercial.csv'
-        table.to_csv(output_file, index=False)
+        table.to_csv(BASE_DIR / output_file, index=False)
         print(f"\nData saved to: {output_file}")
         
         generate_html_table(table, date)
@@ -291,7 +294,7 @@ def generate_html_table(df, date):
 </body>
 </html>'''
     
-    with open('cot_noncommercial.html', 'w') as f:
+    with open(BASE_DIR / 'cot_noncommercial.html', 'w') as f:
         f.write(html)
     print(f"HTML saved to: cot_noncommercial.html")
 

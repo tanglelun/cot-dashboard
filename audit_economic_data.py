@@ -3,7 +3,8 @@ import re
 from pathlib import Path
 
 
-DATA_PATH = Path("economic_data.json")
+BASE_DIR = Path(__file__).resolve().parent
+DATA_PATH = BASE_DIR / "economic_data.json"
 
 
 def period_kind(period):
@@ -73,7 +74,7 @@ def run():
 
         report.append("")
 
-    Path("economic_data_audit.txt").write_text("\n".join(report), encoding="utf-8")
+    (BASE_DIR / "economic_data_audit.txt").write_text("\n".join(report), encoding="utf-8")
     print("\n".join(report))
 
 

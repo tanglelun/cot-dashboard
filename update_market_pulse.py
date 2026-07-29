@@ -11,13 +11,14 @@ import requests
 import yfinance as yf
 
 
-OUTPUT_FILE = Path("market_pulse_data.json")
-VIEW_OUTPUT_FILE = Path("market_pulse_view.json")
-MARKET_DATA_DIR = Path("market_data")
-INDEXES_DATA_DIR = Path("indexes_data")
+BASE_DIR = Path(__file__).resolve().parent
+OUTPUT_FILE = BASE_DIR / "market_pulse_data.json"
+VIEW_OUTPUT_FILE = BASE_DIR / "market_pulse_view.json"
+MARKET_DATA_DIR = BASE_DIR / "market_data"
+INDEXES_DATA_DIR = BASE_DIR / "indexes_data"
 MIN_BREADTH_SAMPLE = 200
 SP500_CONSTITUENTS_URL = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
-SP500_CONSTITUENTS_CACHE = Path("sp500_constituents.json")
+SP500_CONSTITUENTS_CACHE = BASE_DIR / "sp500_constituents.json"
 BREADTH_LOOKBACK_YEARS = int(os.getenv("MARKET_PULSE_BREADTH_YEARS", "20") or 20)
 BREADTH_DOWNLOAD_YEARS = BREADTH_LOOKBACK_YEARS + 2
 BREADTH_CHUNK_SIZE = int(os.getenv("MARKET_PULSE_BREADTH_CHUNK_SIZE", "80") or 80)

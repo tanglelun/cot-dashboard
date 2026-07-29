@@ -7,6 +7,8 @@ from datetime import date, datetime, timezone
 from functools import lru_cache
 from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent
+
 import requests
 
 
@@ -479,7 +481,7 @@ def build_credit_payload():
 
 def build_payload():
     if len(sys.argv) > 1 and sys.argv[1] == "--offline":
-        payload = json.loads(Path("economic_data.json").read_text(encoding="utf-8"))
+        payload = json.loads((BASE_DIR / "economic_data.json").read_text(encoding="utf-8"))
         for item in payload.get("indicators", []):
             config = INDICATOR_CONFIG_BY_KEY.get(item.get("key"))
             if config:
@@ -532,7 +534,7 @@ def build_payload():
 
 
 def load_previous_indicators():
-    path = Path("economic_data.json")
+    path = BASE_DIR / "economic_data.json"
     if not path.exists():
         return {}
     try:
@@ -1279,11 +1281,11 @@ boot();
 
 def write_outputs(payload):
     data_json = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
-    Path("economic_data.json").write_text(data_json, encoding="utf-8")
-    Path("economic_data_embed.js").write_text(f"window.ECONOMIC_DATA = {data_json};\n", encoding="utf-8")
+    (BASE_DIR / "economic_data.json").write_text(data_json, encoding="utf-8")
+    (BASE_DIR / "economic_data_embed.js").write_text(f"window.ECONOMIC_DATA = {data_json};\n", encoding="utf-8")
     html = HTML_TEMPLATE.replace("__DATA__", data_json).replace("__UPDATED__", payload["updated"])
-    Path("economy.html").write_text(html, encoding="utf-8")
-    Path("economic.html").write_text(html, encoding="utf-8")
+    (BASE_DIR / "economy.html").write_text(html, encoding="utf-8")
+    (BASE_DIR / "economic.html").write_text(html, encoding="utf-8")
 
 
 def main():

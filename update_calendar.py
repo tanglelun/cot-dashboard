@@ -8,8 +8,9 @@ from pathlib import Path
 import requests
 
 
-OUTPUT_FILE = Path("calendar_data.json")
-ECONOMIC_DATA_FILE = Path("economic_data.json")
+BASE_DIR = Path(__file__).resolve().parent
+OUTPUT_FILE = BASE_DIR / "calendar_data.json"
+ECONOMIC_DATA_FILE = BASE_DIR / "economic_data.json"
 WINDOW_PAST_DAYS = 0
 WINDOW_FUTURE_DAYS = 370
 IMPORTANCE = 3

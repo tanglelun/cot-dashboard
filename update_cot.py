@@ -11,8 +11,10 @@ import io
 from datetime import datetime
 import zipfile
 import os
+from pathlib import Path
 
-HISTORY_FILE = 'cot_noncommercial_history.csv'
+BASE_DIR = Path(__file__).resolve().parent
+HISTORY_FILE = BASE_DIR / 'cot_noncommercial_history.csv'
 
 def get_all_futures():
     return [

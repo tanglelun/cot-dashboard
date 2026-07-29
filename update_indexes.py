@@ -7,8 +7,9 @@ import pandas as pd
 import yfinance as yf
 
 
-OUTPUT_FILE = Path("indexes_data.json")
-CHART_DATA_DIR = Path("indexes_data")
+BASE_DIR = Path(__file__).resolve().parent
+OUTPUT_FILE = BASE_DIR / "indexes_data.json"
+CHART_DATA_DIR = BASE_DIR / "indexes_data"
 SUMMARY_PERIOD = "18mo"
 HISTORY_PERIOD = "max"
 
