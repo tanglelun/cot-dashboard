@@ -56,7 +56,7 @@ def get_all_futures():
         ('Australian Dollar', 'AUSTRALIAN DOLLAR'),
         ('Canadian Dollar', 'CANADIAN DOLLAR'),
         ('Mexican Peso', 'MEXICAN PESO'),
-        ('U.S. Dollar Index', 'DOLLAR INDEX'),
+        ('U.S. Dollar Index', 'USD INDEX'),
         ('S&P 500', 'S&P 500'),
         ('Nasdaq 100', 'NASDAQ-100'),
         ('Dow Jones', 'DOW JONES'),
