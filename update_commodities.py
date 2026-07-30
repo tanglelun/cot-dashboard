@@ -1,7 +1,8 @@
+import os
+import sys
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-
 import pandas as pd
 import yfinance as yf
 
@@ -54,33 +55,12 @@ COMMODITIES = [
 ]
 
 
-def pct_change(series, periods):
-    if len(series) <= periods:
+def rounded(value, decimals=4):
+    if value is None:
         return None
-    latest = series.iloc[-1]
-    base = series.iloc[-periods - 1]
-    if pd.isna(latest) or pd.isna(base) or base == 0:
+    if not isinstance(value, (int, float)) or pd.isna(value):
         return None
-    return (latest / base - 1) * 100
-
-
-def ytd_change(series):
-    if series.empty:
-        return None
-    latest = series.iloc[-1]
-    year = series.index[-1].year
-    start = pd.Timestamp(year=year, month=1, day=1, tz=series.index.tz)
-    before = series[series.index < start]
-    base = before.iloc[-1] if not before.empty else series[series.index >= start].iloc[0]
-    if pd.isna(latest) or pd.isna(base) or base == 0:
-        return None
-    return (latest / base - 1) * 100
-
-
-def rounded(value, digits=2):
-    if value is None or pd.isna(value):
-        return None
-    return round(float(value), digits)
+    return round(float(value), decimals)
 
 
 def safe_symbol(symbol):
@@ -88,90 +68,98 @@ def safe_symbol(symbol):
 
 
 def series_from_download(data, symbol):
-    if data.empty:
-        return pd.Series(dtype=float)
-    if isinstance(data.columns, pd.MultiIndex):
+    try:
         if symbol not in data.columns.get_level_values(0):
             return pd.Series(dtype=float)
         frame = data[symbol]
-        if "Close" not in frame:
+        if "Close" not in frame.columns:
             return pd.Series(dtype=float)
         return frame["Close"].dropna()
-    if "Close" not in data:
+    except Exception:
         return pd.Series(dtype=float)
-    return data["Close"].dropna()
 
 
 def frame_from_download(data, symbol):
-    if data.empty:
-        return pd.DataFrame()
-    if isinstance(data.columns, pd.MultiIndex):
+    try:
         if symbol not in data.columns.get_level_values(0):
             return pd.DataFrame()
         frame = data[symbol]
-    else:
-        frame = data
-    columns = [column for column in ("Open", "High", "Low", "Close", "Volume") if column in frame.columns]
-    if not {"Open", "High", "Low", "Close"}.issubset(columns):
+        return frame.dropna()
+    except Exception:
         return pd.DataFrame()
-    frame = frame[columns].dropna(subset=["Open", "High", "Low", "Close"]).copy()
-    # Yahoo occasionally returns a partially shifted futures candle around a
-    # contract roll.  Reject rows that violate the basic OHLC envelope instead
-    # of letting one bad observation distort the entire chart.
-    # Futures Close can be an official settlement outside the session's traded
-    # high/low range.  Open, however, must remain inside that range.
-    valid_ohlc = (
-        (frame["High"] >= frame["Open"])
-        & (frame["Low"] <= frame["Open"])
-        & (frame["High"] >= frame["Low"])
-    )
-    invalid_count = int((~valid_ohlc).sum())
-    if invalid_count:
-        print(f"Ignoring {invalid_count} invalid OHLC row(s) for {symbol}")
-    return frame.loc[valid_ohlc]
+
+
+def pct_change(series, periods):
+    try:
+        if len(series) <= periods:
+            return None
+        current = series.iloc[-1]
+        base = series.iloc[-periods - 1]
+        if base == 0:
+            return None
+        return (current - base) / base * 100
+    except Exception:
+        return None
+
+
+def ytd_change(series):
+    try:
+        latest = series.iloc[-1]
+        year = pd.Timestamp(series.index[-1]).year
+        start = pd.Timestamp(year=year, month=1, day=1, tz=series.index.tz)
+        before = series[series.index < start]
+        base = before.iloc[-1] if not before.empty else series[series.index >= start].iloc[0]
+        if base == 0:
+            return None
+        return (latest - base) / base * 100
+    except Exception:
+        return None
 
 
 def history_payload(item, frame, updated):
-    candles = []
-    for timestamp, values in frame.iterrows():
-        candle = {
-            "time": pd.Timestamp(timestamp).strftime("%Y-%m-%d"),
-            "open": rounded(values["Open"], 4),
-            "high": rounded(values["High"], 4),
-            "low": rounded(values["Low"], 4),
-            "close": rounded(values["Close"], 4),
-        }
-        if "Volume" in values and not pd.isna(values["Volume"]):
-            candle["volume"] = int(values["Volume"])
-        candles.append(candle)
+    if frame.empty:
+        return None
+    frame = frame.sort_index()
+    ohlc = []
+    for idx, row in frame.iterrows():
+        try:
+            ohlc.append([
+                int(idx.timestamp()),
+                float(row.get("Open", 0)),
+                float(row.get("Close", 0)),
+                float(row.get("Low", 0)),
+                float(row.get("High", 0)),
+            ])
+        except Exception:
+            continue
     return {
         "symbol": item["symbol"],
         "safeSymbol": safe_symbol(item["symbol"]),
         "name": item["name"],
-        "sector": item["category"],
-        "unit": item["unit"],
-        "marketCap": item["unit"],
+        "category": item.get("category", ""),
+        "unit": item.get("unit", ""),
         "updated": updated,
-        "prices": candles,
+        "data": ohlc,
     }
 
 
 def fallback_history_frame(symbol):
-    for period in (HISTORY_PERIOD, "10y", "5y", "1y", "5d"):
+    try:
         data = yf.download(
             symbol,
-            period=period,
+            period="max",
             interval="1d",
             group_by="ticker",
             auto_adjust=False,
             progress=False,
-            threads=False,
             timeout=30,
         )
         frame = frame_from_download(data, symbol)
-        if not frame.empty:
+        if frame.empty:
             return frame
-    return pd.DataFrame()
+        return frame.sort_index()
+    except Exception:
+        return pd.DataFrame()
 
 
 def main():
@@ -187,13 +175,27 @@ def main():
         timeout=30,
     )
 
+    recent_data = yf.download(
+        symbols,
+        period="10d",
+        interval="1d",
+        group_by="ticker",
+        auto_adjust=False,
+        progress=False,
+        threads=True,
+        timeout=30,
+    )
+
     rows = []
     for item in COMMODITIES:
         series = series_from_download(summary_data, item["symbol"])
+        recent = series_from_download(recent_data, item["symbol"])
         if series.empty:
             continue
         latest = series.iloc[-1]
-        previous = series.iloc[-2] if len(series) > 1 else None
+        previous = recent.iloc[-2] if len(recent) > 1 else None
+        day_change = pct_change(recent, 1) if len(recent) > 1 else 0
+        week_change = pct_change(recent, 5) if len(recent) > 5 else pct_change(series, 5)
         rows.append(
             {
                 "name": item["name"],
@@ -201,18 +203,22 @@ def main():
                 "category": item["category"],
                 "unit": item["unit"],
                 "price": rounded(latest, 4),
-                "day": rounded(pct_change(series, 1)),
-                "week": rounded(pct_change(series, 5)),
+                "day": rounded(day_change),
+                "week": rounded(week_change),
                 "month": rounded(pct_change(series, 21)),
                 "ytd": rounded(ytd_change(series)),
                 "year": rounded(pct_change(series, 252)),
                 "previous": rounded(previous, 4),
-                "date": pd.Timestamp(series.index[-1]).strftime("%Y-%m-%d"),
+                "date": pd.Timestamp(recent.index[-1]).strftime("%Y-%m-%d") if not recent.empty else pd.Timestamp(series.index[-1]).strftime("%Y-%m-%d"),
             }
         )
 
     if len(rows) < 15:
         raise RuntimeError(f"Only fetched {len(rows)} commodity rows; aborting partial update")
+
+    updated = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    payload = {"updated": updated, "commodities": rows}
+    OUTPUT_FILE.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
     history_data = yf.download(
         symbols,
@@ -222,38 +228,36 @@ def main():
         auto_adjust=False,
         progress=False,
         threads=True,
-        timeout=30,
+        timeout=60,
     )
-    CHART_DATA_DIR.mkdir(exist_ok=True)
-    history_rows = []
+
     rows_by_symbol = {row["symbol"]: row for row in rows}
+    CHART_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    history_rows = []
     for item in COMMODITIES:
         frame = frame_from_download(history_data, item["symbol"])
-        # The bulk "max" response can contain stale/shifted rows near a futures
-        # contract roll.  Prefer the separately fetched recent-period candles
-        # for overlapping dates.
-        recent_frame = frame_from_download(summary_data, item["symbol"])
-        if not recent_frame.empty:
-            frame = pd.concat([frame, recent_frame])
-            frame = frame[~frame.index.duplicated(keep="last")].sort_index()
         if frame.empty:
-            frame = fallback_history_frame(item["symbol"])
+            recent_frame = frame_from_download(summary_data, item["symbol"])
+            if not recent_frame.empty:
+                frame = recent_frame
+            else:
+                frame = fallback_history_frame(item["symbol"])
         if frame.empty:
             continue
-        updated = pd.Timestamp(frame.index[-1]).strftime("%Y-%m-%d")
         payload = history_payload(item, frame, updated)
+        if payload is None:
+            continue
         (CHART_DATA_DIR / f"{safe_symbol(item['symbol'])}.json").write_text(
-            json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
-            encoding="utf-8",
+            json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
         )
         summary = rows_by_symbol.get(item["symbol"], {})
         history_rows.append(
             {
+                "name": item["name"],
                 "symbol": item["symbol"],
                 "safeSymbol": safe_symbol(item["symbol"]),
-                "name": item["name"],
-                "sector": item["category"],
-                "unit": item["unit"],
+                "category": item.get("category", ""),
+                "unit": item.get("unit", ""),
                 "price": summary.get("price"),
                 "d": summary.get("day"),
                 "w": summary.get("week"),
@@ -267,22 +271,12 @@ def main():
     if len(history_rows) < 15:
         raise RuntimeError(f"Only wrote {len(history_rows)} commodity history files; aborting partial update")
 
-    rows.sort(key=lambda row: (row["category"], row["name"]))
-    groups = {}
-    for category in ("Indexes", "Energy", "Metals", "Agriculture", "Livestock"):
-        stocks = [row for row in history_rows if row["sector"] == category]
-        if stocks:
-            groups[category] = {"label": category, "stocks": stocks}
-    payload = {
-        "updated": max(row["date"] for row in rows),
-        "source": "Yahoo Finance futures quotes via yfinance",
-        "generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "commodities": rows,
-        "groups": groups,
-        "stocks": history_rows,
-    }
-    OUTPUT_FILE.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"Updated {OUTPUT_FILE} with {len(rows)} rows through {payload['updated']}")
+    index_json = {"type": "commodities", "updated": updated, "stocks": history_rows}
+    (CHART_DATA_DIR / "index.json").write_text(
+        json.dumps(index_json, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
+    )
+
+    print(f"Updated {OUTPUT_FILE} with {len(rows)} rows through {updated}")
 
 
 if __name__ == "__main__":
