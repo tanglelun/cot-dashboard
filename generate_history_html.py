@@ -131,8 +131,6 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
     index_values = get_futures_index_data(comm, chart_dates)
     chart_points = []
     for date, value, index_value in zip(chart_dates, net_values, index_values):
-        if index_value is None:
-            continue
         try:
             numeric_value = int(value)
         except (TypeError, ValueError):
