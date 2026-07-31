@@ -1207,7 +1207,7 @@ function getBaseRows(){
   }
   const source = Object.keys(groups).length
     ? Object.values(groups).flatMap(group => group.stocks || [])
-    : (index.stocks || []);
+    : (index.stocks || index.commodities || []);
   const seen = new Set();
   return source.filter(row => {
     const symbol = rowSymbol(row);
