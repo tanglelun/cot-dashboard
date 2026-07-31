@@ -423,7 +423,7 @@ function setRange(range){
 }
 
 function renderHeader(data){
-  const candles = data.prices;
+  const candles = data.data || data.prices;
   const titleName = data.name || fallbackName || data.symbol;
   document.getElementById('symbol').textContent = titleName;
   document.getElementById('name').textContent = data.sector || 'Commodity';
@@ -1361,10 +1361,11 @@ async function loadChart(){
     const response = await fetch('commodities_data/' + encodeURIComponent(safeSymbol(currentSymbol)) + '.json', { cache:'no-store' });
     if(!response.ok) throw new Error('No commodity chart data found for ' + currentSymbol);
     const data = await response.json();
-    if(!data.prices || !data.prices.length) throw new Error('Commodity chart data is empty for ' + currentSymbol);
+    const prices = data.data || data.prices;
+    if(!prices || !prices.length) throw new Error('Commodity chart data is empty for ' + currentSymbol);
     currentSymbol = data.symbol;
     fallbackName = data.name || fallbackName || currentSymbol;
-    state.candles = data.prices;
+    state.candles = prices;
     calculateMovingAverages(state.candles);
     calculateMacd(state.candles);
     renderHeader(data);
