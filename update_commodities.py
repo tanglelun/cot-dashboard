@@ -120,27 +120,26 @@ def history_payload(item, frame, updated):
     if frame.empty:
         return None
     frame = frame.sort_index()
-    ohlc = []
-    for idx, row in frame.iterrows():
-        try:
-            ohlc.append({
-            "time": idx.strftime("%Y-%m-%d"),
-            "open": float(row.get("Open", 0)),
-            "high": float(row.get("High", 0)),
-            "low": float(row.get("Low", 0)),
-            "close": float(row.get("Close", 0)),
-            "volume": float(row.get("Volume", 0)) or 0,
-        })
-        except Exception:
-            continue
+    candles = []
+    for timestamp, values in frame.iterrows():
+        candle = {
+            "time": pd.Timestamp(timestamp).strftime("%Y-%m-%d"),
+            "open": rounded(values["Open"], 4),
+            "high": rounded(values["High"], 4),
+            "low": rounded(values["Low"], 4),
+            "close": rounded(values["Close"], 4),
+            "volume": int(values["Volume"]) if "Volume" in values and not pd.isna(values["Volume"]) else 0,
+        }
+        candles.append(candle)
     return {
         "symbol": item["symbol"],
         "safeSymbol": safe_symbol(item["symbol"]),
         "name": item["name"],
-        "category": item.get("category", ""),
+        "sector": item.get("category", ""),
         "unit": item.get("unit", ""),
+        "marketCap": item.get("unit", ""),
         "updated": updated,
-        "data": ohlc,
+        "prices": candles,
     }
 
 
@@ -257,7 +256,7 @@ def main():
                 "name": item["name"],
                 "symbol": item["symbol"],
                 "safeSymbol": safe_symbol(item["symbol"]),
-                "category": item.get("category", ""),
+                "sector": item.get("category", ""),
                 "unit": item.get("unit", ""),
                 "price": summary.get("price"),
                 "d": summary.get("day"),
