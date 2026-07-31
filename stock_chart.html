@@ -993,7 +993,7 @@ function draw(){
     ctx.stroke();
     ctx.setLineDash([]);
     const hoverPrice = maxPrice - ((y - top) / Math.max(1, priceBottom - top)) * (maxPrice - minPrice);
-    const priceText = fmtAxisPrice(hoverPrice);
+    const priceText = fmt(hoverPrice);
     drawAxisLabel(priceText, width - 4, y, {
       align:'right',
       background:'#202735',
