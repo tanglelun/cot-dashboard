@@ -1351,6 +1351,25 @@ async function loadMarketIndex(){
   renderStockList();
 }
 
+function normalizeCandles(rawPrices){
+  if(!rawPrices || !rawPrices.length) return [];
+  if(rawPrices[0] && typeof rawPrices[0] === 'object' && !Array.isArray(rawPrices[0])){
+    return rawPrices;
+  }
+  return rawPrices.map(row => {
+    const ts = Number(row[0]);
+    const d = new Date(ts * 1000);
+    return {
+      time: d.toISOString().slice(0, 10),
+      open: Number(row[1]),
+      high: Number(row[4]),
+      low: Number(row[3]),
+      close: Number(row[2]),
+      volume: 0,
+    };
+  });
+}
+
 async function loadChart(){
   if(!currentSymbol){
     setStatus('Missing commodity symbol.');
@@ -1361,7 +1380,7 @@ async function loadChart(){
     const response = await fetch('commodities_data/' + encodeURIComponent(safeSymbol(currentSymbol)) + '.json', { cache:'no-store' });
     if(!response.ok) throw new Error('No commodity chart data found for ' + currentSymbol);
     const data = await response.json();
-    const prices = data.data || data.prices;
+    const prices = normalizeCandles(data.data || data.prices);
     if(!prices || !prices.length) throw new Error('Commodity chart data is empty for ' + currentSymbol);
     currentSymbol = data.symbol;
     fallbackName = data.name || fallbackName || currentSymbol;

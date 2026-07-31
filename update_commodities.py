@@ -123,13 +123,14 @@ def history_payload(item, frame, updated):
     ohlc = []
     for idx, row in frame.iterrows():
         try:
-            ohlc.append([
-                int(idx.timestamp()),
-                float(row.get("Open", 0)),
-                float(row.get("Close", 0)),
-                float(row.get("Low", 0)),
-                float(row.get("High", 0)),
-            ])
+            ohlc.append({
+            "time": idx.strftime("%Y-%m-%d"),
+            "open": float(row.get("Open", 0)),
+            "high": float(row.get("High", 0)),
+            "low": float(row.get("Low", 0)),
+            "close": float(row.get("Close", 0)),
+            "volume": float(row.get("Volume", 0)) or 0,
+        })
         except Exception:
             continue
     return {
