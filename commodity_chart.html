@@ -1190,7 +1190,12 @@ function rowMarketCap(row){ return row.unit || row.marketCap || row.c || 'Unit';
 function rowPrice(row){ return Number(row.price ?? row.p ?? 0); }
 function rowMarketCapNum(row){ return rowMarketCap(row); }
 function rowRank(row){ return Number(row.rank ?? row.r ?? 9999); }
-function rowMetric(row){ return Number(row[state.metric] ?? 0); }
+function rowMetric(row){
+  const shortKey = state.metric;
+  const map = {d:'day', w:'week', m:'month', y:'ytd', year:'year'};
+  const longKey = map[shortKey] || shortKey;
+  return Number(row[longKey] ?? row[shortKey] ?? 0);
+}
 
 function groupEntries(){
   const groups = state.marketIndex && state.marketIndex.groups ? state.marketIndex.groups : {};
