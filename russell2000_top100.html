@@ -309,6 +309,11 @@ tr:hover td:first-child{background:var(--tv-hover)}
   <div id="indexesTable"></div>
 </div>
 
+<div class="market-view hidden" id="bondsMarketView">
+  <div class="commodity-meta" id="bondsMeta">Loading bonds...</div>
+  <div id="bondsTable"></div>
+</div>
+
 <div class="ft"><p>数据来源: Finviz · 2026-07-31更新 · 仅供参考，不构成投资建议</p></div>
 </div>
 
@@ -1080,23 +1085,63 @@ function renderIndexes(payload){
   html+='</tbody></table></div>';
   mount.innerHTML=html;
 }
+function renderBonds(payload){
+  var rows=(payload&&payload.bonds)||[];
+  var meta=document.getElementById('bondsMeta');
+  var mount=document.getElementById('bondsTable');
+  if(!rows.length){
+    meta.textContent='Bonds';
+    mount.innerHTML='<div class="commodity-empty">No bond data available.</div>';
+    return;
+  }
+  meta.innerHTML='<span>共 <strong>'+rows.length+'</strong> 个债券收益率</span><span>更新于 '+(payload.updated||'---')+'</span><span>Source: '+((payload.source)||'FRED')+'</span>';
+  var groups=['Treasury','TIPS'];
+  var grouped=groups.map(function(group){
+    return {name:group,rows:rows.filter(function(row){return row.category===group;})};
+  }).filter(function(group){return group.rows.length;});
+  var html='<div class="commodity-table-wrap"><table class="commodity-table"><thead><tr>'+
+    '<th>Bond</th><th class="pr">Yield</th><th class="gc">Day</th>'+
+    '<th class="gc">Week</th><th class="gc">Month</th><th class="gc">YTD</th><th class="gc">1Y</th><th>Date</th>'+
+    '</tr></thead><tbody>';
+  grouped.forEach(function(group){
+    html+='<tr class="group-row"><td colspan="8">'+group.name+'</td></tr>';
+    group.rows.forEach(function(row){
+      html+='<tr>'+
+        '<td><span class="commodity-name">'+row.name+'</span></td>'+
+        '<td class="commodity-price">'+fmtCommodityNumber(row.yield,2)+'%</td>'+
+        '<td class="gc">'+fmtCommodityPct(row.day)+'</td>'+
+        '<td class="gc">'+fmtCommodityPct(row.week)+'</td>'+
+        '<td class="gc">'+fmtCommodityPct(row.month)+'</td>'+
+        '<td class="gc">'+fmtCommodityPct(row.ytd)+'</td>'+
+        '<td class="gc">'+fmtCommodityPct(row.year)+'</td>'+
+        '<td class="commodity-date">'+(row.date||'---')+'</td>'+
+        '</tr>';
+    });
+  });
+  html+='</tbody></table></div>';
+  mount.innerHTML=html;
+}
 function setupMarketType(){
   var select=document.getElementById('marketTypeSelect');
   var stock=document.getElementById('stockMarketView');
   var shares=document.getElementById('sharesMarketView');
   var commodities=document.getElementById('commoditiesMarketView');
   var indexes=document.getElementById('indexesMarketView');
+  var bonds=document.getElementById('bondsMarketView');
   var loadedShares=false;
   var loadedCommodities=false;
   var loadedIndexes=false;
+  var loadedBonds=false;
   function show(value){
     var isShares=value==='shares';
     var isCommodities=value==='commodities';
     var isIndexes=value==='indexes';
-    stock.classList.toggle('hidden',isShares||isCommodities||isIndexes);
+    var isBonds=value==='bonds';
+    stock.classList.toggle('hidden',isShares||isCommodities||isIndexes||isBonds);
     shares.classList.toggle('hidden',!isShares);
     commodities.classList.toggle('hidden',!isCommodities);
     indexes.classList.toggle('hidden',!isIndexes);
+    bonds.classList.toggle('hidden',!isBonds);
     document.querySelectorAll('[data-market-menu]').forEach(function(link){
       link.classList.toggle('active',link.dataset.marketMenu===value);
     });
@@ -1128,6 +1173,16 @@ function setupMarketType(){
         .catch(function(){
           document.getElementById('indexesMeta').textContent='Indexes';
           document.getElementById('indexesTable').innerHTML='<div class="commodity-empty">Index data has not been generated yet. Run python update_indexes.py.</div>';
+        });
+    }
+    if(isBonds&&!loadedBonds){
+      loadedBonds=true;
+      fetch('bonds_data.json',{cache:'no-store'})
+        .then(function(response){if(!response.ok)throw new Error('No bonds data');return response.json();})
+        .then(renderBonds)
+        .catch(function(){
+          document.getElementById('bondsMeta').textContent='Bonds';
+          document.getElementById('bondsTable').innerHTML='<div class="commodity-empty">Bond data has not been generated yet. Run python fetch_bonds.py.</div>';
         });
     }
   }

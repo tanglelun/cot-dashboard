@@ -1,0 +1,150 @@
+{
+  "updated": "2026-07-30",
+  "source": "FRED (Federal Reserve Economic Data)",
+  "bonds": [
+    {
+      "name": "US 3M",
+      "yield": 3.82,
+      "day": -0.01,
+      "week": -0.13,
+      "month": -0.05,
+      "ytd": 0.15,
+      "year": -0.58,
+      "date": "2026-07-30",
+      "category": "Treasury",
+      "series_id": "DGS3MO"
+    },
+    {
+      "name": "US 6M",
+      "yield": 3.98,
+      "day": 0.01,
+      "week": -0.11,
+      "month": -0.03,
+      "ytd": 0.39,
+      "year": -0.32,
+      "date": "2026-07-30",
+      "category": "Treasury",
+      "series_id": "DGS6MO"
+    },
+    {
+      "name": "US 1Y",
+      "yield": 4.04,
+      "day": 0.0,
+      "week": -0.11,
+      "month": 0.06,
+      "ytd": 0.56,
+      "year": -0.05,
+      "date": "2026-07-30",
+      "category": "Treasury",
+      "series_id": "DGS1"
+    },
+    {
+      "name": "US 2Y",
+      "yield": 4.23,
+      "day": 0.01,
+      "week": -0.14,
+      "month": 0.09,
+      "ytd": 0.76,
+      "year": 0.32,
+      "date": "2026-07-30",
+      "category": "Treasury",
+      "series_id": "DGS2"
+    },
+    {
+      "name": "US 3Y",
+      "yield": 4.3,
+      "day": 0.01,
+      "week": -0.1,
+      "month": 0.15,
+      "ytd": 0.75,
+      "year": 0.43,
+      "date": "2026-07-30",
+      "category": "Treasury",
+      "series_id": "DGS3"
+    },
+    {
+      "name": "US 5Y",
+      "yield": 4.38,
+      "day": 0.01,
+      "week": -0.08,
+      "month": 0.19,
+      "ytd": 0.65,
+      "year": 0.42,
+      "date": "2026-07-30",
+      "category": "Treasury",
+      "series_id": "DGS5"
+    },
+    {
+      "name": "US 7Y",
+      "yield": 4.52,
+      "day": 0.01,
+      "week": -0.06,
+      "month": 0.22,
+      "ytd": 0.58,
+      "year": 0.34,
+      "date": "2026-07-30",
+      "category": "Treasury",
+      "series_id": "DGS7"
+    },
+    {
+      "name": "US 10Y",
+      "yield": 4.68,
+      "day": 0.01,
+      "week": -0.03,
+      "month": 0.24,
+      "ytd": 0.5,
+      "year": 0.26,
+      "date": "2026-07-30",
+      "category": "Treasury",
+      "series_id": "DGS10"
+    },
+    {
+      "name": "US 20Y",
+      "yield": 5.22,
+      "day": 0.01,
+      "week": 0.02,
+      "month": 0.29,
+      "ytd": 0.43,
+      "year": 0.27,
+      "date": "2026-07-30",
+      "category": "Treasury",
+      "series_id": "DGS20"
+    },
+    {
+      "name": "US 30Y",
+      "yield": 5.21,
+      "day": 0.01,
+      "week": 0.04,
+      "month": 0.3,
+      "ytd": 0.37,
+      "year": 0.25,
+      "date": "2026-07-30",
+      "category": "Treasury",
+      "series_id": "DGS30"
+    },
+    {
+      "name": "US 5Y TIPS",
+      "yield": 2.14,
+      "day": 0.01,
+      "week": -0.03,
+      "month": 0.21,
+      "ytd": 0.67,
+      "year": 0.65,
+      "date": "2026-07-30",
+      "category": "TIPS",
+      "series_id": "DFII5"
+    },
+    {
+      "name": "US 10Y TIPS",
+      "yield": 2.41,
+      "day": 0.0,
+      "week": -0.02,
+      "month": 0.21,
+      "ytd": 0.48,
+      "year": 0.43,
+      "date": "2026-07-30",
+      "category": "TIPS",
+      "series_id": "DFII10"
+    }
+  ]
+}

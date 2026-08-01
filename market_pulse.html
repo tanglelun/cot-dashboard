@@ -115,6 +115,10 @@ canvas{display:block;width:100%;height:100%}
 .metric-value{font-size:23px;line-height:1.1;color:#fff;font-weight:950}
 .metric-note{font-size:11px;color:var(--muted);margin-top:6px}
 .hidden{display:none}
+.spinner-wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:100;transition:opacity .25s ease}
+.spinner-wrap.hidden{display:flex;opacity:0;pointer-events:none}
+.spinner{width:40px;height:40px;border:3px solid var(--line);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 .note{margin-top:10px;color:var(--muted);font-size:12px;line-height:1.55}
 @media(max-width:1080px){
   .hero{grid-template-columns:1fr}
@@ -163,6 +167,7 @@ canvas{display:block;width:100%;height:100%}
 </style>
 </head>
 <body>
+<div class="spinner-wrap" id="spinner"><div class="spinner"></div></div>
 <nav class="site-nav" aria-label="Primary">
   <a class="site-brand" href="index.html" aria-label="Net Data home"><span class="brand-mark" aria-hidden="true"></span><span>Net Data</span></a>
   <input class="nav-check" type="checkbox" id="navMenu">
@@ -366,13 +371,23 @@ function trimSeriesToSharedWindow(rows){
   }));
 }
 function nearestPoint(points, date, maxLagDays=7){
+  if(!points || !points.length) return null;
   const target = new Date(date).getTime();
-  let best = null, dist = Infinity;
-  for(const point of points || []){
-    const d = Math.abs(new Date(point.date).getTime() - target);
-    if(d < dist){ dist = d; best = point; }
+  const maxLagMs = maxLagDays * 86400000;
+  let lo = 0, hi = points.length - 1;
+  while(lo < hi){
+    const mid = (lo + hi) >> 1;
+    if(new Date(points[mid].date).getTime() < target) lo = mid + 1;
+    else hi = mid;
   }
-  return dist <= maxLagDays * 86400000 ? best : null;
+  let best = null, dist = Infinity;
+  const check = (i) => {
+    if(i < 0 || i >= points.length) return;
+    const d = Math.abs(new Date(points[i].date).getTime() - target);
+    if(d < dist){ dist = d; best = points[i]; }
+  };
+  check(lo - 1); check(lo); check(lo + 1);
+  return dist <= maxLagMs ? best : null;
 }
 function percentileScore(value, low, high, inverse=false){
   if(!Number.isFinite(value)) return null;
@@ -949,18 +964,27 @@ $('liquidityRanges').addEventListener('click', event => {
   state.liquidityRange = button.dataset.range;
   renderLiquidity();
 });
-fetch('market_pulse_view.json', {cache:'no-store'})
+fetch('market_pulse_view.json')
   .then(response => response.json())
   .then(data => {
     state.data = data;
     $('meta').textContent = `Updated ${data.updated} · ${data.source}`;
     $('notes').textContent = (data.notes || []).join(' ');
+    $('spinner').classList.add('hidden');
+    setTimeout(() => { $('spinner').style.display = 'none'; }, 260);
     render();
   })
   .catch(error => {
+    $('spinner').classList.add('hidden');
+    setTimeout(() => { $('spinner').style.display = 'none'; }, 260);
     $('meta').textContent = `Unable to load market pulse data: ${error.message}`;
   });
-window.addEventListener('resize', () => state.data && render());
+let resizeTimer;
+window.addEventListener('resize', () => {
+  if(!state.data) return;
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(render, 150);
+});
 </script>
 </body>
 </html>
