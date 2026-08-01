@@ -1107,7 +1107,7 @@ function renderBonds(payload){
     html+='<tr class="group-row"><td colspan="8">'+group.name+'</td></tr>';
     group.rows.forEach(function(row){
       html+='<tr>'+
-        '<td><span class="commodity-name">'+row.name+'</span></td>'+
+        '<td><a class="commodity-name" href="bond_chart.html?series_id='+encodeURIComponent(row.series_id)+'&name='+encodeURIComponent(row.name)+'">'+row.name+'</a></td>'+
         '<td class="commodity-price">'+fmtCommodityNumber(row.yield,2)+'%</td>'+
         '<td class="gc">'+fmtCommodityPct(row.day)+'</td>'+
         '<td class="gc">'+fmtCommodityPct(row.week)+'</td>'+

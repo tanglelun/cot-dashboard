@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bond Yield Chart</title>
+<link rel="stylesheet" href="nav_market.css">
+<style>
+:root{--bg:#000;--panel:#050709;--panel-2:#090d12;--line:#1d2730;--text:#d1d4dc;--muted:#787b86;--green:#00d109;--red:#ff4d00;--blue:#2962ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif;font-weight:760}
+.site-nav{min-height:64px;display:flex;align-items:center;gap:28px;padding:0 24px;background:#000;border-bottom:1px solid #1b1f2a;position:relative;z-index:30}
+.site-brand{display:inline-flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-size:25px;font-weight:900}
+.brand-mark{position:relative;width:22px;height:26px;display:inline-block}
+.brand-mark::before{content:"";position:absolute;left:7px;top:1px;width:10px;height:24px;background:#fff;border-radius:10px 10px 10px 1px;transform:skew(-18deg) rotate(22deg);transform-origin:center}
+.brand-mark::after{content:"";position:absolute;left:2px;bottom:2px;width:13px;height:3px;background:#fff;border-radius:999px;transform:rotate(-34deg)}
+.nav-check{position:absolute;opacity:0;pointer-events:none}
+.nav-toggle{display:none;width:38px;height:38px;border:1px solid #2a2e39;border-radius:999px;align-items:center;justify-content:center;flex-direction:column;gap:4px;cursor:pointer;margin-left:0}
+.nav-toggle span{width:16px;height:2px;background:#fff;border-radius:999px}
+.nav-links{display:flex;align-items:center;gap:28px;flex:0 1 auto}
+.nav-link{position:relative;color:#f3f4f6;font-size:15px;font-weight:850;text-decoration:none;white-space:nowrap}
+.nav-link:hover,.nav-link.active{color:#b8ff00}
+.nav-market{position:relative;display:flex;align-items:center}
+.market-trigger{display:inline-flex;align-items:center;gap:7px;border:0;background:transparent;cursor:pointer;font:inherit}
+.market-trigger::after{content:"";width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px)}
+.market-menu{position:absolute;left:50%;top:100%;margin-top:8px;min-width:190px;padding:8px;border:1px solid #26313d;border-radius:8px;background:rgba(9,13,18,.96);box-shadow:0 18px 48px rgba(0,0,0,.48);transform:translateX(-50%) translateY(6px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .14s,transform .14s,visibility .14s;z-index:50}
+.market-menu::before{content:"";position:absolute;left:0;right:0;top:-15px;height:15px}
+.nav-market:hover .market-menu,.nav-market:focus-within .market-menu{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.market-menu-link{display:flex;align-items:center;justify-content:space-between;height:34px;padding:0 10px;border-radius:5px;color:var(--text);font-size:13px;font-weight:850;text-decoration:none}
+.market-menu-link:hover{background:rgba(0,209,9,.16);color:#fff}
+.nav-search-icon{width:42px;height:42px;border:1px solid #2a2e39;border-radius:999px;background:#090c12;display:inline-flex;align-items:center;justify-content:center;position:relative;flex:0 0 auto;margin-left:auto;text-decoration:none}
+.nav-search-icon::before{content:"";width:13px;height:13px;border:2px solid #d1d4dc;border-radius:50%}
+.nav-search-icon::after{content:"";position:absolute;width:7px;height:2px;background:#d1d4dc;border-radius:999px;transform:translate(9px,9px) rotate(45deg)}
+.wrap{padding:16px clamp(10px,1.3vw,24px) 28px}
+.header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.header-left h1{margin:0;color:#fff;font-size:30px;line-height:1;font-weight:950}
+.header-left .sub{color:var(--muted);font-size:12px;margin-top:6px}
+.header-right{display:flex;align-items:center;gap:10px}
+.yield-badge{display:inline-block;padding:6px 14px;border:2px solid var(--green);border-radius:999px;color:#fff;font-size:20px;font-weight:950}
+.range-tabs{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.range-tab{height:30px;border:1px solid var(--line);background:#000;color:var(--muted);border-radius:5px;padding:0 10px;font:900 12px Inter,Arial,sans-serif;cursor:pointer}
+.range-tab:hover{background:#101820;color:#fff}
+.range-tab.active{background:var(--green);border-color:var(--green);color:#001b03}
+.canvas-wrap{position:relative;height:520px;border:1px solid var(--line);background:#000}
+canvas{display:block;width:100%;height:100%}
+.chart-tooltip{position:absolute;left:0;top:0;display:none;min-width:120px;padding:8px 10px;border:1px solid var(--line);border-radius:5px;background:rgba(9,13,18,.96);box-shadow:0 10px 28px rgba(0,0,0,.35);color:#fff;font-size:12px;font-weight:850;pointer-events:none;z-index:5}
+.chart-tooltip .muted{display:block;color:var(--muted);font-size:11px;margin-bottom:4px}
+.gauge-wrap{position:relative;height:520px}
+.gauge-value{position:absolute;top:20px;left:20px;font-size:36px;font-weight:950;color:#fff;z-index:2}
+@media(max-width:720px){
+  .wrap{padding:0}
+  .site-nav{min-height:58px;padding:10px 14px;gap:10px;flex-wrap:wrap}
+  .site-brand{font-size:21px}
+  .nav-toggle{display:flex}
+  .nav-links{display:none;flex:0 0 100%;width:100%;flex-direction:column;align-items:stretch;gap:4px;padding-top:8px}
+  .nav-check:checked~.nav-links{display:flex}
+  .nav-link{height:40px;display:flex;align-items:center;font-size:14px}
+  .nav-market{display:block}
+  .market-menu{position:static;opacity:1;visibility:visible;pointer-events:auto;transform:none;box-shadow:none;background:transparent;border:0;padding:0 0 0 12px}
+  .market-menu::before{display:none}
+  .canvas-wrap{height:calc(100vh - 200px);min-height:420px}
+  .header-left h1{font-size:22px}
+}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="Primary">
+  <a class="site-brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span><span>Net Data</span></a>
+  <input class="nav-check" type="checkbox" id="navMenu">
+  <label class="nav-toggle" for="navMenu"><span></span><span></span><span></span></label>
+  <div class="nav-links">
+    <a class="nav-link" href="cot_noncommercial_history.html">Commercial</a>
+    <div class="nav-market">
+      <button class="nav-link market-trigger" type="button">Market</button>
+      <div class="market-menu">
+        <a class="market-menu-link" href="russell2000_top100.html?market=stock">Tops</a>
+        <a class="market-menu-link" href="russell2000_top100.html?market=commodities">Commodities</a>
+        <a class="market-menu-link" href="russell2000_top100.html?market=indexes">Indexes</a>
+        <a class="market-menu-link" href="russell2000_top100.html?market=shares">Stock</a>
+        <a class="market-menu-link" href="russell2000_top100.html?market=currencies">Currencies</a>
+        <a class="market-menu-link" href="russell2000_top100.html?market=crypto">Crypto</a>
+        <a class="market-menu-link" href="russell2000_top100.html?market=bonds">Bonds</a>
+      </div>
+    </div>
+    <a class="nav-link" href="economy.html">Indicators</a>
+    <a class="nav-link active" href="market_pulse.html">Insight</a>
+    <a class="nav-link" href="compare.html">Compare</a>
+    <a class="nav-link" href="calendar.html">Calendar</a>
+  </div>
+  <a class="nav-search-icon" href="search.html" aria-label="Search"></a>
+</nav>
+<main class="wrap">
+  <div class="header">
+    <div class="header-left">
+      <h1 id="bondName">--</h1>
+      <div class="sub" id="bondMeta">Loading...</div>
+    </div>
+    <div class="header-right">
+      <span class="yield-badge" id="bondYield">--</span>
+    </div>
+  </div>
+  <div class="range-tabs" id="rangeTabs" style="margin-bottom:8px">
+    <button class="range-tab" data-range="all">All</button>
+    <button class="range-tab" data-range="10y">10y</button>
+    <button class="range-tab active" data-range="5y">5y</button>
+    <button class="range-tab" data-range="2y">2y</button>
+    <button class="range-tab" data-range="1y">1y</button>
+    <button class="range-tab" data-range="ytd">YTD</button>
+    <button class="range-tab" data-range="6m">6m</button>
+  </div>
+  <div class="canvas-wrap">
+    <canvas id="chart"></canvas>
+    <div class="chart-tooltip" id="tooltip"></div>
+  </div>
+</main>
+<script>
+(function(){
+var state={points:[], range:'5y', name:'', unit:'%'};
+var $=function(id){return document.getElementById(id);};
+var fmt=function(v){return v==null||!Number.isFinite(Number(v))?'--':Number(v).toFixed(2)+'%';};
+var dateMs=function(d){return new Date(d).getTime();};
+
+function load(){
+  var params=new URLSearchParams(window.location.search);
+  var sid=params.get('series_id')||'';
+  var name=params.get('name')||sid;
+  if(!sid){
+    $('bondMeta').textContent='Missing series_id parameter';
+    return;
+  }
+  fetch('bonds_data/'+encodeURIComponent(sid)+'.json')
+    .then(function(r){if(!r.ok)throw new Error('Not found');return r.json();})
+    .then(function(data){
+      state.name=data.name||name;
+      state.points=(data.points||[]).filter(function(p){return Number.isFinite(Number(p.value));});
+      $('bondName').textContent=state.name;
+      var last=state.points[state.points.length-1];
+      $('bondMeta').textContent=(data.updated||'')+' · '+state.points.length+' data points · '+(data.source||'FRED');
+      $('bondYield').textContent=last?fmt(last.value):'--';
+      if(state.points.length<20) state.range='all';
+      render();
+    })
+    .catch(function(e){
+      $('bondMeta').textContent='Unable to load: '+e.message;
+    });
+}
+
+$('rangeTabs').addEventListener('click',function(e){
+  var btn=e.target.closest('button[data-range]');
+  if(!btn)return;
+  state.range=btn.dataset.range;
+  document.querySelectorAll('.range-tab').forEach(function(t){t.classList.toggle('active',t===btn);});
+  render();
+});
+
+function filterPoints(){
+  var pts=state.points;
+  if(state.range==='all'||!pts.length)return pts;
+  var last=new Date(pts[pts.length-1].date);
+  var start=new Date(last);
+  if(state.range==='6m')start.setMonth(start.getMonth()-6);
+  if(state.range==='1y')start.setFullYear(start.getFullYear()-1);
+  if(state.range==='2y')start.setFullYear(start.getFullYear()-2);
+  if(state.range==='5y')start.setFullYear(start.getFullYear()-5);
+  if(state.range==='10y')start.setFullYear(start.getFullYear()-10);
+  if(state.range==='ytd')return pts.filter(function(p){return p.date>=last.getFullYear()+'-01-01';});
+  var ms=start.getTime();
+  return pts.filter(function(p){return dateMs(p.date)>=ms;});
+}
+
+function render(){
+  var pts=filterPoints();
+  if(!pts.length)return;
+  var canvas=$('chart');
+  var dpr=window.devicePixelRatio||1;
+  var rect=canvas.parentElement.getBoundingClientRect();
+  var w=rect.width, h=rect.height;
+  canvas.width=w*dpr;canvas.height=h*dpr;
+  canvas.style.width=w+'px';canvas.style.height=h+'px';
+  var ctx=canvas.getContext('2d');
+  ctx.scale(dpr,dpr);
+
+  var pad={top:30,right:90,bottom:40,left:80};
+  var cw=w-pad.left-pad.right, ch=h-pad.top-pad.bottom;
+
+  var values=pts.map(function(p){return p.value;});
+  var minY=Math.min.apply(null,values), maxY=Math.max.apply(null,values);
+  var rangeY=maxY-minY||1;
+  minY-=rangeY*0.08;maxY+=rangeY*0.08;
+
+  var minX=dateMs(pts[0].date),maxX=dateMs(pts[pts.length-1].date);
+  var xRange=maxX-minX||1;
+
+  function xFor(d){return pad.left+((dateMs(d)-minX)/xRange)*cw;}
+  function yFor(v){return pad.top+ch-((v-minY)/(maxY-minY))*ch;}
+
+  ctx.clearRect(0,0,w,h);
+
+  // Y axis grid + labels
+  ctx.strokeStyle='#1d2730';ctx.lineWidth=1;
+  ctx.fillStyle='#787b86';ctx.font='11px Inter,Arial';ctx.textAlign='right';
+  for(var i=0;i<=5;i++){
+    var yv=minY+(maxY-minY)*i/5;
+    var yp=yFor(yv);
+    ctx.beginPath();ctx.moveTo(pad.left,yp);ctx.lineTo(w-pad.right,yp);ctx.stroke();
+    ctx.fillText(yv.toFixed(2)+'%',pad.left-8,yp+4);
+  }
+
+  // X axis labels
+  var totalDays=(maxX-minX)/86400000;
+  var step=totalDays<180?30:totalDays<730?90:totalDays<1825?180:365;
+  ctx.textAlign='center';
+  for(var d=new Date(pts[0].date).getTime();d<=maxX;d+=step*86400000){
+    var xp=xFor(new Date(d).toISOString().slice(0,10));
+    ctx.fillText(new Date(d).toISOString().slice(0,10),xp,h-pad.bottom+18);
+  }
+
+  // Line
+  ctx.beginPath();ctx.strokeStyle='#2962ff';ctx.lineWidth=2;ctx.lineJoin='round';
+  for(var j=0;j<pts.length;j++){
+    var xj=xFor(pts[j].date), yj=yFor(pts[j].value);
+    j===0?ctx.moveTo(xj,yj):ctx.lineTo(xj,yj);
+  }
+  ctx.stroke();
+
+  // Fill
+  ctx.lineTo(xFor(pts[pts.length-1].date),pad.top+ch);
+  ctx.lineTo(xFor(pts[0].date),pad.top+ch);
+  ctx.closePath();
+  var grad=ctx.createLinearGradient(0,pad.top,0,pad.top+ch);
+  grad.addColorStop(0,'rgba(41,98,255,0.18)');grad.addColorStop(1,'rgba(41,98,255,0.01)');
+  ctx.fillStyle=grad;ctx.fill();
+
+  // Axes
+  ctx.strokeStyle='#1d2730';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pad.left,pad.top);ctx.lineTo(pad.left,pad.top+ch);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(pad.left,pad.top+ch);ctx.lineTo(w-pad.right,pad.top+ch);ctx.stroke();
+
+  // Hover
+  var tooltip=$('tooltip');
+  canvas.onmousemove=function(e){
+    var mx=e.clientX-rect.left;
+    if(mx<pad.left||mx>w-pad.right){tooltip.style.display='none';return;}
+    var targetMinX=minX+((mx-pad.left)/cw)*xRange;
+    var best=pts[0],bestDist=Infinity;
+    for(var k=0;k<pts.length;k++){
+      var d=Math.abs(dateMs(pts[k].date)-targetMinX);
+      if(d<bestDist){bestDist=d;best=pts[k];}
+    }
+    tooltip.innerHTML='<span class="muted">'+best.date+'</span>'+state.name+' <strong>'+fmt(best.value)+'</strong>';
+    var lx=Math.min(w-136,Math.max(8,xFor(best.date)+12));
+    tooltip.style.transform='translate('+lx+'px, 10px)';
+    tooltip.style.display='block';
+  };
+  canvas.onmouseleave=function(){tooltip.style.display='none';};
+}
+
+window.addEventListener('resize',function(){
+  if(!state.points.length)return;
+  var canvas=$('chart');
+  var rect=canvas.parentElement.getBoundingClientRect();
+  canvas.width=rect.width*window.devicePixelRatio||1;
+  canvas.height=rect.height*window.devicePixelRatio||1;
+  render();
+});
+
+load();
+})();
+</script>
+</body>
+</html>

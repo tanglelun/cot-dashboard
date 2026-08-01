@@ -10,6 +10,7 @@ import requests
 
 BASE_DIR = Path(__file__).resolve().parent
 OUTPUT_FILE = BASE_DIR / "bonds_data.json"
+HISTORY_DIR = BASE_DIR / "bonds_data"
 
 BONDS = [
     {"name": "US 3M", "series_id": "DGS3MO", "category": "Treasury"},
@@ -100,6 +101,8 @@ def collect():
     bonds = []
     latest_date = None
 
+    HISTORY_DIR.mkdir(parents=True, exist_ok=True)
+
     frame = fetch_all_fred_series()
 
     for item in BONDS:
@@ -135,6 +138,26 @@ def collect():
             "series_id": sid,
         })
         print(f"  {item['name']}: {value}% ({date_str})", file=sys.stderr)
+
+        # Save per-bond history
+        history_points = []
+        for date_idx, val in series.items():
+            if pd.notna(val):
+                history_points.append({
+                    "date": date_idx.strftime("%Y-%m-%d"),
+                    "value": round(float(val), 3),
+                })
+        history = {
+            "name": item["name"],
+            "series_id": sid,
+            "category": item["category"],
+            "updated": latest_date or datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+            "source": "FRED (Federal Reserve Economic Data)",
+            "points": history_points,
+        }
+        (HISTORY_DIR / f"{sid}.json").write_text(
+            json.dumps(history, ensure_ascii=False), encoding="utf-8"
+        )
 
     payload = {
         "updated": latest_date or datetime.now(timezone.utc).strftime("%Y-%m-%d"),
