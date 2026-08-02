@@ -229,61 +229,110 @@ function render(){
   canvas.style.width=w+'px';canvas.style.height=h+'px';
   ctx.setTransform(dpr,0,0,dpr,0,0);
 
-  var p={top:28,right:20,bottom:32,left:72};
-  var cw=w-p.left-p.right,ch=h-p.top-p.bottom;
-  var vals=pts.map(function(p){return p.value;});
-  var minY=Math.min.apply(null,vals),maxY=Math.max.apply(null,vals);
-  var ry=maxY-minY||1;minY-=ry*0.12;maxY+=ry*0.12;
-  var minX=dateMs(pts[0].date),maxX=dateMs(pts[pts.length-1].date),rx=maxX-minX||1;
+  // Build synthetic OHLC candles from yield points
+  var candles=[];
+  for(var i=0;i<pts.length;i++){
+    var close=pts[i].value;
+    var open=(i>0?pts[i-1].value:close);
+    candles.push({
+      date:pts[i].date,
+      time:dateMs(pts[i].date),
+      open:open,
+      high:Math.max(open,close),
+      low:Math.min(open,close),
+      close:close,
+      isUp:close>=open,
+    });
+  }
 
-  function xf(d){return p.left+((dateMs(d)-minX)/rx)*cw;}
+  var p={top:28,right:16,bottom:32,left:68};
+  var cw=w-p.left-p.right,ch=h-p.top-p.bottom;
+
+  // Limit visible candles to one per pixel column max
+  var maxCandles=Math.floor(cw/3);
+  var step=Math.max(1,Math.floor(candles.length/maxCandles));
+  var visible=[];
+  for(var vi=0;vi<candles.length;vi+=step){
+    var batch=candles.slice(vi,Math.min(candles.length,vi+step));
+    if(!batch.length)continue;
+    var agg={date:batch[0].date,time:batch[0].time,open:batch[0].open,high:batch[0].high,low:batch[0].low,close:batch[batch.length-1].close};
+    for(var bi=1;bi<batch.length;bi++){if(batch[bi].high>agg.high)agg.high=batch[bi].high;if(batch[bi].low<agg.low)agg.low=batch[bi].low;}
+    agg.isUp=agg.close>=agg.open;
+    visible.push(agg);
+  }
+
+  var allHighs=visible.map(function(c){return c.high;});
+  var allLows=visible.map(function(c){return c.low;});
+  var minY=Math.min.apply(null,allLows),maxY=Math.max.apply(null,allHighs);
+  var ry=maxY-minY||1;minY-=ry*0.08;maxY+=ry*0.08;
+  var minX=visible[0].time,maxX=visible[visible.length-1].time,rx=maxX-minX||1;
+
+  function xf(t){return p.left+((t-minX)/rx)*cw;}
   function yf(v){return p.top+ch-((v-minY)/(maxY-minY))*ch;}
 
   ctx.clearRect(0,0,w,h);
 
-  // grid
+  // Grid & Y labels
   ctx.strokeStyle='#1d2730';ctx.lineWidth=1;
   ctx.fillStyle='#787b86';ctx.font='11px Inter,Arial';ctx.textAlign='right';
-  for(var i=0;i<=5;i++){
-    var yv=minY+ry*1.12*i/5,yp=yf(yv);
+  for(var gi=0;gi<=5;gi++){
+    var yv=minY+ry*1.08*gi/5,yp=yf(yv);
     ctx.beginPath();ctx.moveTo(p.left,yp);ctx.lineTo(w-p.right,yp);ctx.stroke();
     ctx.fillText(yv.toFixed(2)+'%',p.left-8,yp+4);
   }
 
-  // x labels
-  var days=(maxX-minX)/86400000,step=days<180?30:days<730?90:days<1825?180:365;
+  // X labels
+  var days=(maxX-minX)/86400000,labelStep=days<60?7:days<180?30:days<730?90:days<1825?180:365;
   ctx.textAlign='center';
-  for(var d=new Date(pts[0].date);d.getTime()<=maxX;d.setDate(d.getDate()+step)){
-    ctx.fillText(d.toISOString().slice(0,10),xf(d.toISOString().slice(0,10)),h-p.bottom+18);
+  for(var dl=new Date(visible[0].date);dl.getTime()<=maxX;dl.setDate(dl.getDate()+labelStep)){
+    ctx.fillText(dl.toISOString().slice(0,10),xf(dl.getTime()),h-p.bottom+18);
   }
 
-  // fill
-  ctx.beginPath();
-  for(var j=0;j<pts.length;j++){var xj=xf(pts[j].date),yj=yf(pts[j].value);j===0?ctx.moveTo(xj,yj):ctx.lineTo(xj,yj);}
-  ctx.lineTo(xf(pts[pts.length-1].date),p.top+ch);ctx.lineTo(xf(pts[0].date),p.top+ch);ctx.closePath();
-  var g=ctx.createLinearGradient(0,p.top,0,p.top+ch);
-  g.addColorStop(0,'rgba(41,98,255,0.22)');g.addColorStop(1,'rgba(41,98,255,0.02)');
-  ctx.fillStyle=g;ctx.fill();
+  // MA line overlay
+  var maPeriod=Math.max(5,Math.min(20,Math.floor(visible.length/5)));
+  ctx.beginPath();ctx.strokeStyle='rgba(255,157,0,0.7)';ctx.lineWidth=1.2;ctx.setLineDash([4,4]);
+  for(var mi=0;mi<visible.length;mi++){
+    var start=Math.max(0,mi-maPeriod+1),maSum=0;
+    for(var ms=start;ms<=mi;ms++)maSum+=visible[ms].close;
+    var maVal=maSum/(mi-start+1);
+    var mx=xf(visible[mi].time),my=yf(maVal);
+    mi===0?ctx.moveTo(mx,my):ctx.lineTo(mx,my);
+  }
+  ctx.stroke();ctx.setLineDash([]);
 
-  // line
-  ctx.beginPath();ctx.strokeStyle='#2962ff';ctx.lineWidth=2;ctx.lineJoin='round';
-  for(var k=0;k<pts.length;k++){var xk=xf(pts[k].date),yk=yf(pts[k].value);k===0?ctx.moveTo(xk,yk):ctx.lineTo(xk,yk);}
-  ctx.stroke();
+  // Candlesticks
+  var candleW=Math.max(1,Math.min(8,cw/visible.length*0.75));
+  for(var ci=0;ci<visible.length;ci++){
+    var c=visible[ci],cx=xf(c.time);
+    var cOpen=yf(c.open),cClose=yf(c.close),cHigh=yf(c.high),cLow=yf(c.low);
+    var up=c.isUp;
+    ctx.strokeStyle=up?'#00d109':'#ff4d00';
+    ctx.fillStyle=up?'#00d109':'#ff4d00';
+    // Wick
+    ctx.beginPath();ctx.moveTo(cx,cHigh);ctx.lineTo(cx,cLow);ctx.stroke();
+    // Body
+    var bodyTop=Math.min(cOpen,cClose),bodyH=Math.max(1,Math.abs(cClose-cOpen));
+    ctx.fillRect(cx-candleW/2,bodyTop,candleW,bodyH);
+  }
 
-  // axes
+  // Axes
   ctx.strokeStyle='#1d2730';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(p.left,p.top);ctx.lineTo(p.left,p.top+ch);ctx.stroke();
   ctx.beginPath();ctx.moveTo(p.left,p.top+ch);ctx.lineTo(w-p.right,p.top+ch);ctx.stroke();
 
-  // hover
+  // Hover
   var tip=$('tooltip');
   canvas.onmousemove=function(e){
     var mx=e.clientX-rect.left;
     if(mx<p.left||mx>w-p.right){tip.style.display='none';return;}
-    var t=minX+((mx-p.left)/cw)*rx,best=pts[0],bd=Infinity;
-    for(var i2=0;i2<pts.length;i2++){var di=Math.abs(dateMs(pts[i2].date)-t);if(di<bd){bd=di;best=pts[i2];}}
-    tip.innerHTML='<span class="muted">'+best.date+'</span>Yield <strong>'+fmt(best.value)+'</strong>';
-    var lx=Math.min(w-136,Math.max(8,xf(best.date)+12));
+    var t=minX+((mx-p.left)/cw)*rx,best=visible[0],bd=Infinity;
+    for(var hi=0;hi<visible.length;hi++){var d=Math.abs(visible[hi].time-t);if(d<bd){bd=d;best=visible[hi];}}
+    tip.innerHTML='<span class="muted">'+best.date+'</span>'+
+      'O: <strong>'+best.open.toFixed(2)+'%</strong> '+
+      'H: <strong>'+best.high.toFixed(2)+'%</strong> '+
+      'L: <strong>'+best.low.toFixed(2)+'%</strong> '+
+      'C: <strong>'+best.close.toFixed(2)+'%</strong>';
+    var lx=Math.min(w-180,Math.max(8,xf(best.time)+12));
     tip.style.transform='translate('+lx+'px, 8px)';
     tip.style.display='block';
   };
