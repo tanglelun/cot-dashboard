@@ -7,25 +7,24 @@ from pathlib import Path
 
 import pandas as pd
 import requests
-import yfinance as yf
 
 BASE_DIR = Path(__file__).resolve().parent
 OUTPUT_FILE = BASE_DIR / "bonds_data.json"
 HISTORY_DIR = BASE_DIR / "bonds_data"
 
 BONDS = [
-    {"name": "US 3M", "series_id": "DGS3MO", "category": "Treasury", "ticker": None},
-    {"name": "US 6M", "series_id": "DGS6MO", "category": "Treasury", "ticker": None},
-    {"name": "US 1Y", "series_id": "DGS1", "category": "Treasury", "ticker": None},
-    {"name": "US 2Y", "series_id": "DGS2", "category": "Treasury", "ticker": "ZT=F"},
-    {"name": "US 3Y", "series_id": "DGS3", "category": "Treasury", "ticker": None},
-    {"name": "US 5Y", "series_id": "DGS5", "category": "Treasury", "ticker": "ZF=F"},
-    {"name": "US 7Y", "series_id": "DGS7", "category": "Treasury", "ticker": None},
-    {"name": "US 10Y", "series_id": "DGS10", "category": "Treasury", "ticker": "ZN=F"},
-    {"name": "US 20Y", "series_id": "DGS20", "category": "Treasury", "ticker": None},
-    {"name": "US 30Y", "series_id": "DGS30", "category": "Treasury", "ticker": "ZB=F"},
-    {"name": "US 5Y TIPS", "series_id": "DFII5", "category": "TIPS", "ticker": None},
-    {"name": "US 10Y TIPS", "series_id": "DFII10", "category": "TIPS", "ticker": None},
+    {"name": "US 3M", "series_id": "DGS3MO", "category": "Treasury"},
+    {"name": "US 6M", "series_id": "DGS6MO", "category": "Treasury"},
+    {"name": "US 1Y", "series_id": "DGS1", "category": "Treasury"},
+    {"name": "US 2Y", "series_id": "DGS2", "category": "Treasury"},
+    {"name": "US 3Y", "series_id": "DGS3", "category": "Treasury"},
+    {"name": "US 5Y", "series_id": "DGS5", "category": "Treasury"},
+    {"name": "US 7Y", "series_id": "DGS7", "category": "Treasury"},
+    {"name": "US 10Y", "series_id": "DGS10", "category": "Treasury"},
+    {"name": "US 20Y", "series_id": "DGS20", "category": "Treasury"},
+    {"name": "US 30Y", "series_id": "DGS30", "category": "Treasury"},
+    {"name": "US 5Y TIPS", "series_id": "DFII5", "category": "TIPS"},
+    {"name": "US 10Y TIPS", "series_id": "DFII10", "category": "TIPS"},
 ]
 
 TRADING_DAYS_YEAR = 252
@@ -62,25 +61,20 @@ def compute_changes(series, current_date):
 
     changes = {}
 
-    # day change
-    prev_row = series.index[-2]
     prev_val = float(series.iloc[-2])
     if not pd.isna(prev_val):
         changes["day"] = round(current_value - prev_val, 3)
 
-    # week change (5 trading days)
     if len(series) > TRADING_DAYS_WEEK:
         w = float(series.iloc[-TRADING_DAYS_WEEK - 1])
         if not pd.isna(w):
             changes["week"] = round(current_value - w, 3)
 
-    # month change (21 trading days)
     if len(series) > TRADING_DAYS_MONTH:
         m = float(series.iloc[-TRADING_DAYS_MONTH - 1])
         if not pd.isna(m):
             changes["month"] = round(current_value - m, 3)
 
-    # YTD change
     current_year = current_date.year
     ytd_series = series[series.index.year.isin([current_year, current_year - 1])]
     prev_year = ytd_series[ytd_series.index.year < current_year]
@@ -89,67 +83,12 @@ def compute_changes(series, current_date):
         if not pd.isna(ytd_base):
             changes["ytd"] = round(current_value - ytd_base, 3)
 
-    # YoY change (252 trading days)
     if len(series) > TRADING_DAYS_YEAR:
         y = float(series.iloc[-TRADING_DAYS_YEAR - 1])
         if not pd.isna(y):
             changes["year"] = round(current_value - y, 3)
 
     return changes
-
-
-def generate_ohlc_from_history():
-    """Generate bond futures OHLC files from price_history.csv."""
-    price_file = BASE_DIR / "price_history.csv"
-    if not price_file.exists():
-        print("  price_history.csv not found, skipping OHLC generation", file=sys.stderr)
-        return
-
-    df = pd.read_csv(price_file)
-    bond_map = {
-        "2-Year T-Note": ("DGS2", "US 2Y", "Treasury"),
-        "5-Year T-Note": ("DGS5", "US 5Y", "Treasury"),
-        "10-Year T-Note": ("DGS10", "US 10Y", "Treasury"),
-        "30-Year T-Bond": ("DGS30", "US 30Y", "Treasury"),
-    }
-
-    prices = {}
-    for name, (sid, bond_name, category) in bond_map.items():
-        bd = df[df["Commodity"] == name].sort_values("Date")
-        if bd.empty:
-            continue
-        prices_list = bd["Price"].tolist()
-        dates_list = bd["Date"].tolist()
-        candles = []
-        prev_close = None
-        for date, price in zip(dates_list, prices_list):
-            c = float(price)
-            o = prev_close if prev_close is not None else c
-            h = max(o, c) + 0.02
-            lo = min(o, c) - 0.02
-            candles.append({
-                "time": str(date),
-                "open": round(o, 4),
-                "high": round(h, 4),
-                "low": round(lo, 4),
-                "close": round(c, 4),
-                "volume": 0,
-            })
-            prev_close = c
-        ohlc_file = HISTORY_DIR / f"{sid}_ohlc.json"
-        ohlc_data = {
-            "symbol": name,
-            "safeSymbol": sid,
-            "name": bond_name,
-            "sector": category,
-            "unit": "Price",
-            "updated": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
-            "prices": candles,
-        }
-        ohlc_file.write_text(json.dumps(ohlc_data, ensure_ascii=False), encoding="utf-8")
-        prices[sid] = round(candles[-1]["close"], 2)
-        print(f"  OHLC: {bond_name} ({len(candles)} candles, last: {prices[sid]})", file=sys.stderr)
-    return prices
 
 
 def collect():
@@ -194,7 +133,6 @@ def collect():
         })
         print(f"  {item['name']}: {value}% ({date_str})", file=sys.stderr)
 
-        # Save per-bond yield history
         history_points = []
         for date_idx, val in series.items():
             if pd.notna(val):
@@ -213,17 +151,6 @@ def collect():
         (HISTORY_DIR / f"{sid}.json").write_text(
             json.dumps(history, ensure_ascii=False), encoding="utf-8"
         )
-
-    # Generate bond futures OHLC data from price_history.csv
-    futures_prices = generate_ohlc_from_history()
-
-    for b in bonds:
-        sid = b["series_id"]
-        if sid in futures_prices:
-            b["futures_price"] = futures_prices[sid]
-            b["has_futures"] = True
-        else:
-            b["has_futures"] = False
 
     payload = {
         "updated": latest_date or datetime.now(timezone.utc).strftime("%Y-%m-%d"),

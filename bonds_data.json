@@ -12,8 +12,7 @@
       "year": -0.58,
       "date": "2026-07-30",
       "category": "Treasury",
-      "series_id": "DGS3MO",
-      "has_futures": false
+      "series_id": "DGS3MO"
     },
     {
       "name": "US 6M",
@@ -25,8 +24,7 @@
       "year": -0.32,
       "date": "2026-07-30",
       "category": "Treasury",
-      "series_id": "DGS6MO",
-      "has_futures": false
+      "series_id": "DGS6MO"
     },
     {
       "name": "US 1Y",
@@ -38,8 +36,7 @@
       "year": -0.05,
       "date": "2026-07-30",
       "category": "Treasury",
-      "series_id": "DGS1",
-      "has_futures": false
+      "series_id": "DGS1"
     },
     {
       "name": "US 2Y",
@@ -51,9 +48,7 @@
       "year": 0.32,
       "date": "2026-07-30",
       "category": "Treasury",
-      "series_id": "DGS2",
-      "futures_price": 102.8,
-      "has_futures": true
+      "series_id": "DGS2"
     },
     {
       "name": "US 3Y",
@@ -65,8 +60,7 @@
       "year": 0.43,
       "date": "2026-07-30",
       "category": "Treasury",
-      "series_id": "DGS3",
-      "has_futures": false
+      "series_id": "DGS3"
     },
     {
       "name": "US 5Y",
@@ -78,9 +72,7 @@
       "year": 0.42,
       "date": "2026-07-30",
       "category": "Treasury",
-      "series_id": "DGS5",
-      "futures_price": 105.98,
-      "has_futures": true
+      "series_id": "DGS5"
     },
     {
       "name": "US 7Y",
@@ -92,8 +84,7 @@
       "year": 0.34,
       "date": "2026-07-30",
       "category": "Treasury",
-      "series_id": "DGS7",
-      "has_futures": false
+      "series_id": "DGS7"
     },
     {
       "name": "US 10Y",
@@ -105,9 +96,7 @@
       "year": 0.26,
       "date": "2026-07-30",
       "category": "Treasury",
-      "series_id": "DGS10",
-      "futures_price": 108.0,
-      "has_futures": true
+      "series_id": "DGS10"
     },
     {
       "name": "US 20Y",
@@ -119,8 +108,7 @@
       "year": 0.27,
       "date": "2026-07-30",
       "category": "Treasury",
-      "series_id": "DGS20",
-      "has_futures": false
+      "series_id": "DGS20"
     },
     {
       "name": "US 30Y",
@@ -132,9 +120,7 @@
       "year": 0.25,
       "date": "2026-07-30",
       "category": "Treasury",
-      "series_id": "DGS30",
-      "futures_price": 108.31,
-      "has_futures": true
+      "series_id": "DGS30"
     },
     {
       "name": "US 5Y TIPS",
@@ -146,8 +132,7 @@
       "year": 0.65,
       "date": "2026-07-30",
       "category": "TIPS",
-      "series_id": "DFII5",
-      "has_futures": false
+      "series_id": "DFII5"
     },
     {
       "name": "US 10Y TIPS",
@@ -159,8 +144,7 @@
       "year": 0.43,
       "date": "2026-07-30",
       "category": "TIPS",
-      "series_id": "DFII10",
-      "has_futures": false
+      "series_id": "DFII10"
     }
   ]
 }
