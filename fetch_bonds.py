@@ -113,6 +113,7 @@ def generate_ohlc_from_history():
         "30-Year T-Bond": ("DGS30", "US 30Y", "Treasury"),
     }
 
+    prices = {}
     for name, (sid, bond_name, category) in bond_map.items():
         bd = df[df["Commodity"] == name].sort_values("Date")
         if bd.empty:
@@ -146,7 +147,9 @@ def generate_ohlc_from_history():
             "prices": candles,
         }
         ohlc_file.write_text(json.dumps(ohlc_data, ensure_ascii=False), encoding="utf-8")
-        print(f"  OHLC: {bond_name} ({len(candles)} candles)", file=sys.stderr)
+        prices[sid] = round(candles[-1]["close"], 2)
+        print(f"  OHLC: {bond_name} ({len(candles)} candles, last: {prices[sid]})", file=sys.stderr)
+    return prices
 
 
 def collect():
@@ -212,7 +215,15 @@ def collect():
         )
 
     # Generate bond futures OHLC data from price_history.csv
-    generate_ohlc_from_history()
+    futures_prices = generate_ohlc_from_history()
+
+    for b in bonds:
+        sid = b["series_id"]
+        if sid in futures_prices:
+            b["futures_price"] = futures_prices[sid]
+            b["has_futures"] = True
+        else:
+            b["has_futures"] = False
 
     payload = {
         "updated": latest_date or datetime.now(timezone.utc).strftime("%Y-%m-%d"),

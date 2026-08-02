@@ -1237,7 +1237,10 @@ function sortedRows(){
 function valueLabel(row){
   if(state.sortKey === 'gain') return fmtPct(rowMetric(row));
   if(state.sortKey === 'rank') return '#' + rowRank(row);
-  if(state.sortKey === 'price') return fmt(rowPrice(row));
+  if(state.sortKey === 'price'){
+    if(row.has_futures) return fmt(rowPrice(row));
+    return fmt(row.yield || rowPrice(row)) + '%';
+  }
   if(state.sortKey === 'unit') return rowMarketCap(row);
   return rowSymbol(row);
 }
@@ -1262,12 +1265,16 @@ function renderStockList(){
   stockListEl.innerHTML = state.stockRows.map(row => {
     const symbol = rowSymbol(row);
     const active = symbol === currentSymbol ? ' active' : '';
-    const value = valueLabel(row);
-    const numeric = state.sortKey === 'gain' ? rowMetric(row) : null;
-    const valueClass = numeric === null ? '' : (numeric >= 0 ? ' up' : ' down');
+    const priceVal = row.has_futures ? fmt(rowPrice(row)) : fmt(row.yield || rowPrice(row)) + '%';
+    const dayVal = rowMetric(row);
+    const dayStr = dayVal != null ? (dayVal >= 0 ? '+' : '') + dayVal.toFixed(2) + '%' : '';
+    const dayClass = dayVal == null ? '' : (dayVal >= 0 ? ' up' : ' down');
     return '<button class="stock-row'+active+'" data-symbol="'+symbol+'" type="button">' +
       '<span class="stock-main"><span class="stock-symbol">'+rowName(row)+'</span></span>' +
-      '<span class="stock-value'+valueClass+'">'+value+'</span>' +
+      '<span class="stock-value" style="text-align:right">' +
+        '<span>'+priceVal+'</span>' +
+        '<span class="stock-value'+dayClass+'" style="font-size:10px;display:block">'+dayStr+'</span>' +
+      '</span>' +
       '</button>';
   }).join('');
   if(currentIndex >= 0){
@@ -1352,7 +1359,7 @@ async function loadMarketIndex(){
     const bonds = (data.bonds || []).map(b => ({
       symbol: b.series_id,
       name: b.name,
-      price: b.yield,
+      price: b.futures_price || b.yield,
       day: b.day,
       week: b.week,
       month: b.month,
@@ -1361,6 +1368,8 @@ async function loadMarketIndex(){
       sector: b.category,
       date: b.date,
       series_id: b.series_id,
+      yield: b.yield,
+      has_futures: b.has_futures || false,
     }));
     const groups = {};
     const cats = ['Treasury', 'TIPS'];
