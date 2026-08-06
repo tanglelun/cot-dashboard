@@ -925,17 +925,52 @@ function plotWidthFor(width){
 }
 
 function drawTongDaXin(candles, xFor, yFor, bodyWidth, wickWidth, chartTop, priceBottom){
-  // ── TD Sequential labels ──
+  // ── TD Sequential with BACKSET: show count 1-9 on bars ──
   ctx.font='bold 11px Inter,Arial';ctx.textAlign='center';
-  candles.forEach((c,i)=>{
-    const x=xFor(i);
-    if(c.tdUp9){ctx.fillStyle='#00d109';ctx.fillText('9',x,yFor(c.high)-bodyWidth*2.5);}
-    if(c.tdDn9){ctx.fillStyle='#ff4d00';ctx.fillText('9',x,yFor(c.low)+bodyWidth*2.5+12);}
-    if(c.tdUpPending){ctx.fillStyle='#ff00ff';ctx.fillText(c.tdUpPending,x,yFor(c.high)-bodyWidth*2.5);}
-    if(c.tdDnPending){ctx.fillStyle='#ff00ff';ctx.fillText(c.tdDnPending,x,yFor(c.low)+bodyWidth*2.5+12);}
-  });
+  for(let i=0;i<candles.length;i++){
+    let upCount=candles[i].tdUp||0;
+    if(upCount>0){
+      // BACKSET: mark next 9 bars back when 9 is reached
+      let peak=i,count=upCount;
+      if(upCount===9){
+        for(let j=0;j<9;j++){if(i-j>=0&&candles[i-j].tdUp>=j+1)peak=i-j;}
+        count=9;
+      }
+      // Show count number for last bar's incomplete sequence
+      if(i===candles.length-1&&upCount>=5&&upCount<=8){
+        for(let j=0;j<upCount;j++){
+          const bi=i-j;if(bi<0)continue;
+          const x=xFor(bi);
+          ctx.fillStyle='#ff00ff';
+          ctx.fillText(upCount-j,x,yFor(candles[bi].high)-bodyWidth*2.5);
+        }
+      }
+      if(upCount===9){
+        for(let j=0;j<9;j++){
+          const bi=i-j;if(bi<0)continue;
+          const x=xFor(bi);
+          if(j===0){ctx.fillStyle='#00d109';ctx.fillText('9',x,yFor(candles[bi].high)-bodyWidth*2.5);}
+        }
+      }
+    }
+    let dnCount=candles[i].tdDn||0;
+    if(dnCount>0){
+      if(dnCount===9){
+        ctx.fillStyle='#ff4d00';
+        ctx.fillText('9',xFor(i),yFor(candles[i].low)+bodyWidth*2.5+12);
+      }
+      if(i===candles.length-1&&dnCount>=5&&dnCount<=8){
+        for(let j=0;j<dnCount;j++){
+          const bi=i-j;if(bi<0)continue;
+          const x=xFor(bi);
+          ctx.fillStyle='#ff00ff';
+          ctx.fillText(dnCount-j,x,yFor(candles[bi].low)+bodyWidth*2.5+12);
+        }
+      }
+    }
+  }
 
-  // ── 生命线: EMA(EMA(C,10),10) ──
+  // ── 生命线: EMA(EMA(C,10),10) blue=rising, red=falling ──
   ctx.lineWidth=3;ctx.lineJoin='round';
   for(let pass=0;pass<2;pass++){
     ctx.beginPath();let started=false;
@@ -948,6 +983,19 @@ function drawTongDaXin(candles, xFor, yFor, bodyWidth, wickWidth, chartTop, pric
       if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);
     }
     ctx.strokeStyle=pass===0?'#2962ff':'#ff4d00';ctx.stroke();
+  }
+
+  // ── 极阴极阳: price drop >5% draw (O+C)/2 line ──
+  for(let i=1;i<candles.length;i++){
+    const chg=candles[i].close/candles[i-1].close;
+    if(chg<0.95){
+      const mid=(Number(candles[i].open)+Number(candles[i].close))/2;
+      ctx.strokeStyle='rgba(255,0,0,0.6)';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+      ctx.beginPath();
+      ctx.moveTo(xFor(i),yFor(mid));
+      for(let j=i+1;j<candles.length;j++){ctx.lineTo(xFor(j),yFor(mid));}
+      ctx.stroke();ctx.setLineDash([]);
+    }
   }
 
   // ── 缠论 pivot support/resistance ──
@@ -979,18 +1027,6 @@ function drawTongDaXin(candles, xFor, yFor, bodyWidth, wickWidth, chartTop, pric
     ctx.lineTo(xFor(p1.idx),yFor(p1.price));ctx.stroke();
   }
   ctx.setLineDash([]);
-
-  // ── Candle rendering (green=up, red=down) ──
-  candles.forEach((c,i)=>{
-    const x=xFor(i);
-    const up=c.close>=c.open;
-    ctx.fillStyle=up?'#5e686f':'#5e686f'; // wick grey
-    ctx.fillRect(x-wickWidth/2,yFor(c.high),wickWidth,Math.max(1,yFor(c.low)-yFor(c.high)));
-    const yO=yFor(c.open),yC=yFor(c.close);
-    const bTop=Math.min(yO,yC),bH=Math.max(1,Math.abs(yO-yC));
-    ctx.fillStyle=up?'#00d109':'#ff4d00';
-    ctx.fillRect(x-bodyWidth/2,bTop,bodyWidth,bH);
-  });
 }
 
 function draw(){
