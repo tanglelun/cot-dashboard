@@ -925,15 +925,16 @@ function plotWidthFor(width){
 }
 
 function drawTongDaXin(candles, xFor, yFor, bodyWidth, wickWidth, chartTop, priceBottom){
-  // ── EMA candle coloring ──
-  const ema5 = [], ema10 = [], ema20 = [];
-  let e5=null,e10=null,e20=null;
-  const k5=2/6,k10=2/11,k20=2/21;
-  candles.forEach(c=>{
-    const cl=Number(c.close);
-    e5=e5===null?cl:cl*k5+e5*(1-k5);ema5.push(e5);
-    e10=e10===null?cl:cl*k10+e10*(1-k10);ema10.push(e10);
-    e20=e20===null?cl:cl*k20+e20*(1-k20);ema20.push(e20);
+  // ── Candle rendering (green=up, red=down) ──
+  candles.forEach((c,i)=>{
+    const x=xFor(i);
+    const up=c.close>=c.open;
+    ctx.fillStyle='#5e686f';
+    ctx.fillRect(x-wickWidth/2,yFor(c.high),wickWidth,Math.max(1,yFor(c.low)-yFor(c.high)));
+    const yO=yFor(c.open),yC=yFor(c.close);
+    const bTop=Math.min(yO,yC),bH=Math.max(1,Math.abs(yO-yC));
+    ctx.fillStyle=up?'#00d109':'#ff4d00';
+    ctx.fillRect(x-bodyWidth/2,bTop,bodyWidth,bH);
   });
 
   // ── TD Sequential labels ──
@@ -991,42 +992,17 @@ function drawTongDaXin(candles, xFor, yFor, bodyWidth, wickWidth, chartTop, pric
   }
   ctx.setLineDash([]);
 
-  // ── Candle re-color based on EMA cross ──
+  // ── Candle rendering (green=up, red=down) ──
   candles.forEach((c,i)=>{
     const x=xFor(i);
-    const ab=i>=20&&ema5[i]>ema20[i],bb=i>=20&&ema5[i]<ema20[i];
-    const ca=i>=20&&ema5[i]>ema10[i],ca1=i>=20&&ema5[i]<ema10[i];
-    const dd=c.close<c.open;
-    let fillColor;
-    if(i<20||(!ab&&!bb&&!ca&&!ca1)){
-      fillColor=dd?'#ff4d00':'#00d109';
-    }else if(ab){
-      fillColor=dd?'#ff4d00':'#00d109';
-    }else if(bb&&ca){
-      fillColor=dd?'#cccccc':'#ffffff';
-    }else if(bb){
-      fillColor=dd?'#ff4d00':'#00d109';
-    }else{
-      fillColor=dd?'#cccccc':'#ffffff';
-    }
-    ctx.fillStyle='#5e686f';
+    const up=c.close>=c.open;
+    ctx.fillStyle=up?'#5e686f':'#5e686f'; // wick grey
     ctx.fillRect(x-wickWidth/2,yFor(c.high),wickWidth,Math.max(1,yFor(c.low)-yFor(c.high)));
     const yO=yFor(c.open),yC=yFor(c.close);
     const bTop=Math.min(yO,yC),bH=Math.max(1,Math.abs(yO-yC));
-    ctx.fillStyle=fillColor;
+    ctx.fillStyle=up?'#00d109':'#ff4d00';
     ctx.fillRect(x-bodyWidth/2,bTop,bodyWidth,bH);
   });
-
-  // ── MA5 ──
-  ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.lineWidth=1;ctx.setLineDash([2,2]);
-  ctx.beginPath();
-  for(let i=0;i<candles.length;i++){
-    if(ema5[i]==null)continue;
-    const x=xFor(i),y=yFor(ema5[i]);
-    if(y<chartTop||y>priceBottom)continue;
-    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-  }
-  ctx.stroke();ctx.setLineDash([]);
 }
 
 function draw(){
