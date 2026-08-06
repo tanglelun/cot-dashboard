@@ -923,7 +923,7 @@ function plotWidthFor(width){
   return Math.max(1, width - pad.left - pad.right);
 }
 
-function drawTongDaXin(candles, xFor, yFor, bodyWidth, step, chartTop, priceBottom){
+function drawTongDaXin(candles, xFor, yFor, bodyWidth, wickWidth, chartTop, priceBottom){
   // ── EMA candle coloring ──
   const ema5 = [], ema10 = [], ema20 = [];
   let e5=null,e10=null,e20=null;
@@ -992,25 +992,24 @@ function drawTongDaXin(candles, xFor, yFor, bodyWidth, step, chartTop, priceBott
 
   // ── Candle re-color based on EMA cross ──
   candles.forEach((c,i)=>{
-    if(i<20)return;
     const x=xFor(i);
-    const ab=ema5[i]>ema20[i],bb=ema5[i]<ema20[i];
-    const ca=ema5[i]>ema10[i],ca1=ema5[i]<ema10[i];
+    const ab=i>=20&&ema5[i]>ema20[i],bb=i>=20&&ema5[i]<ema20[i];
+    const ca=i>=20&&ema5[i]>ema10[i],ca1=i>=20&&ema5[i]<ema10[i];
     const dd=c.close<c.open;
-    let cUp,cDown,cWick;
+    let fillColor;
+    if(i<20||(!ab&&!bb&&!ca&&!ca1)){
+      fillColor=dd?'#ff4d00':'#00d109';
+    }else if(ab){
+      fillColor=dd?'#990000':'#cc0000';
+    }else if(bb&&ca){
+      fillColor=dd?'#cccccc':'#ffffff';
+    }else if(bb){
+      fillColor=dd?'#007700':'#00aa00';
+    }else{
+      fillColor=dd?'#cccccc':'#ffffff';
+    }
     ctx.fillStyle='#5e686f';
     ctx.fillRect(x-wickWidth/2,yFor(c.high),wickWidth,Math.max(1,yFor(c.low)-yFor(c.high)));
-    if(ab){
-      cUp='#cc0000';cDown='#990000';
-    }else if(bb&&ca){
-      cUp='#ffffff';cDown='#cccccc';
-    }else if(bb){
-      cUp='#00aa00';cDown='#007700';
-    }else if(ca1){
-      cUp='#ffffff';cDown='#cccccc';
-    }
-    if(!cUp){cUp='#00d109';cDown='#ff4d00';}
-    const fillColor=dd?cDown:cUp;
     const yO=yFor(c.open),yC=yFor(c.close);
     const bTop=Math.min(yO,yC),bH=Math.max(1,Math.abs(yO-yC));
     ctx.fillStyle=fillColor;
@@ -1099,7 +1098,7 @@ function draw(){
     ctx.stroke();
   }else{
     // TD Sequential + 生命线 + candles re-colored via TongDaXin indicator
-    drawTongDaXin(candles, xFor, yFor, bodyWidth, step, top, priceBottom);
+    drawTongDaXin(candles, xFor, yFor, bodyWidth, wickWidth, top, priceBottom);
     if(state.showMa) MOVING_AVERAGES.forEach(ma => drawMovingAverage(ma, candles, xFor, yFor));
     if(state.showEma){
       drawIndicatorLine(candles, 'ema20', xFor, yFor, '#ffcc00', 0.9, 1.4);
