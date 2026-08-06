@@ -923,49 +923,110 @@ function plotWidthFor(width){
   return Math.max(1, width - pad.left - pad.right);
 }
 
-function drawTDSequential(candles, xFor, yFor, bodyWidth){
-  candles.forEach((c, i) => {
-    const x = xFor(i);
-    ctx.font = 'bold 10px Inter, Arial, sans-serif';
-    ctx.textAlign = 'center';
-    if(c.tdUp9){
-      ctx.fillStyle = '#00d109';
-      ctx.fillText('9', x, yFor(c.high) - bodyWidth * 2);
-    }
-    if(c.tdDn9){
-      ctx.fillStyle = '#ff4d00';
-      ctx.fillText('9', x, yFor(c.low) + bodyWidth * 2 + 10);
-    }
-    if(c.tdUpPending){
-      ctx.fillStyle = '#ff00ff';
-      ctx.fillText(c.tdUpPending, x, yFor(c.high) - bodyWidth * 2);
-    }
-    if(c.tdDnPending){
-      ctx.fillStyle = '#ff00ff';
-      ctx.fillText(c.tdDnPending, x, yFor(c.low) + bodyWidth * 2 + 10);
-    }
+function drawTongDaXin(candles, xFor, yFor, bodyWidth, step, chartTop, priceBottom){
+  // ── EMA candle coloring ──
+  const ema5 = [], ema10 = [], ema20 = [];
+  let e5=null,e10=null,e20=null;
+  const k5=2/6,k10=2/11,k20=2/21;
+  candles.forEach(c=>{
+    const cl=Number(c.close);
+    e5=e5===null?cl:cl*k5+e5*(1-k5);ema5.push(e5);
+    e10=e10===null?cl:cl*k10+e10*(1-k10);ema10.push(e10);
+    e20=e20===null?cl:cl*k20+e20*(1-k20);ema20.push(e20);
   });
-}
 
-function drawLifeLine(candles, xFor, yFor, chartTop, priceBottom){
-  ctx.lineWidth = 2.5;
-  ctx.lineJoin = 'round';
-  for(let pass = 0; pass < 2; pass++){
-    ctx.beginPath();
-    let started = false;
-    for(let i = 0; i < candles.length; i++){
-      const c = candles[i];
-      if(c.lifeLine == null) continue;
-      const x = xFor(i), y = yFor(c.lifeLine);
-      if(y < chartTop || y > priceBottom) continue;
-      if(pass === 0 && !c.lifeUp) continue; // blue = rising
-      if(pass === 1 && c.lifeUp) continue;  // red = falling
-      if(!started){ ctx.moveTo(x, y); started = true; }
-      else ctx.lineTo(x, y);
+  // ── TD Sequential labels ──
+  ctx.font='bold 11px Inter,Arial';ctx.textAlign='center';
+  candles.forEach((c,i)=>{
+    const x=xFor(i);
+    if(c.tdUp9){ctx.fillStyle='#00d109';ctx.fillText('9',x,yFor(c.high)-bodyWidth*2.5);}
+    if(c.tdDn9){ctx.fillStyle='#ff4d00';ctx.fillText('9',x,yFor(c.low)+bodyWidth*2.5+12);}
+    if(c.tdUpPending){ctx.fillStyle='#ff00ff';ctx.fillText(c.tdUpPending,x,yFor(c.high)-bodyWidth*2.5);}
+    if(c.tdDnPending){ctx.fillStyle='#ff00ff';ctx.fillText(c.tdDnPending,x,yFor(c.low)+bodyWidth*2.5+12);}
+  });
+
+  // ── 生命线: EMA(EMA(C,10),10) ──
+  ctx.lineWidth=3;ctx.lineJoin='round';
+  for(let pass=0;pass<2;pass++){
+    ctx.beginPath();let started=false;
+    for(let i=0;i<candles.length;i++){
+      if(candles[i].lifeLine==null)continue;
+      const x=xFor(i),y=yFor(candles[i].lifeLine);
+      if(y<chartTop||y>priceBottom)continue;
+      if(pass===0&&!candles[i].lifeUp)continue;
+      if(pass===1&&candles[i].lifeUp)continue;
+      if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);
     }
-    ctx.strokeStyle = pass === 0 ? '#2962ff' : '#ff4d00';
-    ctx.stroke();
+    ctx.strokeStyle=pass===0?'#2962ff':'#ff4d00';ctx.stroke();
   }
+
+  // ── 缠论 pivot support/resistance ──
+  const HI=10,LO=10;
+  const pivotsH=[],pivotsL=[];
+  for(let i=HI;i<candles.length-HI;i++){
+    const h=Number(candles[i].high);
+    let isHigh=true;
+    for(let j=i-HI;j<=i+HI;j++){if(j!==i&&Number(candles[j].high)>h){isHigh=false;break;}}
+    if(isHigh)pivotsH.push({idx:i,price:h});
+  }
+  for(let i=LO;i<candles.length-LO;i++){
+    const l=Number(candles[i].low);
+    let isLow=true;
+    for(let j=i-LO;j<=i+LO;j++){if(j!==i&&Number(candles[j].low)<l){isLow=false;break;}}
+    if(isLow)pivotsL.push({idx:i,price:l});
+  }
+  ctx.setLineDash([6,3]);ctx.lineWidth=1.5;
+  for(let ph=1;ph<pivotsH.length;ph++){
+    const p0=pivotsH[ph-1],p1=pivotsH[ph];
+    ctx.strokeStyle='rgba(0,209,9,0.5)';ctx.beginPath();
+    ctx.moveTo(xFor(p0.idx),yFor(p0.price));
+    ctx.lineTo(xFor(p1.idx),yFor(p1.price));ctx.stroke();
+  }
+  for(let pl=1;pl<pivotsL.length;pl++){
+    const p0=pivotsL[pl-1],p1=pivotsL[pl];
+    ctx.strokeStyle='rgba(255,77,0,0.5)';ctx.beginPath();
+    ctx.moveTo(xFor(p0.idx),yFor(p0.price));
+    ctx.lineTo(xFor(p1.idx),yFor(p1.price));ctx.stroke();
+  }
+  ctx.setLineDash([]);
+
+  // ── Candle re-color based on EMA cross ──
+  candles.forEach((c,i)=>{
+    if(i<20)return;
+    const x=xFor(i);
+    const ab=ema5[i]>ema20[i],bb=ema5[i]<ema20[i];
+    const ca=ema5[i]>ema10[i],ca1=ema5[i]<ema10[i];
+    const dd=c.close<c.open;
+    let cUp,cDown,cWick;
+    ctx.fillStyle='#5e686f';
+    ctx.fillRect(x-wickWidth/2,yFor(c.high),wickWidth,Math.max(1,yFor(c.low)-yFor(c.high)));
+    if(ab){
+      cUp='#cc0000';cDown='#990000';
+    }else if(bb&&ca){
+      cUp='#ffffff';cDown='#cccccc';
+    }else if(bb){
+      cUp='#00aa00';cDown='#007700';
+    }else if(ca1){
+      cUp='#ffffff';cDown='#cccccc';
+    }
+    if(!cUp){cUp='#00d109';cDown='#ff4d00';}
+    const fillColor=dd?cDown:cUp;
+    const yO=yFor(c.open),yC=yFor(c.close);
+    const bTop=Math.min(yO,yC),bH=Math.max(1,Math.abs(yO-yC));
+    ctx.fillStyle=fillColor;
+    ctx.fillRect(x-bodyWidth/2,bTop,bodyWidth,bH);
+  });
+
+  // ── MA5 ──
+  ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+  ctx.beginPath();
+  for(let i=0;i<candles.length;i++){
+    if(ema5[i]==null)continue;
+    const x=xFor(i),y=yFor(ema5[i]);
+    if(y<chartTop||y>priceBottom)continue;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  }
+  ctx.stroke();ctx.setLineDash([]);
 }
 
 function draw(){
@@ -1009,6 +1070,7 @@ function draw(){
   }
   if(state.showEma) candles.forEach(c => { if(c.ema20) maValues.push(c.ema20); if(c.ema50) maValues.push(c.ema50); });
   if(state.showBollinger) candles.forEach(c => { if(c.bbUpper) maValues.push(c.bbUpper); if(c.bbLower) maValues.push(c.bbLower); });
+  candles.forEach(c => { if(c.lifeLine != null) maValues.push(c.lifeLine); });
   const highs = candles.map(c => denseLineMode ? c.close : c.high).concat(maValues);
   const lows = candles.map(c => denseLineMode ? c.close : c.low).concat(maValues);
   let maxPrice = Math.max(...highs);
@@ -1036,22 +1098,8 @@ function draw(){
     });
     ctx.stroke();
   }else{
-    candles.forEach((c, i) => {
-      const x = xFor(i);
-      const up = c.close >= c.open;
-      const color = up ? '#00d109' : '#ff4d00';
-      const yOpen = yFor(c.open), yClose = yFor(c.close), yHigh = yFor(c.high), yLow = yFor(c.low);
-      const bodyTop = Math.min(yOpen, yClose);
-      const bodyHeight = Math.max(1, Math.abs(yOpen - yClose));
-      ctx.fillStyle = '#5e686f';
-      ctx.fillRect(x - wickWidth / 2, yHigh, wickWidth, Math.max(1, yLow - yHigh));
-      ctx.fillStyle = color;
-      ctx.fillRect(x - bodyWidth / 2, bodyTop, bodyWidth, bodyHeight);
-    });
-    // TD Sequential labels
-    drawTDSequential(candles, xFor, yFor, bodyWidth);
-    // 生命线
-    drawLifeLine(candles, xFor, yFor, top, priceBottom);
+    // TD Sequential + 生命线 + candles re-colored via TongDaXin indicator
+    drawTongDaXin(candles, xFor, yFor, bodyWidth, step, top, priceBottom);
     if(state.showMa) MOVING_AVERAGES.forEach(ma => drawMovingAverage(ma, candles, xFor, yFor));
     if(state.showEma){
       drawIndicatorLine(candles, 'ema20', xFor, yFor, '#ffcc00', 0.9, 1.4);
