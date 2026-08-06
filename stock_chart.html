@@ -925,18 +925,6 @@ function plotWidthFor(width){
 }
 
 function drawTongDaXin(candles, xFor, yFor, bodyWidth, wickWidth, chartTop, priceBottom){
-  // ── Candle rendering (green=up, red=down) ──
-  candles.forEach((c,i)=>{
-    const x=xFor(i);
-    const up=c.close>=c.open;
-    ctx.fillStyle='#5e686f';
-    ctx.fillRect(x-wickWidth/2,yFor(c.high),wickWidth,Math.max(1,yFor(c.low)-yFor(c.high)));
-    const yO=yFor(c.open),yC=yFor(c.close);
-    const bTop=Math.min(yO,yC),bH=Math.max(1,Math.abs(yO-yC));
-    ctx.fillStyle=up?'#00d109':'#ff4d00';
-    ctx.fillRect(x-bodyWidth/2,bTop,bodyWidth,bH);
-  });
-
   // ── TD Sequential labels ──
   ctx.font='bold 11px Inter,Arial';ctx.textAlign='center';
   candles.forEach((c,i)=>{
@@ -1074,7 +1062,19 @@ function draw(){
     });
     ctx.stroke();
   }else{
-    // TD Sequential + 生命线 + candles re-colored via TongDaXin indicator
+    // Candles always visible
+    candles.forEach((c, i) => {
+      const x = xFor(i);
+      const up = c.close >= c.open;
+      const color = up ? '#00d109' : '#ff4d00';
+      const yOpen = yFor(c.open), yClose = yFor(c.close), yHigh = yFor(c.high), yLow = yFor(c.low);
+      const bodyTop = Math.min(yOpen, yClose);
+      const bodyHeight = Math.max(1, Math.abs(yOpen - yClose));
+      ctx.fillStyle = '#5e686f';
+      ctx.fillRect(x - wickWidth / 2, yHigh, wickWidth, Math.max(1, yLow - yHigh));
+      ctx.fillStyle = color;
+      ctx.fillRect(x - bodyWidth / 2, bodyTop, bodyWidth, bodyHeight);
+    });
     if(state.showTongDaXin) drawTongDaXin(candles, xFor, yFor, bodyWidth, wickWidth, top, priceBottom);
     if(state.showMa) MOVING_AVERAGES.forEach(ma => drawMovingAverage(ma, candles, xFor, yFor));
     if(state.showEma){
