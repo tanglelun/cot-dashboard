@@ -1062,11 +1062,18 @@ function draw(){
     });
     ctx.stroke();
   }else{
-    // Candles always visible
+    // Candles: lifeLine coloring
     candles.forEach((c, i) => {
       const x = xFor(i);
-      const up = c.close >= c.open;
-      const color = up ? '#00d109' : '#ff4d00';
+      let color;
+      if(c.lifeLine != null){
+        if(c.close > c.lifeLine) color = '#00d109';
+        else if(c.close < c.lifeLine) color = '#ff4d00';
+        else color = '#ffffff';
+      }else{
+        const up = c.close >= c.open;
+        color = up ? '#00d109' : '#ff4d00';
+      }
       const yOpen = yFor(c.open), yClose = yFor(c.close), yHigh = yFor(c.high), yLow = yFor(c.low);
       const bodyTop = Math.min(yOpen, yClose);
       const bodyHeight = Math.max(1, Math.abs(yOpen - yClose));
