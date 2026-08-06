@@ -985,19 +985,6 @@ function drawTongDaXin(candles, xFor, yFor, bodyWidth, wickWidth, chartTop, pric
     ctx.strokeStyle=pass===0?'#2962ff':'#ff4d00';ctx.stroke();
   }
 
-  // ── 极阴极阳: price drop >5% draw (O+C)/2 line ──
-  for(let i=1;i<candles.length;i++){
-    const chg=candles[i].close/candles[i-1].close;
-    if(chg<0.95){
-      const mid=(Number(candles[i].open)+Number(candles[i].close))/2;
-      ctx.strokeStyle='rgba(255,0,0,0.6)';ctx.lineWidth=1;ctx.setLineDash([2,2]);
-      ctx.beginPath();
-      ctx.moveTo(xFor(i),yFor(mid));
-      for(let j=i+1;j<candles.length;j++){ctx.lineTo(xFor(j),yFor(mid));}
-      ctx.stroke();ctx.setLineDash([]);
-    }
-  }
-
   // ── 缠论 pivot support/resistance ──
   const HI=10,LO=10;
   const pivotsH=[],pivotsL=[];
@@ -1098,18 +1085,11 @@ function draw(){
     });
     ctx.stroke();
   }else{
-    // Candles: lifeLine coloring
+    // Standard green=up, red=down
     candles.forEach((c, i) => {
       const x = xFor(i);
-      let color;
-      if(c.lifeLine != null){
-        if(c.close > c.lifeLine) color = '#00d109';
-        else if(c.close < c.lifeLine) color = '#ff4d00';
-        else color = '#ffffff';
-      }else{
-        const up = c.close >= c.open;
-        color = up ? '#00d109' : '#ff4d00';
-      }
+      const up = c.close >= c.open;
+      const color = up ? '#00d109' : '#ff4d00';
       const yOpen = yFor(c.open), yClose = yFor(c.close), yHigh = yFor(c.high), yLow = yFor(c.low);
       const bodyTop = Math.min(yOpen, yClose);
       const bodyHeight = Math.max(1, Math.abs(yOpen - yClose));
