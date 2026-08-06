@@ -621,6 +621,46 @@ function calculateTechnicalIndicators(candles){
   });
 }
 
+function calculateTDSequential(candles){
+  let upCount = 0;
+  for(let i = 0; i < candles.length; i++){
+    if(i >= 4 && Number(candles[i].close) > Number(candles[i - 4].close)){
+      upCount++;
+    }else{
+      upCount = 0;
+    }
+    candles[i].tdUp = upCount;
+    candles[i].tdUp9 = upCount === 9;
+  }
+  let dnCount = 0;
+  for(let i = 0; i < candles.length; i++){
+    if(i >= 4 && Number(candles[i].close) < Number(candles[i - 4].close)){
+      dnCount++;
+    }else{
+      dnCount = 0;
+    }
+    candles[i].tdDn = dnCount;
+    candles[i].tdDn9 = dnCount === 9;
+  }
+  if(candles.length > 0){
+    const last = candles[candles.length - 1];
+    if(last.tdUp >= 5 && last.tdUp <= 8) last.tdUpPending = last.tdUp;
+    if(last.tdDn >= 5 && last.tdDn <= 8) last.tdDnPending = last.tdDn;
+  }
+}
+
+function calculateLifeLine(candles){
+  let ema1 = null, ema2 = null;
+  const k = 2 / 11;
+  for(let i = 0; i < candles.length; i++){
+    const c = Number(candles[i].close);
+    ema1 = ema1 === null ? c : c * k + ema1 * (1 - k);
+    ema2 = ema2 === null ? c : ema1 * k + ema2 * (1 - k);
+    candles[i].lifeLine = ema2;
+    candles[i].lifeUp = i > 0 && ema2 > candles[i - 1].lifeLine;
+  }
+}
+
 function visibleRangeYears(candles){
   if(!candles || candles.length < 2) return 0;
   const first = new Date(candles[0].time).getTime();
@@ -883,6 +923,51 @@ function plotWidthFor(width){
   return Math.max(1, width - pad.left - pad.right);
 }
 
+function drawTDSequential(candles, xFor, yFor, bodyWidth){
+  candles.forEach((c, i) => {
+    const x = xFor(i);
+    ctx.font = 'bold 10px Inter, Arial, sans-serif';
+    ctx.textAlign = 'center';
+    if(c.tdUp9){
+      ctx.fillStyle = '#00d109';
+      ctx.fillText('9', x, yFor(c.high) - bodyWidth * 2);
+    }
+    if(c.tdDn9){
+      ctx.fillStyle = '#ff4d00';
+      ctx.fillText('9', x, yFor(c.low) + bodyWidth * 2 + 10);
+    }
+    if(c.tdUpPending){
+      ctx.fillStyle = '#ff00ff';
+      ctx.fillText(c.tdUpPending, x, yFor(c.high) - bodyWidth * 2);
+    }
+    if(c.tdDnPending){
+      ctx.fillStyle = '#ff00ff';
+      ctx.fillText(c.tdDnPending, x, yFor(c.low) + bodyWidth * 2 + 10);
+    }
+  });
+}
+
+function drawLifeLine(candles, xFor, yFor, chartTop, priceBottom){
+  ctx.lineWidth = 2.5;
+  ctx.lineJoin = 'round';
+  for(let pass = 0; pass < 2; pass++){
+    ctx.beginPath();
+    let started = false;
+    for(let i = 0; i < candles.length; i++){
+      const c = candles[i];
+      if(c.lifeLine == null) continue;
+      const x = xFor(i), y = yFor(c.lifeLine);
+      if(y < chartTop || y > priceBottom) continue;
+      if(pass === 0 && !c.lifeUp) continue; // blue = rising
+      if(pass === 1 && c.lifeUp) continue;  // red = falling
+      if(!started){ ctx.moveTo(x, y); started = true; }
+      else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = pass === 0 ? '#2962ff' : '#ff4d00';
+    ctx.stroke();
+  }
+}
+
 function draw(){
   const readoutIndex = state.hover >= state.start && state.hover < state.end ? state.hover : state.end - 1;
   renderMaLegend(state.candles[readoutIndex]);
@@ -963,6 +1048,10 @@ function draw(){
       ctx.fillStyle = color;
       ctx.fillRect(x - bodyWidth / 2, bodyTop, bodyWidth, bodyHeight);
     });
+    // TD Sequential labels
+    drawTDSequential(candles, xFor, yFor, bodyWidth);
+    // 生命线
+    drawLifeLine(candles, xFor, yFor, top, priceBottom);
     if(state.showMa) MOVING_AVERAGES.forEach(ma => drawMovingAverage(ma, candles, xFor, yFor));
     if(state.showEma){
       drawIndicatorLine(candles, 'ema20', xFor, yFor, '#ffcc00', 0.9, 1.4);
@@ -1673,6 +1762,8 @@ async function loadChart(){
     calculateMovingAverages(state.candles);
     calculateMacd(state.candles);
     calculateTechnicalIndicators(state.candles);
+    calculateTDSequential(state.candles);
+    calculateLifeLine(state.candles);
     renderHeader(data);
     setStatus('');
     setRange(state.activeRange || defaultChartRange());
