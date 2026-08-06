@@ -328,6 +328,7 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
             <label class="indicator-option"><span>Volume</span><input type="checkbox" data-indicator="showVolume" checked></label>
             <label class="indicator-option"><span>RSI (14)</span><input type="checkbox" data-indicator="showRsi"></label>
             <label class="indicator-option"><span>MACD</span><input type="checkbox" data-indicator="showMacd" checked></label>
+            <label class="indicator-option"><span>TD Sequential + LifeLine</span><input type="checkbox" data-indicator="showTongDaXin" checked></label>
           </div>
         </div>
         <div class="ma-group" id="maGroup">
@@ -392,7 +393,7 @@ const state = {
   pinching: false, pinchDistance: 0, pinchStart: 0, pinchEnd: 0, pinchRatio: 0.5,
   touchMode: 'idle', touchTimer: null, touchStartX: 0, touchStartY: 0, touchCurrentX: 0, touchCurrentY: 0,
   maCollapsed: true, showMa: true, showEma: false, showBollinger: false,
-  showVolume: true, showRsi: false, showMacd: true,
+  showVolume: true, showRsi: false, showMacd: true, showTongDaXin: true,
   marketIndex: null, stockRows: [], activeRange: null,
   universe: params.get('universe') || 'r2kRaw',
   metric: params.get('metric') || 'd',
@@ -1069,7 +1070,7 @@ function draw(){
   }
   if(state.showEma) candles.forEach(c => { if(c.ema20) maValues.push(c.ema20); if(c.ema50) maValues.push(c.ema50); });
   if(state.showBollinger) candles.forEach(c => { if(c.bbUpper) maValues.push(c.bbUpper); if(c.bbLower) maValues.push(c.bbLower); });
-  candles.forEach(c => { if(c.lifeLine != null) maValues.push(c.lifeLine); });
+  if(state.showTongDaXin) candles.forEach(c => { if(c.lifeLine != null) maValues.push(c.lifeLine); });
   const highs = candles.map(c => denseLineMode ? c.close : c.high).concat(maValues);
   const lows = candles.map(c => denseLineMode ? c.close : c.low).concat(maValues);
   let maxPrice = Math.max(...highs);
@@ -1098,7 +1099,7 @@ function draw(){
     ctx.stroke();
   }else{
     // TD Sequential + 生命线 + candles re-colored via TongDaXin indicator
-    drawTongDaXin(candles, xFor, yFor, bodyWidth, wickWidth, top, priceBottom);
+    if(state.showTongDaXin) drawTongDaXin(candles, xFor, yFor, bodyWidth, wickWidth, top, priceBottom);
     if(state.showMa) MOVING_AVERAGES.forEach(ma => drawMovingAverage(ma, candles, xFor, yFor));
     if(state.showEma){
       drawIndicatorLine(candles, 'ema20', xFor, yFor, '#ffcc00', 0.9, 1.4);
