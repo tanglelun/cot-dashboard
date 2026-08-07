@@ -328,7 +328,7 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
             <label class="indicator-option"><span>Volume</span><input type="checkbox" data-indicator="showVolume" checked></label>
             <label class="indicator-option"><span>RSI (14)</span><input type="checkbox" data-indicator="showRsi"></label>
             <label class="indicator-option"><span>MACD</span><input type="checkbox" data-indicator="showMacd" checked></label>
-            <label class="indicator-option"><span>TD Sequential + LifeLine</span><input type="checkbox" data-indicator="showTongDaXin" checked></label>
+            <label class="indicator-option"><span>TD Sequential + LifeLine</span><input type="checkbox" data-indicator="showTongDaXin"></label>
           </div>
         </div>
         <div class="ma-group" id="maGroup">
@@ -393,7 +393,7 @@ const state = {
   pinching: false, pinchDistance: 0, pinchStart: 0, pinchEnd: 0, pinchRatio: 0.5,
   touchMode: 'idle', touchTimer: null, touchStartX: 0, touchStartY: 0, touchCurrentX: 0, touchCurrentY: 0,
   maCollapsed: true, showMa: true, showEma: false, showBollinger: false,
-  showVolume: true, showRsi: false, showMacd: true, showTongDaXin: true,
+  showVolume: true, showRsi: false, showMacd: true, showTongDaXin: false,
   marketIndex: null, stockRows: [], activeRange: null,
   universe: params.get('universe') || 'r2kRaw',
   metric: params.get('metric') || 'd',
