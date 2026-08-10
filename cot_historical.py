@@ -15,7 +15,7 @@ REQUEST_HEADERS = {'User-Agent': 'Mozilla/5.0 NetData COT updater'}
 PRIORITY_HISTORY_MARKETS = [
     'Coffee', 'Cocoa', 'Cotton', 'Sugar', 'S&P 500 Micro', 'Soybean Oil', 'Copper',
     'Corn', 'Soybeans', 'Soybean Meal', 'Wheat', 'Crude Oil', 'Gold', 'Silver',
-    'Platinum', 'Palladium', 'Orange Juice', 'Live Cattle', 'Lean Hogs',
+    'Platinum', 'Palladium', 'Aluminum', 'Orange Juice', 'Live Cattle', 'Lean Hogs',
     'Feeder Cattle', 'Euro FX', 'Japanese Yen', 'Swiss Franc', 'U.S. Dollar Index',
 ]
 
@@ -41,6 +41,7 @@ def get_all_futures():
         ('Copper', 'COPPER'),
         ('Platinum', 'PLATINUM'),
         ('Palladium', 'PALLADIUM'),
+        ('Aluminum', 'ALUMINUM - COMMODITY EXCHANGE'),
         ('Coffee', 'COFFEE'),
         ('Sugar', 'SUGAR'),
         ('Cocoa', 'COCOA'),

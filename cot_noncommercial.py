@@ -59,6 +59,7 @@ def get_all_futures():
         ('Copper', 'COPPER'),
         ('Platinum', 'PLATINUM'),
         ('Palladium', 'PALLADIUM'),
+        ('Aluminum', 'ALUMINUM - COMMODITY EXCHANGE'),
         ('Coffee', 'COFFEE'),
         ('Sugar', 'SUGAR'),
         ('Cocoa', 'COCOA'),
@@ -190,7 +191,7 @@ def generate_html_table(df, date):
     categories = {
         'Grains': ['Corn', 'Soybeans', 'Wheat', 'Soybean Oil', 'Soybean Meal', 'Rice', 'Oats'],
         'Energies': ['Crude Oil', 'Natural Gas'],
-        'Metals': ['Gold', 'Silver', 'Copper', 'Platinum', 'Palladium'],
+        'Metals': ['Gold', 'Silver', 'Copper', 'Platinum', 'Palladium', 'Aluminum'],
         'Softs': ['Coffee', 'Sugar', 'Cocoa', 'Cotton', 'Orange Juice'],
         'Livestock': ['Live Cattle', 'Lean Hogs', 'Feeder Cattle'],
         'Currencies': ['Euro FX', 'British Pound', 'Japanese Yen', 'Swiss Franc', 'Australian Dollar', 'Canadian Dollar', 'Mexican Peso'],
@@ -201,7 +202,7 @@ def generate_html_table(df, date):
     code_map = {
         'Corn': 'ZC', 'Soybeans': 'ZS', 'Wheat': 'ZW', 'Soybean Oil': 'ZL', 'Soybean Meal': 'ZM',
         'Oats': 'ZO', 'Rice': 'ZR', 'Crude Oil': 'CL', 'Natural Gas': 'NG', 'Gold': 'GC',
-        'Silver': 'SI', 'Copper': 'HG', 'Platinum': 'PL', 'Palladium': 'PA', 'Coffee': 'KC',
+        'Silver': 'SI', 'Copper': 'HG', 'Platinum': 'PL', 'Palladium': 'PA', 'Aluminum': 'ALI', 'Coffee': 'KC',
         'Sugar': 'SB', 'Cocoa': 'CC', 'Cotton': 'CT', 'Orange Juice': 'OJ', 'Live Cattle': 'LE',
         'Lean Hogs': 'HE', 'Feeder Cattle': 'GF', 'Euro FX': 'EC', 'British Pound': 'BP',
         'Japanese Yen': 'JY', 'Swiss Franc': 'SF', 'Australian Dollar': 'AD', 'Canadian Dollar': 'CD',

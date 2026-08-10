@@ -38,6 +38,7 @@ def get_all_futures():
         ('Copper', 'COPPER'),
         ('Platinum', 'PLATINUM'),
         ('Palladium', 'PALLADIUM'),
+        ('Aluminum', 'ALUMINUM - COMMODITY EXCHANGE'),
         ('Coffee', 'COFFEE'),
         ('Sugar', 'SUGAR'),
         ('Cocoa', 'COCOA'),

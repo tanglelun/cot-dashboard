@@ -25,6 +25,7 @@ commodity_tickers = {
     'Copper': 'HG=F',
     'Platinum': 'PL=F',
     'Palladium': 'PA=F',
+    'Aluminum': 'ALI=F',
     'Coffee': 'KC=F',
     'Sugar': 'SB=F',
     'Cocoa': 'CC=F',
