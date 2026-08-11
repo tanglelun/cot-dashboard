@@ -972,18 +972,23 @@ function drawTongDaXin(candles, xFor, yFor, bodyWidth, wickWidth, chartTop, pric
 
   // ── 生命线: EMA(EMA(C,10),10) blue=rising, red=falling ──
   ctx.lineWidth=3;ctx.lineJoin='round';
-  for(let pass=0;pass<2;pass++){
-    ctx.beginPath();let started=false;
-    for(let i=0;i<candles.length;i++){
-      if(candles[i].lifeLine==null)continue;
-      const x=xFor(i),y=yFor(candles[i].lifeLine);
-      if(y<chartTop||y>priceBottom)continue;
-      if(pass===0&&!candles[i].lifeUp)continue;
-      if(pass===1&&candles[i].lifeUp)continue;
-      if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);
+  let lastUp=null,segStart=false;
+  for(let i=0;i<candles.length;i++){
+    if(candles[i].lifeLine==null)continue;
+    const x=xFor(i),y=yFor(candles[i].lifeLine);
+    if(y<chartTop||y>priceBottom)continue;
+    const up=candles[i].lifeUp;
+    if(up!==lastUp){
+      if(segStart)ctx.stroke();
+      ctx.beginPath();segStart=true;
+      ctx.strokeStyle=up?'#2962ff':'#ff4d00';
+      ctx.moveTo(x,y);
+      lastUp=up;
+    }else{
+      ctx.lineTo(x,y);
     }
-    ctx.strokeStyle=pass===0?'#2962ff':'#ff4d00';ctx.stroke();
   }
+  if(segStart)ctx.stroke();
 
   // ── 缠论 pivot support/resistance ──
   const HI=10,LO=10;
@@ -1093,14 +1098,17 @@ function draw(){
       const x = xFor(i);
       ema5 = ema5 === null ? Number(c.close) : Number(c.close) * k5 + ema5 * (1 - k5);
       let color;
-      if(state.showTongDaXin && c.lifeLine != null){
-        const aboveMA20 = Number(c.close) > c.ma20;
-        const belowMA20 = Number(c.close) < c.ma20;
-        const ema5AboveMA20 = ema5 > c.ma20;
-        const ema5BelowMA20 = ema5 < c.ma20;
+      if(state.showTongDaXin && c.lifeLine != null && c.ma20 != null){
+        const cl = Number(c.close), ma20 = Number(c.ma20);
+        const aboveMA20 = cl > ma20, belowMA20 = cl < ma20;
+        const ema5AboveMA20 = ema5 > ma20, ema5BelowMA20 = ema5 < ma20;
         if((aboveMA20 && ema5BelowMA20) || (belowMA20 && ema5AboveMA20)){
           color = '#ffffff';
-        }else if(c.close > c.lifeLine) color = '#00d109';
+        }else if(cl > c.lifeLine) color = '#00d109';
+        else if(cl < c.lifeLine) color = '#ff4d00';
+        else color = '#ffffff';
+      }else if(state.showTongDaXin && c.lifeLine != null){
+        if(c.close > c.lifeLine) color = '#00d109';
         else if(c.close < c.lifeLine) color = '#ff4d00';
         else color = '#ffffff';
       }else{
