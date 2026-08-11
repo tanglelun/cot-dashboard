@@ -1086,11 +1086,21 @@ function draw(){
     ctx.stroke();
   }else{
     // K-line: lifeLine coloring when indicator on, else standard
+    // Pre-compute EMA5 for cross detection
+    let ema5 = null;
+    const k5 = 2 / 6;
     candles.forEach((c, i) => {
       const x = xFor(i);
+      ema5 = ema5 === null ? Number(c.close) : Number(c.close) * k5 + ema5 * (1 - k5);
       let color;
       if(state.showTongDaXin && c.lifeLine != null){
-        if(c.close > c.lifeLine) color = '#00d109';
+        const aboveMA20 = Number(c.close) > c.ma20;
+        const belowMA20 = Number(c.close) < c.ma20;
+        const ema5AboveMA20 = ema5 > c.ma20;
+        const ema5BelowMA20 = ema5 < c.ma20;
+        if((aboveMA20 && ema5BelowMA20) || (belowMA20 && ema5AboveMA20)){
+          color = '#ffffff';
+        }else if(c.close > c.lifeLine) color = '#00d109';
         else if(c.close < c.lifeLine) color = '#ff4d00';
         else color = '#ffffff';
       }else{
