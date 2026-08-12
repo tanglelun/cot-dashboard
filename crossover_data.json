@@ -1,0 +1,338 @@
+{
+  "updated": "2026-08-12 11:21 UTC",
+  "stocks": [
+    {
+      "symbol": "EVC",
+      "name": "Entravision Communications Corp",
+      "price": 9.23,
+      "change_pct": -21.11,
+      "ma20": 11.13,
+      "direction": "down",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "RXT",
+      "name": "Rackspace Technology Inc",
+      "price": 4.35,
+      "change_pct": -8.03,
+      "ma20": 4.36,
+      "direction": "down",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "HURA",
+      "name": "TuHURA Biosciences Inc",
+      "price": 2.3,
+      "change_pct": 6.98,
+      "ma20": 2.18,
+      "direction": "up",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "DOCN",
+      "name": "DigitalOcean Holdings Inc",
+      "price": 120.86,
+      "change_pct": -6.84,
+      "ma20": 123.43,
+      "direction": "down",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "COHU",
+      "name": "Cohu Inc",
+      "price": 52.82,
+      "change_pct": 6.77,
+      "ma20": 50.66,
+      "direction": "up",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "MELI",
+      "name": "MercadoLibre Inc",
+      "price": 1940.0,
+      "change_pct": 6.34,
+      "ma20": 1846.85,
+      "direction": "up",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "DDOG",
+      "name": "Datadog Inc",
+      "price": 246.78,
+      "change_pct": -5.37,
+      "ma20": 259.18,
+      "direction": "down",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "HON",
+      "name": "Honeywell International Inc",
+      "price": 230.12,
+      "change_pct": -5.27,
+      "ma20": 238.39,
+      "direction": "down",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "PLUG",
+      "name": "Plug Power Inc",
+      "price": 2.22,
+      "change_pct": 5.21,
+      "ma20": 2.12,
+      "direction": "up",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "GNRC",
+      "name": "Generac Holdings Inc",
+      "price": 215.86,
+      "change_pct": 4.74,
+      "ma20": 209.04,
+      "direction": "up",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "VRT",
+      "name": "Vertiv Holdings Co",
+      "price": 281.81,
+      "change_pct": 4.34,
+      "ma20": 278.07,
+      "direction": "up",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "PENG",
+      "name": "Penguin Solutions Inc",
+      "price": 57.33,
+      "change_pct": 3.9,
+      "ma20": 57.21,
+      "direction": "up",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "GOOGL",
+      "name": "Alphabet Inc",
+      "price": 343.8,
+      "change_pct": -3.84,
+      "ma20": 349.01,
+      "direction": "down",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "ATOM",
+      "name": "Atomera Inc",
+      "price": 5.57,
+      "change_pct": 3.72,
+      "ma20": 5.44,
+      "direction": "up",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "GOOG",
+      "name": "Alphabet Inc",
+      "price": 343.0,
+      "change_pct": -3.61,
+      "ma20": 348.18,
+      "direction": "down",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "TH",
+      "name": "Target Hospitality Corp",
+      "price": 16.62,
+      "change_pct": 3.42,
+      "ma20": 16.05,
+      "direction": "up",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "HUM",
+      "name": "Humana Inc",
+      "price": 372.82,
+      "change_pct": -3.34,
+      "ma20": 384.46,
+      "direction": "down",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "CF",
+      "name": "CF Industries Holdings Inc",
+      "price": 117.8,
+      "change_pct": -3.03,
+      "ma20": 121.47,
+      "direction": "down",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "CASY",
+      "name": "Casey's General Stores Inc",
+      "price": 829.91,
+      "change_pct": -2.87,
+      "ma20": 853.04,
+      "direction": "down",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "ACLS",
+      "name": "Axcelis Technologies Inc",
+      "price": 135.36,
+      "change_pct": 2.04,
+      "ma20": 134.42,
+      "direction": "up",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "SBUX",
+      "name": "Starbucks Corp",
+      "price": 106.66,
+      "change_pct": 1.92,
+      "ma20": 104.83,
+      "direction": "up",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "LRCX",
+      "name": "Lam Research Corp",
+      "price": 311.41,
+      "change_pct": 1.64,
+      "ma20": 306.82,
+      "direction": "up",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "MSTR",
+      "name": "Strategy Inc",
+      "price": 96.09,
+      "change_pct": -1.27,
+      "ma20": 96.66,
+      "direction": "down",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "EQIX",
+      "name": "Equinix Inc",
+      "price": 1032.4,
+      "change_pct": -1.05,
+      "ma20": 1035.08,
+      "direction": "down",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "INOD",
+      "name": "Innodata Inc",
+      "price": 62.71,
+      "change_pct": 0.77,
+      "ma20": 62.27,
+      "direction": "up",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "TTMI",
+      "name": "TTM Technologies Inc",
+      "price": 130.74,
+      "change_pct": 0.51,
+      "ma20": 130.14,
+      "direction": "up",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "PEP",
+      "name": "PepsiCo Inc",
+      "price": 138.41,
+      "change_pct": 0.49,
+      "ma20": 138.19,
+      "direction": "up",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "BEN",
+      "name": "Franklin Resources Inc",
+      "price": 33.36,
+      "change_pct": -0.48,
+      "ma20": 33.4,
+      "direction": "down",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "BE",
+      "name": "Bloom Energy Corp",
+      "price": 211.21,
+      "change_pct": 0.28,
+      "ma20": 210.98,
+      "direction": "up",
+      "date": "2026-08-11"
+    }
+  ],
+  "commodities": [
+    {
+      "symbol": "KC=F",
+      "name": "Coffee",
+      "sector": "Agriculture",
+      "price": 312.8,
+      "change_pct": -5.87,
+      "ma20": 326.62,
+      "direction": "down",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "ZC=F",
+      "name": "Corn",
+      "sector": "Agriculture",
+      "price": 460.5,
+      "change_pct": 5.08,
+      "ma20": 447.51,
+      "direction": "up",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "LE=F",
+      "name": "Live Cattle",
+      "sector": "Livestock",
+      "price": 226.25,
+      "change_pct": -3.01,
+      "ma20": 228.95,
+      "direction": "down",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "GF=F",
+      "name": "Feeder Cattle",
+      "sector": "Livestock",
+      "price": 344.98,
+      "change_pct": -1.65,
+      "ma20": 347.3,
+      "direction": "down",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "TAN",
+      "name": "Solar Energy Index",
+      "sector": "Indexes",
+      "price": 52.7,
+      "change_pct": 1.62,
+      "ma20": 52.13,
+      "direction": "up",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "FAN",
+      "name": "Wind Energy Index",
+      "sector": "Indexes",
+      "price": 23.92,
+      "change_pct": 0.97,
+      "ma20": 23.91,
+      "direction": "up",
+      "date": "2026-08-11"
+    },
+    {
+      "symbol": "ZR=F",
+      "name": "Rough Rice",
+      "sector": "Agriculture",
+      "price": 13.94,
+      "change_pct": -0.61,
+      "ma20": 13.95,
+      "direction": "down",
+      "date": "2026-08-11"
+    }
+  ]
+}

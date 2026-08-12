@@ -48,6 +48,26 @@
         h1 { color: #fff; margin: 0 0 4px 0; font-size: 22px; font-weight: 800; letter-spacing: 0; }
         .subtitle { color: var(--tv-muted); margin-bottom: 12px; font-size: 13px; }
         
+        .cross-section { margin-bottom: 14px; border: 1px solid var(--tv-border); border-radius: 8px; background: var(--tv-panel); overflow:hidden; }
+        .cross-header { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-bottom:1px solid var(--tv-border); flex-wrap:wrap; gap:8px; }
+        .cross-header h2 { margin:0; color:#fff; font-size:16px; font-weight:800; }
+        .cross-meta { color:var(--tv-muted); font-size:11px; }
+        .cross-tabs { display:flex; gap:4px; }
+        .cross-tab { height:28px; padding:0 12px; border:1px solid var(--tv-border); background:transparent; color:var(--tv-muted); border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; }
+        .cross-tab:hover { color:#fff; background:var(--tv-hover); }
+        .cross-tab.active { background:var(--tv-accent); border-color:var(--tv-accent); color:#001b03; }
+        .cross-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:6px; padding:10px; max-height:340px; overflow:auto; }
+        .cross-card { padding:10px; border:1px solid var(--tv-border-soft); border-radius:6px; background:#000; cursor:pointer; text-decoration:none; display:block; color:inherit; }
+        .cross-card:hover { background:var(--tv-hover); border-color:var(--tv-border); }
+        .cross-symbol { font-size:13px; font-weight:800; color:#fff; }
+        .cross-name { font-size:10px; color:var(--tv-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-top:2px; }
+        .cross-row { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:6px; }
+        .cross-price { font-size:13px; font-weight:800; }
+        .cross-chg { font-size:11px; font-weight:800; }
+        .cross-ma { font-size:9px; color:var(--tv-faint); margin-top:2px; }
+        .up{color:var(--tv-green)}.down{color:var(--tv-red)}
+        .cross-arrow { font-size:12px; margin-right:2px; }
+        
         .tabs { display: flex; gap: 4px; margin-bottom: 10px; border: 1px solid var(--tv-border); background: var(--tv-panel-2); border-radius: 6px; padding: 5px; width: fit-content; }
         .tab { height: 30px; padding: 0 14px; cursor: pointer; background: transparent; border: none; border-radius: 4px; color: var(--tv-muted); font-size: 13px; font-weight: 700; transition: 0.15s; }
         .tab:hover { color: var(--tv-text); background: var(--tv-hover); }
@@ -124,6 +144,20 @@
         <div class="page-head">
             <h1>CFTC Non-Commercial Positions</h1>
             <p class="subtitle">Legacy COT Report | Latest 52 Weeks · Select a commodity for full history</p>
+            
+            <div class="cross-section" id="crossSection">
+              <div class="cross-header">
+                <div>
+                  <h2>MA20 Crossover</h2>
+                  <div class="cross-meta" id="crossMeta">Loading...</div>
+                </div>
+                <div class="cross-tabs">
+                  <button class="cross-tab active" data-cross="stocks">Stocks</button>
+                  <button class="cross-tab" data-cross="commodities">Commodities</button>
+                </div>
+              </div>
+              <div class="cross-grid" id="crossGrid"></div>
+            </div>
             
             <div class="tabs">
                 <button class="tab active" onclick="showTab('net')">Net</button>
@@ -313,6 +347,44 @@
             document.getElementById(tabName).classList.add('active');
         }
         setupNavSearch();
+        let crossMode = 'stocks', crossData = null;
+        function renderCross(){
+          if(!crossData) return;
+          var items = crossData[crossMode] || [];
+          $('crossMeta').textContent = 'Updated '+crossData.updated+' · ' + items.length + ' signals';
+          var grid = $('crossGrid');
+          var h = items.map(function(r){
+            var dir = r.direction === 'up' ? '↑' : '↓';
+            var cls = r.direction === 'up' ? 'up' : 'down';
+            var sym = r.symbol || '';
+            var p = r.price != null ? r.price.toFixed(2) : '--';
+            var chg = r.change_pct != null ? (r.change_pct>=0?'+':'')+r.change_pct.toFixed(1)+'%' : '';
+            var ma = r.ma20 != null ? 'MA20 '+r.ma20.toFixed(2) : '';
+            var href = crossMode === 'commodities'
+              ? 'commodity_chart.html?symbol='+encodeURIComponent(sym)+'&name='+encodeURIComponent(r.name)
+              : 'stock_chart.html?symbol='+encodeURIComponent(sym)+'&name='+encodeURIComponent(r.name);
+            return '<a class="cross-card" href="'+href+'">'+
+              '<div class="cross-symbol">'+dir+' '+r.name+'</div>'+
+              '<div class="cross-name">'+sym+'</div>'+
+              '<div class="cross-row"><span class="cross-price '+cls+'">'+p+'</span><span class="cross-chg '+cls+'">'+chg+'</span></div>'+
+              '<div class="cross-ma">'+ma+'</div></a>';
+          }).join('');
+          grid.innerHTML = h || '<div style="padding:20px;color:var(--tv-muted);text-align:center">No crossover signals today</div>';
+        }
+        function loadCross(){
+          fetch('crossover_data.json').then(function(r){return r.json();}).then(function(d){
+            crossData = d; renderCross();
+          }).catch(function(){});
+        }
+        document.querySelectorAll('.cross-tab').forEach(function(btn){
+          btn.addEventListener('click', function(){
+            crossMode = btn.dataset.cross;
+            document.querySelectorAll('.cross-tab').forEach(function(t){t.classList.toggle('active', t===btn);});
+            renderCross();
+          });
+        });
+        var $ = function(id){return document.getElementById(id);};
+        loadCross();
     </script>
 </body>
 </html>
