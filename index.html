@@ -34,17 +34,21 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,san
 .nav-search-icon{width:42px;height:42px;border:1px solid #2a2e39;border-radius:999px;background:#090c12;display:inline-flex;align-items:center;justify-content:center;position:relative;flex:0 0 auto;margin-left:auto;text-decoration:none}
 .nav-search-icon::before{content:"";width:13px;height:13px;border:2px solid #d1d4dc;border-radius:50%}
 .nav-search-icon::after{content:"";position:absolute;width:7px;height:2px;background:#d1d4dc;border-radius:999px;transform:translate(9px,9px) rotate(45deg)}
-.container{width:100%;max-width:100%;margin:0;padding:16px clamp(10px,1.3vw,24px) 28px}
-.section{margin-bottom:16px;border:1px solid var(--border);border-radius:8px;background:var(--panel);overflow:hidden}
+.container{width:100%;max-width:100%;margin:0;padding:16px clamp(10px,1.3vw,24px) 28px;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:14px;align-items:start}
+.main-col{min-width:0}
+.side-col{display:flex;flex-direction:column;gap:14px}
+.section{margin:0;border:1px solid var(--border);border-radius:8px;background:var(--panel);overflow:hidden}
 .section-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
 .section-head h2{margin:0;color:#fff;font-size:16px;font-weight:800}
 .section-meta{color:var(--muted);font-size:11px}
-.cross-tabs{display:flex;gap:4px}
+.cross-tabs{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
 .cross-tab{height:28px;padding:0 12px;border:1px solid var(--border);background:transparent;color:var(--muted);border-radius:4px;font-size:11px;font-weight:700;cursor:pointer}
 .cross-tab:hover{color:#fff;background:var(--hover)}
 .cross-tab.active{background:var(--accent);border-color:var(--accent);color:#001b03}
-.cross-grid{display:block;padding:0;max-height:420px;overflow:auto}
-.cross-list{width:100%;border-collapse:collapse;font-size:12px}
+.cross-tab.putcall{background:rgba(0,209,9,.15);color:var(--green);border-color:rgba(0,209,9,.3)}
+.cross-tab.callput{background:rgba(255,77,0,.15);color:var(--red);border-color:rgba(255,77,0,.3)}
+.cross-list-wrap{overflow-x:auto;max-height:calc(100vh - 160px);overflow-y:auto}
+.cross-list{width:100%;border-collapse:collapse;font-size:12px;min-width:520px}
 .cross-list thead th{position:sticky;top:0;background:var(--panel2);color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;padding:8px;text-align:left;border-bottom:1px solid var(--border);z-index:2}
 .cross-list tbody td{padding:8px;border-bottom:1px solid var(--border-soft);white-space:nowrap}
 .cross-list tbody tr{cursor:pointer}
@@ -52,17 +56,21 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,san
 .cross-list .num{text-align:right}
 .cross-name{font-weight:800;color:#fff}
 .cross-sub{color:var(--muted);font-size:10px}
-.cross-dir{font-weight:800}
-.cross-trans{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:800}
+.cross-dir{font-weight:800;font-size:14px}
+.cross-trans{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:800}
 .trans-up{background:rgba(0,209,9,.15);color:var(--green)}
 .trans-down{background:rgba(255,77,0,.15);color:var(--red)}
 .cross-price{font-weight:800;text-align:right}
 .up{color:var(--green)}.down{color:var(--red)}
-.links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;padding:12px}
-.link-card{display:flex;flex-direction:column;gap:4px;padding:12px;border:1px solid var(--border-soft);border-radius:6px;background:#000;color:inherit;text-decoration:none}
+.links-grid{display:flex;flex-direction:column;gap:6px;padding:10px}
+.link-card{display:flex;flex-direction:column;gap:3px;padding:11px 12px;border:1px solid var(--border-soft);border-radius:6px;background:#000;color:inherit;text-decoration:none}
 .link-card:hover{background:var(--hover);border-color:var(--border)}
 .link-card .t{font-size:13px;font-weight:800;color:#fff}
 .link-card .d{font-size:11px;color:var(--muted)}
+@media(max-width:1000px){
+  .container{grid-template-columns:1fr}
+  .cross-list-wrap{max-height:420px}
+}
 @media(max-width:768px){
   .site-nav{min-height:58px;padding:10px 14px;gap:10px;flex-wrap:wrap}
   .site-brand{font-size:21px}
@@ -105,41 +113,53 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,san
 </nav>
 
 <main class="container">
-  <div class="section">
-    <div class="section-head">
-      <div>
-        <h2>MA20 Crossover</h2>
-        <div class="section-meta" id="crossMeta">Loading...</div>
+  <div class="main-col">
+    <div class="section">
+      <div class="section-head">
+        <div>
+          <h2>MA20 Crossover</h2>
+          <div class="section-meta" id="crossMeta">Loading...</div>
+        </div>
       </div>
-      <div class="cross-tabs">
-        <button class="cross-tab active" data-cross="stocks">Stocks</button>
-        <button class="cross-tab" data-cross="commodities">Commodities</button>
+      <div style="padding:8px 14px;border-bottom:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <div class="cross-tabs" id="marketTabs">
+          <button class="cross-tab active" data-cross="stocks">Stocks</button>
+          <button class="cross-tab" data-cross="commodities">Commodities</button>
+        </div>
+        <div class="cross-tabs" id="dirTabs">
+          <button class="cross-tab active" data-dir="all">All</button>
+          <button class="cross-tab putcall" data-dir="up">Put → Call</button>
+          <button class="cross-tab callput" data-dir="down">Call → Put</button>
+        </div>
       </div>
-    </div>
-    <div class="cross-grid" id="crossGrid"></div>
-  </div>
-
-  <div class="section">
-    <div class="section-head"><h2>Markets</h2></div>
-    <div class="links-grid">
-      <a class="link-card" href="russell2000_top100.html?market=stock"><span class="t">Tops</span><span class="d">涨幅排行 · Russell 2000 / S&P 500 / Nasdaq</span></a>
-      <a class="link-card" href="russell2000_top100.html?market=commodities"><span class="t">Commodities</span><span class="d">商品期货行情</span></a>
-      <a class="link-card" href="russell2000_top100.html?market=indexes"><span class="t">Indexes</span><span class="d">全球主要指数</span></a>
-      <a class="link-card" href="russell2000_top100.html?market=shares"><span class="t">Stock</span><span class="d">美股热力图</span></a>
-      <a class="link-card" href="russell2000_top100.html?market=currencies"><span class="t">Currencies</span><span class="d">外汇行情</span></a>
-      <a class="link-card" href="russell2000_top100.html?market=crypto"><span class="t">Crypto</span><span class="d">加密货币</span></a>
-      <a class="link-card" href="russell2000_top100.html?market=bonds"><span class="t">Bonds</span><span class="d">美债收益率</span></a>
+      <div class="cross-list-wrap">
+        <div id="crossGrid"></div>
+      </div>
     </div>
   </div>
 
-  <div class="section">
-    <div class="section-head"><h2>Analysis</h2></div>
-    <div class="links-grid">
-      <a class="link-card" href="cot_noncommercial_history.html"><span class="t">Commercial</span><span class="d">CFTC 非商业持仓</span></a>
-      <a class="link-card" href="economy.html"><span class="t">Indicators</span><span class="d">宏观经济指标</span></a>
-      <a class="link-card" href="market_pulse.html"><span class="t">Insight</span><span class="d">Market Pulse 市场脉搏</span></a>
-      <a class="link-card" href="compare.html"><span class="t">Compare</span><span class="d">对比分析</span></a>
-      <a class="link-card" href="calendar.html"><span class="t">Calendar</span><span class="d">财经日历</span></a>
+  <div class="side-col">
+    <div class="section">
+      <div class="section-head"><h2>Markets</h2></div>
+      <div class="links-grid">
+        <a class="link-card" href="russell2000_top100.html?market=stock"><span class="t">Tops</span><span class="d">涨幅排行 · Russell 2000 / S&P 500 / Nasdaq</span></a>
+        <a class="link-card" href="russell2000_top100.html?market=commodities"><span class="t">Commodities</span><span class="d">商品期货行情</span></a>
+        <a class="link-card" href="russell2000_top100.html?market=indexes"><span class="t">Indexes</span><span class="d">全球主要指数</span></a>
+        <a class="link-card" href="russell2000_top100.html?market=shares"><span class="t">Stock</span><span class="d">美股热力图</span></a>
+        <a class="link-card" href="russell2000_top100.html?market=currencies"><span class="t">Currencies</span><span class="d">外汇行情</span></a>
+        <a class="link-card" href="russell2000_top100.html?market=crypto"><span class="t">Crypto</span><span class="d">加密货币</span></a>
+        <a class="link-card" href="russell2000_top100.html?market=bonds"><span class="t">Bonds</span><span class="d">美债收益率</span></a>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-head"><h2>Analysis</h2></div>
+      <div class="links-grid">
+        <a class="link-card" href="cot_noncommercial_history.html"><span class="t">Commercial</span><span class="d">CFTC 非商业持仓</span></a>
+        <a class="link-card" href="economy.html"><span class="t">Indicators</span><span class="d">宏观经济指标</span></a>
+        <a class="link-card" href="market_pulse.html"><span class="t">Insight</span><span class="d">Market Pulse 市场脉搏</span></a>
+        <a class="link-card" href="compare.html"><span class="t">Compare</span><span class="d">对比分析</span></a>
+        <a class="link-card" href="calendar.html"><span class="t">Calendar</span><span class="d">财经日历</span></a>
+      </div>
     </div>
   </div>
 </main>
@@ -147,17 +167,18 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,san
 <script>
 (function(){
   var $=function(id){return document.getElementById(id);};
-  var crossMode='stocks',crossData=null;
+  var crossMode='stocks',crossDir='all',crossData=null;
+  function colorLabel(c){
+    if(c==='green')return '<span class="up">绿</span>';
+    if(c==='red')return '<span class="down">红</span>';
+    return '<span style="color:#fff">白</span>';
+  }
   function renderCross(){
     if(!crossData)return;
     var items=crossData[crossMode]||[];
+    if(crossDir!=='all')items=items.filter(function(r){return r.direction===crossDir;});
     $('crossMeta').textContent='Updated '+crossData.updated+' · '+items.length+' signals';
     var grid=$('crossGrid');
-    function colorLabel(c){
-      if(c==='green')return '<span class="up">绿</span>';
-      if(c==='red')return '<span class="down">红</span>';
-      return '<span style="color:#fff">白</span>';
-    }
     var rows=items.map(function(r){
       var dir=r.direction==='up'?'↑':'↓';
       var cls=r.direction==='up'?'up':'down';
@@ -188,12 +209,19 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,san
       tr.addEventListener('click',function(){window.location.href=tr.dataset.href;});
     });
   }
-  document.querySelectorAll('.cross-tab').forEach(function(btn){
-    btn.addEventListener('click',function(){
-      crossMode=btn.dataset.cross;
-      document.querySelectorAll('.cross-tab').forEach(function(t){t.classList.toggle('active',t===btn);});
-      renderCross();
-    });
+  document.getElementById('marketTabs').addEventListener('click',function(e){
+    var btn=e.target.closest('.cross-tab[data-cross]');
+    if(!btn)return;
+    crossMode=btn.dataset.cross;
+    document.querySelectorAll('#marketTabs .cross-tab').forEach(function(t){t.classList.toggle('active',t===btn);});
+    renderCross();
+  });
+  document.getElementById('dirTabs').addEventListener('click',function(e){
+    var btn=e.target.closest('.cross-tab[data-dir]');
+    if(!btn)return;
+    crossDir=btn.dataset.dir;
+    document.querySelectorAll('#dirTabs .cross-tab').forEach(function(t){t.classList.toggle('active',t===btn);});
+    renderCross();
   });
   fetch('crossover_data.json').then(function(r){return r.json();}).then(function(d){crossData=d;renderCross();}).catch(function(){});
 })();
