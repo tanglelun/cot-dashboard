@@ -43,15 +43,20 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,san
 .cross-tab{height:28px;padding:0 12px;border:1px solid var(--border);background:transparent;color:var(--muted);border-radius:4px;font-size:11px;font-weight:700;cursor:pointer}
 .cross-tab:hover{color:#fff;background:var(--hover)}
 .cross-tab.active{background:var(--accent);border-color:var(--accent);color:#001b03}
-.cross-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;padding:10px;max-height:360px;overflow:auto}
-.cross-card{padding:10px;border:1px solid var(--border-soft);border-radius:6px;background:#000;cursor:pointer;text-decoration:none;display:block;color:inherit}
-.cross-card:hover{background:var(--hover);border-color:var(--border)}
-.cross-symbol{font-size:13px;font-weight:800;color:#fff}
-.cross-name{font-size:10px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px}
-.cross-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px}
-.cross-price{font-size:13px;font-weight:800}
-.cross-chg{font-size:11px;font-weight:800}
-.cross-ma{font-size:9px;color:var(--faint);margin-top:2px}
+.cross-grid{display:block;padding:0;max-height:420px;overflow:auto}
+.cross-list{width:100%;border-collapse:collapse;font-size:12px}
+.cross-list thead th{position:sticky;top:0;background:var(--panel2);color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;padding:8px;text-align:left;border-bottom:1px solid var(--border);z-index:2}
+.cross-list tbody td{padding:8px;border-bottom:1px solid var(--border-soft);white-space:nowrap}
+.cross-list tbody tr{cursor:pointer}
+.cross-list tbody tr:hover{background:var(--hover)}
+.cross-list .num{text-align:right}
+.cross-name{font-weight:800;color:#fff}
+.cross-sub{color:var(--muted);font-size:10px}
+.cross-dir{font-weight:800}
+.cross-trans{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:800}
+.trans-up{background:rgba(0,209,9,.15);color:var(--green)}
+.trans-down{background:rgba(255,77,0,.15);color:var(--red)}
+.cross-price{font-weight:800;text-align:right}
 .up{color:var(--green)}.down{color:var(--red)}
 .links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;padding:12px}
 .link-card{display:flex;flex-direction:column;gap:4px;padding:12px;border:1px solid var(--border-soft);border-radius:6px;background:#000;color:inherit;text-decoration:none}
@@ -68,7 +73,7 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,san
   .nav-market{display:block}
   .market-menu{position:static;opacity:1;visibility:visible;pointer-events:auto;transform:none;box-shadow:none;background:transparent;border:0;padding:0 0 0 12px}
   .market-menu::before{display:none}
-  .cross-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+  .cross-list{font-size:11px}
 }
 </style>
 </head>
@@ -148,22 +153,40 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,san
     var items=crossData[crossMode]||[];
     $('crossMeta').textContent='Updated '+crossData.updated+' · '+items.length+' signals';
     var grid=$('crossGrid');
-    grid.innerHTML=items.map(function(r){
+    function colorLabel(c){
+      if(c==='green')return '<span class="up">绿</span>';
+      if(c==='red')return '<span class="down">红</span>';
+      return '<span style="color:#fff">白</span>';
+    }
+    var rows=items.map(function(r){
       var dir=r.direction==='up'?'↑':'↓';
       var cls=r.direction==='up'?'up':'down';
       var sym=r.symbol||'';
       var p=r.price!=null?r.price.toFixed(2):'--';
       var chg=r.change_pct!=null?(r.change_pct>=0?'+':'')+r.change_pct.toFixed(1)+'%':'';
-      var ma=r.ma20!=null?'MA20 '+r.ma20.toFixed(2):'';
+      var trans=colorLabel(r.prev_color)+' → '+colorLabel(r.cur_color);
+      var transCls=r.direction==='up'?'trans-up':'trans-down';
+      var sub=r.sector?r.sector+' · '+sym:sym;
       var href=crossMode==='commodities'
         ?'commodity_chart.html?symbol='+encodeURIComponent(sym)+'&name='+encodeURIComponent(r.name)
         :'stock_chart.html?symbol='+encodeURIComponent(sym)+'&name='+encodeURIComponent(r.name);
-      return '<a class="cross-card" href="'+href+'">'+
-        '<div class="cross-symbol"><span class="'+cls+'">'+dir+'</span> '+r.name+'</div>'+
-        '<div class="cross-name">'+sym+'</div>'+
-        '<div class="cross-row"><span class="cross-price '+cls+'">'+p+'</span><span class="cross-chg '+cls+'">'+chg+'</span></div>'+
-        '<div class="cross-ma">'+ma+'</div></a>';
-    }).join('')||'<div style="padding:20px;color:var(--muted);text-align:center;grid-column:1/-1">No crossover signals today</div>';
+      return '<tr data-href="'+href+'">'+
+        '<td class="cross-dir '+cls+'">'+dir+'</td>'+
+        '<td><div class="cross-name">'+r.name+'</div><div class="cross-sub">'+sub+'</div></td>'+
+        '<td><span class="cross-trans '+transCls+'">'+trans+'</span></td>'+
+        '<td class="cross-price '+cls+'">'+p+'</td>'+
+        '<td class="num '+cls+'">'+chg+'</td>'+
+        '<td class="cross-sub">'+r.date+'</td>'+
+        '</tr>';
+    }).join('');
+    grid.innerHTML='<table class="cross-list"><thead><tr>'+
+      '<th></th><th>Name</th><th>K线变化</th><th>Price</th><th>Change</th><th>Date</th>'+
+      '</tr></thead><tbody>'+
+      (rows||'<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px">No signals today</td></tr>')+
+      '</tbody></table>';
+    grid.querySelectorAll('tr[data-href]').forEach(function(tr){
+      tr.addEventListener('click',function(){window.location.href=tr.dataset.href;});
+    });
   }
   document.querySelectorAll('.cross-tab').forEach(function(btn){
     btn.addEventListener('click',function(){
