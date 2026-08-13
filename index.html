@@ -189,8 +189,8 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,san
       var transCls=r.direction==='up'?'trans-up':'trans-down';
       var sub=r.sector?r.sector+' · '+sym:sym;
       var href=crossMode==='commodities'
-        ?'commodity_chart.html?symbol='+encodeURIComponent(sym)+'&name='+encodeURIComponent(r.name)
-        :'stock_chart.html?symbol='+encodeURIComponent(sym)+'&name='+encodeURIComponent(r.name);
+        ?'commodity_chart.html?symbol='+encodeURIComponent(sym)+'&name='+encodeURIComponent(r.name)+'&ma=0'
+        :'stock_chart.html?symbol='+encodeURIComponent(sym)+'&name='+encodeURIComponent(r.name)+'&td=1&ma=0';
       return '<tr data-href="'+href+'">'+
         '<td class="cross-dir '+cls+'">'+dir+'</td>'+
         '<td><div class="cross-name">'+r.name+'</div><div class="cross-sub">'+sub+'</div></td>'+

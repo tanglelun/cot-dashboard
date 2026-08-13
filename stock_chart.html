@@ -388,8 +388,8 @@ const state = {
   candles: [], start: 0, end: 0, hover: -1, hoverY: null, dragging: false, dragX: 0, dragStart: 0, dragEnd: 0,
   pinching: false, pinchDistance: 0, pinchStart: 0, pinchEnd: 0, pinchRatio: 0.5,
   touchMode: 'idle', touchTimer: null, touchStartX: 0, touchStartY: 0, touchCurrentX: 0, touchCurrentY: 0,
-  maCollapsed: true, showMa: true, showEma: false, showBollinger: false,
-  showVolume: true, showRsi: false, showMacd: true, showTongDaXin: false,
+  maCollapsed: true, showMa: params.get('ma') !== '0', showEma: false, showBollinger: false,
+  showVolume: true, showRsi: false, showMacd: true, showTongDaXin: params.get('td') === '1',
   marketIndex: null, stockRows: [], activeRange: null,
   universe: params.get('universe') || 'r2kRaw',
   metric: params.get('metric') || 'd',
@@ -1450,6 +1450,11 @@ document.getElementById('indicatorMenu').addEventListener('change', event => {
   if(!input) return;
   state[input.dataset.indicator] = input.checked;
   draw();
+});
+// Sync checkbox state with URL params (e.g. ?td=1&ma=0)
+document.querySelectorAll('#indicatorMenu input[data-indicator]').forEach(input => {
+  const key = input.dataset.indicator;
+  if(key in state) input.checked = !!state[key];
 });
 document.addEventListener('click', event => {
   if(indicatorControl.contains(event.target)) return;

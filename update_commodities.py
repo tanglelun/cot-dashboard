@@ -63,49 +63,6 @@ def rounded(value, decimals=4):
     return round(float(value), decimals)
 
 
-# Rollover-gap thresholds per category: back-adjust continuous (=F) futures
-# to remove artificial price jumps at contract rollover (主力连续 effect).
-CATEGORY_THRESHOLDS = {
-    "Indexes": None,      # ETFs / indices, no rollover
-    "Energy": 0.08,       # crude / gas are very volatile
-    "Metals": 0.06,
-    "Agriculture": 0.05,  # includes softs (coffee/cocoa/sugar) which are volatile
-    "Livestock": 0.05,
-}
-
-
-def back_adjust_frame(frame, threshold):
-    """Remove rollover gaps from a continuous futures OHLC frame.
-
-    Multiplicative back-adjust: the latest (most recent) price stays real, and
-    historical prices are scaled so that gaps at rollover points disappear.
-    """
-    if frame is None or frame.empty or threshold is None:
-        return frame
-    frame = frame.sort_index()
-    n = len(frame)
-    opens = frame["Open"].astype(float).tolist()
-    highs = frame["High"].astype(float).tolist()
-    lows = frame["Low"].astype(float).tolist()
-    closes = frame["Close"].astype(float).tolist()
-    factor = [1.0] * n
-    for i in range(n - 2, -1, -1):
-        if closes[i] != 0:
-            ratio = opens[i + 1] / closes[i]
-            if abs(ratio - 1) > threshold:
-                factor[i] = factor[i + 1] * ratio
-            else:
-                factor[i] = factor[i + 1]
-        else:
-            factor[i] = factor[i + 1]
-    adjusted = frame.copy()
-    adjusted["Open"] = [o * f for o, f in zip(opens, factor)]
-    adjusted["High"] = [h * f for h, f in zip(highs, factor)]
-    adjusted["Low"] = [l * f for l, f in zip(lows, factor)]
-    adjusted["Close"] = [c * f for c, f in zip(closes, factor)]
-    return adjusted
-
-
 def safe_symbol(symbol):
     return symbol.replace("=", "-").replace("/", "-").replace(".", "-")
 
@@ -287,7 +244,6 @@ def main():
                 frame = fallback_history_frame(item["symbol"])
         if frame.empty:
             continue
-        frame = back_adjust_frame(frame, CATEGORY_THRESHOLDS.get(item["category"]))
         payload = history_payload(item, frame, updated)
         if payload is None:
             continue
