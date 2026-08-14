@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-14 03:28 UTC",
+  "updated": "2026-08-14 04:57 UTC",
   "stocks": [
     {
       "symbol": "AOSL",
@@ -282,16 +282,6 @@
       "date": "2026-08-13"
     },
     {
-      "symbol": "CTAS",
-      "name": "Cintas Corp",
-      "price": 200.7,
-      "change_pct": -1.38,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-08-13"
-    },
-    {
       "symbol": "CPRT",
       "name": "Copart Inc",
       "price": 29.39,
@@ -299,6 +289,16 @@
       "direction": "up",
       "prev_color": "red",
       "cur_color": "green",
+      "date": "2026-08-13"
+    },
+    {
+      "symbol": "CTAS",
+      "name": "Cintas Corp",
+      "price": 200.7,
+      "change_pct": -1.38,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
       "date": "2026-08-13"
     },
     {
@@ -444,69 +444,36 @@
   ],
   "commodities": [
     {
-      "symbol": "KC=F",
-      "name": "Coffee",
-      "price": 313.4,
-      "change_pct": -7.85,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-08-13",
+      "symbol": "ZO=F",
+      "name": "Oats",
+      "price": 338.5,
+      "change_pct": 6.95,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-08-14",
       "sector": "Agriculture"
     },
     {
-      "symbol": "ZO=F",
-      "name": "Oats",
-      "price": 337.25,
-      "change_pct": 4.33,
+      "symbol": "ZC=F",
+      "name": "Corn",
+      "price": 475.25,
+      "change_pct": 6.08,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
-      "date": "2026-08-13",
+      "date": "2026-08-14",
       "sector": "Agriculture"
     },
     {
-      "symbol": "GF=F",
-      "name": "Feeder Cattle",
-      "price": 337.65,
-      "change_pct": -2.51,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-08-13",
-      "sector": "Livestock"
-    },
-    {
-      "symbol": "CL=F",
-      "name": "Crude Oil WTI",
-      "price": 81.28,
-      "change_pct": -2.39,
+      "symbol": "HO=F",
+      "name": "Heating Oil",
+      "price": 4.11,
+      "change_pct": -3.4,
       "direction": "down",
       "prev_color": "green",
       "cur_color": "white",
-      "date": "2026-08-13",
-      "sector": "Energy"
-    },
-    {
-      "symbol": "NG=F",
-      "name": "Natural Gas",
-      "price": 2.74,
-      "change_pct": -2.18,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-08-13",
-      "sector": "Energy"
-    },
-    {
-      "symbol": "BZ=F",
-      "name": "Brent Crude Oil",
-      "price": 87.09,
-      "change_pct": -2.12,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-08-13",
+      "date": "2026-08-14",
       "sector": "Energy"
     },
     {
@@ -521,26 +488,37 @@
       "sector": "Agriculture"
     },
     {
-      "symbol": "ZS=F",
-      "name": "Soybeans",
-      "price": 1186.5,
-      "change_pct": 1.87,
+      "symbol": "ZM=F",
+      "name": "Soybean Meal",
+      "price": 315.8,
+      "change_pct": 1.9,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "green",
-      "date": "2026-08-13",
+      "date": "2026-08-14",
       "sector": "Agriculture"
     },
     {
-      "symbol": "ZM=F",
-      "name": "Soybean Meal",
-      "price": 315.1,
-      "change_pct": 1.32,
+      "symbol": "ZS=F",
+      "name": "Soybeans",
+      "price": 1188.75,
+      "change_pct": 1.75,
       "direction": "up",
       "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-08-13",
+      "cur_color": "white",
+      "date": "2026-08-14",
       "sector": "Agriculture"
+    },
+    {
+      "symbol": "GF=F",
+      "name": "Feeder Cattle",
+      "price": 342.82,
+      "change_pct": -1.02,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-08-13",
+      "sector": "Livestock"
     }
   ]
 }

@@ -67,7 +67,43 @@ def safe_symbol(symbol):
     return symbol.replace("=", "-").replace("/", "-").replace(".", "-")
 
 
-ROLL_GAP_THRESHOLD = 0.08
+ROLL_THRESHOLD = 0.08
+ROLL_REVERT_WINDOW = 3
+ROLL_REVERT_RATIO = 0.5
+
+
+def _is_roll_day(closes, i):
+    """Return True if day ``i`` looks like a contract roll rather than a real
+    price move.
+
+    A roll shows up as a large close-to-close jump that does NOT revert: after
+    the jump the price settles at the new contract's level and stays there.
+    Real shocks (spikes, crashes) usually pull back a meaningful fraction of
+    the move within a few days, so we exclude those to keep genuine history.
+    """
+    n = len(closes)
+    prev_close = closes[i - 1]
+    cur_close = closes[i]
+    if prev_close is None or cur_close is None or pd.isna(prev_close) or pd.isna(cur_close):
+        return False
+    if prev_close <= 0 or cur_close <= 0:
+        return False
+    close_ret = cur_close / prev_close - 1
+    if abs(close_ret) < ROLL_THRESHOLD:
+        return False
+
+    jump = cur_close - prev_close
+    revert_amount = abs(jump) * ROLL_REVERT_RATIO
+    for j in range(i + 1, min(i + 1 + ROLL_REVERT_WINDOW, n)):
+        cj = closes[j]
+        if cj is None or pd.isna(cj) or cj <= 0:
+            continue
+        moved = cj - cur_close
+        if jump > 0 and moved <= -revert_amount:
+            return False
+        if jump < 0 and moved >= revert_amount:
+            return False
+    return True
 
 
 def back_adjust_frame(frame):
@@ -75,8 +111,8 @@ def back_adjust_frame(frame):
 
     Continuous futures contracts (e.g. ``CL=F``) are simple front-month
     concatenations, so switching to the next contract month creates a large
-    price gap. We detect roll days by their outsized overnight open gap and
-    scale all earlier OHLC prices so the series is continuous across rolls.
+    price gap. We detect roll days by their outsized, non-reverting close
+    jump and scale all earlier OHLC prices so the series stays continuous.
     """
     if frame is None or frame.empty or len(frame) < 2:
         return frame
@@ -85,18 +121,16 @@ def back_adjust_frame(frame):
     highs = frame["High"].astype(float)
     lows = frame["Low"].astype(float)
     closes = frame["Close"].astype(float)
+    close_values = closes.to_list()
 
     n = len(frame)
     roll_ratio = {}
     for i in range(1, n):
-        prev_close = closes.iloc[i - 1]
-        if prev_close is None or pd.isna(prev_close) or prev_close <= 0:
+        if not _is_roll_day(close_values, i):
             continue
-        open_gap = opens.iloc[i] / prev_close - 1
-        if abs(open_gap) >= ROLL_GAP_THRESHOLD:
-            ratio = opens.iloc[i] / prev_close
-            if ratio > 0:
-                roll_ratio[i] = ratio
+        ratio = close_values[i] / close_values[i - 1]
+        if ratio > 0:
+            roll_ratio[i] = ratio
 
     if not roll_ratio:
         return frame
