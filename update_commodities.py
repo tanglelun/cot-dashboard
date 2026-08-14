@@ -67,6 +67,55 @@ def safe_symbol(symbol):
     return symbol.replace("=", "-").replace("/", "-").replace(".", "-")
 
 
+ROLL_GAP_THRESHOLD = 0.08
+
+
+def back_adjust_frame(frame):
+    """Remove futures roll gaps using proportional (ratio) back-adjustment.
+
+    Continuous futures contracts (e.g. ``CL=F``) are simple front-month
+    concatenations, so switching to the next contract month creates a large
+    price gap. We detect roll days by their outsized overnight open gap and
+    scale all earlier OHLC prices so the series is continuous across rolls.
+    """
+    if frame is None or frame.empty or len(frame) < 2:
+        return frame
+    frame = frame.sort_index().copy()
+    opens = frame["Open"].astype(float)
+    highs = frame["High"].astype(float)
+    lows = frame["Low"].astype(float)
+    closes = frame["Close"].astype(float)
+
+    n = len(frame)
+    roll_ratio = {}
+    for i in range(1, n):
+        prev_close = closes.iloc[i - 1]
+        if prev_close is None or pd.isna(prev_close) or prev_close <= 0:
+            continue
+        open_gap = opens.iloc[i] / prev_close - 1
+        if abs(open_gap) >= ROLL_GAP_THRESHOLD:
+            ratio = opens.iloc[i] / prev_close
+            if ratio > 0:
+                roll_ratio[i] = ratio
+
+    if not roll_ratio:
+        return frame
+
+    adj = [1.0] * n
+    running = 1.0
+    for i in range(n - 1, -1, -1):
+        adj[i] = running
+        if i in roll_ratio:
+            running *= roll_ratio[i]
+
+    adj = pd.Series(adj, index=frame.index)
+    frame["Open"] = opens * adj
+    frame["High"] = highs * adj
+    frame["Low"] = lows * adj
+    frame["Close"] = closes * adj
+    return frame
+
+
 def series_from_download(data, symbol):
     try:
         if symbol not in data.columns.get_level_values(0):
@@ -74,6 +123,8 @@ def series_from_download(data, symbol):
         frame = data[symbol]
         if "Close" not in frame.columns:
             return pd.Series(dtype=float)
+        if symbol.endswith("=F"):
+            frame = back_adjust_frame(frame)
         return frame["Close"].dropna()
     except Exception:
         return pd.Series(dtype=float)
@@ -244,6 +295,8 @@ def main():
                 frame = fallback_history_frame(item["symbol"])
         if frame.empty:
             continue
+        if item["symbol"].endswith("=F"):
+            frame = back_adjust_frame(frame)
         payload = history_payload(item, frame, updated)
         if payload is None:
             continue

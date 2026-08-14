@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-14 02:44 UTC",
+  "updated": "2026-08-14 03:28 UTC",
   "stocks": [
     {
       "symbol": "AOSL",
@@ -282,13 +282,13 @@
       "date": "2026-08-13"
     },
     {
-      "symbol": "PEP",
-      "name": "PepsiCo Inc",
-      "price": 140.62,
-      "change_pct": 1.38,
-      "direction": "up",
+      "symbol": "CTAS",
+      "name": "Cintas Corp",
+      "price": 200.7,
+      "change_pct": -1.38,
+      "direction": "down",
       "prev_color": "white",
-      "cur_color": "green",
+      "cur_color": "red",
       "date": "2026-08-13"
     },
     {
@@ -302,13 +302,13 @@
       "date": "2026-08-13"
     },
     {
-      "symbol": "CTAS",
-      "name": "Cintas Corp",
-      "price": 200.7,
-      "change_pct": -1.38,
-      "direction": "down",
+      "symbol": "PEP",
+      "name": "PepsiCo Inc",
+      "price": 140.62,
+      "change_pct": 1.38,
+      "direction": "up",
       "prev_color": "white",
-      "cur_color": "red",
+      "cur_color": "green",
       "date": "2026-08-13"
     },
     {
@@ -444,17 +444,6 @@
   ],
   "commodities": [
     {
-      "symbol": "RB=F",
-      "name": "RBOB Gasoline",
-      "price": 2.85,
-      "change_pct": -9.52,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-08-13",
-      "sector": "Energy"
-    },
-    {
       "symbol": "KC=F",
       "name": "Coffee",
       "price": 313.4,
@@ -466,37 +455,15 @@
       "sector": "Agriculture"
     },
     {
-      "symbol": "PA=F",
-      "name": "Palladium",
-      "price": 1313.0,
-      "change_pct": -4.17,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-08-13",
-      "sector": "Metals"
-    },
-    {
-      "symbol": "NG=F",
-      "name": "Natural Gas",
-      "price": 2.73,
-      "change_pct": -2.6,
-      "direction": "down",
+      "symbol": "ZO=F",
+      "name": "Oats",
+      "price": 337.25,
+      "change_pct": 4.33,
+      "direction": "up",
       "prev_color": "white",
-      "cur_color": "red",
+      "cur_color": "green",
       "date": "2026-08-13",
-      "sector": "Energy"
-    },
-    {
-      "symbol": "CL=F",
-      "name": "Crude Oil WTI",
-      "price": 81.13,
-      "change_pct": -2.57,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-08-13",
-      "sector": "Energy"
+      "sector": "Agriculture"
     },
     {
       "symbol": "GF=F",
@@ -510,10 +477,32 @@
       "sector": "Livestock"
     },
     {
+      "symbol": "CL=F",
+      "name": "Crude Oil WTI",
+      "price": 81.28,
+      "change_pct": -2.39,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "white",
+      "date": "2026-08-13",
+      "sector": "Energy"
+    },
+    {
+      "symbol": "NG=F",
+      "name": "Natural Gas",
+      "price": 2.74,
+      "change_pct": -2.18,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-08-13",
+      "sector": "Energy"
+    },
+    {
       "symbol": "BZ=F",
       "name": "Brent Crude Oil",
-      "price": 86.93,
-      "change_pct": -2.3,
+      "price": 87.09,
+      "change_pct": -2.12,
       "direction": "down",
       "prev_color": "green",
       "cur_color": "white",
@@ -534,8 +523,8 @@
     {
       "symbol": "ZS=F",
       "name": "Soybeans",
-      "price": 1183.0,
-      "change_pct": 1.57,
+      "price": 1186.5,
+      "change_pct": 1.87,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "green",
@@ -545,8 +534,8 @@
     {
       "symbol": "ZM=F",
       "name": "Soybean Meal",
-      "price": 314.1,
-      "change_pct": 1.0,
+      "price": 315.1,
+      "change_pct": 1.32,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "green",
