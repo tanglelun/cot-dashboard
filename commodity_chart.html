@@ -1285,6 +1285,8 @@ function updateUrl(row){
   next.set('metric', state.metric);
   next.set('sort', state.sortKey);
   next.set('dir', state.sortDir);
+  if(params.get('list')) next.set('list', params.get('list'));
+  if(params.get('ma')) next.set('ma', params.get('ma'));
   window.history.replaceState(null, '', window.location.pathname + '?' + next.toString());
 }
 

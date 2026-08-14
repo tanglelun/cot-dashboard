@@ -397,6 +397,8 @@ const state = {
   sortDir: params.get('dir') === 'asc' ? 'asc' : 'desc'
 };
 const chartCache = new Map();
+const CHART_CACHE_LIMIT = 300;
+let prefetchStarted = false;
 const stockRowDataBySymbol = new Map();
 const stockButtonBySymbol = new Map();
 let activeChartRequest = 0;
@@ -1726,6 +1728,9 @@ function updateUrl(row){
   next.set('metric', state.metric);
   next.set('sort', state.sortKey);
   next.set('dir', state.sortDir);
+  if(params.get('list')) next.set('list', params.get('list'));
+  if(params.get('td')) next.set('td', params.get('td'));
+  if(params.get('ma')) next.set('ma', params.get('ma'));
   window.history.replaceState(null, '', window.location.pathname + '?' + next.toString());
 }
 
@@ -1818,6 +1823,35 @@ async function loadMarketIndex(){
   }
   setupStockControls();
   renderStockList();
+  prefetchCharts();
+}
+
+async function prefetchCharts(){
+  if(prefetchStarted) return;
+  prefetchStarted = true;
+  const symbols = (state.marketIndex?.stocks || [])
+    .map(s => (s.symbol || '').trim().toUpperCase())
+    .filter(Boolean);
+  const concurrency = 4;
+  let cursor = 0;
+  async function worker(){
+    while(cursor < symbols.length){
+      const symbol = symbols[cursor++];
+      if(chartCache.has(symbol)) continue;
+      try{
+        const response = await fetch('market_data/' + encodeURIComponent(symbol) + '.json', { cache:'no-store' });
+        if(!response.ok) continue;
+        const data = await response.json();
+        if(!data || !data.prices || !data.prices.length) continue;
+        if(chartCache.size > CHART_CACHE_LIMIT) chartCache.delete(chartCache.keys().next().value);
+        chartCache.set(symbol, data);
+      }catch(error){}
+    }
+  }
+  const workers = [];
+  const workerCount = Math.max(1, Math.min(concurrency, symbols.length));
+  for(let i = 0; i < workerCount; i++) workers.push(worker());
+  await Promise.all(workers);
 }
 
 async function loadChart(){
@@ -1834,7 +1868,7 @@ async function loadChart(){
       const response = await fetch('market_data/' + encodeURIComponent(symbol) + '.json', { cache:'no-store' });
       if(!response.ok) throw new Error('No chart data found for ' + symbol);
       data = await response.json();
-      if(chartCache.size > 24) chartCache.delete(chartCache.keys().next().value);
+      if(chartCache.size > CHART_CACHE_LIMIT) chartCache.delete(chartCache.keys().next().value);
       chartCache.set(symbol, data);
     }
     if(requestId !== activeChartRequest || symbol !== currentSymbol) return;
