@@ -1343,9 +1343,20 @@ function setupStockControls(){
 
 async function loadMarketIndex(){
   try{
-    const response = await fetch('commodities_data.json', { cache:'no-store' });
-    if(!response.ok) throw new Error('No commodities index');
-    state.marketIndex = await response.json();
+    let data;
+    if(params.get('list') === 'crossover'){
+      const response = await fetch('crossover_data.json', { cache:'no-store' });
+      if(!response.ok) throw new Error('No crossover data');
+      const cd = await response.json();
+      data = { stocks: (cd.commodities || []).map(c => ({
+        symbol: c.symbol, name: c.name, price: c.price, d: c.change_pct, sector: c.sector || ''
+      })) };
+    }else{
+      const response = await fetch('commodities_data.json', { cache:'no-store' });
+      if(!response.ok) throw new Error('No commodities index');
+      data = await response.json();
+    }
+    state.marketIndex = data;
   }catch(error){
     state.marketIndex = { stocks: currentSymbol ? [{ symbol: currentSymbol, name: fallbackName }] : [] };
   }
