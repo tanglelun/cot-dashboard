@@ -38,9 +38,6 @@ jobs:
       - name: Generate HTML
         run: python generate_history_html.py
 
-      - name: Sync browser entry
-        run: cp cot_noncommercial_history.html index.html
-
       - name: Commit updated data and pages
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
