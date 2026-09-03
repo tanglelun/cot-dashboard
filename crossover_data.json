@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-02 00:34 UTC",
+  "updated": "2026-09-03 00:41 UTC",
   "stocks": [
     {
       "symbol": "CDNS",
@@ -82,6 +82,16 @@
       "date": "2026-09-01"
     },
     {
+      "symbol": "TWST",
+      "name": "Twist Bioscience Corp",
+      "price": 132.06,
+      "change_pct": -4.99,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-09-01"
+    },
+    {
       "symbol": "BAND",
       "name": "Bandwidth Inc",
       "price": 50.79,
@@ -89,6 +99,16 @@
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
+      "date": "2026-09-01"
+    },
+    {
+      "symbol": "FCX",
+      "name": "Freeport-McMoRan Inc",
+      "price": 72.47,
+      "change_pct": -4.32,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
       "date": "2026-09-01"
     },
     {
@@ -109,16 +129,6 @@
       "direction": "down",
       "prev_color": "green",
       "cur_color": "red",
-      "date": "2026-09-01"
-    },
-    {
-      "symbol": "ADM",
-      "name": "Archer Daniels Midland Co",
-      "price": 84.55,
-      "change_pct": 4.01,
-      "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
       "date": "2026-09-01"
     },
     {
@@ -197,7 +207,7 @@
       "price": 148.35,
       "change_pct": 2.34,
       "direction": "up",
-      "prev_color": "red",
+      "prev_color": "white",
       "cur_color": "green",
       "date": "2026-09-01"
     },
@@ -272,16 +282,6 @@
       "date": "2026-09-01"
     },
     {
-      "symbol": "GEHC",
-      "name": "GE HealthCare Technologies Inc",
-      "price": 70.42,
-      "change_pct": -1.14,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-09-01"
-    },
-    {
       "symbol": "TMUS",
       "name": "T-Mobile US Inc",
       "price": 182.16,
@@ -302,22 +302,12 @@
       "date": "2026-09-01"
     },
     {
-      "symbol": "KHC",
-      "name": "Kraft Heinz Co",
-      "price": 25.87,
-      "change_pct": 0.78,
-      "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-09-01"
-    },
-    {
       "symbol": "FDX",
       "name": "Fedex Corp",
       "price": 324.88,
       "change_pct": -0.77,
-      "direction": "down",
-      "prev_color": "green",
+      "direction": "up",
+      "prev_color": "red",
       "cur_color": "white",
       "date": "2026-09-01"
     },
@@ -327,7 +317,7 @@
       "price": 16.63,
       "change_pct": 0.73,
       "direction": "up",
-      "prev_color": "white",
+      "prev_color": "red",
       "cur_color": "green",
       "date": "2026-09-01"
     },
@@ -352,13 +342,13 @@
       "date": "2026-09-01"
     },
     {
-      "symbol": "SMTC",
-      "name": "Semtech Corp",
-      "price": 132.27,
-      "change_pct": -0.52,
+      "symbol": "LIN",
+      "name": "Linde Plc",
+      "price": 486.76,
+      "change_pct": -0.58,
       "direction": "down",
       "prev_color": "green",
-      "cur_color": "white",
+      "cur_color": "red",
       "date": "2026-09-01"
     },
     {
@@ -380,39 +370,20 @@
       "prev_color": "green",
       "cur_color": "white",
       "date": "2026-09-01"
-    },
-    {
-      "symbol": "BKR",
-      "name": "Baker Hughes Co",
-      "price": 63.66,
-      "change_pct": 0.17,
-      "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-09-01"
-    },
-    {
-      "symbol": "ELVN",
-      "name": "Enliven Therapeutics Inc",
-      "price": 57.86,
-      "change_pct": -0.05,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-09-01"
-    },
-    {
-      "symbol": "GWW",
-      "name": "W.W. Grainger Inc",
-      "price": 1309.21,
-      "change_pct": -0.02,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-09-01"
     }
   ],
   "commodities": [
+    {
+      "symbol": "PA=F",
+      "name": "Palladium",
+      "price": 1363.0,
+      "change_pct": 3.48,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-09-02",
+      "sector": "Metals"
+    },
     {
       "symbol": "URA",
       "name": "Nuclear Energy Index",
@@ -425,59 +396,37 @@
       "sector": "Indexes"
     },
     {
-      "symbol": "PA=F",
-      "name": "Palladium",
-      "price": 1316.5,
-      "change_pct": -3.4,
+      "symbol": "GC=F",
+      "name": "Gold",
+      "price": 4432.9,
+      "change_pct": 1.95,
       "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-09-01",
-      "sector": "Metals"
-    },
-    {
-      "symbol": "SI=F",
-      "name": "Silver",
-      "price": 64.69,
-      "change_pct": -2.32,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-09-01",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-09-02",
       "sector": "Metals"
     },
     {
       "symbol": "HG=F",
       "name": "Copper",
-      "price": 6.55,
-      "change_pct": -0.69,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-09-01",
+      "price": 6.6,
+      "change_pct": 1.44,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-09-02",
       "sector": "Metals"
     },
     {
-      "symbol": "MES=F",
-      "name": "S&P 500 Micro",
-      "price": 7646.0,
-      "change_pct": -0.69,
+      "symbol": "PL=F",
+      "name": "Platinum",
+      "price": 1768.8,
+      "change_pct": 0.41,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
-      "date": "2026-09-01",
-      "sector": "Indexes"
-    },
-    {
-      "symbol": "KC=F",
-      "name": "Coffee",
-      "price": 308.35,
-      "change_pct": 0.0,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-09-01",
-      "sector": "Agriculture"
+      "date": "2026-09-02",
+      "sector": "Metals"
     }
   ]
 }
