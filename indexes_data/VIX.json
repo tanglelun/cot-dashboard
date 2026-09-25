@@ -7,7 +7,7 @@
   "flag": "🇺🇸",
   "sector": "Americas",
   "unit": "Index Points",
-  "updated": "2026-09-24",
+  "updated": "2026-09-25",
   "prices": [
     {
       "time": "1990-01-02",
@@ -74007,6 +74007,14 @@
       "high": 15.45,
       "low": 14.12,
       "close": 15.18,
+      "volume": 0
+    },
+    {
+      "time": "2026-09-24",
+      "open": 15.83,
+      "high": 16.57,
+      "low": 15.34,
+      "close": 15.67,
       "volume": 0
     }
   ]
