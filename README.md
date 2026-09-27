@@ -48,6 +48,16 @@ market close on weekdays and updates:
 - `indexes_data.json`
 - `indexes_data/*.json`
 
+Market updates run at 22:30 UTC Monday–Friday, with a second pass at 04:30
+UTC Tuesday–Saturday (06:30 and 12:30 Beijing time Tuesday–Saturday; GitHub
+may delay scheduled runs). Stock downloads are checked against the most recent
+completed NYSE session, including holidays and early closes. Missing or stale
+symbols are retried twice using recent history and merged into the full history.
+Publishing stops if fewer than 95% of chart stocks or 90% of the full stock
+universe have that session's close. Individual chart files keep their actual
+last-candle date, including suspended stocks. Failed runs remain visible in
+GitHub Actions instead of reporting a stale refresh as successful.
+
 The workflow in `.github/workflows/update-economic.yml` refreshes the G20
 Economy dashboard weekly from OECD SDMX and World Bank WDI APIs and updates:
 

@@ -10,6 +10,8 @@ import pandas as pd
 import requests
 import yfinance as yf
 
+from market_freshness import StaleMarketDataError, ensure_fresh_prices, expected_market_date
+
 
 BASE_DIR = Path(__file__).resolve().parent
 MARKET_FILE = BASE_DIR / "russell2000_top100.html"
@@ -455,7 +457,7 @@ def write_chart_data(static_data, chart_price_frames, updated_at, universe_rows=
             "name": row["n"],
             "sector": row["s"],
             "marketCap": row["c"],
-            "updated": updated_at,
+            "updated": candles[-1]["time"],
             "prices": candles,
         }
         (MARKET_DATA_DIR / f"{symbol}.json").write_text(
@@ -619,6 +621,8 @@ def ensure_daily_button(text):
 
 
 def main():
+    expected = expected_market_date()
+    print(f"Expected completed US market session: {expected}", flush=True)
     with open(MARKET_FILE, "r", encoding="utf-8-sig") as file:
         text = file.read()
 
@@ -645,14 +649,23 @@ def main():
                 chunk_size=80,
                 retry_missing=False,
             )
+            summary_frames = ensure_fresh_prices(
+                [row["t"] for row in raw_universe], summary_frames, expected,
+                get_price_frame_map, min_coverage=0.90,
+            )
             universe_rows = update_universe_rows(raw_universe, summary_frames)
             print(f"Refreshed {len(universe_rows)} US stock summary rows")
             if GENERATE_ALL_STOCK_CHARTS:
                 chart_symbols = [row["t"] for row in universe_rows]
+        except StaleMarketDataError:
+            raise
         except Exception as error:
             print(f"Full US stock universe unavailable, using Tops universe only: {error}")
 
     price_frames = get_price_frame_map(chart_symbols, period=CHART_PERIOD)
+    price_frames = ensure_fresh_prices(
+        chart_symbols, price_frames, expected, get_price_frame_map,
+    )
     series_map = {symbol: frame["Close"] for symbol, frame in price_frames.items() if "Close" in frame.columns}
 
     for name, rows in static_data.items():

@@ -6,6 +6,13 @@ on:
     # Runs after the regular US market close.
     # 22:30 UTC = 06:30 Beijing time on the next day.
     - cron: "30 22 * * 1-5"
+    # Retry after the provider has had more time to publish the daily close.
+    # 04:30 UTC = 12:30 Beijing time, Tuesday through Saturday.
+    - cron: "30 4 * * 2-6"
+
+concurrency:
+  group: update-market
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -13,6 +20,7 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
 
     steps:
       - name: Check out repository
@@ -28,7 +36,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Update Market page
-        run: python update_market.py
+        run: python -u update_market.py
 
       - name: Update Commodities data
         run: python update_commodities.py
