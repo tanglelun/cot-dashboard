@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-30 01:34 UTC",
+  "updated": "2026-09-30 10:47 UTC",
   "stocks": [
     {
       "symbol": "GLW",
@@ -132,16 +132,6 @@
       "date": "2026-09-29"
     },
     {
-      "symbol": "STRL",
-      "name": "Sterling Infrastructure Inc",
-      "price": 504.94,
-      "change_pct": 1.32,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-09-29"
-    },
-    {
       "symbol": "DE",
       "name": "Deere & Co",
       "price": 680.5,
@@ -149,6 +139,16 @@
       "direction": "down",
       "prev_color": "green",
       "cur_color": "white",
+      "date": "2026-09-29"
+    },
+    {
+      "symbol": "STRL",
+      "name": "Sterling Infrastructure Inc",
+      "price": 504.94,
+      "change_pct": 1.32,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
       "date": "2026-09-29"
     },
     {
@@ -234,32 +234,32 @@
   ],
   "commodities": [
     {
-      "symbol": "SB=F",
-      "name": "Sugar",
-      "price": 18.84,
-      "change_pct": 7.9,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-09-29",
-      "sector": "Agriculture"
+      "symbol": "BZ=F",
+      "name": "Brent Crude Oil",
+      "price": 97.18,
+      "change_pct": -5.27,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-09-30",
+      "sector": "Energy"
     },
     {
-      "symbol": "RB=F",
-      "name": "RBOB Gasoline",
-      "price": 3.13,
-      "change_pct": -6.25,
+      "symbol": "HO=F",
+      "name": "Heating Oil",
+      "price": 4.66,
+      "change_pct": -4.93,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
-      "date": "2026-09-29",
+      "date": "2026-09-30",
       "sector": "Energy"
     },
     {
       "symbol": "OJ=F",
       "name": "Orange Juice",
-      "price": 153.55,
-      "change_pct": 3.02,
+      "price": 153.6,
+      "change_pct": 3.05,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
@@ -267,15 +267,26 @@
       "sector": "Agriculture"
     },
     {
-      "symbol": "LE=F",
-      "name": "Live Cattle",
-      "price": 220.9,
-      "change_pct": 1.59,
+      "symbol": "KC=F",
+      "name": "Coffee",
+      "price": 297.25,
+      "change_pct": 2.69,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-09-30",
+      "sector": "Agriculture"
+    },
+    {
+      "symbol": "HG=F",
+      "name": "Copper",
+      "price": 6.65,
+      "change_pct": 1.56,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
-      "date": "2026-09-29",
-      "sector": "Livestock"
+      "date": "2026-09-30",
+      "sector": "Metals"
     },
     {
       "symbol": "DBC",
@@ -289,32 +300,43 @@
       "sector": "Indexes"
     },
     {
-      "symbol": "HG=F",
-      "name": "Copper",
-      "price": 6.65,
-      "change_pct": 1.24,
+      "symbol": "ZL=F",
+      "name": "Soybean Oil",
+      "price": 68.41,
+      "change_pct": 0.83,
       "direction": "up",
-      "prev_color": "white",
+      "prev_color": "red",
       "cur_color": "green",
-      "date": "2026-09-29",
-      "sector": "Metals"
+      "date": "2026-09-30",
+      "sector": "Agriculture"
     },
     {
       "symbol": "ZC=F",
       "name": "Corn",
-      "price": 521.5,
-      "change_pct": -0.29,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-09-29",
+      "price": 525.0,
+      "change_pct": 0.57,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-09-30",
       "sector": "Agriculture"
     },
     {
-      "symbol": "GF=F",
-      "name": "Feeder Cattle",
-      "price": 331.07,
-      "change_pct": -0.25,
+      "symbol": "ZS=F",
+      "name": "Soybeans",
+      "price": 1302.25,
+      "change_pct": 0.35,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-09-30",
+      "sector": "Agriculture"
+    },
+    {
+      "symbol": "LE=F",
+      "name": "Live Cattle",
+      "price": 217.22,
+      "change_pct": -0.1,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
