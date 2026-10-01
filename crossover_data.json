@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-01 01:39 UTC",
+  "updated": "2026-10-01 11:17 UTC",
   "stocks": [
     {
       "symbol": "DMRC",
@@ -292,16 +292,6 @@
       "date": "2026-09-30"
     },
     {
-      "symbol": "XOM",
-      "name": "Exxon Mobil Corp",
-      "price": 162.75,
-      "change_pct": 0.87,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-09-30"
-    },
-    {
       "symbol": "CIEN",
       "name": "CIENA Corp",
       "price": 351.82,
@@ -309,6 +299,16 @@
       "direction": "down",
       "prev_color": "green",
       "cur_color": "red",
+      "date": "2026-09-30"
+    },
+    {
+      "symbol": "XOM",
+      "name": "Exxon Mobil Corp",
+      "price": 162.75,
+      "change_pct": 0.87,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
       "date": "2026-09-30"
     },
     {
@@ -356,78 +356,89 @@
     {
       "symbol": "HO=F",
       "name": "Heating Oil",
-      "price": 4.66,
-      "change_pct": -4.94,
+      "price": 4.6,
+      "change_pct": -7.11,
       "direction": "down",
-      "prev_color": "white",
+      "prev_color": "green",
       "cur_color": "red",
-      "date": "2026-09-30",
+      "date": "2026-10-01",
+      "sector": "Energy"
+    },
+    {
+      "symbol": "SB=F",
+      "name": "Sugar",
+      "price": 18.83,
+      "change_pct": 6.81,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-10-01",
+      "sector": "Agriculture"
+    },
+    {
+      "symbol": "RB=F",
+      "name": "RBOB Gasoline",
+      "price": 3.29,
+      "change_pct": -4.33,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-10-01",
       "sector": "Energy"
     },
     {
       "symbol": "BZ=F",
       "name": "Brent Crude Oil",
-      "price": 97.8,
-      "change_pct": -4.67,
+      "price": 99.97,
+      "change_pct": -3.44,
       "direction": "down",
       "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-09-30",
+      "cur_color": "white",
+      "date": "2026-10-01",
       "sector": "Energy"
     },
     {
-      "symbol": "ZC=F",
-      "name": "Corn",
-      "price": 501.5,
-      "change_pct": -3.93,
+      "symbol": "NG=F",
+      "name": "Natural Gas",
+      "price": 2.96,
+      "change_pct": -2.28,
       "direction": "down",
-      "prev_color": "white",
+      "prev_color": "green",
       "cur_color": "red",
+      "date": "2026-10-01",
+      "sector": "Energy"
+    },
+    {
+      "symbol": "GF=F",
+      "name": "Feeder Cattle",
+      "price": 336.43,
+      "change_pct": 0.83,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
       "date": "2026-09-30",
-      "sector": "Agriculture"
+      "sector": "Livestock"
     },
     {
       "symbol": "LE=F",
       "name": "Live Cattle",
-      "price": 222.88,
-      "change_pct": 2.6,
+      "price": 218.68,
+      "change_pct": 0.67,
       "direction": "up",
       "prev_color": "red",
-      "cur_color": "green",
+      "cur_color": "white",
       "date": "2026-09-30",
       "sector": "Livestock"
     },
     {
       "symbol": "ZM=F",
       "name": "Soybean Meal",
-      "price": 355.9,
-      "change_pct": -1.17,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-09-30",
-      "sector": "Agriculture"
-    },
-    {
-      "symbol": "HG=F",
-      "name": "Copper",
-      "price": 6.62,
-      "change_pct": 1.14,
+      "price": 357.6,
+      "change_pct": 0.14,
       "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-09-30",
-      "sector": "Metals"
-    },
-    {
-      "symbol": "ZS=F",
-      "name": "Soybeans",
-      "price": 1291.75,
-      "change_pct": -0.46,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-09-30",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-01",
       "sector": "Agriculture"
     }
   ]
