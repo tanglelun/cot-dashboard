@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-02 01:54 UTC",
+  "updated": "2026-10-02 10:51 UTC",
   "stocks": [
     {
       "symbol": "COHR",
@@ -182,16 +182,6 @@
       "date": "2026-10-01"
     },
     {
-      "symbol": "SWKS",
-      "name": "Skyworks Solutions Inc",
-      "price": 83.16,
-      "change_pct": -2.71,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-01"
-    },
-    {
       "symbol": "STRL",
       "name": "Sterling Infrastructure Inc",
       "price": 505.12,
@@ -199,6 +189,16 @@
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
+      "date": "2026-10-01"
+    },
+    {
+      "symbol": "SWKS",
+      "name": "Skyworks Solutions Inc",
+      "price": 83.16,
+      "change_pct": -2.71,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "white",
       "date": "2026-10-01"
     },
     {
@@ -354,28 +354,6 @@
   ],
   "commodities": [
     {
-      "symbol": "SB=F",
-      "name": "Sugar",
-      "price": 18.96,
-      "change_pct": 7.54,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-01",
-      "sector": "Agriculture"
-    },
-    {
-      "symbol": "HO=F",
-      "name": "Heating Oil",
-      "price": 4.62,
-      "change_pct": -6.81,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-01",
-      "sector": "Energy"
-    },
-    {
       "symbol": "OJ=F",
       "name": "Orange Juice",
       "price": 141.7,
@@ -387,36 +365,36 @@
       "sector": "Agriculture"
     },
     {
-      "symbol": "NG=F",
-      "name": "Natural Gas",
-      "price": 2.94,
-      "change_pct": -3.01,
+      "symbol": "RB=F",
+      "name": "RBOB Gasoline",
+      "price": 3.29,
+      "change_pct": -3.45,
       "direction": "down",
       "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-01",
+      "cur_color": "red",
+      "date": "2026-10-02",
       "sector": "Energy"
     },
     {
-      "symbol": "LE=F",
-      "name": "Live Cattle",
-      "price": 223.35,
-      "change_pct": 2.14,
+      "symbol": "KC=F",
+      "name": "Coffee",
+      "price": 295.9,
+      "change_pct": 2.65,
       "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-10-01",
-      "sector": "Livestock"
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-02",
+      "sector": "Agriculture"
     },
     {
-      "symbol": "RB=F",
-      "name": "RBOB Gasoline",
-      "price": 3.38,
-      "change_pct": -1.67,
+      "symbol": "BZ=F",
+      "name": "Brent Crude Oil",
+      "price": 99.76,
+      "change_pct": -2.49,
       "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-01",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-10-02",
       "sector": "Energy"
     },
     {
@@ -431,6 +409,17 @@
       "sector": "Indexes"
     },
     {
+      "symbol": "NG=F",
+      "name": "Natural Gas",
+      "price": 2.93,
+      "change_pct": -1.31,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-02",
+      "sector": "Energy"
+    },
+    {
       "symbol": "BOAT",
       "name": "World Container Index",
       "price": 51.69,
@@ -442,15 +431,26 @@
       "sector": "Indexes"
     },
     {
-      "symbol": "BZ=F",
-      "name": "Brent Crude Oil",
-      "price": 102.55,
-      "change_pct": -0.95,
+      "symbol": "ZM=F",
+      "name": "Soybean Meal",
+      "price": 348.3,
+      "change_pct": -1.08,
       "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-10-02",
+      "sector": "Agriculture"
+    },
+    {
+      "symbol": "LE=F",
+      "name": "Live Cattle",
+      "price": 219.3,
+      "change_pct": 0.29,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
       "date": "2026-10-01",
-      "sector": "Energy"
+      "sector": "Livestock"
     }
   ]
 }
