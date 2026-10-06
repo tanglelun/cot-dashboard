@@ -7,15 +7,15 @@
   "flag": "🇸🇦",
   "sector": "Middle East & Africa",
   "unit": "Index Points",
-  "updated": "2026-10-03",
+  "updated": "2026-10-06",
   "prices": [
     {
-      "time": "2026-10-01",
-      "open": 10440.0596,
-      "high": 10453.9199,
-      "low": 10357.9697,
-      "close": 10392.9697,
-      "volume": 176319704
+      "time": "2026-10-05",
+      "open": 10468.2197,
+      "high": 10500.1504,
+      "low": 10417.4297,
+      "close": 10479.7803,
+      "volume": 179165304
     }
   ]
 }
