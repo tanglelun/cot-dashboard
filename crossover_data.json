@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-06 02:33 UTC",
+  "updated": "2026-10-06 11:37 UTC",
   "stocks": [
     {
       "symbol": "MELI",
@@ -172,16 +172,6 @@
       "date": "2026-10-05"
     },
     {
-      "symbol": "CNC",
-      "name": "Centene Corp",
-      "price": 64.3,
-      "change_pct": 2.08,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-05"
-    },
-    {
       "symbol": "AVGO",
       "name": "Broadcom Inc",
       "price": 362.51,
@@ -189,6 +179,16 @@
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
+      "date": "2026-10-05"
+    },
+    {
+      "symbol": "CNC",
+      "name": "Centene Corp",
+      "price": 64.3,
+      "change_pct": 2.08,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
       "date": "2026-10-05"
     },
     {
@@ -272,16 +272,6 @@
       "date": "2026-10-05"
     },
     {
-      "symbol": "AGX",
-      "name": "Argan Inc",
-      "price": 387.74,
-      "change_pct": 1.02,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-05"
-    },
-    {
       "symbol": "GOOG",
       "name": "Alphabet Inc",
       "price": 343.83,
@@ -289,6 +279,16 @@
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
+      "date": "2026-10-05"
+    },
+    {
+      "symbol": "AGX",
+      "name": "Argan Inc",
+      "price": 387.74,
+      "change_pct": 1.02,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
       "date": "2026-10-05"
     },
     {
@@ -436,68 +436,68 @@
     {
       "symbol": "CT=F",
       "name": "Cotton",
-      "price": 80.51,
-      "change_pct": 7.13,
+      "price": 81.23,
+      "change_pct": 5.32,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
-      "date": "2026-10-05",
+      "date": "2026-10-06",
       "sector": "Agriculture"
     },
     {
       "symbol": "CC=F",
       "name": "Cocoa",
-      "price": 5852.0,
-      "change_pct": 3.21,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-05",
+      "price": 5799.0,
+      "change_pct": -1.16,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-06",
       "sector": "Agriculture"
     },
     {
-      "symbol": "HG=F",
-      "name": "Copper",
-      "price": 6.67,
-      "change_pct": 2.68,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
+      "symbol": "LE=F",
+      "name": "Live Cattle",
+      "price": 217.25,
+      "change_pct": -0.73,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
       "date": "2026-10-05",
-      "sector": "Metals"
+      "sector": "Livestock"
     },
     {
       "symbol": "KC=F",
       "name": "Coffee",
-      "price": 293.35,
-      "change_pct": 1.59,
+      "price": 293.45,
+      "change_pct": 0.31,
       "direction": "up",
       "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-05",
+      "cur_color": "white",
+      "date": "2026-10-06",
       "sector": "Agriculture"
-    },
-    {
-      "symbol": "BZ=F",
-      "name": "Brent Crude Oil",
-      "price": 100.71,
-      "change_pct": -1.51,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-10-05",
-      "sector": "Energy"
     },
     {
       "symbol": "GF=F",
       "name": "Feeder Cattle",
-      "price": 330.35,
-      "change_pct": -1.28,
+      "price": 333.85,
+      "change_pct": -0.23,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
       "date": "2026-10-05",
       "sector": "Livestock"
+    },
+    {
+      "symbol": "ZL=F",
+      "name": "Soybean Oil",
+      "price": 69.05,
+      "change_pct": 0.15,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-06",
+      "sector": "Agriculture"
     }
   ]
 }
