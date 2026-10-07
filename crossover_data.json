@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-07 01:55 UTC",
+  "updated": "2026-10-07 11:25 UTC",
   "stocks": [
     {
       "symbol": "TWST",
@@ -534,10 +534,10 @@
   ],
   "commodities": [
     {
-      "symbol": "CT=F",
-      "name": "Cotton",
-      "price": 80.92,
-      "change_pct": 4.91,
+      "symbol": "OJ=F",
+      "name": "Orange Juice",
+      "price": 150.3,
+      "change_pct": 4.12,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
@@ -545,14 +545,14 @@
       "sector": "Agriculture"
     },
     {
-      "symbol": "OJ=F",
-      "name": "Orange Juice",
-      "price": 150.7,
-      "change_pct": 4.4,
+      "symbol": "CT=F",
+      "name": "Cotton",
+      "price": 80.65,
+      "change_pct": 4.09,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
-      "date": "2026-10-06",
+      "date": "2026-10-07",
       "sector": "Agriculture"
     },
     {
@@ -567,92 +567,26 @@
       "sector": "Indexes"
     },
     {
-      "symbol": "KC=F",
-      "name": "Coffee",
-      "price": 303.2,
-      "change_pct": 3.64,
+      "symbol": "GF=F",
+      "name": "Feeder Cattle",
+      "price": 340.5,
+      "change_pct": 1.99,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "green",
       "date": "2026-10-06",
-      "sector": "Agriculture"
+      "sector": "Livestock"
     },
     {
       "symbol": "LE=F",
       "name": "Live Cattle",
-      "price": 224.05,
-      "change_pct": 3.13,
+      "price": 221.22,
+      "change_pct": 1.83,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "green",
       "date": "2026-10-06",
       "sector": "Livestock"
-    },
-    {
-      "symbol": "ZS=F",
-      "name": "Soybeans",
-      "price": 1308.25,
-      "change_pct": 2.15,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-06",
-      "sector": "Agriculture"
-    },
-    {
-      "symbol": "ZW=F",
-      "name": "Wheat",
-      "price": 706.25,
-      "change_pct": 2.02,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-06",
-      "sector": "Agriculture"
-    },
-    {
-      "symbol": "CC=F",
-      "name": "Cocoa",
-      "price": 5762.0,
-      "change_pct": -1.79,
-      "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-10-06",
-      "sector": "Agriculture"
-    },
-    {
-      "symbol": "GF=F",
-      "name": "Feeder Cattle",
-      "price": 338.25,
-      "change_pct": 1.32,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-06",
-      "sector": "Livestock"
-    },
-    {
-      "symbol": "ZL=F",
-      "name": "Soybean Oil",
-      "price": 69.76,
-      "change_pct": 1.17,
-      "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-10-06",
-      "sector": "Agriculture"
-    },
-    {
-      "symbol": "HG=F",
-      "name": "Copper",
-      "price": 6.66,
-      "change_pct": 1.11,
-      "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-10-06",
-      "sector": "Metals"
     },
     {
       "symbol": "DBC",
@@ -664,6 +598,28 @@
       "cur_color": "green",
       "date": "2026-10-06",
       "sector": "Indexes"
+    },
+    {
+      "symbol": "HG=F",
+      "name": "Copper",
+      "price": 6.64,
+      "change_pct": 0.76,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-07",
+      "sector": "Metals"
+    },
+    {
+      "symbol": "ZW=F",
+      "name": "Wheat",
+      "price": 699.0,
+      "change_pct": -0.75,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-10-07",
+      "sector": "Agriculture"
     }
   ]
 }
