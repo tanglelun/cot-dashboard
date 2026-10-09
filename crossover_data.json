@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-09 02:34 UTC",
+  "updated": "2026-10-09 11:38 UTC",
   "stocks": [
     {
       "symbol": "AAOI",
@@ -754,70 +754,48 @@
   ],
   "commodities": [
     {
-      "symbol": "HO=F",
-      "name": "Heating Oil",
-      "price": 4.84,
-      "change_pct": 4.63,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-08",
-      "sector": "Energy"
-    },
-    {
       "symbol": "CT=F",
       "name": "Cotton",
-      "price": 80.11,
-      "change_pct": 3.39,
+      "price": 80.8,
+      "change_pct": 6.02,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
-      "date": "2026-10-08",
+      "date": "2026-10-09",
       "sector": "Agriculture"
     },
     {
-      "symbol": "BZ=F",
-      "name": "Brent Crude Oil",
-      "price": 103.48,
-      "change_pct": 3.27,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08",
-      "sector": "Energy"
-    },
-    {
-      "symbol": "KC=F",
-      "name": "Coffee",
-      "price": 287.85,
-      "change_pct": -1.66,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-08",
-      "sector": "Agriculture"
-    },
-    {
-      "symbol": "^SPGSCI",
-      "name": "GSCI",
-      "price": 740.18,
-      "change_pct": 1.62,
+      "symbol": "HG=F",
+      "name": "Copper",
+      "price": 6.69,
+      "change_pct": 2.69,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "green",
-      "date": "2026-10-08",
-      "sector": "Indexes"
+      "date": "2026-10-09",
+      "sector": "Metals"
     },
     {
-      "symbol": "ZL=F",
-      "name": "Soybean Oil",
-      "price": 68.35,
-      "change_pct": 1.38,
+      "symbol": "OJ=F",
+      "name": "Orange Juice",
+      "price": 149.95,
+      "change_pct": 2.32,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-08",
+      "sector": "Agriculture"
+    },
+    {
+      "symbol": "HO=F",
+      "name": "Heating Oil",
+      "price": 4.81,
+      "change_pct": -1.51,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
-      "date": "2026-10-08",
-      "sector": "Agriculture"
+      "date": "2026-10-09",
+      "sector": "Energy"
     },
     {
       "symbol": "DBC",
@@ -831,28 +809,6 @@
       "sector": "Indexes"
     },
     {
-      "symbol": "ZM=F",
-      "name": "Soybean Meal",
-      "price": 361.8,
-      "change_pct": -1.12,
-      "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-10-08",
-      "sector": "Agriculture"
-    },
-    {
-      "symbol": "GF=F",
-      "name": "Feeder Cattle",
-      "price": 335.35,
-      "change_pct": -0.83,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-08",
-      "sector": "Livestock"
-    },
-    {
       "symbol": "KRBN",
       "name": "EU Carbon Permits",
       "price": 34.14,
@@ -864,26 +820,26 @@
       "sector": "Indexes"
     },
     {
-      "symbol": "HG=F",
-      "name": "Copper",
-      "price": 6.64,
-      "change_pct": 0.72,
-      "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-10-08",
-      "sector": "Metals"
+      "symbol": "ZM=F",
+      "name": "Soybean Meal",
+      "price": 359.9,
+      "change_pct": -0.22,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "white",
+      "date": "2026-10-09",
+      "sector": "Agriculture"
     },
     {
-      "symbol": "CC=F",
-      "name": "Cocoa",
-      "price": 5617.0,
-      "change_pct": 0.63,
+      "symbol": "^SPGSCI",
+      "name": "GSCI",
+      "price": 740.18,
+      "change_pct": -0.0,
       "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-10-08",
-      "sector": "Agriculture"
+      "prev_color": "green",
+      "cur_color": "white",
+      "date": "2026-10-09",
+      "sector": "Indexes"
     }
   ]
 }
