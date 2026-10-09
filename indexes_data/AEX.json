@@ -7,7 +7,7 @@
   "flag": "🇳🇱",
   "sector": "Europe",
   "unit": "Index Points",
-  "updated": "2026-10-08",
+  "updated": "2026-10-09",
   "prices": [
     {
       "time": "1992-10-12",
@@ -69396,10 +69396,10 @@
     {
       "time": "2026-10-08",
       "open": 1111.65,
-      "high": 1117.0,
+      "high": 1126.23,
       "low": 1107.67,
-      "close": 1117.0,
-      "volume": 0
+      "close": 1121.2,
+      "volume": 56616600
     }
   ]
 }
