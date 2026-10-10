@@ -1,763 +1,653 @@
 {
-  "updated": "2026-10-09 11:38 UTC",
+  "updated": "2026-10-10 02:00 UTC",
   "stocks": [
     {
-      "symbol": "AAOI",
-      "name": "Applied Optoelectronics Inc",
-      "price": 105.9,
-      "change_pct": -13.58,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "COHR",
-      "name": "Coherent Corp",
-      "price": 302.35,
-      "change_pct": -9.63,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "ERAS",
-      "name": "Erasca Inc",
-      "price": 15.46,
-      "change_pct": 9.49,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "TTMI",
-      "name": "TTM Technologies Inc",
-      "price": 117.5,
-      "change_pct": -8.35,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "KOPN",
-      "name": "Kopin Corp",
-      "price": 4.2,
-      "change_pct": -8.1,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "VICR",
-      "name": "Vicor Corp",
-      "price": 262.32,
-      "change_pct": -7.24,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "ARM",
-      "name": "Arm Holdings Plc ADR",
-      "price": 275.29,
-      "change_pct": -6.48,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "GLW",
-      "name": "Corning Inc",
-      "price": 152.83,
-      "change_pct": -6.38,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "BE",
-      "name": "Bloom Energy Corp",
-      "price": 272.82,
-      "change_pct": -6.34,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "RXT",
-      "name": "Rackspace Technology Inc",
-      "price": 3.62,
-      "change_pct": -5.97,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "ATOM",
-      "name": "Atomera Inc",
-      "price": 4.13,
-      "change_pct": -5.49,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "ORCL",
-      "name": "Oracle Corp",
-      "price": 135.69,
-      "change_pct": -5.48,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "INTC",
-      "name": "Intel Corp",
-      "price": 107.08,
-      "change_pct": -5.34,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "CTSH",
-      "name": "Cognizant Technology Solutions Corp",
-      "price": 60.01,
-      "change_pct": 5.15,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "OUST",
-      "name": "Ouster Inc",
-      "price": 39.53,
-      "change_pct": -5.14,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "CEVA",
-      "name": "Ceva Inc",
-      "price": 33.66,
-      "change_pct": -5.13,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "SVCO",
-      "name": "Silvaco Group Inc",
-      "price": 7.99,
-      "change_pct": -4.88,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "MU",
-      "name": "Micron Technology Inc",
-      "price": 1035.84,
-      "change_pct": -4.79,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "DIOD",
-      "name": "Diodes Inc",
-      "price": 96.24,
-      "change_pct": -4.38,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "POWL",
-      "name": "Powell Industries Inc",
-      "price": 189.27,
-      "change_pct": -4.28,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "KLIC",
-      "name": "Kulicke & Soffa Industries Inc",
-      "price": 90.92,
-      "change_pct": -4.24,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "VRSK",
-      "name": "Verisk Analytics Inc",
-      "price": 175.49,
-      "change_pct": 4.04,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "MOD",
-      "name": "Modine Manufacturing Co",
-      "price": 181.89,
-      "change_pct": -3.99,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "FANG",
-      "name": "Diamondback Energy Inc",
-      "price": 191.68,
-      "change_pct": 3.96,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "LASR",
-      "name": "nLIGHT Inc",
-      "price": 38.31,
-      "change_pct": -3.94,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "KOS",
-      "name": "Kosmos Energy Ltd",
-      "price": 2.69,
-      "change_pct": 3.86,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "APA",
-      "name": "APA Corp",
-      "price": 45.47,
-      "change_pct": 3.79,
+      "symbol": "FSLY",
+      "name": "Fastly Inc",
+      "price": 29.3,
+      "change_pct": 15.86,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
-      "date": "2026-10-08"
+      "date": "2026-10-09"
     },
     {
-      "symbol": "WTI",
-      "name": "W & T Offshore Inc",
-      "price": 3.7,
-      "change_pct": 3.64,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "OXY",
-      "name": "Occidental Petroleum Corp",
-      "price": 60.28,
-      "change_pct": 3.56,
-      "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "TPL",
-      "name": "Texas Pacific Land Corp",
-      "price": 357.78,
-      "change_pct": 3.47,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "ODFL",
-      "name": "Old Dominion Freight Line Inc",
-      "price": 181.65,
-      "change_pct": 3.44,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "LGN",
-      "name": "Legence Corp",
-      "price": 51.55,
-      "change_pct": -3.37,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "ICHR",
-      "name": "Ichor Holdings Ltd",
-      "price": 58.83,
-      "change_pct": -3.35,
+      "symbol": "TMUS",
+      "name": "T-Mobile US Inc",
+      "price": 148.58,
+      "change_pct": -13.27,
       "direction": "down",
       "prev_color": "green",
       "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "MCHP",
-      "name": "Microchip Technology Inc",
-      "price": 75.52,
-      "change_pct": -3.2,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "TER",
-      "name": "Teradyne Inc",
-      "price": 398.72,
-      "change_pct": -3.17,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "LYB",
-      "name": "LyondellBasell Industries NV",
-      "price": 60.34,
-      "change_pct": 3.16,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "CVX",
-      "name": "Chevron Corp",
-      "price": 211.55,
-      "change_pct": 3.12,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "SITM",
-      "name": "SiTime Corp",
-      "price": 645.06,
-      "change_pct": -3.02,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "DOW",
-      "name": "Dow Inc",
-      "price": 28.59,
-      "change_pct": 2.95,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "POWI",
-      "name": "Power Integrations Inc",
-      "price": 49.89,
-      "change_pct": -2.94,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "CCEP",
-      "name": "Coca-Cola Europacific Partners Plc",
-      "price": 103.64,
-      "change_pct": 2.76,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "ACMR",
-      "name": "ACM Research Inc",
-      "price": 70.8,
-      "change_pct": -2.71,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "NFLX",
-      "name": "Netflix Inc",
-      "price": 71.57,
-      "change_pct": 2.68,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "TTWO",
-      "name": "Take-Two Interactive Software Inc",
-      "price": 209.37,
-      "change_pct": 2.63,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "ADP",
-      "name": "Automatic Data Processing Inc",
-      "price": 270.73,
-      "change_pct": 2.55,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "BHE",
-      "name": "Benchmark Electronics Inc",
-      "price": 81.16,
-      "change_pct": -2.49,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "IRM",
-      "name": "Iron Mountain Inc",
-      "price": 112.97,
-      "change_pct": -2.4,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "AIP",
-      "name": "Arteris Inc",
-      "price": 22.84,
-      "change_pct": -2.39,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08"
+      "date": "2026-10-09"
     },
     {
       "symbol": "HUM",
       "name": "Humana Inc",
-      "price": 387.12,
-      "change_pct": -2.37,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "KDP",
-      "name": "Keurig Dr Pepper Inc",
-      "price": 31.26,
-      "change_pct": 2.36,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "TWST",
-      "name": "Twist Bioscience Corp",
-      "price": 152.05,
-      "change_pct": -2.31,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "TRI",
-      "name": "Thomson-Reuters Corp",
-      "price": 101.55,
-      "change_pct": 2.29,
+      "price": 431.87,
+      "change_pct": 11.56,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
-      "date": "2026-10-08"
+      "date": "2026-10-09"
     },
     {
-      "symbol": "WMT",
-      "name": "Walmart Inc",
-      "price": 110.56,
-      "change_pct": 2.22,
+      "symbol": "ATEX",
+      "name": "Anterix Inc",
+      "price": 84.53,
+      "change_pct": 10.58,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "DOCN",
+      "name": "DigitalOcean Holdings Inc",
+      "price": 134.82,
+      "change_pct": 8.81,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "RXT",
+      "name": "Rackspace Technology Inc",
+      "price": 3.9,
+      "change_pct": 7.73,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "VSAT",
+      "name": "Viasat Inc",
+      "price": 72.01,
+      "change_pct": 6.82,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "TNGX",
+      "name": "Tango Therapeutics Inc",
+      "price": 23.81,
+      "change_pct": 5.49,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "SITM",
+      "name": "SiTime Corp",
+      "price": 612.37,
+      "change_pct": -5.07,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "PDD",
+      "name": "PDD Holdings Inc ADR",
+      "price": 81.35,
+      "change_pct": 3.95,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
-      "date": "2026-10-08"
+      "date": "2026-10-09"
     },
     {
-      "symbol": "LINC",
-      "name": "Lincoln Educational Services Corp",
-      "price": 23.24,
-      "change_pct": 2.2,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "MDLZ",
-      "name": "Mondelez International Inc",
-      "price": 60.67,
-      "change_pct": 2.17,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "EQIX",
-      "name": "Equinix Inc",
-      "price": 1011.16,
-      "change_pct": -2.0,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "CTAS",
-      "name": "Cintas Corp",
-      "price": 201.12,
-      "change_pct": 1.99,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "MNST",
-      "name": "Monster Beverage Corp",
-      "price": 43.65,
-      "change_pct": 1.8,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "DDD",
-      "name": "3D Systems Corp",
-      "price": 3.35,
-      "change_pct": -1.76,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "NXPI",
-      "name": "NXP Semiconductors NV",
-      "price": 231.07,
-      "change_pct": -1.76,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "ORLY",
-      "name": "O'Reilly Automotive Inc",
-      "price": 86.01,
-      "change_pct": 1.65,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "ABNB",
-      "name": "Airbnb Inc",
-      "price": 163.23,
-      "change_pct": 1.62,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "ETN",
-      "name": "Eaton Corp Plc",
-      "price": 424.51,
-      "change_pct": -1.58,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "CARR",
-      "name": "Carrier Global Corp",
-      "price": 55.83,
-      "change_pct": 1.51,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "ADM",
-      "name": "Archer Daniels Midland Co",
-      "price": 82.45,
-      "change_pct": 1.36,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "HST",
-      "name": "Host Hotels & Resorts Inc",
-      "price": 22.54,
-      "change_pct": 1.35,
+      "symbol": "ERAS",
+      "name": "Erasca Inc",
+      "price": 16.03,
+      "change_pct": 3.69,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "FAST",
-      "name": "Fastenal Co",
-      "price": 50.49,
-      "change_pct": 1.32,
-      "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "MSTR",
-      "name": "Strategy Inc",
-      "price": 151.47,
-      "change_pct": -1.24,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "CSX",
-      "name": "CSX Corp",
-      "price": 47.34,
-      "change_pct": 1.13,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08"
+      "date": "2026-10-09"
     },
     {
       "symbol": "FCX",
       "name": "Freeport-McMoRan Inc",
-      "price": 71.14,
-      "change_pct": -1.0,
+      "price": 73.69,
+      "change_pct": 3.58,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "AAOI",
+      "name": "Applied Optoelectronics Inc",
+      "price": 109.64,
+      "change_pct": 3.53,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "SLS",
+      "name": "SELLAS Life Sciences Group Inc",
+      "price": 11.65,
+      "change_pct": 3.46,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "COHR",
+      "name": "Coherent Corp",
+      "price": 312.62,
+      "change_pct": 3.4,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "ADM",
+      "name": "Archer Daniels Midland Co",
+      "price": 79.89,
+      "change_pct": -3.1,
       "direction": "down",
       "prev_color": "green",
       "cur_color": "red",
-      "date": "2026-10-08"
+      "date": "2026-10-09"
     },
     {
-      "symbol": "HON",
-      "name": "Honeywell International Inc",
-      "price": 206.6,
-      "change_pct": -0.73,
+      "symbol": "TTMI",
+      "name": "TTM Technologies Inc",
+      "price": 121.01,
+      "change_pct": 2.99,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
-      "date": "2026-10-08"
+      "date": "2026-10-09"
     },
     {
-      "symbol": "WAB",
-      "name": "Westinghouse Air Brake Technologies Corp",
-      "price": 280.8,
-      "change_pct": -0.58,
+      "symbol": "BE",
+      "name": "Bloom Energy Corp",
+      "price": 280.5,
+      "change_pct": 2.82,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "GILD",
+      "name": "Gilead Sciences Inc",
+      "price": 151.17,
+      "change_pct": 2.77,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "AGL",
+      "name": "Agilon Health Inc",
+      "price": 82.39,
+      "change_pct": -2.75,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
-      "date": "2026-10-08"
+      "date": "2026-10-09"
     },
     {
-      "symbol": "GWW",
-      "name": "W.W. Grainger Inc",
-      "price": 1268.67,
-      "change_pct": 0.41,
+      "symbol": "GLW",
+      "name": "Corning Inc",
+      "price": 156.68,
+      "change_pct": 2.52,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
-      "date": "2026-10-08"
+      "date": "2026-10-09"
     },
     {
       "symbol": "DASH",
       "name": "DoorDash Inc",
-      "price": 191.71,
-      "change_pct": 0.25,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08"
-    },
-    {
-      "symbol": "STLD",
-      "name": "Steel Dynamics Inc",
-      "price": 234.17,
-      "change_pct": 0.03,
+      "price": 196.5,
+      "change_pct": 2.5,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
-      "date": "2026-10-08"
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "JBL",
+      "name": "Jabil Inc",
+      "price": 306.28,
+      "change_pct": 2.38,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "GEHC",
+      "name": "GE HealthCare Technologies Inc",
+      "price": 65.74,
+      "change_pct": 2.37,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "ON",
+      "name": "ON Semiconductor Corp",
+      "price": 77.53,
+      "change_pct": -2.37,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "TTWO",
+      "name": "Take-Two Interactive Software Inc",
+      "price": 213.44,
+      "change_pct": 1.94,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "WTI",
+      "name": "W & T Offshore Inc",
+      "price": 3.63,
+      "change_pct": -1.89,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "MSTR",
+      "name": "Strategy Inc",
+      "price": 154.34,
+      "change_pct": 1.89,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "KOS",
+      "name": "Kosmos Energy Ltd",
+      "price": 2.64,
+      "change_pct": -1.86,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "ICHR",
+      "name": "Ichor Holdings Ltd",
+      "price": 59.91,
+      "change_pct": 1.84,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "NFLX",
+      "name": "Netflix Inc",
+      "price": 70.3,
+      "change_pct": -1.77,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "AIP",
+      "name": "Arteris Inc",
+      "price": 22.44,
+      "change_pct": -1.75,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "NUE",
+      "name": "Nucor Corp",
+      "price": 250.33,
+      "change_pct": 1.7,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "GWW",
+      "name": "W.W. Grainger Inc",
+      "price": 1289.79,
+      "change_pct": 1.66,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "ABNB",
+      "name": "Airbnb Inc",
+      "price": 165.87,
+      "change_pct": 1.62,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "KDP",
+      "name": "Keurig Dr Pepper Inc",
+      "price": 31.76,
+      "change_pct": 1.6,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "POWI",
+      "name": "Power Integrations Inc",
+      "price": 49.12,
+      "change_pct": -1.54,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "NXPI",
+      "name": "NXP Semiconductors NV",
+      "price": 227.52,
+      "change_pct": -1.54,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "VSH",
+      "name": "Vishay Intertechnology Inc",
+      "price": 34.04,
+      "change_pct": -1.5,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "EQIX",
+      "name": "Equinix Inc",
+      "price": 1026.06,
+      "change_pct": 1.47,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "POWL",
+      "name": "Powell Industries Inc",
+      "price": 191.93,
+      "change_pct": 1.41,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "IRM",
+      "name": "Iron Mountain Inc",
+      "price": 114.51,
+      "change_pct": 1.36,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "CTSH",
+      "name": "Cognizant Technology Solutions Corp",
+      "price": 59.2,
+      "change_pct": -1.35,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "DIOD",
+      "name": "Diodes Inc",
+      "price": 94.94,
+      "change_pct": -1.35,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "VRSK",
+      "name": "Verisk Analytics Inc",
+      "price": 177.63,
+      "change_pct": 1.22,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "ETN",
+      "name": "Eaton Corp Plc",
+      "price": 429.65,
+      "change_pct": 1.21,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "KLIC",
+      "name": "Kulicke & Soffa Industries Inc",
+      "price": 92.01,
+      "change_pct": 1.2,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "LINC",
+      "name": "Lincoln Educational Services Corp",
+      "price": 23.49,
+      "change_pct": 1.08,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "white",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "STRL",
+      "name": "Sterling Infrastructure Inc",
+      "price": 513.0,
+      "change_pct": -1.04,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "TER",
+      "name": "Teradyne Inc",
+      "price": 402.68,
+      "change_pct": 0.99,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "IDXX",
+      "name": "Idexx Laboratories Inc",
+      "price": 518.0,
+      "change_pct": 0.95,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "ATOM",
+      "name": "Atomera Inc",
+      "price": 4.16,
+      "change_pct": 0.73,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "STRZ",
+      "name": "Starz Entertainment Corp",
+      "price": 23.79,
+      "change_pct": 0.68,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "MU",
+      "name": "Micron Technology Inc",
+      "price": 1029.0,
+      "change_pct": -0.66,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "DOW",
+      "name": "Dow Inc",
+      "price": 28.42,
+      "change_pct": -0.59,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "LRCX",
+      "name": "Lam Research Corp",
+      "price": 318.84,
+      "change_pct": -0.55,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "CAT",
+      "name": "Caterpillar Inc",
+      "price": 800.47,
+      "change_pct": 0.54,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "ORLY",
+      "name": "O'Reilly Automotive Inc",
+      "price": 86.45,
+      "change_pct": 0.51,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "ADBE",
+      "name": "Adobe Inc",
+      "price": 242.27,
+      "change_pct": 0.51,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "META",
+      "name": "Meta Platforms Inc",
+      "price": 718.67,
+      "change_pct": -0.31,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "white",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "FANG",
+      "name": "Diamondback Energy Inc",
+      "price": 192.13,
+      "change_pct": 0.23,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "ADP",
+      "name": "Automatic Data Processing Inc",
+      "price": 270.88,
+      "change_pct": 0.06,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "PL",
+      "name": "Planet Labs PBC",
+      "price": 17.18,
+      "change_pct": -0.06,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "MNST",
+      "name": "Monster Beverage Corp",
+      "price": 43.64,
+      "change_pct": -0.02,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-09"
     }
   ],
   "commodities": [
     {
       "symbol": "CT=F",
       "name": "Cotton",
-      "price": 80.8,
-      "change_pct": 6.02,
+      "price": 81.02,
+      "change_pct": 6.31,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
@@ -765,10 +655,21 @@
       "sector": "Agriculture"
     },
     {
+      "symbol": "HO=F",
+      "name": "Heating Oil",
+      "price": 4.68,
+      "change_pct": -4.1,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-10-09",
+      "sector": "Energy"
+    },
+    {
       "symbol": "HG=F",
       "name": "Copper",
-      "price": 6.69,
-      "change_pct": 2.69,
+      "price": 6.71,
+      "change_pct": 2.95,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "green",
@@ -778,68 +679,35 @@
     {
       "symbol": "OJ=F",
       "name": "Orange Juice",
-      "price": 149.95,
-      "change_pct": 2.32,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08",
+      "price": 146.7,
+      "change_pct": -2.17,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-10-09",
       "sector": "Agriculture"
     },
     {
-      "symbol": "HO=F",
-      "name": "Heating Oil",
-      "price": 4.81,
-      "change_pct": -1.51,
+      "symbol": "KRBN",
+      "name": "EU Carbon Permits",
+      "price": 34.29,
+      "change_pct": 0.44,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-09",
+      "sector": "Indexes"
+    },
+    {
+      "symbol": "BZ=F",
+      "name": "Brent Crude Oil",
+      "price": 104.43,
+      "change_pct": 0.14,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
       "date": "2026-10-09",
       "sector": "Energy"
-    },
-    {
-      "symbol": "DBC",
-      "name": "CRB Index",
-      "price": 32.91,
-      "change_pct": 1.23,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-08",
-      "sector": "Indexes"
-    },
-    {
-      "symbol": "KRBN",
-      "name": "EU Carbon Permits",
-      "price": 34.14,
-      "change_pct": 0.74,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-08",
-      "sector": "Indexes"
-    },
-    {
-      "symbol": "ZM=F",
-      "name": "Soybean Meal",
-      "price": 359.9,
-      "change_pct": -0.22,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-09",
-      "sector": "Agriculture"
-    },
-    {
-      "symbol": "^SPGSCI",
-      "name": "GSCI",
-      "price": 740.18,
-      "change_pct": -0.0,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-09",
-      "sector": "Indexes"
     }
   ]
 }

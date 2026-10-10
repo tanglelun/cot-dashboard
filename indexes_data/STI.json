@@ -7,7 +7,7 @@
   "flag": "🇸🇬",
   "sector": "Asia",
   "unit": "Index Points",
-  "updated": "2026-10-09",
+  "updated": "2026-10-10",
   "prices": [
     {
       "time": "1987-12-28",
@@ -77551,7 +77551,7 @@
       "high": 5455.1699,
       "low": 5369.4902,
       "close": 5401.8901,
-      "volume": 0
+      "volume": 341999600
     }
   ]
 }
