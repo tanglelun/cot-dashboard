@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-10 02:00 UTC",
+  "updated": "2026-10-10 10:55 UTC",
   "stocks": [
     {
       "symbol": "FSLY",
@@ -362,9 +362,9 @@
       "date": "2026-10-09"
     },
     {
-      "symbol": "POWI",
-      "name": "Power Integrations Inc",
-      "price": 49.12,
+      "symbol": "NXPI",
+      "name": "NXP Semiconductors NV",
+      "price": 227.52,
       "change_pct": -1.54,
       "direction": "down",
       "prev_color": "white",
@@ -372,9 +372,9 @@
       "date": "2026-10-09"
     },
     {
-      "symbol": "NXPI",
-      "name": "NXP Semiconductors NV",
-      "price": 227.52,
+      "symbol": "POWI",
+      "name": "Power Integrations Inc",
+      "price": 49.12,
       "change_pct": -1.54,
       "direction": "down",
       "prev_color": "white",
@@ -422,16 +422,6 @@
       "date": "2026-10-09"
     },
     {
-      "symbol": "CTSH",
-      "name": "Cognizant Technology Solutions Corp",
-      "price": 59.2,
-      "change_pct": -1.35,
-      "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-10-09"
-    },
-    {
       "symbol": "DIOD",
       "name": "Diodes Inc",
       "price": 94.94,
@@ -439,6 +429,16 @@
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "CTSH",
+      "name": "Cognizant Technology Solutions Corp",
+      "price": 59.2,
+      "change_pct": -1.35,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
       "date": "2026-10-09"
     },
     {
@@ -612,16 +612,6 @@
       "date": "2026-10-09"
     },
     {
-      "symbol": "ADP",
-      "name": "Automatic Data Processing Inc",
-      "price": 270.88,
-      "change_pct": 0.06,
-      "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-10-09"
-    },
-    {
       "symbol": "PL",
       "name": "Planet Labs PBC",
       "price": 17.18,
@@ -629,6 +619,16 @@
       "direction": "down",
       "prev_color": "green",
       "cur_color": "red",
+      "date": "2026-10-09"
+    },
+    {
+      "symbol": "ADP",
+      "name": "Automatic Data Processing Inc",
+      "price": 270.88,
+      "change_pct": 0.06,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
       "date": "2026-10-09"
     },
     {
@@ -646,8 +646,8 @@
     {
       "symbol": "CT=F",
       "name": "Cotton",
-      "price": 81.02,
-      "change_pct": 6.31,
+      "price": 80.54,
+      "change_pct": 5.68,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
@@ -657,8 +657,8 @@
     {
       "symbol": "HO=F",
       "name": "Heating Oil",
-      "price": 4.68,
-      "change_pct": -4.1,
+      "price": 4.74,
+      "change_pct": -2.96,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
@@ -668,8 +668,8 @@
     {
       "symbol": "HG=F",
       "name": "Copper",
-      "price": 6.71,
-      "change_pct": 2.95,
+      "price": 6.64,
+      "change_pct": 1.89,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "green",
@@ -677,13 +677,24 @@
       "sector": "Metals"
     },
     {
+      "symbol": "KC=F",
+      "name": "Coffee",
+      "price": 289.05,
+      "change_pct": -1.25,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-10-08",
+      "sector": "Agriculture"
+    },
+    {
       "symbol": "OJ=F",
       "name": "Orange Juice",
-      "price": 146.7,
-      "change_pct": -2.17,
-      "direction": "down",
+      "price": 148.7,
+      "change_pct": -0.83,
+      "direction": "up",
       "prev_color": "white",
-      "cur_color": "red",
+      "cur_color": "green",
       "date": "2026-10-09",
       "sector": "Agriculture"
     },
@@ -701,8 +712,8 @@
     {
       "symbol": "BZ=F",
       "name": "Brent Crude Oil",
-      "price": 104.43,
-      "change_pct": 0.14,
+      "price": 104.72,
+      "change_pct": 0.42,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
