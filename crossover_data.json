@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-13 03:16 UTC",
+  "updated": "2026-10-13 12:13 UTC",
   "stocks": [
     {
       "symbol": "SMTC",
@@ -634,47 +634,36 @@
   ],
   "commodities": [
     {
-      "symbol": "ZO=F",
-      "name": "Oats",
-      "price": 408.0,
-      "change_pct": -3.03,
+      "symbol": "ZM=F",
+      "name": "Soybean Meal",
+      "price": 361.7,
+      "change_pct": -3.7,
       "direction": "down",
       "prev_color": "green",
       "cur_color": "white",
-      "date": "2026-10-12",
-      "sector": "Agriculture"
-    },
-    {
-      "symbol": "KC=F",
-      "name": "Coffee",
-      "price": 289.9,
-      "change_pct": 1.03,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-12",
+      "date": "2026-10-13",
       "sector": "Agriculture"
     },
     {
       "symbol": "ZL=F",
       "name": "Soybean Oil",
-      "price": 68.24,
-      "change_pct": 0.77,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-12",
-      "sector": "Agriculture"
-    },
-    {
-      "symbol": "CT=F",
-      "name": "Cotton",
-      "price": 80.43,
-      "change_pct": -0.14,
+      "price": 69.15,
+      "change_pct": 1.24,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
-      "date": "2026-10-12",
+      "date": "2026-10-13",
+      "sector": "Agriculture"
+    },
+    {
+      "symbol": "ZO=F",
+      "name": "Oats",
+      "price": 407.0,
+      "change_pct": -0.79,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-10-13",
       "sector": "Agriculture"
     }
   ]
