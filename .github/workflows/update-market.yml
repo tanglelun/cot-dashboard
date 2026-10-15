@@ -25,6 +25,9 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -74,9 +77,20 @@ jobs:
       - name: Commit updated Market page
         if: steps.outputs.outputs.files != ''
         uses: stefanzweifel/git-auto-commit-action@v5
+        id: commit
         with:
+          skip_push: true
           commit_message: "Update Market data"
           file_pattern: ${{ steps.outputs.outputs.files }}
+
+      - name: Publish after syncing concurrent commits
+        if: steps.commit.outputs.changes_detected == 'true'
+        run: |
+          for attempt in 1 2 3; do
+            git pull --rebase --autostash origin main
+            if git push origin HEAD:main; then exit 0; fi
+          done
+          exit 1
 
       - name: Report incomplete refreshes
         if: steps.stocks.outcome == 'failure' || steps.commodities.outcome == 'failure' || steps.indexes.outcome == 'failure' || steps.crossover.outcome == 'failure'

@@ -20,6 +20,9 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -29,6 +32,17 @@ jobs:
       - name: Refresh Insight independently of the full stock universe
         run: python -u update_market_pulse.py
       - uses: stefanzweifel/git-auto-commit-action@v5
+        id: commit
         with:
+          skip_push: true
           commit_message: "chore: refresh Insight data"
           file_pattern: "market_pulse_data.json market_pulse_view.json sp500_constituents.json"
+
+      - name: Publish after syncing concurrent commits
+        if: steps.commit.outputs.changes_detected == 'true'
+        run: |
+          for attempt in 1 2 3; do
+            git pull --rebase --autostash origin main
+            if git push origin HEAD:main; then exit 0; fi
+          done
+          exit 1
