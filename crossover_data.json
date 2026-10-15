@@ -1,9 +1,9 @@
 {
-  "updated": "2026-10-15 05:27 UTC",
+  "updated": "2026-10-15 05:42 UTC",
   "stocks": [
     {
       "symbol": "DELL",
-      "name": "Dell Technologies Inc",
+      "name": "Dell Technologies Inc. Class C Common Stock",
       "price": 507.93,
       "change_pct": -11.27,
       "direction": "down",
@@ -13,7 +13,7 @@
     },
     {
       "symbol": "MXL",
-      "name": "MaxLinear Inc",
+      "name": "MaxLinear, Inc - Common Stock",
       "price": 78.82,
       "change_pct": -11.08,
       "direction": "down",
@@ -23,7 +23,7 @@
     },
     {
       "symbol": "PDFS",
-      "name": "PDF Solutions Inc",
+      "name": "PDF Solutions, Inc. - Common Stock",
       "price": 42.41,
       "change_pct": -10.94,
       "direction": "down",
@@ -33,7 +33,7 @@
     },
     {
       "symbol": "CIEN",
-      "name": "CIENA Corp",
+      "name": "Ciena Corporation Common Stock",
       "price": 359.6,
       "change_pct": -10.19,
       "direction": "down",
@@ -43,7 +43,7 @@
     },
     {
       "symbol": "LITE",
-      "name": "Lumentum Holdings Inc",
+      "name": "Lumentum Holdings Inc. - Common Stock",
       "price": 896.33,
       "change_pct": -9.28,
       "direction": "down",
@@ -53,7 +53,7 @@
     },
     {
       "symbol": "ORCL",
-      "name": "Oracle Corp",
+      "name": "Oracle Corporation Common Stock",
       "price": 130.55,
       "change_pct": -8.83,
       "direction": "down",
@@ -63,7 +63,7 @@
     },
     {
       "symbol": "MRVL",
-      "name": "Marvell Technology Inc",
+      "name": "Marvell Technology, Inc. - Common Stock",
       "price": 245.28,
       "change_pct": -8.73,
       "direction": "down",
@@ -73,7 +73,7 @@
     },
     {
       "symbol": "HPE",
-      "name": "Hewlett Packard Enterprise Co",
+      "name": "Hewlett Packard Enterprise Company Common Stock",
       "price": 63.11,
       "change_pct": -8.28,
       "direction": "down",
@@ -83,7 +83,7 @@
     },
     {
       "symbol": "FSLY",
-      "name": "Fastly Inc",
+      "name": "Fastly, Inc. - Class A Common Stock",
       "price": 25.0,
       "change_pct": -7.72,
       "direction": "down",
@@ -93,7 +93,7 @@
     },
     {
       "symbol": "GNRC",
-      "name": "Generac Holdings Inc",
+      "name": "Generac Holdlings Inc. Common Stock",
       "price": 198.06,
       "change_pct": -7.57,
       "direction": "down",
@@ -103,7 +103,7 @@
     },
     {
       "symbol": "JBL",
-      "name": "Jabil Inc",
+      "name": "Jabil Inc. Common Stock",
       "price": 293.91,
       "change_pct": -7.53,
       "direction": "down",
@@ -113,7 +113,7 @@
     },
     {
       "symbol": "GEV",
-      "name": "GE Vernova Inc",
+      "name": "GE Vernova Inc. Common Stock",
       "price": 941.78,
       "change_pct": -6.2,
       "direction": "down",
@@ -123,7 +123,7 @@
     },
     {
       "symbol": "VECO",
-      "name": "Veeco Instruments Inc",
+      "name": "Veeco Instruments Inc. - Common Stock",
       "price": 45.82,
       "change_pct": -6.15,
       "direction": "down",
@@ -133,7 +133,7 @@
     },
     {
       "symbol": "MYRG",
-      "name": "MYR Group Inc",
+      "name": "MYR Group, Inc. - Common Stock",
       "price": 291.17,
       "change_pct": -5.8,
       "direction": "down",
@@ -143,7 +143,7 @@
     },
     {
       "symbol": "AMD",
-      "name": "Advanced Micro Devices Inc",
+      "name": "Advanced Micro Devices, Inc. - Common Stock",
       "price": 570.82,
       "change_pct": -5.73,
       "direction": "down",
@@ -153,7 +153,7 @@
     },
     {
       "symbol": "PANW",
-      "name": "Palo Alto Networks Inc",
+      "name": "Palo Alto Networks, Inc. - Common Stock",
       "price": 375.04,
       "change_pct": -5.54,
       "direction": "down",
@@ -163,7 +163,7 @@
     },
     {
       "symbol": "ACLS",
-      "name": "Axcelis Technologies Inc",
+      "name": "Axcelis Technologies, Inc. - Common Stock",
       "price": 118.61,
       "change_pct": -5.02,
       "direction": "down",
@@ -172,18 +172,8 @@
       "date": "2026-10-14"
     },
     {
-      "symbol": "DASH",
-      "name": "DoorDash Inc",
-      "price": 184.01,
-      "change_pct": -4.7,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-14"
-    },
-    {
       "symbol": "WTI",
-      "name": "W & T Offshore Inc",
+      "name": "W&T Offshore, Inc. Common Stock",
       "price": 3.65,
       "change_pct": -4.7,
       "direction": "down",
@@ -192,8 +182,18 @@
       "date": "2026-10-14"
     },
     {
+      "symbol": "DASH",
+      "name": "DoorDash, Inc. - Common Stock",
+      "price": 184.01,
+      "change_pct": -4.7,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-10-14"
+    },
+    {
       "symbol": "CRWD",
-      "name": "Crowdstrike Holdings Inc",
+      "name": "CrowdStrike Holdings, Inc. - Class A Common Stock",
       "price": 249.29,
       "change_pct": -4.56,
       "direction": "down",
@@ -203,7 +203,7 @@
     },
     {
       "symbol": "ANET",
-      "name": "Arista Networks Inc",
+      "name": "Arista Networks, Inc. Common Stock",
       "price": 195.42,
       "change_pct": -4.45,
       "direction": "down",
@@ -213,7 +213,7 @@
     },
     {
       "symbol": "ON",
-      "name": "ON Semiconductor Corp",
+      "name": "ON Semiconductor Corporation - Common Stock",
       "price": 73.36,
       "change_pct": -4.34,
       "direction": "down",
@@ -223,7 +223,7 @@
     },
     {
       "symbol": "PWR",
-      "name": "Quanta Services Inc",
+      "name": "Quanta Services, Inc. Common Stock",
       "price": 660.53,
       "change_pct": -4.12,
       "direction": "down",
@@ -233,7 +233,7 @@
     },
     {
       "symbol": "EME",
-      "name": "Emcor Group Inc",
+      "name": "EMCOR Group, Inc. Common Stock",
       "price": 745.35,
       "change_pct": -3.96,
       "direction": "down",
@@ -243,7 +243,7 @@
     },
     {
       "symbol": "LINC",
-      "name": "Lincoln Educational Services Corp",
+      "name": "Lincoln Educational Services Corporation - Common Stock",
       "price": 22.54,
       "change_pct": -3.88,
       "direction": "down",
@@ -253,7 +253,7 @@
     },
     {
       "symbol": "FCX",
-      "name": "Freeport-McMoRan Inc",
+      "name": "Freeport-McMoRan, Inc. Common Stock",
       "price": 69.62,
       "change_pct": -3.87,
       "direction": "down",
@@ -263,7 +263,7 @@
     },
     {
       "symbol": "GILD",
-      "name": "Gilead Sciences Inc",
+      "name": "Gilead Sciences, Inc. - Common Stock",
       "price": 153.54,
       "change_pct": 3.8,
       "direction": "up",
@@ -273,7 +273,7 @@
     },
     {
       "symbol": "KEYS",
-      "name": "Keysight Technologies Inc",
+      "name": "Keysight Technologies Inc. Common Stock",
       "price": 357.62,
       "change_pct": -3.4,
       "direction": "down",
@@ -283,7 +283,7 @@
     },
     {
       "symbol": "REGN",
-      "name": "Regeneron Pharmaceuticals Inc",
+      "name": "Regeneron Pharmaceuticals, Inc. - Common Stock",
       "price": 778.36,
       "change_pct": 3.35,
       "direction": "up",
@@ -293,7 +293,7 @@
     },
     {
       "symbol": "IRM",
-      "name": "Iron Mountain Inc",
+      "name": "Iron Mountain Incorporated (Delaware)Common Stock REIT",
       "price": 110.86,
       "change_pct": -3.26,
       "direction": "down",
@@ -303,7 +303,7 @@
     },
     {
       "symbol": "TXN",
-      "name": "Texas Instruments Inc",
+      "name": "Texas Instruments Incorporated - Common Stock",
       "price": 280.65,
       "change_pct": -2.5,
       "direction": "down",
@@ -313,7 +313,7 @@
     },
     {
       "symbol": "URI",
-      "name": "United Rentals Inc",
+      "name": "United Rentals, Inc. Common Stock",
       "price": 1034.81,
       "change_pct": -2.43,
       "direction": "down",
@@ -323,7 +323,7 @@
     },
     {
       "symbol": "DOW",
-      "name": "Dow Inc",
+      "name": "Dow Inc. Common Stock",
       "price": 29.19,
       "change_pct": 2.39,
       "direction": "up",
@@ -333,7 +333,7 @@
     },
     {
       "symbol": "TGT",
-      "name": "Target Corp",
+      "name": "Target Corporation Common Stock",
       "price": 155.31,
       "change_pct": 2.18,
       "direction": "up",
@@ -343,7 +343,7 @@
     },
     {
       "symbol": "ROST",
-      "name": "Ross Stores Inc",
+      "name": "Ross Stores, Inc. - Common Stock",
       "price": 230.57,
       "change_pct": 2.17,
       "direction": "up",
@@ -353,7 +353,7 @@
     },
     {
       "symbol": "TSLA",
-      "name": "Tesla Inc",
+      "name": "Tesla, Inc.  - Common Stock",
       "price": 367.16,
       "change_pct": -2.15,
       "direction": "down",
@@ -363,7 +363,7 @@
     },
     {
       "symbol": "PAYX",
-      "name": "Paychex Inc",
+      "name": "Paychex, Inc. - Common Stock",
       "price": 108.37,
       "change_pct": 2.0,
       "direction": "up",
@@ -373,7 +373,7 @@
     },
     {
       "symbol": "LYB",
-      "name": "LyondellBasell Industries NV",
+      "name": "LyondellBasell Industries NV Ordinary Shares Class A (Netherlands)",
       "price": 61.17,
       "change_pct": 1.93,
       "direction": "up",
@@ -383,7 +383,7 @@
     },
     {
       "symbol": "CF",
-      "name": "CF Industries Holdings Inc",
+      "name": "CF Industries Holdings, Inc. Common Stock",
       "price": 119.46,
       "change_pct": 1.88,
       "direction": "up",
@@ -393,7 +393,7 @@
     },
     {
       "symbol": "ADBE",
-      "name": "Adobe Inc",
+      "name": "Adobe Inc. - Common Stock",
       "price": 240.68,
       "change_pct": 1.86,
       "direction": "up",
@@ -403,7 +403,7 @@
     },
     {
       "symbol": "IDXX",
-      "name": "Idexx Laboratories Inc",
+      "name": "IDEXX Laboratories, Inc. - Common Stock",
       "price": 529.01,
       "change_pct": 1.67,
       "direction": "up",
@@ -413,7 +413,7 @@
     },
     {
       "symbol": "PEP",
-      "name": "PepsiCo Inc",
+      "name": "PepsiCo, Inc. - Common Stock",
       "price": 129.27,
       "change_pct": 1.55,
       "direction": "up",
@@ -423,7 +423,7 @@
     },
     {
       "symbol": "WDAY",
-      "name": "Workday Inc",
+      "name": "Workday, Inc. - Class A Common Stock",
       "price": 188.77,
       "change_pct": 1.48,
       "direction": "up",
@@ -433,7 +433,7 @@
     },
     {
       "symbol": "CDNS",
-      "name": "Cadence Design Systems Inc",
+      "name": "Cadence Design Systems, Inc. - Common Stock",
       "price": 329.46,
       "change_pct": -1.42,
       "direction": "down",
@@ -443,7 +443,7 @@
     },
     {
       "symbol": "JBHT",
-      "name": "J.B. Hunt Transport Services Inc",
+      "name": "J.B. Hunt Transport Services, Inc. - Common Stock",
       "price": 232.16,
       "change_pct": 1.36,
       "direction": "up",
@@ -453,7 +453,7 @@
     },
     {
       "symbol": "BG",
-      "name": "Bunge Global SA",
+      "name": "Bunge Limited Common Shares",
       "price": 108.91,
       "change_pct": 1.26,
       "direction": "up",
@@ -463,7 +463,7 @@
     },
     {
       "symbol": "ADM",
-      "name": "Archer Daniels Midland Co",
+      "name": "Archer-Daniels-Midland Company Common Stock",
       "price": 83.64,
       "change_pct": 0.53,
       "direction": "up",
@@ -473,7 +473,7 @@
     },
     {
       "symbol": "FDX",
-      "name": "Fedex Corp",
+      "name": "FedEx Corporation Common Stock",
       "price": 291.28,
       "change_pct": 0.24,
       "direction": "up",
@@ -483,7 +483,7 @@
     },
     {
       "symbol": "NFLX",
-      "name": "Netflix Inc",
+      "name": "Netflix, Inc. - Common Stock",
       "price": 70.57,
       "change_pct": 0.16,
       "direction": "up",
@@ -493,7 +493,7 @@
     },
     {
       "symbol": "WAB",
-      "name": "Westinghouse Air Brake Technologies Corp",
+      "name": "Westinghouse Air Brake Technologies Corporation Common Stock",
       "price": 286.49,
       "change_pct": -0.01,
       "direction": "down",
