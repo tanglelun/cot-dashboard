@@ -96,3 +96,9 @@ The full Insight, CNN-only, and market workflows share their write lock.
 Stock, commodity, and index steps publish successful updates even if another
 source fails. The overall run still fails visibly when any source fails; crossover
 signals are only regenerated after a successful stock refresh.
+
+All current US stock charts refresh by default (`GENERATE_ALL_STOCK_CHARTS=1`).
+Top-stock charts keep full-history downloads. Other charts merge the validated
+one-year universe download into their saved candles, retaining older history up
+to `MARKET_CHART_MAX_ROWS`. The previous default refreshed only top-stock charts,
+leaving other saved chart files unchanged even when their summary prices updated.

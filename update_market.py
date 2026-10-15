@@ -23,7 +23,7 @@ MARKET_DOWNLOAD_SLEEP = float(os.getenv("MARKET_DOWNLOAD_SLEEP", "0.8"))
 MARKET_UNIVERSE_LIMIT = int(os.getenv("MARKET_UNIVERSE_LIMIT", "0") or 0)
 MARKET_UNIVERSE_OFFSET = int(os.getenv("MARKET_UNIVERSE_OFFSET", "0") or 0)
 TRACK_ALL_US_STOCKS = os.getenv("TRACK_ALL_US_STOCKS", "1") != "0"
-GENERATE_ALL_STOCK_CHARTS = os.getenv("GENERATE_ALL_STOCK_CHARTS", "0") == "1"
+GENERATE_ALL_STOCK_CHARTS = os.getenv("GENERATE_ALL_STOCK_CHARTS", "1") == "1"
 NASDAQ_LISTED_URL = "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt"
 OTHER_LISTED_URL = "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt"
 ARRAYS = {
@@ -430,7 +430,7 @@ def write_chart_data(static_data, chart_price_frames, updated_at, universe_rows=
 
     chart_symbols = rows_by_symbol
     if GENERATE_ALL_STOCK_CHARTS and universe_rows:
-        chart_symbols = {row["t"]: row for row in universe_rows}
+        chart_symbols = {**rows_by_symbol, **{row["t"]: row for row in universe_rows}}
 
     for symbol, row in sorted(chart_symbols.items()):
         frame = chart_price_frames.get(symbol, pd.DataFrame())
@@ -451,6 +451,17 @@ def write_chart_data(static_data, chart_price_frames, updated_at, universe_rows=
             if "Volume" in values and not pd.isna(values["Volume"]):
                 candle["volume"] = int(values["Volume"])
             candles.append(candle)
+
+        # Non-top stocks reuse the already validated one-year summary download.
+        # Merge it into saved candles rather than freezing or truncating charts.
+        chart_path = MARKET_DATA_DIR / f"{symbol}.json"
+        if symbol not in rows_by_symbol and chart_path.exists():
+            existing = json.loads(chart_path.read_text(encoding="utf-8"))
+            merged = {candle["time"]: candle for candle in existing.get("prices", [])}
+            merged.update({candle["time"]: candle for candle in candles})
+            candles = [merged[date] for date in sorted(merged)]
+            if CHART_MAX_ROWS:
+                candles = candles[-CHART_MAX_ROWS:]
 
         payload = {
             "symbol": symbol,
@@ -630,6 +641,7 @@ def main():
     static_symbols = [row["t"] for rows in static_data.values() for row in rows]
     chart_symbols = static_symbols
     universe_rows = None
+    summary_frames = {}
 
     if TRACK_ALL_US_STOCKS:
         try:
@@ -655,8 +667,6 @@ def main():
             )
             universe_rows = update_universe_rows(raw_universe, summary_frames)
             print(f"Refreshed {len(universe_rows)} US stock summary rows")
-            if GENERATE_ALL_STOCK_CHARTS:
-                chart_symbols = [row["t"] for row in universe_rows]
         except StaleMarketDataError:
             raise
         except Exception as error:
@@ -672,7 +682,11 @@ def main():
         text = replace_array(text, name, update_rows(rows, series_map))
 
     today = latest_price_date(series_map)
-    write_chart_data(static_data, price_frames, today, universe_rows=universe_rows)
+    # Full-history downloads are only needed for top-stock charts; all other
+    # charts receive the fresh bars already fetched for the full-universe list.
+    chart_frames = {**summary_frames, **price_frames}
+    write_chart_data(static_data, chart_frames, today, universe_rows=universe_rows)
+    print(f"Refreshed chart inputs for {len(chart_frames)} stocks", flush=True)
     text = ensure_daily_button(text)
     text = re.sub(r"更新于\s*\d{4}-\d{2}-\d{2}", f"更新于 {today}", text)
     text = re.sub(r"·\s*\d{4}-\d{2}-\d{2}更新", f"· {today}更新", text)
