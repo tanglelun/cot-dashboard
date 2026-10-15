@@ -1,0 +1,33 @@
+name: Update CNN Fear and Greed
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */2 * * *"
+
+permissions:
+  contents: write
+
+# Both workflows write the Market Pulse JSON files. Serialize their checkouts.
+concurrency:
+  group: update-market
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Refresh CNN independently of stock downloads
+        run: python -u update_market_pulse.py --cnn-only
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: refresh CNN Fear and Greed"
+          file_pattern: "market_pulse_data.json market_pulse_view.json"

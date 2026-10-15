@@ -1,3 +1,4 @@
+import argparse
 import io
 import json
 import os
@@ -9,6 +10,8 @@ from pathlib import Path
 import pandas as pd
 import requests
 import yfinance as yf
+
+from market_freshness import expected_market_date
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -201,7 +204,17 @@ def merge_existing_payload(payload):
     except Exception as exc:
         print(f"Could not read existing {OUTPUT_FILE}: {exc}")
         return payload
-    payload["series"] = merge_series(existing.get("series"), payload.get("series"))
+    old_snapshots = {item["key"]: item for item in existing.get("snapshots", [])}
+    rejected = set()
+    for item in payload.get("snapshots", []):
+        old = old_snapshots.get(item["key"], {})
+        if snapshot_time(item) >= snapshot_time(old):
+            old_snapshots[item["key"]] = item
+        else:
+            rejected.add(item["key"])
+    payload["series"] = merge_series(existing.get("series"),
+                                     [item for item in payload.get("series", []) if item.get("key") not in rejected])
+    payload["snapshots"] = list(old_snapshots.values())
     return payload
 
 
@@ -263,22 +276,58 @@ def date_from_cnn_timestamp(value):
     return datetime.fromtimestamp(timestamp, timezone.utc).strftime("%Y-%m-%d")
 
 
-def fetch_cnn_fear_greed():
-    try:
-        url = f"{CNN_FEAR_GREED_URL}/{CNN_FEAR_GREED_START_DATE}" if CNN_FEAR_GREED_START_DATE else CNN_FEAR_GREED_URL
-        response = requests.get(url, headers=CNN_HEADERS, timeout=30)
-        response.raise_for_status()
-        data = response.json()
-    except Exception as exc:
-        print(f"CNN Fear & Greed failed: {exc}")
+def snapshot_time(snapshot):
+    value = snapshot.get("timestamp") or snapshot.get("date")
+    if value is None:
+        return pd.Timestamp.min.tz_localize("UTC")
+    if isinstance(value, (int, float)):
+        return pd.to_datetime(value, unit="ms" if value > 10_000_000_000 else "s", utc=True)
+    return pd.to_datetime(value, utc=True)
+
+
+def fetch_cnn_fear_greed(include_history=True):
+    # The current endpoint and dated history endpoint can have different caches.
+    # Always use the current endpoint for the gauge and comparison values.
+    data = None
+    for attempt in range(3):
+        try:
+            response = requests.get(CNN_FEAR_GREED_URL, headers=CNN_HEADERS, timeout=30)
+            response.raise_for_status()
+            data = response.json()
+            current = data.get("fear_and_greed") or {}
+            score = rounded(current.get("score"), 2)
+            if score is None or not 0 <= score <= 100 or not date_from_cnn_timestamp(current.get("timestamp")):
+                raise ValueError("CNN response has no valid score/source timestamp")
+            if date_from_cnn_timestamp(current["timestamp"]) < expected_market_date():
+                raise ValueError("CNN source timestamp predates the latest completed market session")
+            break
+        except Exception as exc:
+            print(f"CNN Fear & Greed attempt {attempt + 1} failed: {exc}", flush=True)
+            data = None
+            if attempt < 2:
+                time.sleep(2)
+    if data is None:
         return [], None
 
-    historical = data.get("fear_and_greed_historical") or {}
+    history_data = data
+    if include_history and CNN_FEAR_GREED_START_DATE:
+        try:
+            response = requests.get(f"{CNN_FEAR_GREED_URL}/{CNN_FEAR_GREED_START_DATE}",
+                                    headers=CNN_HEADERS, timeout=30)
+            response.raise_for_status()
+            history_data = response.json()
+        except Exception as exc:
+            print(f"CNN history unavailable; retaining saved history: {exc}")
+
+    historical = history_data.get("fear_and_greed_historical") or {}
     points = [
         {"date": date_from_cnn_timestamp(point.get("x")), "value": point.get("y")}
         for point in historical.get("data", [])
         if point.get("x") is not None and point.get("y") is not None
     ]
+    current = data["fear_and_greed"]
+    points = merge_points(points, [{"date": date_from_cnn_timestamp(current["timestamp"]),
+                                   "value": current["score"]}])
     series = series_payload(
         {
             "key": "cnn_fear_greed",
@@ -299,7 +348,9 @@ def fetch_cnn_fear_greed():
         "unit": "",
         "value": rounded(current.get("score"), 2),
         "rating": current.get("rating"),
-        "date": date_from_cnn_timestamp(current.get("timestamp")) or datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        "date": date_from_cnn_timestamp(current["timestamp"]),
+        "timestamp": snapshot_time(current).isoformat(),
+        "fetched_at": datetime.now(timezone.utc).isoformat(),
         "source": "CNN Fear & Greed Index",
         "previous_close": rounded(current.get("previous_close"), 2),
         "previous_1_week": rounded(current.get("previous_1_week"), 2),
@@ -754,6 +805,25 @@ def fetch_sp500_pe_snapshot():
     }
 
 
+def refresh_cnn_only():
+    """Refresh CNN without depending on stock/breadth downloads."""
+    series, snapshot = fetch_cnn_fear_greed(include_history=False)
+    if snapshot is None:
+        raise RuntimeError("CNN update failed; existing data has been preserved")
+    payload = json.loads(OUTPUT_FILE.read_text())
+    old = next((item for item in payload.get("snapshots", [])
+                if item.get("key") == "cnn_fear_greed"), {})
+    if snapshot_time(snapshot) < snapshot_time(old):
+        raise RuntimeError("CNN returned an older snapshot; existing data has been preserved")
+    payload["series"] = merge_series(payload.get("series"), series)
+    payload["snapshots"] = [item for item in payload.get("snapshots", [])
+                            if item.get("key") != "cnn_fear_greed"] + [snapshot]
+    # Do not advance the global timestamp: other Insight data was not refreshed.
+    OUTPUT_FILE.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
+    VIEW_OUTPUT_FILE.write_text(json.dumps(build_view_payload(payload), ensure_ascii=False, separators=(",", ":")))
+    print(f"CNN updated: {snapshot['value']} ({snapshot['rating']}), source {snapshot['timestamp']}")
+
+
 def main():
     updated = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     series = []
@@ -784,4 +854,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--cnn-only", action="store_true")
+    args = parser.parse_args()
+    if args.cnn_only:
+        refresh_cnn_only()
+    else:
+        main()

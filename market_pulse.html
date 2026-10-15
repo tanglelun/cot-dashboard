@@ -216,7 +216,7 @@ canvas{display:block;width:100%;height:100%}
     <div class="fear-overview" id="fearOverview">
       <div class="gauge-card">
         <div class="gauge-title">
-          <div class="section-title">CNN Fear & Greed Index</div>
+          <div class="section-title" id="fearTitle">CNN Fear & Greed Index</div>
           <span class="pill" id="fearDate">--</span>
         </div>
         <div class="gauge-wrap">
@@ -445,6 +445,7 @@ function fearClass(score){
   return 'fear';
 }
 function ratingText(rating, score){
+  if(score === null || score === undefined || !Number.isFinite(Number(score))) return 'Unavailable';
   if(rating) return rating.replace(/\b\w/g, c => c.toUpperCase());
   return fearState(score || 0);
 }
@@ -827,10 +828,13 @@ function renderFear(){
   const cnnSnapshot = cnnFearSnapshot();
   const history = cnnSeries && cnnSeries.points.length ? cnnSeries.points : buildFearHistory();
   const last = history[history.length - 1];
-  const score = cnnSnapshot && Number.isFinite(Number(cnnSnapshot.value)) ? cnnSnapshot.value : (last ? last.value : null);
+  const score = cnnSnapshot && cnnSnapshot.value != null && Number.isFinite(Number(cnnSnapshot.value)) ? cnnSnapshot.value : (last ? last.value : null);
   $('fearScore').textContent = score === null ? '--' : Math.round(score);
   $('fearState').textContent = score === null ? 'Unavailable' : ratingText(cnnSnapshot?.rating, score);
-  $('fearDate').textContent = cnnSnapshot?.date || (last ? last.date : '--');
+  $('fearTitle').textContent = cnnSnapshot || cnnSeries ? 'CNN Fear & Greed Index' : 'Fear & Greed Estimate';
+  const sourceTime = cnnSnapshot?.timestamp;
+  $('fearDate').textContent = sourceTime ? `CNN · ${new Date(sourceTime).toISOString().replace('T', ' ').slice(0, 16)} UTC` : (cnnSnapshot?.date || (last ? last.date : '--'));
+  $('fearDate').title = cnnSnapshot?.fetched_at ? `Last fetched: ${cnnSnapshot.fetched_at}` : 'Source data date';
   drawGauge(score);
   const previousRows = [
     ['Previous close', cnnSnapshot?.previous_close],
@@ -842,7 +846,7 @@ function renderFear(){
     <div class="previous-row">
       <div class="previous-label">${label}</div>
       <div><div class="previous-rating">${ratingText(null, value)}</div><div class="previous-line"></div></div>
-      <div class="previous-score ${fearClass(value)}">${Number.isFinite(Number(value)) ? Math.round(Number(value)) : '--'}</div>
+      <div class="previous-score ${fearClass(value)}">${value != null && Number.isFinite(Number(value)) ? Math.round(Number(value)) : '--'}</div>
     </div>
   `).join('');
   const points = history.map(point => ({date:point.date, value:point.value}));
@@ -964,7 +968,7 @@ $('liquidityRanges').addEventListener('click', event => {
   state.liquidityRange = button.dataset.range;
   renderLiquidity();
 });
-fetch('market_pulse_view.json')
+fetch('market_pulse_view.json', {cache:'no-store'})
   .then(response => response.json())
   .then(data => {
     state.data = data;

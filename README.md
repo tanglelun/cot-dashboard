@@ -77,3 +77,10 @@ and the Federal Reserve FOMC calendar.
 You can also run it manually in GitHub:
 
 `Actions` -> `Update COT data` -> `Run workflow`
+
+CNN Fear & Greed also refreshes independently every two hours through
+`.github/workflows/update-cnn.yml`. This lightweight job uses the current CNN
+endpoint, preserves the official source timestamp and existing history, and
+does not advance timestamps for other Insight indicators. Failed or older
+responses preserve the saved data and fail the job. Both market workflows share
+a concurrency group to prevent simultaneous writes to the same JSON files.
