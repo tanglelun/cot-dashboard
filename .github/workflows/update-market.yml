@@ -76,7 +76,7 @@ jobs:
 
       - name: Commit updated Market page
         if: steps.outputs.outputs.files != ''
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         id: commit
         with:
           skip_push: true

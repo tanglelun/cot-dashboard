@@ -30,7 +30,7 @@ jobs:
         run: pip install -r requirements.txt
       - name: Refresh CNN independently of stock downloads
         run: python -u update_market_pulse.py --cnn-only
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: stefanzweifel/git-auto-commit-action@v7
         id: commit
         with:
           skip_push: true
