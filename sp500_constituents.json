@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-17 02:37 UTC",
+  "updated": "2026-10-15 05:04 UTC",
   "source": "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies",
   "items": [
     {
@@ -215,10 +215,6 @@
       "name": "AutoZone"
     },
     {
-      "symbol": "AVB",
-      "name": "AvalonBay Communities"
-    },
-    {
       "symbol": "AVY",
       "name": "Avery Dennison"
     },
@@ -275,6 +271,10 @@
       "name": "Block, Inc."
     },
     {
+      "symbol": "BE",
+      "name": "Bloom Energy"
+    },
+    {
       "symbol": "BNY",
       "name": "BNY Mellon"
     },
@@ -309,10 +309,6 @@
     {
       "symbol": "BF-B",
       "name": "Brown–Forman"
-    },
-    {
-      "symbol": "BLDR",
-      "name": "Builders FirstSource"
     },
     {
       "symbol": "BG",
@@ -519,10 +515,6 @@
       "name": "Corpay"
     },
     {
-      "symbol": "CTVA",
-      "name": "Corteva"
-    },
-    {
       "symbol": "CSGP",
       "name": "CoStar Group"
     },
@@ -671,10 +663,6 @@
       "name": "Edwards Lifesciences"
     },
     {
-      "symbol": "EA",
-      "name": "Electronic Arts"
-    },
-    {
       "symbol": "ELV",
       "name": "Elevance Health"
     },
@@ -707,10 +695,6 @@
       "name": "Equinix"
     },
     {
-      "symbol": "EQR",
-      "name": "Equity Residential"
-    },
-    {
       "symbol": "ERIE",
       "name": "Erie Indemnity"
     },
@@ -729,6 +713,10 @@
     {
       "symbol": "EVRG",
       "name": "Evergy"
+    },
+    {
+      "symbol": "P",
+      "name": "Everpure"
     },
     {
       "symbol": "ES",
@@ -785,6 +773,10 @@
     {
       "symbol": "FDXF",
       "name": "FedEx Freight"
+    },
+    {
+      "symbol": "FERG",
+      "name": "Ferguson Enterprises"
     },
     {
       "symbol": "FIS",
@@ -997,6 +989,10 @@
     {
       "symbol": "ITW",
       "name": "Illinois Tool Works"
+    },
+    {
+      "symbol": "ILMN",
+      "name": "Illumina, Inc."
     },
     {
       "symbol": "INCY",
@@ -1232,7 +1228,7 @@
     },
     {
       "symbol": "MCK",
-      "name": "McKesson Corporation"
+      "name": "McKesson"
     },
     {
       "symbol": "MDT",
@@ -1279,10 +1275,6 @@
       "name": "Moderna"
     },
     {
-      "symbol": "TAP",
-      "name": "Molson Coors Beverage Company"
-    },
-    {
       "symbol": "MDLZ",
       "name": "Mondelez International"
     },
@@ -1312,7 +1304,7 @@
     },
     {
       "symbol": "MSCI",
-      "name": "MSCI Inc."
+      "name": "MSCI"
     },
     {
       "symbol": "NDAQ",
@@ -1392,7 +1384,7 @@
     },
     {
       "symbol": "ORLY",
-      "name": "O’Reilly Automotive"
+      "name": "O'Reilly Automotive"
     },
     {
       "symbol": "OXY",
@@ -1437,10 +1429,6 @@
     {
       "symbol": "PANW",
       "name": "Palo Alto Networks"
-    },
-    {
-      "symbol": "PSKY",
-      "name": "Paramount Skydance Corporation"
     },
     {
       "symbol": "PH",
@@ -1555,6 +1543,10 @@
       "name": "Raymond James Financial"
     },
     {
+      "symbol": "RDDT",
+      "name": "Reddit"
+    },
+    {
       "symbol": "RTX",
       "name": "RTX Corporation"
     },
@@ -1580,7 +1572,7 @@
     },
     {
       "symbol": "RMD",
-      "name": "ResMed"
+      "name": "ResMed|"
     },
     {
       "symbol": "RVTY",
@@ -1649,6 +1641,10 @@
     {
       "symbol": "SPG",
       "name": "Simon Property Group"
+    },
+    {
+      "symbol": "SKYD",
+      "name": "Skydance Corporation"
     },
     {
       "symbol": "SWKS",
@@ -1783,10 +1779,6 @@
       "name": "TKO Group Holdings"
     },
     {
-      "symbol": "TTD",
-      "name": "Trade Desk (The)"
-    },
-    {
       "symbol": "TSCO",
       "name": "Tractor Supply"
     },
@@ -1809,6 +1801,10 @@
     {
       "symbol": "TFC",
       "name": "Truist Financial"
+    },
+    {
+      "symbol": "TWLO",
+      "name": "Twilio"
     },
     {
       "symbol": "TYL",
@@ -1911,8 +1907,16 @@
       "name": "Vistra Corp."
     },
     {
+      "symbol": "VMRK",
+      "name": "Vivmark Residential"
+    },
+    {
       "symbol": "VMC",
       "name": "Vulcan Materials Company"
+    },
+    {
+      "symbol": "VYLR",
+      "name": "Vylor"
     },
     {
       "symbol": "WRB",
@@ -1933,10 +1937,6 @@
     {
       "symbol": "DIS",
       "name": "Walt Disney Company (The)"
-    },
-    {
-      "symbol": "WBD",
-      "name": "Warner Bros. Discovery"
     },
     {
       "symbol": "WM",
