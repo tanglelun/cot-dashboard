@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-15 05:42 UTC",
+  "updated": "2026-10-15 09:29 UTC",
   "stocks": [
     {
       "symbol": "DELL",
@@ -504,6 +504,17 @@
   ],
   "commodities": [
     {
+      "symbol": "HO=F",
+      "name": "Heating Oil",
+      "price": 4.64,
+      "change_pct": -5.81,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "white",
+      "date": "2026-10-15",
+      "sector": "Energy"
+    },
+    {
       "symbol": "TAN",
       "name": "Solar Energy Index",
       "price": 42.64,
@@ -513,17 +524,6 @@
       "cur_color": "red",
       "date": "2026-10-14",
       "sector": "Indexes"
-    },
-    {
-      "symbol": "KC=F",
-      "name": "Coffee",
-      "price": 298.05,
-      "change_pct": 1.83,
-      "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-10-14",
-      "sector": "Agriculture"
     }
   ]
 }
