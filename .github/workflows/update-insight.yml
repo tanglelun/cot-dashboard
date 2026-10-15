@@ -1,0 +1,34 @@
+name: Update Insight data
+
+on:
+  workflow_dispatch:
+  schedule:
+    # After the US close, then a second pass after provider delays.
+    - cron: "45 22 * * 1-5"
+    - cron: "45 4 * * 2-6"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-market
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Refresh Insight independently of the full stock universe
+        run: python -u update_market_pulse.py
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: refresh Insight data"
+          file_pattern: "market_pulse_data.json market_pulse_view.json sp500_constituents.json"

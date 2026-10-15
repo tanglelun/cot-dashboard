@@ -36,22 +36,50 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Update Market page
+        id: stocks
+        continue-on-error: true
         run: python -u update_market.py
 
       - name: Update Commodities data
+        id: commodities
+        continue-on-error: true
         run: python update_commodities.py
 
       - name: Update Indexes data
+        id: indexes
+        continue-on-error: true
         run: python update_indexes.py
 
-      - name: Update Market Pulse data
-        run: python update_market_pulse.py
-
       - name: Generate Crossover signals
+        id: crossover
+        if: steps.stocks.outcome == 'success'
+        continue-on-error: true
         run: python generate_crossover.py
 
+      - name: Select successful outputs
+        id: outputs
+        env:
+          STOCKS_OK: ${{ steps.stocks.outcome }}
+          COMMODITIES_OK: ${{ steps.commodities.outcome }}
+          INDEXES_OK: ${{ steps.indexes.outcome }}
+          CROSSOVER_OK: ${{ steps.crossover.outcome }}
+        run: |
+          patterns=()
+          if [[ "$STOCKS_OK" == success ]]; then patterns+=("russell2000_top100.html" "market_data/*.json"); fi
+          if [[ "$COMMODITIES_OK" == success ]]; then patterns+=("commodities_data.json" "commodities_data/*.json"); fi
+          if [[ "$INDEXES_OK" == success ]]; then patterns+=("indexes_data.json" "indexes_data/*.json"); fi
+          if [[ "$CROSSOVER_OK" == success ]]; then patterns+=("crossover_data.json"); fi
+          echo "files=${patterns[*]}" >> "$GITHUB_OUTPUT"
+
       - name: Commit updated Market page
+        if: steps.outputs.outputs.files != ''
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Update Market data"
-          file_pattern: "russell2000_top100.html stock_chart.html commodity_chart.html index_chart.html market_pulse.html update_market.py update_market_pulse.py market_data/*.json commodities_data.json commodities_data/*.json indexes_data.json indexes_data/*.json market_pulse_data.json market_pulse_view.json crossover_data.json"
+          file_pattern: ${{ steps.outputs.outputs.files }}
+
+      - name: Report incomplete refreshes
+        if: steps.stocks.outcome == 'failure' || steps.commodities.outcome == 'failure' || steps.indexes.outcome == 'failure' || steps.crossover.outcome == 'failure'
+        run: |
+          echo "::error::One or more data sources failed. Successful updates were committed; inspect the failed step."
+          exit 1

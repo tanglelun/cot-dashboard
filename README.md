@@ -84,3 +84,15 @@ endpoint, preserves the official source timestamp and existing history, and
 does not advance timestamps for other Insight indicators. Failed or older
 responses preserve the saved data and fail the job. Both market workflows share
 a concurrency group to prevent simultaneous writes to the same JSON files.
+
+The full Insight page (S&P 500 index/breadth, liquidity, and valuation) refreshes
+independently through `update-insight.yml` at 22:45 UTC Monday–Friday and 04:45
+UTC Tuesday–Saturday. It does not depend on the all-stock update succeeding.
+S&P 500 index and MA50/MA200 breadth must reach the last completed session;
+breadth requires at least 90% of the constituent universe with valid averages.
+Stale constituents are retried with one year of adjusted prices, keeping history.
+The full Insight, CNN-only, and market workflows share their write lock.
+
+Stock, commodity, and index steps publish successful updates even if another
+source fails. The overall run still fails visibly when any source fails; crossover
+signals are only regenerated after a successful stock refresh.

@@ -11,7 +11,7 @@ import pandas as pd
 import requests
 import yfinance as yf
 
-from market_freshness import expected_market_date
+from market_freshness import expected_market_date, completed_prices
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -428,10 +428,19 @@ def fetch_yahoo_series():
         print(f"Yahoo download failed: {exc}")
         data = pd.DataFrame()
 
+    expected = expected_market_date()
     fallback_keys = {"^GSPC": "GSPC", "^NDX": "NDX", "^RUT": "RUT", "^VIX": "VIX"}
     for item in YAHOO_SERIES:
         series = close_from_download(data, item["symbol"])
         points = points_from_series(series)
+        if not points or points[-1]["date"] < expected:
+            try:
+                recent = yf.download(item["symbol"], period="1mo", interval="1d",
+                                     auto_adjust=False, progress=False, timeout=40)
+                points = merge_points(points, points_from_series(close_from_download(recent, item["symbol"])))
+            except Exception as exc:
+                print(f"Recent index retry failed for {item['symbol']}: {exc}")
+        points = [point for point in points if point["date"] <= expected]
         if not points:
             points = load_local_index_history(fallback_keys.get(item["symbol"], item["symbol"].strip("^")))
         result.append(series_payload(item, points, "Yahoo Finance"))
@@ -685,14 +694,14 @@ def close_frame_from_download(data, symbols):
     return close.dropna(axis=1, how="all")
 
 
-def download_sp500_closes(symbols):
+def download_sp500_closes(symbols, period=None):
     frames = []
     for start in range(0, len(symbols), BREADTH_CHUNK_SIZE):
         chunk = symbols[start : start + BREADTH_CHUNK_SIZE]
         try:
             data = yf.download(
                 chunk,
-                period=f"{BREADTH_DOWNLOAD_YEARS}y",
+                period=period or f"{BREADTH_DOWNLOAD_YEARS}y",
                 interval="1d",
                 group_by="ticker",
                 auto_adjust=True,
@@ -745,10 +754,25 @@ def breadth_points_from_closes(closes, window):
 def compute_sp500_breadth():
     constituents = fetch_sp500_constituents()
     symbols = [item["symbol"] for item in constituents if item.get("symbol")]
-    closes = download_sp500_closes(symbols)
-    if closes.empty:
-        print("S&P 500 breadth failed: no close data, using local breadth fallback")
-        return compute_breadth()
+    expected = expected_market_date()
+    closes = completed_prices(download_sp500_closes(symbols), expected)
+    for attempt in range(2):
+        stale = [symbol for symbol in symbols if symbol not in closes
+                 or pd.Timestamp(expected) not in closes.index
+                 or pd.isna(closes.at[pd.Timestamp(expected), symbol])]
+        if not stale:
+            break
+        print(f"Retrying {len(stale)} S&P 500 constituents for {expected}", flush=True)
+        recent = completed_prices(download_sp500_closes(stale, period="1y"), expected)
+        closes = recent.combine_first(closes).sort_index()
+    if len(symbols) < 450:
+        raise RuntimeError(f"Incomplete S&P 500 constituent universe: {len(symbols)}")
+    for window in (50, 200):
+        points = breadth_points_from_closes(closes, window)
+        if (not points or points[-1]["date"] != expected
+                or points[-1]["sample"] < len(symbols) * 0.90):
+            raise RuntimeError(f"S&P 500 MA{window} breadth is stale or incomplete for {expected}; refusing publication")
+        print(f"S&P 500 MA{window}: {points[-1]}", flush=True)
     source = "Current S&P 500 constituents via Wikipedia and Yahoo Finance"
     return [
         series_payload(
@@ -829,7 +853,11 @@ def main():
     series = []
     cnn_series, cnn_snapshot = fetch_cnn_fear_greed()
     series.extend(cnn_series)
-    series.extend(fetch_yahoo_series())
+    yahoo_series = fetch_yahoo_series()
+    sp500 = next(item for item in yahoo_series if item["key"] == "us500")
+    if not sp500.get("latest") or sp500["latest"]["date"] != expected_market_date():
+        raise RuntimeError("S&P 500 index is stale; refusing to publish outdated Insight data")
+    series.extend(yahoo_series)
     series.extend(compute_sp500_breadth())
     series.extend(fetch_fred_series())
     snapshots = [fetch_sp500_pe_snapshot()]
