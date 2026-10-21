@@ -7,14 +7,14 @@
   "flag": "🇹🇭",
   "sector": "Asia",
   "unit": "Index Points",
-  "updated": "2026-10-20",
+  "updated": "2026-10-21",
   "prices": [
     {
       "time": "2026-10-20",
       "open": 1571.15,
       "high": 1574.97,
-      "low": 1555.52,
-      "close": 1557.22,
+      "low": 1554.9399,
+      "close": 1554.9399,
       "volume": 0
     }
   ]
