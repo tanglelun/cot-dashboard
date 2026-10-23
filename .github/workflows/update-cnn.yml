@@ -39,9 +39,17 @@ jobs:
 
       - name: Publish after syncing concurrent commits
         if: steps.commit.outputs.changes_detected == 'true'
-        run: |
-          for attempt in 1 2 3; do
-            git pull --rebase --autostash origin main
-            if git push origin HEAD:main; then exit 0; fi
-          done
-          exit 1
+        run: bash publish_data.sh
+
+      - name: Preserve generated commit if publishing fails
+        if: failure() && steps.commit.outputs.changes_detected == 'true'
+        env:
+          DATA_COMMIT: ${{ steps.commit.outputs.commit_hash }}
+        run: git bundle create data-update.bundle "$DATA_COMMIT^..$DATA_COMMIT"
+      - name: Upload recoverable data commit
+        if: failure() && steps.commit.outputs.changes_detected == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: data-update-${{ github.run_id }}
+          path: data-update.bundle
+          retention-days: 7

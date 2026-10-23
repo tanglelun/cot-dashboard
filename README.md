@@ -111,3 +111,8 @@ session (including holidays). Up-to-date recovery runs skip data downloads.
 Manual runs and both regular daily runs still refresh unconditionally. GitHub
 scheduled execution is best-effort and may be delayed; these checks provide more
 recovery opportunities, not a guaranteed wall-clock deadline.
+
+Publishing uses `publish_data.sh`, which supplies the bot identity explicitly for
+rebases and autostashes on fresh runners. Failed publishes retain the generated
+commit as a downloadable Git bundle artifact for seven days, so data can be
+recovered without downloading every market again.
