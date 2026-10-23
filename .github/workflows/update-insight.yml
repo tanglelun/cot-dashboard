@@ -6,12 +6,13 @@ on:
     # After the US close, then a second pass after provider delays.
     - cron: "45 22 * * 1-5"
     - cron: "45 4 * * 2-6"
+    - cron: "26 * * * *"
 
 permissions:
   contents: write
 
 concurrency:
-  group: update-market
+  group: update-insight-data
   cancel-in-progress: false
 
 jobs:
@@ -29,9 +30,16 @@ jobs:
           cache: pip
       - name: Install dependencies
         run: pip install -r requirements.txt
+      - name: Check whether hourly recovery is needed
+        id: freshness
+        env:
+          RECOVERY_ONLY: ${{ github.event_name == 'schedule' && github.event.schedule == '26 * * * *' }}
+        run: python check_update_needed.py insight
       - name: Refresh Insight independently of the full stock universe
+        if: steps.freshness.outputs.needed == 'true'
         run: python -u update_market_pulse.py
-      - uses: stefanzweifel/git-auto-commit-action@v7
+      - if: steps.freshness.outputs.needed == 'true'
+        uses: stefanzweifel/git-auto-commit-action@v7
         id: commit
         with:
           skip_push: true

@@ -10,7 +10,7 @@ permissions:
 
 # Both workflows write the Market Pulse JSON files. Serialize their checkouts.
 concurrency:
-  group: update-market
+  group: update-insight-data
   cancel-in-progress: false
 
 jobs:

@@ -9,9 +9,11 @@ on:
     # Retry after the provider has had more time to publish the daily close.
     # 04:30 UTC = 12:30 Beijing time, Tuesday through Saturday.
     - cron: "30 4 * * 2-6"
+    # Recover delayed source data without waiting until the next daily run.
+    - cron: "11 * * * *"
 
 concurrency:
-  group: update-market
+  group: update-market-data
   cancel-in-progress: false
 
 permissions:
@@ -38,17 +40,26 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Check whether hourly recovery is needed
+        id: freshness
+        env:
+          RECOVERY_ONLY: ${{ github.event_name == 'schedule' && github.event.schedule == '11 * * * *' }}
+        run: python check_update_needed.py market
+
       - name: Update Market page
+        if: steps.freshness.outputs.needed == 'true'
         id: stocks
         continue-on-error: true
         run: python -u update_market.py
 
       - name: Update Commodities data
+        if: steps.freshness.outputs.needed == 'true'
         id: commodities
         continue-on-error: true
         run: python update_commodities.py
 
       - name: Update Indexes data
+        if: steps.freshness.outputs.needed == 'true'
         id: indexes
         continue-on-error: true
         run: python update_indexes.py

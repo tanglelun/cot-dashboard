@@ -82,7 +82,7 @@ CNN Fear & Greed also refreshes independently every two hours through
 `.github/workflows/update-cnn.yml`. This lightweight job uses the current CNN
 endpoint, preserves the official source timestamp and existing history, and
 does not advance timestamps for other Insight indicators. Failed or older
-responses preserve the saved data and fail the job. Both market workflows share
+responses preserve the saved data and fail the job. The CNN and full Insight workflows share
 a concurrency group to prevent simultaneous writes to the same JSON files.
 
 The full Insight page (S&P 500 index/breadth, liquidity, and valuation) refreshes
@@ -91,7 +91,8 @@ UTC Tuesday–Saturday. It does not depend on the all-stock update succeeding.
 S&P 500 index and MA50/MA200 breadth must reach the last completed session;
 breadth requires at least 90% of the constituent universe with valid averages.
 Stale constituents are retried with one year of adjusted prices, keeping history.
-The full Insight, CNN-only, and market workflows share their write lock.
+The full Insight and CNN-only workflows share their write lock; market data has
+a separate lock because it writes different files.
 
 Stock, commodity, and index steps publish successful updates even if another
 source fails. The overall run still fails visibly when any source fails; crossover
@@ -102,3 +103,11 @@ Top-stock charts keep full-history downloads. Other charts merge the validated
 one-year universe download into their saved candles, retaining older history up
 to `MARKET_CHART_MAX_ROWS`. The previous default refreshed only top-stock charts,
 leaving other saved chart files unchanged even when their summary prices updated.
+
+Hourly recovery checks supplement the regular daily schedules: market at minute
+11 and Insight at minute 26 UTC. Recovery only downloads when the published
+stock/chart, benchmark, or breadth data is behind the latest completed US market
+session (including holidays). Up-to-date recovery runs skip data downloads.
+Manual runs and both regular daily runs still refresh unconditionally. GitHub
+scheduled execution is best-effort and may be delayed; these checks provide more
+recovery opportunities, not a guaranteed wall-clock deadline.
