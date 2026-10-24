@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-23 20:38 UTC",
+  "updated": "2026-10-24 09:10 UTC",
   "stocks": [
     {
       "symbol": "TNGX",
@@ -184,21 +184,10 @@
   ],
   "commodities": [
     {
-      "symbol": "HO=F",
-      "name": "Heating Oil",
-      "price": 4.81,
-      "change_pct": -2.55,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-23",
-      "sector": "Energy"
-    },
-    {
       "symbol": "SB=F",
       "name": "Sugar",
-      "price": 20.26,
-      "change_pct": 0.65,
+      "price": 20.24,
+      "change_pct": 0.55,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "green",
@@ -208,8 +197,8 @@
     {
       "symbol": "CC=F",
       "name": "Cocoa",
-      "price": 5560.0,
-      "change_pct": -0.39,
+      "price": 5592.0,
+      "change_pct": 0.18,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
