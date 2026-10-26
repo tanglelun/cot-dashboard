@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-24 09:09 UTC",
+  "updated": "2026-10-26 20:03 UTC",
   "source": "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies",
   "items": [
     {
@@ -1519,20 +1519,20 @@
       "name": "PulteGroup"
     },
     {
-      "symbol": "PWR",
-      "name": "Quanta Services"
+      "symbol": "Q",
+      "name": "Qnity Electronics"
     },
     {
       "symbol": "QCOM",
       "name": "Qualcomm"
     },
     {
-      "symbol": "DGX",
-      "name": "Quest Diagnostics"
+      "symbol": "PWR",
+      "name": "Quanta Services"
     },
     {
-      "symbol": "Q",
-      "name": "Qnity Electronics"
+      "symbol": "DGX",
+      "name": "Quest Diagnostics"
     },
     {
       "symbol": "RL",
@@ -1545,10 +1545,6 @@
     {
       "symbol": "RDDT",
       "name": "Reddit"
-    },
-    {
-      "symbol": "RTX",
-      "name": "RTX Corporation"
     },
     {
       "symbol": "O",
@@ -1603,6 +1599,10 @@
       "name": "Royal Caribbean Group"
     },
     {
+      "symbol": "RTX",
+      "name": "RTX Corporation"
+    },
+    {
       "symbol": "SPGI",
       "name": "S&P Global"
     },
@@ -1644,7 +1644,7 @@
     },
     {
       "symbol": "SKYD",
-      "name": "Skydance Corporation"
+      "name": "Skydance"
     },
     {
       "symbol": "SWKS",
