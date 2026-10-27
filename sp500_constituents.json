@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-27 01:38 UTC",
+  "updated": "2026-10-27 10:04 UTC",
   "source": "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies",
   "items": [
     {
@@ -1503,12 +1503,12 @@
       "name": "Prudential Financial"
     },
     {
-      "symbol": "PEG",
-      "name": "Public Service Enterprise Group"
-    },
-    {
       "symbol": "PTC",
       "name": "PTC Inc."
+    },
+    {
+      "symbol": "PEG",
+      "name": "Public Service Enterprise Group"
     },
     {
       "symbol": "PSA",
