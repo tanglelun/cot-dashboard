@@ -1,208 +1,320 @@
 {
-  "updated": "2026-10-24 09:10 UTC",
+  "updated": "2026-10-27 00:01 UTC",
   "stocks": [
     {
-      "symbol": "TNGX",
-      "name": "Tango Therapeutics, Inc. - Common Stock",
-      "price": 23.34,
-      "change_pct": -16.43,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-23"
-    },
-    {
-      "symbol": "CRWD",
-      "name": "CrowdStrike Holdings, Inc. - Class A Common Stock",
-      "price": 257.57,
-      "change_pct": 8.25,
+      "symbol": "VSAT",
+      "name": "ViaSat, Inc. - Common Stock",
+      "price": 66.39,
+      "change_pct": 8.0,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
-      "date": "2026-10-23"
+      "date": "2026-10-26"
     },
     {
-      "symbol": "PANW",
-      "name": "Palo Alto Networks, Inc. - Common Stock",
-      "price": 380.55,
-      "change_pct": 7.22,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-23"
-    },
-    {
-      "symbol": "SLB",
-      "name": "SLB Limited Common Shares",
-      "price": 53.06,
-      "change_pct": 7.08,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-23"
-    },
-    {
-      "symbol": "DDOG",
-      "name": "Datadog, Inc. - Class A Common Stock",
-      "price": 269.65,
-      "change_pct": 4.62,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-23"
-    },
-    {
-      "symbol": "ODFL",
-      "name": "Old Dominion Freight Line, Inc. - Common Stock",
-      "price": 182.7,
-      "change_pct": -3.79,
+      "symbol": "ASPN",
+      "name": "Aspen Aerogels, Inc. Common Stock",
+      "price": 5.18,
+      "change_pct": -6.16,
       "direction": "down",
       "prev_color": "green",
       "cur_color": "red",
-      "date": "2026-10-23"
+      "date": "2026-10-26"
     },
     {
-      "symbol": "TGT",
-      "name": "Target Corporation Common Stock",
-      "price": 152.76,
-      "change_pct": -3.38,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-23"
-    },
-    {
-      "symbol": "BKNG",
-      "name": "Booking Holdings Inc. - Common Stock",
-      "price": 155.83,
-      "change_pct": -3.27,
+      "symbol": "CHTR",
+      "name": "Charter Communications, Inc. - Class A Common Stock",
+      "price": 102.18,
+      "change_pct": -5.92,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
-      "date": "2026-10-23"
+      "date": "2026-10-26"
     },
     {
-      "symbol": "ROST",
-      "name": "Ross Stores, Inc. - Common Stock",
-      "price": 229.3,
-      "change_pct": -3.11,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-23"
-    },
-    {
-      "symbol": "TTWO",
-      "name": "Take-Two Interactive Software, Inc. - Common Stock",
-      "price": 203.69,
-      "change_pct": -1.98,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-23"
-    },
-    {
-      "symbol": "JBHT",
-      "name": "J.B. Hunt Transport Services, Inc. - Common Stock",
-      "price": 226.03,
-      "change_pct": -1.98,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-10-23"
-    },
-    {
-      "symbol": "TXN",
-      "name": "Texas Instruments Incorporated - Common Stock",
-      "price": 284.69,
-      "change_pct": 1.86,
+      "symbol": "AKAM",
+      "name": "Akamai Technologies, Inc. - Common Stock",
+      "price": 98.5,
+      "change_pct": 5.31,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "green",
-      "date": "2026-10-23"
+      "date": "2026-10-26"
     },
     {
-      "symbol": "SLS",
-      "name": "SELLAS Life Sciences Group, Inc.  - Common Stock",
-      "price": 11.54,
-      "change_pct": 1.67,
+      "symbol": "FSLY",
+      "name": "Fastly, Inc. - Class A Common Stock",
+      "price": 25.61,
+      "change_pct": 4.92,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
-      "date": "2026-10-23"
+      "date": "2026-10-26"
+    },
+    {
+      "symbol": "ADI",
+      "name": "Analog Devices, Inc. - Common Stock",
+      "price": 407.93,
+      "change_pct": 4.31,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-26"
+    },
+    {
+      "symbol": "ERAS",
+      "name": "Erasca, Inc. - Common Stock",
+      "price": 14.99,
+      "change_pct": 4.17,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-26"
+    },
+    {
+      "symbol": "PYPL",
+      "name": "PayPal Holdings, Inc. - Common Stock",
+      "price": 54.99,
+      "change_pct": -3.56,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "white",
+      "date": "2026-10-26"
+    },
+    {
+      "symbol": "NTAP",
+      "name": "NetApp, Inc. - Common Stock",
+      "price": 222.08,
+      "change_pct": 3.06,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-26"
+    },
+    {
+      "symbol": "IRM",
+      "name": "Iron Mountain Incorporated (Delaware)Common Stock REIT",
+      "price": 113.08,
+      "change_pct": 2.84,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-26"
     },
     {
       "symbol": "FATE",
       "name": "Fate Therapeutics, Inc. - Common Stock",
-      "price": 2.11,
-      "change_pct": 0.96,
+      "price": 2.06,
+      "change_pct": -2.61,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-10-26"
+    },
+    {
+      "symbol": "PANW",
+      "name": "Palo Alto Networks, Inc. - Common Stock",
+      "price": 390.46,
+      "change_pct": 2.6,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "white",
+      "date": "2026-10-26"
+    },
+    {
+      "symbol": "MCHP",
+      "name": "Microchip Technology Incorporated - Common Stock",
+      "price": 75.9,
+      "change_pct": 2.5,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "green",
-      "date": "2026-10-23"
+      "date": "2026-10-26"
     },
     {
-      "symbol": "AMZN",
-      "name": "Amazon.com, Inc. - Common Stock",
-      "price": 248.0,
-      "change_pct": -0.95,
+      "symbol": "QCOM",
+      "name": "QUALCOMM Incorporated - Common Stock",
+      "price": 179.6,
+      "change_pct": 2.1,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-26"
+    },
+    {
+      "symbol": "ROST",
+      "name": "Ross Stores, Inc. - Common Stock",
+      "price": 234.11,
+      "change_pct": 2.1,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-26"
+    },
+    {
+      "symbol": "FTNT",
+      "name": "Fortinet, Inc. - Common Stock",
+      "price": 183.33,
+      "change_pct": 1.86,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-26"
+    },
+    {
+      "symbol": "SLS",
+      "name": "SELLAS Life Sciences Group, Inc.  - Common Stock",
+      "price": 11.34,
+      "change_pct": -1.73,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
-      "date": "2026-10-23"
+      "date": "2026-10-26"
+    },
+    {
+      "symbol": "STLD",
+      "name": "Steel Dynamics, Inc. - Common Stock",
+      "price": 237.55,
+      "change_pct": -1.65,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-10-26"
+    },
+    {
+      "symbol": "CRWD",
+      "name": "CrowdStrike Holdings, Inc. - Class A Common Stock",
+      "price": 261.83,
+      "change_pct": 1.65,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-26"
     },
     {
       "symbol": "MSFT",
       "name": "Microsoft Corporation - Common Stock",
-      "price": 524.51,
-      "change_pct": 0.66,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-10-23"
+      "price": 532.6,
+      "change_pct": 1.54,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-10-26"
     },
     {
-      "symbol": "CMI",
-      "name": "Cummins Inc. Common Stock",
-      "price": 517.4,
-      "change_pct": -0.41,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-10-23"
+      "symbol": "FFIV",
+      "name": "F5, Inc. - Common Stock",
+      "price": 461.6,
+      "change_pct": 1.36,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-10-26"
     },
     {
-      "symbol": "PDD",
-      "name": "PDD Holdings Inc ADR",
-      "price": 79.04,
-      "change_pct": -0.16,
+      "symbol": "AXON",
+      "name": "Axon Enterprise, Inc. - Common Stock",
+      "price": 424.77,
+      "change_pct": 1.05,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-26"
+    },
+    {
+      "symbol": "NTRS",
+      "name": "Northern Trust Corporation - Common Stock",
+      "price": 169.55,
+      "change_pct": 0.97,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-26"
+    },
+    {
+      "symbol": "INOD",
+      "name": "Innodata Inc. - Common Stock",
+      "price": 59.91,
+      "change_pct": 0.88,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-10-26"
+    },
+    {
+      "symbol": "MRNA",
+      "name": "Moderna, Inc. - Common Stock",
+      "price": 198.85,
+      "change_pct": -0.62,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
-      "date": "2026-10-23"
+      "date": "2026-10-26"
+    },
+    {
+      "symbol": "BKR",
+      "name": "Baker Hughes Company - Common Stock",
+      "price": 56.01,
+      "change_pct": 0.27,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-26"
+    },
+    {
+      "symbol": "ODFL",
+      "name": "Old Dominion Freight Line, Inc. - Common Stock",
+      "price": 182.47,
+      "change_pct": -0.13,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-26"
     }
   ],
   "commodities": [
     {
       "symbol": "SB=F",
       "name": "Sugar",
-      "price": 20.24,
-      "change_pct": 0.55,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-10-23",
+      "price": 19.1,
+      "change_pct": -5.63,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-10-26",
       "sector": "Agriculture"
     },
     {
-      "symbol": "CC=F",
-      "name": "Cocoa",
-      "price": 5592.0,
-      "change_pct": 0.18,
+      "symbol": "HO=F",
+      "name": "Heating Oil",
+      "price": 4.72,
+      "change_pct": -5.21,
       "direction": "down",
-      "prev_color": "white",
+      "prev_color": "green",
+      "cur_color": "white",
+      "date": "2026-10-26",
+      "sector": "Energy"
+    },
+    {
+      "symbol": "KC=F",
+      "name": "Coffee",
+      "price": 299.5,
+      "change_pct": -2.59,
+      "direction": "down",
+      "prev_color": "green",
       "cur_color": "red",
-      "date": "2026-10-23",
+      "date": "2026-10-26",
+      "sector": "Agriculture"
+    },
+    {
+      "symbol": "CT=F",
+      "name": "Cotton",
+      "price": 79.19,
+      "change_pct": -1.26,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-10-26",
       "sector": "Agriculture"
     }
   ]
