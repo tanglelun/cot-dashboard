@@ -1088,30 +1088,10 @@ function draw(){
     });
     ctx.stroke();
   }else{
-    // K-line: lifeLine coloring when indicator on, else standard
-    // Pre-compute EMA5 for cross detection
-    let ema5 = null;
-    const k5 = 2 / 6;
+    // Candle direction always follows open/close; indicators use separate overlays.
     candles.forEach((c, i) => {
       const x = xFor(i);
-      ema5 = ema5 === null ? Number(c.close) : Number(c.close) * k5 + ema5 * (1 - k5);
-      let color;
-      if(state.showTongDaXin && c.lifeLine != null && c.ma20 != null){
-        const cl = Number(c.close), ma20 = Number(c.ma20), ll = Number(c.lifeLine);
-        const aboveMA20 = cl > ma20, belowMA20 = cl < ma20;
-        const ema5AboveLL = ema5 > ll, ema5BelowLL = ema5 < ll;
-        if((aboveMA20 && ema5BelowLL) || (belowMA20 && ema5AboveLL)){
-          color = '#ffffff';
-        }else if(cl > ll) color = '#00d109';
-        else if(cl < ll) color = '#ff4d00';
-        else color = '#ffffff';
-      }else if(state.showTongDaXin && c.lifeLine != null){
-        if(c.close > c.lifeLine) color = '#00d109';
-        else if(c.close < c.lifeLine) color = '#ff4d00';
-        else color = '#ffffff';
-      }else{
-        color = c.close >= c.open ? '#00d109' : '#ff4d00';
-      }
+      const color = c.close >= c.open ? '#00d109' : '#ff4d00';
       const yOpen = yFor(c.open), yClose = yFor(c.close), yHigh = yFor(c.high), yLow = yFor(c.low);
       const bodyTop = Math.min(yOpen, yClose);
       const bodyHeight = Math.max(1, Math.abs(yOpen - yClose));
