@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-27 01:44 UTC",
+  "updated": "2026-10-27 10:10 UTC",
   "stocks": [
     {
       "symbol": "VSAT",
@@ -172,16 +172,6 @@
       "date": "2026-10-26"
     },
     {
-      "symbol": "CRWD",
-      "name": "CrowdStrike Holdings, Inc. - Class A Common Stock",
-      "price": 261.83,
-      "change_pct": 1.65,
-      "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-10-26"
-    },
-    {
       "symbol": "STLD",
       "name": "Steel Dynamics, Inc. - Common Stock",
       "price": 237.55,
@@ -189,6 +179,16 @@
       "direction": "down",
       "prev_color": "green",
       "cur_color": "red",
+      "date": "2026-10-26"
+    },
+    {
+      "symbol": "CRWD",
+      "name": "CrowdStrike Holdings, Inc. - Class A Common Stock",
+      "price": 261.83,
+      "change_pct": 1.65,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
       "date": "2026-10-26"
     },
     {
@@ -274,37 +274,26 @@
   ],
   "commodities": [
     {
-      "symbol": "SB=F",
-      "name": "Sugar",
-      "price": 19.1,
-      "change_pct": -5.63,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-26",
-      "sector": "Agriculture"
-    },
-    {
       "symbol": "HO=F",
       "name": "Heating Oil",
-      "price": 4.71,
-      "change_pct": -5.55,
+      "price": 4.72,
+      "change_pct": -3.97,
       "direction": "down",
       "prev_color": "green",
       "cur_color": "white",
-      "date": "2026-10-26",
+      "date": "2026-10-27",
       "sector": "Energy"
     },
     {
-      "symbol": "KC=F",
-      "name": "Coffee",
-      "price": 299.5,
-      "change_pct": -2.59,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-26",
-      "sector": "Agriculture"
+      "symbol": "HG=F",
+      "name": "Copper",
+      "price": 6.62,
+      "change_pct": 1.72,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-27",
+      "sector": "Metals"
     },
     {
       "symbol": "BOAT",
@@ -318,25 +307,14 @@
       "sector": "Indexes"
     },
     {
-      "symbol": "HG=F",
-      "name": "Copper",
-      "price": 6.58,
-      "change_pct": 1.54,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-10-26",
-      "sector": "Metals"
-    },
-    {
-      "symbol": "CT=F",
-      "name": "Cotton",
-      "price": 79.19,
-      "change_pct": -1.26,
+      "symbol": "KC=F",
+      "name": "Coffee",
+      "price": 299.25,
+      "change_pct": -0.56,
       "direction": "down",
       "prev_color": "green",
       "cur_color": "red",
-      "date": "2026-10-26",
+      "date": "2026-10-27",
       "sector": "Agriculture"
     }
   ]
