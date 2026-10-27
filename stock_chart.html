@@ -324,7 +324,7 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
             <label class="indicator-option"><span>Volume</span><input type="checkbox" data-indicator="showVolume" checked></label>
             <label class="indicator-option"><span>RSI (14)</span><input type="checkbox" data-indicator="showRsi"></label>
             <label class="indicator-option"><span>MACD</span><input type="checkbox" data-indicator="showMacd" checked></label>
-            <label class="indicator-option"><span title="Top strip: green = bullish, red = bearish, white = transition">TD Sequential + LifeLine · 三色状态带</span><input type="checkbox" data-indicator="showTongDaXin"></label>
+            <label class="indicator-option"><span title="Green: bullish; red: bearish; white: transition. Hollow: close above open; filled: close below open.">TD Sequential + LifeLine</span><input type="checkbox" data-indicator="showTongDaXin"></label>
           </div>
         </div>
         <div class="ma-group" id="maGroup">
@@ -926,6 +926,16 @@ function plotWidthFor(width){
   return Math.max(1, width - pad.left - pad.right);
 }
 
+function candleAppearance(candle, trendEnabled){
+  const up = Number(candle.close) > Number(candle.open);
+  const colors = { bullish: '#00d109', bearish: '#ff4d00', transition: '#ffffff' };
+  return {
+    color: trendEnabled ? (colors[candle.lifeState] || colors.transition) :
+      Number(candle.close) >= Number(candle.open) ? '#00d109' : '#ff4d00',
+    hollow: trendEnabled && up
+  };
+}
+
 function drawTongDaXin(candles, xFor, yFor, bodyWidth, wickWidth, chartTop, priceBottom){
   // ── TD Sequential with BACKSET: show count 1-9 on bars ──
   ctx.font='bold 11px Inter,Arial';ctx.textAlign='center';
@@ -1092,17 +1102,25 @@ function draw(){
     });
     ctx.stroke();
   }else{
-    // Candle direction always follows open/close; indicators use separate overlays.
+    // Trend color and daily open/close direction encode separate information.
     candles.forEach((c, i) => {
       const x = xFor(i);
-      const color = c.close >= c.open ? '#00d109' : '#ff4d00';
+      const { color, hollow } = candleAppearance(c, state.showTongDaXin);
       const yOpen = yFor(c.open), yClose = yFor(c.close), yHigh = yFor(c.high), yLow = yFor(c.low);
       const bodyTop = Math.min(yOpen, yClose);
       const bodyHeight = Math.max(1, Math.abs(yOpen - yClose));
-      ctx.fillStyle = '#5e686f';
-      ctx.fillRect(x - wickWidth / 2, yHigh, wickWidth, Math.max(1, yLow - yHigh));
+      // Split the wick so it does not run through a hollow candle's interior.
+      ctx.fillStyle = state.showTongDaXin ? color : '#5e686f';
+      ctx.fillRect(x - wickWidth / 2, yHigh, wickWidth, Math.max(0, bodyTop - yHigh));
+      ctx.fillRect(x - wickWidth / 2, bodyTop + bodyHeight, wickWidth, Math.max(0, yLow - bodyTop - bodyHeight));
       ctx.fillStyle = color;
-      ctx.fillRect(x - bodyWidth / 2, bodyTop, bodyWidth, bodyHeight);
+      if(hollow && bodyHeight > 1){
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x - bodyWidth / 2 + 0.5, bodyTop + 0.5, bodyWidth - 1, bodyHeight - 1);
+      }else{
+        ctx.fillRect(x - bodyWidth / 2, bodyTop, bodyWidth, bodyHeight);
+      }
     });
     if(state.showTongDaXin) drawTongDaXin(candles, xFor, yFor, bodyWidth, wickWidth, top, priceBottom);
     if(state.showMa) MOVING_AVERAGES.forEach(ma => drawMovingAverage(ma, candles, xFor, yFor));
@@ -1115,16 +1133,6 @@ function draw(){
       drawIndicatorLine(candles, 'bbMiddle', xFor, yFor, '#7b8794', 0.45, 1);
       drawIndicatorLine(candles, 'bbLower', xFor, yFor, '#00bcd4', 0.65, 1.2);
     }
-  }
-  if(state.showTongDaXin){
-    // A separate strip preserves trend regimes without recoloring price candles.
-    const colors = { bullish: '#00d109', bearish: '#ff4d00', transition: '#ffffff' };
-    ctx.save();
-    candles.forEach((c, i) => {
-      ctx.fillStyle = colors[c.lifeState] || colors.transition;
-      ctx.fillRect(left + i * step, 4, step + 0.5, 6);
-    });
-    ctx.restore();
   }
   if(state.showVolume) drawVolumePanel(candles, xFor, step, volumeTop, volumeBottom, maxVolume, height);
   if(state.showRsi) drawRsiPanel(candles, xFor, rsiTop, rsiBottom, width);
