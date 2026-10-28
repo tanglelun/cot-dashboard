@@ -95,6 +95,7 @@ body{font-family:Inter,Arial,sans-serif;background:var(--tv-bg);color:var(--tv-t
 .stock-list::-webkit-scrollbar-track{background:transparent}
 .stock-list::-webkit-scrollbar-thumb{background:#3a5063;border-radius:999px;border:0}
 .stock-list::-webkit-scrollbar-thumb:hover{background:#52687a}
+.stock-list-item{display:flex;align-items:center;gap:2px}.stock-list-item .stock-row{flex:1;min-width:0;margin-bottom:0}.favorite-btn{border:1px solid var(--tv-border);border-radius:4px;background:transparent;color:var(--tv-muted);cursor:pointer;min-width:32px;min-height:34px;font-size:18px}.favorite-btn[aria-pressed="true"]{color:#ffcf33}.favorite-btn:focus-visible{outline:2px solid var(--tv-blue)}.stock-list-item{margin-bottom:5px}.favorites-note{font-size:11px;color:var(--tv-muted);line-height:1.5}.favorites-view{font-size:12px;padding:6px}.favorites-empty{padding:16px 8px;color:var(--tv-muted);font-size:13px;line-height:1.6}
 .stock-row{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;min-height:34px;border:none;background:transparent;color:#d7dae2;text-align:left;padding:0 9px;cursor:pointer;border-radius:6px;margin:0 0 5px}
 .stock-row:hover{background:#0d171f;color:#fff}
 .stock-row.active.up{background:rgba(0,209,9,.16);box-shadow:none}
@@ -174,7 +175,7 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
   .sidebar-collapsed .stock-panel-title,.sidebar-collapsed .stock-panel-body{display:flex}
   .sidebar-collapsed .stock-panel{align-items:stretch}
   .stock-panel-body{display:flex}
-  .mobile-switcher{display:none}
+  .mobile-switcher{display:flex;gap:8px;padding:8px 12px;align-items:center}
   .mobile-switcher .select{flex:1;min-width:132px;width:auto}
   h1{font-size:19px}
   .last-price{font-size:18px}
@@ -231,6 +232,8 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
         </span>
       </div>
       <div class="stock-panel-body">
+        <button class="favorite-btn favorites-view" id="favoritesView" type="button" aria-pressed="false">☆ 我的收藏 (0)</button>
+        <div class="favorites-note" id="favoritesNotice" role="status">收藏保存在当前浏览器</div>
         <details class="filter-drawer" id="filterDrawer">
           <summary>
             <span class="filter-summary">
@@ -281,7 +284,7 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
 
     <section class="main-panel">
       <div class="mobile-switcher">
-        <button class="btn" id="mobileListToggle" type="button">Stocks</button>
+        <button class="btn" id="mobileListToggle" type="button">Stocks / 收藏</button>
         <select class="select" id="mobileSortSelect" aria-label="Mobile stock sort">
           <option value="gain">Gain</option>
           <option value="rank">Rank</option>
@@ -294,7 +297,7 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
   <div class="topbar">
     <div class="identity">
       <div class="symbol-line">
-        <h1 id="symbol">---</h1>
+        <h1 id="symbol">---</h1><button class="favorite-btn" id="favoriteCurrent" type="button" aria-label="收藏当前股票" aria-pressed="false">☆</button>
         <span class="badge" id="sector">---</span>
         <span class="badge" id="mcap">---</span>
       </div>
@@ -352,6 +355,42 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
 const params = new URLSearchParams(window.location.search);
 let currentSymbol = (params.get('symbol') || '').trim().toUpperCase();
 let fallbackName = params.get('name') || currentSymbol;
+const FAVORITES_KEY = 'net-data.stock-favorites.v1';
+function readFavorites(){
+  try{
+    const values = JSON.parse(localStorage.getItem(FAVORITES_KEY) || '[]');
+    return new Set(Array.isArray(values) ? values.filter(s => typeof s === 'string' && /^[A-Z0-9.^=\-]{1,32}$/.test(s)) : []);
+  }catch(error){ return new Set(); }
+}
+let favoriteSymbols = readFavorites();
+function syncFavoriteControls(){
+  const button = document.getElementById('favoriteCurrent');
+  const saved = favoriteSymbols.has(currentSymbol);
+  button.textContent = saved ? '★' : '☆';
+  button.setAttribute('aria-pressed', String(saved));
+  button.setAttribute('aria-label', (saved ? '取消收藏 ' : '收藏 ') + currentSymbol);
+  button.title = button.getAttribute('aria-label');
+  button.disabled = !currentSymbol;
+  const view = document.getElementById('favoritesView');
+  view.textContent = '★ 我的收藏 (' + favoriteSymbols.size + ')';
+  view.setAttribute('aria-pressed', String(state.universe === 'favorites'));
+}
+function toggleFavorite(symbol){
+  if(!symbol || !/^[A-Z0-9.^=\-]{1,32}$/.test(symbol)) return;
+  // Read the latest saved set so another tab's changes are preserved.
+  const next = readFavorites();
+  if(next.has(symbol)) next.delete(symbol); else next.add(symbol);
+  try{
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify([...next]));
+    favoriteSymbols = next;
+    document.getElementById('favoritesNotice').textContent = '收藏保存在当前浏览器';
+    const scroll = stockListEl.scrollTop;
+    renderStockList();
+    stockListEl.scrollTop = scroll;
+  }catch(error){
+    document.getElementById('favoritesNotice').textContent = '浏览器无法保存收藏，请允许本地存储后重试。';
+  }
+}
 const canvas = document.getElementById('chart');
 const ctx = canvas.getContext('2d');
 const statusEl = document.getElementById('status');
@@ -476,6 +515,7 @@ function setRange(range){
 }
 
 function renderHeader(data){
+  syncFavoriteControls();
   const candles = data.prices;
   document.getElementById('symbol').textContent = data.symbol;
   document.getElementById('name').textContent = data.name || fallbackName || data.symbol;
@@ -486,6 +526,7 @@ function renderHeader(data){
 }
 
 function renderHeaderFromRow(row){
+  syncFavoriteControls();
   if(!row) return;
   const symbol = rowSymbol(row);
   const name = rowName(row);
@@ -1617,12 +1658,17 @@ function groupEntries(){
   const groups = state.marketIndex && state.marketIndex.groups ? state.marketIndex.groups : {};
   const entries = Object.keys(groups).map(key => ({ key, label: groups[key].label || UNIVERSE_LABELS[key] || key }));
   if(entries.length) entries.push({ key:'all', label:'All Stocks' });
-  return entries.length ? entries : [{ key:'all', label:'All Stocks' }];
+  return [...(entries.length ? entries : [{ key:'all', label:'All Stocks' }]), {key:'favorites', label:'我的收藏'}];
 }
 
 function getBaseRows(){
   const index = state.marketIndex || {};
   const groups = index.groups || {};
+  if(state.universe === 'favorites'){
+    const rows = [...(index.stocks || []), ...Object.values(groups).flatMap(g => g.stocks || [])];
+    const bySymbol = new Map(rows.map(row => [rowSymbol(row), row]));
+    return [...favoriteSymbols].map(symbol => bySymbol.get(symbol) || {symbol, name:symbol, unavailable:true});
+  }
   if(state.universe !== 'all' && groups[state.universe] && groups[state.universe].stocks){
     return groups[state.universe].stocks;
   }
@@ -1682,6 +1728,7 @@ function syncControls(){
 
 function renderStockList(){
   syncControls();
+  syncFavoriteControls();
   state.stockRows = sortedRows();
   stockRowDataBySymbol.clear();
   stockButtonBySymbol.clear();
@@ -1692,12 +1739,12 @@ function renderStockList(){
     const active = symbol === currentSymbol ? ' active' : '';
     const metric = rowMetric(row);
     const valueClass = metric >= 0 ? ' up' : ' down';
-    return '<button class="stock-row'+active+valueClass+'" data-symbol="'+symbol+'" type="button">' +
+    return '<div class="stock-list-item"><button class="stock-row'+active+valueClass+'" data-symbol="'+symbol+'" type="button">' +
       '<span class="stock-rank">'+(index + 1)+'</span>' +
       '<span class="stock-main"><span class="stock-symbol">'+symbol+'</span></span>' +
-      '<span class="stock-value'+valueClass+'">'+fmtPct(metric)+'</span>' +
-      '</button>';
-  }).join('');
+      '<span class="stock-value'+valueClass+'">'+(row.unavailable ? '—' : fmtPct(metric))+'</span>' +
+      '</button><button class="favorite-btn" type="button" data-favorite="'+symbol+'" aria-label="'+(favoriteSymbols.has(symbol) ? '取消收藏 ' : '收藏 ')+symbol+'" aria-pressed="'+favoriteSymbols.has(symbol)+'">'+(favoriteSymbols.has(symbol) ? '★' : '☆')+'</button></div>';
+  }).join('') || '<div class="favorites-empty">还没有收藏。点击股票旁的 ☆，即可加入这里。</div>';
   stockListEl.querySelectorAll('.stock-row[data-symbol]').forEach(button => {
     stockButtonBySymbol.set(button.dataset.symbol, button);
   });
@@ -1774,6 +1821,14 @@ function setupKeyboardStockSwitching(){
 }
 
 function setupStockControls(){
+  document.getElementById('favoriteCurrent').addEventListener('click', () => toggleFavorite(currentSymbol));
+  document.getElementById('favoritesView').addEventListener('click', () => {
+    state.universe = state.universe === 'favorites' ? 'all' : 'favorites';
+    renderStockList(); updateUrl(currentRow());
+  });
+  window.addEventListener('storage', event => {
+    if(event.key === FAVORITES_KEY || event.key === null){ favoriteSymbols = readFavorites(); renderStockList(); }
+  });
   document.getElementById('panelToggle').addEventListener('click', () => {
     if(window.matchMedia('(max-width: 768px)').matches){
       stockPanel.classList.toggle('open');
@@ -1792,6 +1847,8 @@ function setupStockControls(){
     switchStock(button.dataset.symbol);
   });
   stockListEl.addEventListener('click', event => {
+    const favorite = event.target.closest('[data-favorite]');
+    if(favorite){ toggleFavorite(favorite.dataset.favorite); return; }
     const button = event.target.closest('.stock-row[data-symbol]');
     if(!button) return;
     switchStock(button.dataset.symbol);
