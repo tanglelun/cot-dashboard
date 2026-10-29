@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-28 21:19 UTC",
+  "updated": "2026-10-29 02:05 UTC",
   "stocks": [
     {
       "symbol": "FFIV",
@@ -132,22 +132,22 @@
       "date": "2026-10-28"
     },
     {
-      "symbol": "RXO",
-      "name": "RXO, Inc. Common Stock",
-      "price": 27.6,
-      "change_pct": -5.15,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-28"
-    },
-    {
       "symbol": "CORZ",
       "name": "Core Scientific, Inc. - Common Stock",
       "price": 15.0,
       "change_pct": 5.15,
       "direction": "up",
       "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-10-28"
+    },
+    {
+      "symbol": "RXO",
+      "name": "RXO, Inc. Common Stock",
+      "price": 27.6,
+      "change_pct": -5.15,
+      "direction": "down",
+      "prev_color": "green",
       "cur_color": "white",
       "date": "2026-10-28"
     },
@@ -669,7 +669,7 @@
       "symbol": "HO=F",
       "name": "Heating Oil",
       "price": 4.64,
-      "change_pct": -2.91,
+      "change_pct": -2.88,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
@@ -688,17 +688,6 @@
       "sector": "Agriculture"
     },
     {
-      "symbol": "HG=F",
-      "name": "Copper",
-      "price": 6.68,
-      "change_pct": 0.91,
-      "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-10-28",
-      "sector": "Metals"
-    },
-    {
       "symbol": "BOAT",
       "name": "World Container Index",
       "price": 52.5,
@@ -708,6 +697,17 @@
       "cur_color": "green",
       "date": "2026-10-28",
       "sector": "Indexes"
+    },
+    {
+      "symbol": "HG=F",
+      "name": "Copper",
+      "price": 6.66,
+      "change_pct": 0.61,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-10-28",
+      "sector": "Metals"
     }
   ]
 }

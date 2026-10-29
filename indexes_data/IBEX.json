@@ -7,7 +7,7 @@
   "flag": "🇪🇸",
   "sector": "Major",
   "unit": "Index Points",
-  "updated": "2026-10-28",
+  "updated": "2026-10-29",
   "prices": [
     {
       "time": "1993-07-12",
@@ -67519,7 +67519,7 @@
       "high": 19097.5996,
       "low": 18849.3008,
       "close": 18883.5,
-      "volume": 107858866
+      "volume": 0
     }
   ]
 }
