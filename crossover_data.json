@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-29 20:28 UTC",
+  "updated": "2026-10-30 02:17 UTC",
   "stocks": [
     {
       "symbol": "ALNY",
@@ -282,16 +282,6 @@
       "date": "2026-10-29"
     },
     {
-      "symbol": "NTAP",
-      "name": "NetApp, Inc. - Common Stock",
-      "price": 218.42,
-      "change_pct": -2.34,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-10-29"
-    },
-    {
       "symbol": "CNC",
       "name": "Centene Corporation Common Stock",
       "price": 68.62,
@@ -299,6 +289,16 @@
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
+      "date": "2026-10-29"
+    },
+    {
+      "symbol": "NTAP",
+      "name": "NetApp, Inc. - Common Stock",
+      "price": 218.42,
+      "change_pct": -2.34,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "white",
       "date": "2026-10-29"
     },
     {
@@ -362,16 +362,6 @@
       "date": "2026-10-29"
     },
     {
-      "symbol": "DIOD",
-      "name": "Diodes Incorporated - Common Stock",
-      "price": 87.82,
-      "change_pct": -1.66,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-29"
-    },
-    {
       "symbol": "RDW",
       "name": "Redwire Corporation Common Stock",
       "price": 9.16,
@@ -379,6 +369,16 @@
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
+      "date": "2026-10-29"
+    },
+    {
+      "symbol": "DIOD",
+      "name": "Diodes Incorporated - Common Stock",
+      "price": 87.82,
+      "change_pct": -1.66,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
       "date": "2026-10-29"
     },
     {
@@ -592,16 +592,6 @@
       "date": "2026-10-29"
     },
     {
-      "symbol": "ADP",
-      "name": "Automatic Data Processing, Inc. - Common Stock",
-      "price": 286.08,
-      "change_pct": 0.25,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-10-29"
-    },
-    {
       "symbol": "WDC",
       "name": "Western Digital Corporation - Common Stock",
       "price": 395.41,
@@ -609,6 +599,16 @@
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
+      "date": "2026-10-29"
+    },
+    {
+      "symbol": "ADP",
+      "name": "Automatic Data Processing, Inc. - Common Stock",
+      "price": 286.08,
+      "change_pct": 0.25,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
       "date": "2026-10-29"
     },
     {
@@ -657,8 +657,8 @@
     {
       "symbol": "MES=F",
       "name": "S&P 500 Micro",
-      "price": 7716.5,
-      "change_pct": -0.86,
+      "price": 7668.5,
+      "change_pct": -1.47,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
@@ -679,8 +679,8 @@
     {
       "symbol": "FAN",
       "name": "Wind Energy Index",
-      "price": 22.12,
-      "change_pct": 0.36,
+      "price": 22.13,
+      "change_pct": 0.41,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",

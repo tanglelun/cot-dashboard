@@ -7,7 +7,7 @@
   "flag": "🇧🇪",
   "sector": "Europe",
   "unit": "Index Points",
-  "updated": "2026-10-29",
+  "updated": "2026-10-30",
   "prices": [
     {
       "time": "1991-04-09",
@@ -72255,7 +72255,7 @@
       "high": 5879.8599,
       "low": 5790.4902,
       "close": 5840.2598,
-      "volume": 0
+      "volume": 4838000
     }
   ]
 }
