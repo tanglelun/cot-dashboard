@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-31 02:02 UTC",
+  "updated": "2026-10-31 10:38 UTC",
   "stocks": [
     {
       "symbol": "TWST",
@@ -554,32 +554,43 @@
   ],
   "commodities": [
     {
+      "symbol": "RB=F",
+      "name": "RBOB Gasoline",
+      "price": 3.31,
+      "change_pct": 3.99,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-10-30",
+      "sector": "Energy"
+    },
+    {
       "symbol": "GF=F",
       "name": "Feeder Cattle",
-      "price": 331.43,
-      "change_pct": -5.6,
+      "price": 337.77,
+      "change_pct": -3.8,
       "direction": "down",
       "prev_color": "green",
-      "cur_color": "red",
+      "cur_color": "white",
       "date": "2026-10-30",
       "sector": "Livestock"
     },
     {
-      "symbol": "LE=F",
-      "name": "Live Cattle",
-      "price": 220.78,
-      "change_pct": -2.86,
+      "symbol": "HG=F",
+      "name": "Copper",
+      "price": 6.46,
+      "change_pct": -1.86,
       "direction": "down",
       "prev_color": "green",
       "cur_color": "red",
       "date": "2026-10-30",
-      "sector": "Livestock"
+      "sector": "Metals"
     },
     {
       "symbol": "NG=F",
       "name": "Natural Gas",
-      "price": 2.88,
-      "change_pct": -2.34,
+      "price": 2.9,
+      "change_pct": -1.83,
       "direction": "down",
       "prev_color": "green",
       "cur_color": "red",
@@ -598,15 +609,15 @@
       "sector": "Indexes"
     },
     {
-      "symbol": "HG=F",
-      "name": "Copper",
-      "price": 6.51,
-      "change_pct": -1.09,
+      "symbol": "LE=F",
+      "name": "Live Cattle",
+      "price": 224.0,
+      "change_pct": -1.44,
       "direction": "down",
       "prev_color": "green",
-      "cur_color": "red",
+      "cur_color": "white",
       "date": "2026-10-30",
-      "sector": "Metals"
+      "sector": "Livestock"
     }
   ]
 }
