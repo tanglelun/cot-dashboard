@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-02 23:40 UTC",
+  "updated": "2026-11-03 03:47 UTC",
   "stocks": [
     {
       "symbol": "TWST",
@@ -426,8 +426,8 @@
     {
       "symbol": "CL=F",
       "name": "Crude Oil WTI",
-      "price": 96.4,
-      "change_pct": -7.41,
+      "price": 96.65,
+      "change_pct": -7.17,
       "direction": "down",
       "prev_color": "green",
       "cur_color": "white",
