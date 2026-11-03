@@ -1,515 +1,409 @@
 {
-  "updated": "2026-11-03 12:22 UTC",
+  "updated": "2026-11-03 21:15 UTC",
   "stocks": [
     {
-      "symbol": "TWST",
-      "name": "Twist Bioscience Corporation - Common Stock",
-      "price": 129.04,
-      "change_pct": -15.54,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "KOS",
-      "name": "Kosmos Energy Ltd. Common Shares (DE)",
-      "price": 2.47,
-      "change_pct": -13.33,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "WTI",
-      "name": "W&T Offshore, Inc. Common Stock",
-      "price": 3.59,
-      "change_pct": -11.36,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "HURA",
-      "name": "TuHURA Biosciences, Inc. - Common Stock",
-      "price": 1.72,
-      "change_pct": -10.88,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "ORCL",
-      "name": "Oracle Corporation Common Stock",
-      "price": 119.22,
-      "change_pct": -8.76,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "APA",
-      "name": "APA Corporation - Common Stock",
-      "price": 48.82,
-      "change_pct": -7.57,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "DVN",
-      "name": "Devon Energy Corporation Common Stock",
-      "price": 48.63,
-      "change_pct": -6.75,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "TRGP",
-      "name": "Targa Resources, Inc. Common Stock",
-      "price": 294.73,
-      "change_pct": -6.43,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "DASH",
-      "name": "DoorDash, Inc. - Common Stock",
-      "price": 190.07,
-      "change_pct": 6.19,
+      "symbol": "WULF",
+      "name": "TeraWulf Inc. - Common Stock",
+      "price": 12.53,
+      "change_pct": 14.53,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
-      "date": "2026-11-02"
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "CORZ",
+      "name": "Core Scientific, Inc. - Common Stock",
+      "price": 14.24,
+      "change_pct": 13.87,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "TRI",
+      "name": "Thomson Reuters Corp - Common Shares",
+      "price": 110.18,
+      "change_pct": -9.87,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "white",
+      "date": "2026-11-03"
     },
     {
       "symbol": "EVC",
       "name": "Entravision Communications Corporation Common Stock",
-      "price": 6.45,
-      "change_pct": 5.91,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "ZS",
-      "name": "Zscaler, Inc. - Common Stock",
-      "price": 223.79,
-      "change_pct": -5.9,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "FANG",
-      "name": "Diamondback Energy, Inc. - Common Stock",
-      "price": 199.74,
-      "change_pct": -5.82,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "OXY",
-      "name": "Occidental Petroleum Corporation Common Stock",
-      "price": 60.72,
-      "change_pct": -5.13,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "ABNB",
-      "name": "Airbnb, Inc. - Class A Common Stock",
-      "price": 171.11,
-      "change_pct": 4.09,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "PDD",
-      "name": "PDD Holdings Inc ADR",
-      "price": 81.68,
-      "change_pct": 3.91,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "TROX",
-      "name": "Tronox Holdings plc Ordinary Shares (UK)",
-      "price": 3.46,
-      "change_pct": -3.89,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "PANW",
-      "name": "Palo Alto Networks, Inc. - Common Stock",
-      "price": 351.72,
-      "change_pct": -3.87,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "LASR",
-      "name": "nLIGHT, Inc. - Common Stock",
-      "price": 35.77,
-      "change_pct": -3.66,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "CRWD",
-      "name": "CrowdStrike Holdings, Inc. - Class A Common Stock",
-      "price": 241.81,
-      "change_pct": -3.44,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "FATE",
-      "name": "Fate Therapeutics, Inc. - Common Stock",
-      "price": 2.01,
-      "change_pct": -3.37,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "DXCM",
-      "name": "DexCom, Inc. - Common Stock",
-      "price": 84.76,
-      "change_pct": 3.0,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "ORLY",
-      "name": "O'Reilly Automotive, Inc. - Common Stock",
-      "price": 90.7,
-      "change_pct": 2.93,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "CNC",
-      "name": "Centene Corporation Common Stock",
-      "price": 66.53,
-      "change_pct": -2.8,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "PSX",
-      "name": "Phillips 66 Common Stock",
-      "price": 275.04,
-      "change_pct": -2.75,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "CC",
-      "name": "Chemours Company (The) Common Stock",
-      "price": 13.16,
-      "change_pct": -2.73,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "TGT",
-      "name": "Target Corporation Common Stock",
-      "price": 158.38,
-      "change_pct": 2.59,
+      "price": 6.92,
+      "change_pct": 7.36,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
-      "date": "2026-11-02"
+      "date": "2026-11-03"
     },
     {
-      "symbol": "WAB",
-      "name": "Westinghouse Air Brake Technologies Corporation Common Stock",
-      "price": 286.79,
-      "change_pct": 2.57,
+      "symbol": "MPWR",
+      "name": "Monolithic Power Systems, Inc. - Common Stock",
+      "price": 1328.3,
+      "change_pct": 6.78,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "green",
-      "date": "2026-11-02"
+      "date": "2026-11-03"
     },
     {
-      "symbol": "ERAS",
-      "name": "Erasca, Inc. - Common Stock",
-      "price": 14.05,
-      "change_pct": -2.09,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "GNRC",
-      "name": "Generac Holdlings Inc. Common Stock",
-      "price": 202.04,
-      "change_pct": 2.08,
+      "symbol": "GEV",
+      "name": "GE Vernova Inc. Common Stock",
+      "price": 918.04,
+      "change_pct": 6.47,
       "direction": "up",
       "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-11-02"
+      "cur_color": "white",
+      "date": "2026-11-03"
     },
     {
-      "symbol": "MGM",
-      "name": "MGM Resorts International Common Stock",
-      "price": 30.56,
-      "change_pct": 2.0,
+      "symbol": "STRZ",
+      "name": "Starz Entertainment Corp. - Common Shares",
+      "price": 23.36,
+      "change_pct": 5.75,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "AMPX",
+      "name": "Amprius Technologies, Inc. Common Stock",
+      "price": 8.85,
+      "change_pct": 5.61,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "EQIX",
-      "name": "Equinix, Inc. - Common Stock",
-      "price": 993.69,
-      "change_pct": -1.97,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "AAPL",
-      "name": "Apple Inc. - Common Stock",
-      "price": 338.32,
-      "change_pct": -1.83,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "CASY",
-      "name": "Caseys General Stores, Inc. - Common Stock",
-      "price": 668.17,
-      "change_pct": -1.77,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "MCHP",
-      "name": "Microchip Technology Incorporated - Common Stock",
-      "price": 76.11,
-      "change_pct": -1.59,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-11-02"
+      "date": "2026-11-03"
     },
     {
       "symbol": "MYRG",
       "name": "MYR Group, Inc. - Common Stock",
-      "price": 278.24,
-      "change_pct": -1.55,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "RXO",
-      "name": "RXO, Inc. Common Stock",
-      "price": 27.82,
-      "change_pct": 1.2,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-02"
-    },
-    {
-      "symbol": "ISRG",
-      "name": "Intuitive Surgical, Inc. - Common Stock",
-      "price": 436.87,
-      "change_pct": 1.12,
+      "price": 291.59,
+      "change_pct": 4.8,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "green",
-      "date": "2026-11-02"
+      "date": "2026-11-03"
     },
     {
-      "symbol": "ROST",
-      "name": "Ross Stores, Inc. - Common Stock",
-      "price": 230.59,
-      "change_pct": 1.01,
+      "symbol": "ERAS",
+      "name": "Erasca, Inc. - Common Stock",
+      "price": 14.64,
+      "change_pct": 4.2,
       "direction": "up",
       "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-11-02"
+      "cur_color": "green",
+      "date": "2026-11-03"
     },
     {
-      "symbol": "HUM",
-      "name": "Humana Inc. Common Stock",
-      "price": 410.41,
-      "change_pct": -0.99,
+      "symbol": "EME",
+      "name": "EMCOR Group, Inc. Common Stock",
+      "price": 707.51,
+      "change_pct": 3.62,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "TMUS",
+      "name": "T-Mobile US, Inc. - Common Stock",
+      "price": 154.41,
+      "change_pct": -3.58,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "DASH",
+      "name": "DoorDash, Inc. - Common Stock",
+      "price": 183.32,
+      "change_pct": -3.55,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "CF",
+      "name": "CF Industries Holdings, Inc. Common Stock",
+      "price": 116.81,
+      "change_pct": -2.93,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "white",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "ABNB",
+      "name": "Airbnb, Inc. - Class A Common Stock",
+      "price": 166.96,
+      "change_pct": -2.43,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
-      "date": "2026-11-02"
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "MCHP",
+      "name": "Microchip Technology Incorporated - Common Stock",
+      "price": 77.9,
+      "change_pct": 2.35,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "APA",
+      "name": "APA Corporation - Common Stock",
+      "price": 47.77,
+      "change_pct": -2.15,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-11-03"
     },
     {
       "symbol": "ADBE",
       "name": "Adobe Inc. - Common Stock",
-      "price": 251.47,
-      "change_pct": 0.5,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-11-02"
+      "price": 246.14,
+      "change_pct": -2.12,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-11-03"
     },
     {
-      "symbol": "STT",
-      "name": "State Street Corporation Common Stock",
-      "price": 169.31,
-      "change_pct": -0.27,
+      "symbol": "DXCM",
+      "name": "DexCom, Inc. - Common Stock",
+      "price": 82.97,
+      "change_pct": -2.11,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "DVN",
+      "name": "Devon Energy Corporation Common Stock",
+      "price": 47.61,
+      "change_pct": -2.09,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
-      "date": "2026-11-02"
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "EQIX",
+      "name": "Equinix, Inc. - Common Stock",
+      "price": 1014.4,
+      "change_pct": 2.08,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "AXON",
+      "name": "Axon Enterprise, Inc. - Common Stock",
+      "price": 416.57,
+      "change_pct": -2.08,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-11-03"
     },
     {
       "symbol": "CTSH",
       "name": "Cognizant Technology Solutions Corporation - Class A Common Stock",
-      "price": 65.09,
-      "change_pct": -0.03,
+      "price": 63.83,
+      "change_pct": -1.94,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "AAPL",
+      "name": "Apple Inc. - Common Stock",
+      "price": 331.9,
+      "change_pct": -1.9,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "DVA",
+      "name": "DaVita Inc. Common Stock",
+      "price": 182.22,
+      "change_pct": -1.9,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "white",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "HUM",
+      "name": "Humana Inc. Common Stock",
+      "price": 417.97,
+      "change_pct": 1.84,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
-      "date": "2026-11-02"
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "CDNS",
+      "name": "Cadence Design Systems, Inc. - Common Stock",
+      "price": 323.75,
+      "change_pct": -1.75,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "EOG",
+      "name": "EOG Resources, Inc. Common Stock",
+      "price": 155.17,
+      "change_pct": -1.72,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "white",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "COP",
+      "name": "ConocoPhillips Common Stock",
+      "price": 144.45,
+      "change_pct": -1.63,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "HAL",
+      "name": "Halliburton Company Common Stock",
+      "price": 34.06,
+      "change_pct": -1.59,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "RXO",
+      "name": "RXO, Inc. Common Stock",
+      "price": 28.26,
+      "change_pct": 1.58,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "AGL",
+      "name": "agilon health, inc. Common Stock",
+      "price": 87.85,
+      "change_pct": 1.41,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "TRGP",
+      "name": "Targa Resources, Inc. Common Stock",
+      "price": 298.62,
+      "change_pct": 1.32,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "XOM",
+      "name": "ExxonMobil Holdings Corporation Common Stock",
+      "price": 177.46,
+      "change_pct": -1.23,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "CC",
+      "name": "Chemours Company (The) Common Stock",
+      "price": 13.1,
+      "change_pct": -0.49,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "OXY",
+      "name": "Occidental Petroleum Corporation Common Stock",
+      "price": 60.43,
+      "change_pct": -0.48,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "CASY",
+      "name": "Caseys General Stores, Inc. - Common Stock",
+      "price": 665.39,
+      "change_pct": -0.42,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "ATEX",
+      "name": "Anterix Inc. - Common Stock",
+      "price": 82.21,
+      "change_pct": 0.0,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-11-03"
     }
   ],
   "commodities": [
     {
       "symbol": "TAN",
       "name": "Solar Energy Index",
-      "price": 42.07,
-      "change_pct": 4.65,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-11-02",
-      "sector": "Indexes"
-    },
-    {
-      "symbol": "^SPGSCI",
-      "name": "GSCI",
-      "price": 725.11,
-      "change_pct": -3.88,
+      "price": 43.34,
+      "change_pct": 3.02,
       "direction": "down",
       "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-11-02",
-      "sector": "Indexes"
-    },
-    {
-      "symbol": "DBC",
-      "name": "CRB Index",
-      "price": 32.46,
-      "change_pct": -3.42,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-11-02",
-      "sector": "Indexes"
-    },
-    {
-      "symbol": "BOAT",
-      "name": "World Container Index",
-      "price": 51.36,
-      "change_pct": -3.33,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-11-02",
-      "sector": "Indexes"
-    },
-    {
-      "symbol": "CL=F",
-      "name": "Crude Oil WTI",
-      "price": 98.68,
-      "change_pct": 2.3,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
+      "cur_color": "white",
       "date": "2026-11-03",
-      "sector": "Energy"
-    },
-    {
-      "symbol": "LE=F",
-      "name": "Live Cattle",
-      "price": 219.7,
-      "change_pct": -1.92,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-02",
-      "sector": "Livestock"
+      "sector": "Indexes"
     },
     {
       "symbol": "FAN",
       "name": "Wind Energy Index",
-      "price": 22.04,
-      "change_pct": 1.15,
+      "price": 22.27,
+      "change_pct": 1.04,
       "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-11-02",
-      "sector": "Indexes"
-    },
-    {
-      "symbol": "GF=F",
-      "name": "Feeder Cattle",
-      "price": 338.43,
-      "change_pct": 0.19,
-      "direction": "down",
       "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-02",
-      "sector": "Livestock"
+      "cur_color": "green",
+      "date": "2026-11-03",
+      "sector": "Indexes"
     }
   ]
 }
