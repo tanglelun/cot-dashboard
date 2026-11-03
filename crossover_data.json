@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-03 03:47 UTC",
+  "updated": "2026-11-03 12:22 UTC",
   "stocks": [
     {
       "symbol": "TWST",
@@ -424,17 +424,6 @@
   ],
   "commodities": [
     {
-      "symbol": "CL=F",
-      "name": "Crude Oil WTI",
-      "price": 96.65,
-      "change_pct": -7.17,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-11-02",
-      "sector": "Energy"
-    },
-    {
       "symbol": "TAN",
       "name": "Solar Energy Index",
       "price": 42.07,
@@ -479,21 +468,21 @@
       "sector": "Indexes"
     },
     {
-      "symbol": "LE=F",
-      "name": "Live Cattle",
-      "price": 219.43,
-      "change_pct": -2.04,
+      "symbol": "CL=F",
+      "name": "Crude Oil WTI",
+      "price": 98.68,
+      "change_pct": 2.3,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
-      "date": "2026-11-02",
-      "sector": "Livestock"
+      "date": "2026-11-03",
+      "sector": "Energy"
     },
     {
-      "symbol": "GF=F",
-      "name": "Feeder Cattle",
-      "price": 332.6,
-      "change_pct": -1.53,
+      "symbol": "LE=F",
+      "name": "Live Cattle",
+      "price": 219.7,
+      "change_pct": -1.92,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
@@ -510,6 +499,17 @@
       "cur_color": "white",
       "date": "2026-11-02",
       "sector": "Indexes"
+    },
+    {
+      "symbol": "GF=F",
+      "name": "Feeder Cattle",
+      "price": 338.43,
+      "change_pct": 0.19,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-11-02",
+      "sector": "Livestock"
     }
   ]
 }
