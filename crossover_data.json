@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-04 02:43 UTC",
+  "updated": "2026-11-04 12:35 UTC",
   "stocks": [
     {
       "symbol": "WULF",
@@ -202,16 +202,6 @@
       "date": "2026-11-03"
     },
     {
-      "symbol": "EQIX",
-      "name": "Equinix, Inc. - Common Stock",
-      "price": 1014.4,
-      "change_pct": 2.08,
-      "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-11-03"
-    },
-    {
       "symbol": "DVN",
       "name": "Devon Energy Corporation Common Stock",
       "price": 47.62,
@@ -219,6 +209,16 @@
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
+      "date": "2026-11-03"
+    },
+    {
+      "symbol": "EQIX",
+      "name": "Equinix, Inc. - Common Stock",
+      "price": 1014.4,
+      "change_pct": 2.08,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
       "date": "2026-11-03"
     },
     {
@@ -393,17 +393,6 @@
       "cur_color": "white",
       "date": "2026-11-03",
       "sector": "Indexes"
-    },
-    {
-      "symbol": "CL=F",
-      "name": "Crude Oil WTI",
-      "price": 95.13,
-      "change_pct": -1.38,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-03",
-      "sector": "Energy"
     },
     {
       "symbol": "FAN",
