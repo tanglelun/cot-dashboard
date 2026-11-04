@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-03 21:15 UTC",
+  "updated": "2026-11-04 02:43 UTC",
   "stocks": [
     {
       "symbol": "WULF",
@@ -35,7 +35,7 @@
       "symbol": "EVC",
       "name": "Entravision Communications Corporation Common Stock",
       "price": 6.92,
-      "change_pct": 7.36,
+      "change_pct": 7.29,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
@@ -54,8 +54,8 @@
     {
       "symbol": "GEV",
       "name": "GE Vernova Inc. Common Stock",
-      "price": 918.04,
-      "change_pct": 6.47,
+      "price": 918.2,
+      "change_pct": 6.49,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
@@ -74,8 +74,8 @@
     {
       "symbol": "AMPX",
       "name": "Amprius Technologies, Inc. Common Stock",
-      "price": 8.85,
-      "change_pct": 5.61,
+      "price": 8.83,
+      "change_pct": 5.37,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
@@ -104,8 +104,8 @@
     {
       "symbol": "EME",
       "name": "EMCOR Group, Inc. Common Stock",
-      "price": 707.51,
-      "change_pct": 3.62,
+      "price": 707.43,
+      "change_pct": 3.61,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "green",
@@ -192,12 +192,12 @@
       "date": "2026-11-03"
     },
     {
-      "symbol": "DVN",
-      "name": "Devon Energy Corporation Common Stock",
-      "price": 47.61,
-      "change_pct": -2.09,
+      "symbol": "AXON",
+      "name": "Axon Enterprise, Inc. - Common Stock",
+      "price": 416.57,
+      "change_pct": -2.08,
       "direction": "down",
-      "prev_color": "white",
+      "prev_color": "green",
       "cur_color": "red",
       "date": "2026-11-03"
     },
@@ -212,12 +212,12 @@
       "date": "2026-11-03"
     },
     {
-      "symbol": "AXON",
-      "name": "Axon Enterprise, Inc. - Common Stock",
-      "price": 416.57,
+      "symbol": "DVN",
+      "name": "Devon Energy Corporation Common Stock",
+      "price": 47.62,
       "change_pct": -2.08,
       "direction": "down",
-      "prev_color": "green",
+      "prev_color": "white",
       "cur_color": "red",
       "date": "2026-11-03"
     },
@@ -232,6 +232,16 @@
       "date": "2026-11-03"
     },
     {
+      "symbol": "DVA",
+      "name": "DaVita Inc. Common Stock",
+      "price": 182.17,
+      "change_pct": -1.92,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "white",
+      "date": "2026-11-03"
+    },
+    {
       "symbol": "AAPL",
       "name": "Apple Inc. - Common Stock",
       "price": 331.9,
@@ -242,20 +252,10 @@
       "date": "2026-11-03"
     },
     {
-      "symbol": "DVA",
-      "name": "DaVita Inc. Common Stock",
-      "price": 182.22,
-      "change_pct": -1.9,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-11-03"
-    },
-    {
       "symbol": "HUM",
       "name": "Humana Inc. Common Stock",
-      "price": 417.97,
-      "change_pct": 1.84,
+      "price": 417.87,
+      "change_pct": 1.82,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
@@ -284,8 +284,8 @@
     {
       "symbol": "COP",
       "name": "ConocoPhillips Common Stock",
-      "price": 144.45,
-      "change_pct": -1.63,
+      "price": 144.4,
+      "change_pct": -1.66,
       "direction": "down",
       "prev_color": "green",
       "cur_color": "red",
@@ -294,8 +294,8 @@
     {
       "symbol": "HAL",
       "name": "Halliburton Company Common Stock",
-      "price": 34.06,
-      "change_pct": -1.59,
+      "price": 34.07,
+      "change_pct": -1.56,
       "direction": "down",
       "prev_color": "green",
       "cur_color": "red",
@@ -304,8 +304,8 @@
     {
       "symbol": "RXO",
       "name": "RXO, Inc. Common Stock",
-      "price": 28.26,
-      "change_pct": 1.58,
+      "price": 28.24,
+      "change_pct": 1.51,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
@@ -314,8 +314,8 @@
     {
       "symbol": "AGL",
       "name": "agilon health, inc. Common Stock",
-      "price": 87.85,
-      "change_pct": 1.41,
+      "price": 87.79,
+      "change_pct": 1.34,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
@@ -324,8 +324,8 @@
     {
       "symbol": "TRGP",
       "name": "Targa Resources, Inc. Common Stock",
-      "price": 298.62,
-      "change_pct": 1.32,
+      "price": 298.56,
+      "change_pct": 1.3,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
@@ -344,8 +344,8 @@
     {
       "symbol": "CC",
       "name": "Chemours Company (The) Common Stock",
-      "price": 13.1,
-      "change_pct": -0.49,
+      "price": 13.09,
+      "change_pct": -0.53,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
@@ -395,10 +395,21 @@
       "sector": "Indexes"
     },
     {
+      "symbol": "CL=F",
+      "name": "Crude Oil WTI",
+      "price": 95.13,
+      "change_pct": -1.38,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-11-03",
+      "sector": "Energy"
+    },
+    {
       "symbol": "FAN",
       "name": "Wind Energy Index",
-      "price": 22.27,
-      "change_pct": 1.04,
+      "price": 22.34,
+      "change_pct": 1.36,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
