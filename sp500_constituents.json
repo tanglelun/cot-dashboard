@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-04 12:36 UTC",
+  "updated": "2026-11-04 22:00 UTC",
   "source": "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies",
   "items": [
     {
@@ -1079,10 +1079,6 @@
       "name": "JPMorgan Chase"
     },
     {
-      "symbol": "KVUE",
-      "name": "Kenvue"
-    },
-    {
       "symbol": "KDP",
       "name": "Keurig Dr Pepper"
     },
@@ -1389,6 +1385,10 @@
     {
       "symbol": "OXY",
       "name": "Occidental Petroleum"
+    },
+    {
+      "symbol": "OKTA",
+      "name": "Okta, Inc."
     },
     {
       "symbol": "ODFL",
