@@ -7,7 +7,7 @@
   "flag": "🇧🇷",
   "sector": "Americas",
   "unit": "Index Points",
-  "updated": "2026-11-04",
+  "updated": "2026-11-05",
   "prices": [
     {
       "time": "1993-04-27",
@@ -66435,9 +66435,9 @@
     },
     {
       "time": "2026-11-04",
-      "open": 165547.875,
-      "high": 167986.375,
-      "low": 165541.375,
+      "open": 0.0,
+      "high": 0.0,
+      "low": 0.0,
       "close": 167563.4688,
       "volume": 0
     }

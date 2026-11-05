@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-04 22:49 UTC",
+  "updated": "2026-11-05 02:49 UTC",
   "stocks": [
     {
       "symbol": "OUST",
@@ -517,10 +517,10 @@
       "symbol": "RB=F",
       "name": "RBOB Gasoline",
       "price": 2.72,
-      "change_pct": -7.26,
+      "change_pct": -7.39,
       "direction": "down",
       "prev_color": "green",
-      "cur_color": "white",
+      "cur_color": "red",
       "date": "2026-11-04",
       "sector": "Energy"
     },
@@ -536,26 +536,26 @@
       "sector": "Indexes"
     },
     {
+      "symbol": "GC=F",
+      "name": "Gold",
+      "price": 4137.7,
+      "change_pct": 5.01,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-11-04",
+      "sector": "Metals"
+    },
+    {
       "symbol": "NG=F",
       "name": "Natural Gas",
       "price": 2.95,
-      "change_pct": 1.9,
+      "change_pct": 2.0,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "green",
       "date": "2026-11-04",
       "sector": "Energy"
-    },
-    {
-      "symbol": "MES=F",
-      "name": "S&P 500 Micro",
-      "price": 7734.5,
-      "change_pct": 1.81,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-11-04",
-      "sector": "Indexes"
     }
   ]
 }

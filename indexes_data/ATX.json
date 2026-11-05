@@ -7,7 +7,7 @@
   "flag": "🇦🇹",
   "sector": "Europe",
   "unit": "Index Points",
-  "updated": "2026-11-04",
+  "updated": "2026-11-05",
   "prices": [
     {
       "time": "1992-11-11",
@@ -67583,7 +67583,7 @@
       "high": 6633.2402,
       "low": 6396.9399,
       "close": 6518.52,
-      "volume": 0
+      "volume": 3856100
     }
   ]
 }
