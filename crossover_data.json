@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-06 02:54 UTC",
+  "updated": "2026-11-06 12:30 UTC",
   "stocks": [
     {
       "symbol": "APP",
@@ -112,22 +112,22 @@
       "date": "2026-11-05"
     },
     {
-      "symbol": "VSAT",
-      "name": "ViaSat, Inc. - Common Stock",
-      "price": 59.38,
-      "change_pct": -11.09,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-05"
-    },
-    {
       "symbol": "IRM",
       "name": "Iron Mountain Incorporated (Delaware)Common Stock REIT",
       "price": 105.5,
       "change_pct": -11.09,
       "direction": "down",
       "prev_color": "green",
+      "cur_color": "red",
+      "date": "2026-11-05"
+    },
+    {
+      "symbol": "VSAT",
+      "name": "ViaSat, Inc. - Common Stock",
+      "price": 59.38,
+      "change_pct": -11.09,
+      "direction": "down",
+      "prev_color": "white",
       "cur_color": "red",
       "date": "2026-11-05"
     },
@@ -454,28 +454,6 @@
   ],
   "commodities": [
     {
-      "symbol": "BZ=F",
-      "name": "Brent Crude Oil",
-      "price": 99.93,
-      "change_pct": 5.61,
-      "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-11-05",
-      "sector": "Energy"
-    },
-    {
-      "symbol": "CL=F",
-      "name": "Crude Oil WTI",
-      "price": 91.69,
-      "change_pct": 4.05,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-11-05",
-      "sector": "Energy"
-    },
-    {
       "symbol": "BDRY",
       "name": "Containerized Freight Index",
       "price": 13.02,
@@ -487,26 +465,37 @@
       "sector": "Indexes"
     },
     {
-      "symbol": "RB=F",
-      "name": "RBOB Gasoline",
-      "price": 2.8,
-      "change_pct": 2.58,
-      "direction": "down",
+      "symbol": "NG=F",
+      "name": "Natural Gas",
+      "price": 3.0,
+      "change_pct": 1.87,
+      "direction": "up",
       "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-05",
+      "cur_color": "green",
+      "date": "2026-11-06",
       "sector": "Energy"
     },
     {
       "symbol": "GC=F",
       "name": "Gold",
-      "price": 4072.9,
-      "change_pct": -0.0,
+      "price": 4078.4,
+      "change_pct": -0.85,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-11-06",
+      "sector": "Metals"
+    },
+    {
+      "symbol": "CL=F",
+      "name": "Crude Oil WTI",
+      "price": 90.99,
+      "change_pct": 0.52,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "green",
-      "date": "2026-11-05",
-      "sector": "Metals"
+      "date": "2026-11-06",
+      "sector": "Energy"
     }
   ]
 }
