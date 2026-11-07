@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-06 23:14 UTC",
+  "updated": "2026-11-07 11:24 UTC",
   "stocks": [
     {
       "symbol": "AIRS",
@@ -344,17 +344,6 @@
   ],
   "commodities": [
     {
-      "symbol": "NG=F",
-      "name": "Natural Gas",
-      "price": 3.0,
-      "change_pct": 1.9,
-      "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-11-06",
-      "sector": "Energy"
-    },
-    {
       "symbol": "KRBN",
       "name": "EU Carbon Permits",
       "price": 34.61,
@@ -364,6 +353,17 @@
       "cur_color": "red",
       "date": "2026-11-06",
       "sector": "Indexes"
+    },
+    {
+      "symbol": "NG=F",
+      "name": "Natural Gas",
+      "price": 3.0,
+      "change_pct": 1.73,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-11-06",
+      "sector": "Energy"
     },
     {
       "symbol": "BDRY",
@@ -379,13 +379,35 @@
     {
       "symbol": "GC=F",
       "name": "Gold",
-      "price": 4079.5,
-      "change_pct": -0.83,
+      "price": 4074.9,
+      "change_pct": -0.94,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
       "date": "2026-11-06",
       "sector": "Metals"
+    },
+    {
+      "symbol": "CT=F",
+      "name": "Cotton",
+      "price": 79.11,
+      "change_pct": 0.51,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-11-06",
+      "sector": "Agriculture"
+    },
+    {
+      "symbol": "CL=F",
+      "name": "Crude Oil WTI",
+      "price": 90.83,
+      "change_pct": 0.34,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-11-06",
+      "sector": "Energy"
     }
   ]
 }
