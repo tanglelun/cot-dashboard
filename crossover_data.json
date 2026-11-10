@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-10 04:25 UTC",
+  "updated": "2026-11-10 13:03 UTC",
   "stocks": [
     {
       "symbol": "LINC",
@@ -526,35 +526,13 @@
     {
       "symbol": "BZ=F",
       "name": "Brent Crude Oil",
-      "price": 91.74,
-      "change_pct": -6.69,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-11-09",
-      "sector": "Energy"
-    },
-    {
-      "symbol": "CL=F",
-      "name": "Crude Oil WTI",
-      "price": 85.91,
-      "change_pct": -5.42,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-11-09",
-      "sector": "Energy"
-    },
-    {
-      "symbol": "PL=F",
-      "name": "Platinum",
-      "price": 1576.7,
-      "change_pct": 2.5,
+      "price": 90.32,
+      "change_pct": -2.43,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
-      "date": "2026-11-09",
-      "sector": "Metals"
+      "date": "2026-11-10",
+      "sector": "Energy"
     },
     {
       "symbol": "KRBN",
@@ -566,17 +544,6 @@
       "cur_color": "green",
       "date": "2026-11-09",
       "sector": "Indexes"
-    },
-    {
-      "symbol": "CT=F",
-      "name": "Cotton",
-      "price": 78.65,
-      "change_pct": -0.58,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-11-09",
-      "sector": "Agriculture"
     }
   ]
 }
