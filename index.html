@@ -44,11 +44,10 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,san
 .section-head h2{margin:0;color:#fff;font-size:16px;font-weight:800}
 .section-meta{color:var(--muted);font-size:11px}
 .cross-tabs{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
-.cross-tab{height:28px;padding:0 12px;border:1px solid var(--border);background:transparent;color:var(--muted);border-radius:4px;font-size:11px;font-weight:700;cursor:pointer}
-.cross-tab:hover{color:#fff;background:var(--hover)}
-.cross-tab.active{background:var(--accent);border-color:var(--accent);color:#001b03}
-.cross-tab.putcall{background:rgba(0,209,9,.15);color:var(--green);border-color:rgba(0,209,9,.3)}
-.cross-tab.callput{background:rgba(255,77,0,.15);color:var(--red);border-color:rgba(255,77,0,.3)}
+.cross-tab{height:28px;padding:0 12px;border:2px solid var(--border);background:transparent;color:var(--muted);border-radius:4px;font-size:11px;font-weight:700;cursor:pointer}
+.cross-tab:hover{color:#fff;border-color:var(--muted)}
+.cross-tab.active{background:transparent;border-color:var(--accent);color:#fff}
+.cross-tab:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .cross-list-wrap{overflow-x:auto;max-height:calc(100vh - 160px);overflow-y:auto}
 .cross-list{width:100%;border-collapse:collapse;font-size:12px;min-width:520px}
 .cross-list thead th{position:sticky;top:0;background:var(--panel2);color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;padding:8px;text-align:left;border-bottom:1px solid var(--border);z-index:2}
@@ -144,13 +143,13 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,san
       </div>
       <div style="padding:8px 14px;border-bottom:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;align-items:center">
         <div class="cross-tabs" id="marketTabs">
-          <button class="cross-tab active" data-cross="stocks">Stocks</button>
-          <button class="cross-tab" data-cross="commodities">Commodities</button>
+          <button class="cross-tab active" data-cross="stocks" aria-pressed="true">Stocks</button>
+          <button class="cross-tab" data-cross="commodities" aria-pressed="false">Commodities</button>
         </div>
         <div class="cross-tabs" id="dirTabs">
-          <button class="cross-tab active" data-dir="all">All</button>
-          <button class="cross-tab putcall" data-dir="up">Put → Call</button>
-          <button class="cross-tab callput" data-dir="down">Call → Put</button>
+          <button class="cross-tab active" data-dir="all" aria-pressed="true">All</button>
+          <button class="cross-tab putcall" data-dir="up" aria-pressed="false">Put → Call</button>
+          <button class="cross-tab callput" data-dir="down" aria-pressed="false">Call → Put</button>
         </div>
       </div>
       <div class="cross-list-wrap">
@@ -234,14 +233,14 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,san
     var btn=e.target.closest('.cross-tab[data-cross]');
     if(!btn)return;
     crossMode=btn.dataset.cross;
-    document.querySelectorAll('#marketTabs .cross-tab').forEach(function(t){t.classList.toggle('active',t===btn);});
+    document.querySelectorAll('#marketTabs .cross-tab').forEach(function(t){t.classList.toggle('active',t===btn);t.setAttribute('aria-pressed',String(t===btn));});
     renderCross();
   });
   document.getElementById('dirTabs').addEventListener('click',function(e){
     var btn=e.target.closest('.cross-tab[data-dir]');
     if(!btn)return;
     crossDir=btn.dataset.dir;
-    document.querySelectorAll('#dirTabs .cross-tab').forEach(function(t){t.classList.toggle('active',t===btn);});
+    document.querySelectorAll('#dirTabs .cross-tab').forEach(function(t){t.classList.toggle('active',t===btn);t.setAttribute('aria-pressed',String(t===btn));});
     renderCross();
   });
   fetch('crossover_data.json').then(function(r){return r.json();}).then(function(d){crossData=d;renderCross();}).catch(function(){});
