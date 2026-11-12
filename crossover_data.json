@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-11 21:36 UTC",
+  "updated": "2026-11-12 03:24 UTC",
   "stocks": [
     {
       "symbol": "RXT",
@@ -142,9 +142,9 @@
       "date": "2026-11-11"
     },
     {
-      "symbol": "GNRC",
-      "name": "Generac Holdlings Inc. Common Stock",
-      "price": 194.0,
+      "symbol": "PDFS",
+      "name": "PDF Solutions, Inc. - Common Stock",
+      "price": 41.79,
       "change_pct": 6.72,
       "direction": "up",
       "prev_color": "red",
@@ -152,9 +152,9 @@
       "date": "2026-11-11"
     },
     {
-      "symbol": "PDFS",
-      "name": "PDF Solutions, Inc. - Common Stock",
-      "price": 41.79,
+      "symbol": "GNRC",
+      "name": "Generac Holdlings Inc. Common Stock",
+      "price": 194.0,
       "change_pct": 6.72,
       "direction": "up",
       "prev_color": "red",
@@ -444,7 +444,7 @@
     {
       "symbol": "MSFT",
       "name": "Microsoft Corporation - Common Stock",
-      "price": 521.12,
+      "price": 521.13,
       "change_pct": -2.26,
       "direction": "down",
       "prev_color": "green",
@@ -577,35 +577,35 @@
     {
       "symbol": "PA=F",
       "name": "Palladium",
-      "price": 1032.5,
-      "change_pct": 1.39,
+      "price": 1037.5,
+      "change_pct": 1.89,
       "direction": "up",
       "prev_color": "red",
-      "cur_color": "green",
+      "cur_color": "white",
       "date": "2026-11-11",
       "sector": "Metals"
     },
     {
-      "symbol": "MES=F",
-      "name": "S&P 500 Micro",
-      "price": 7645.0,
-      "change_pct": 1.34,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-11-11",
-      "sector": "Indexes"
-    },
-    {
       "symbol": "ZS=F",
       "name": "Soybeans",
-      "price": 1230.5,
-      "change_pct": 0.49,
+      "price": 1227.5,
+      "change_pct": 0.24,
       "direction": "down",
       "prev_color": "green",
       "cur_color": "white",
       "date": "2026-11-11",
       "sector": "Agriculture"
+    },
+    {
+      "symbol": "PL=F",
+      "name": "Platinum",
+      "price": 1539.0,
+      "change_pct": 0.01,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-11-11",
+      "sector": "Metals"
     }
   ]
 }
