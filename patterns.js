@@ -15,12 +15,12 @@
   function miniChart(row) {
     const ns = 'http://www.w3.org/2000/svg';
     const svg = document.createElementNS(ns, 'svg');
-    svg.setAttribute('viewBox', '0 0 300 146'); svg.setAttribute('role', 'img');
+    svg.setAttribute('viewBox', '0 0 180 66'); svg.setAttribute('role', 'img');
     svg.setAttribute('aria-label', `${row.symbol} ${kind === 'top' ? '头肩顶' : '头肩底'}：彩色点为左肩、头部、右肩，黄点为两次反弹或回落的颈线连接点`);
     const values = row.chart.map(p => p.close).concat(row.points.map(p => p.price), [row.neck_start, row.neck_end]);
     const lo = Math.min(...values), hi = Math.max(...values);
-    const x = i => 12 + i * 276 / Math.max(1, row.chart.length - 1);
-    const y = v => 112 - (v-lo)*78 / Math.max(.0001,hi-lo);
+    const x = i => 6 + i * 168 / Math.max(1, row.chart.length - 1);
+    const y = v => 58 - (v-lo)*48 / Math.max(.0001,hi-lo);
     function shape(tag, attrs) {
       const node = document.createElementNS(ns, tag);
       Object.entries(attrs).forEach(([k,v]) => node.setAttribute(k,v)); svg.append(node); return node;
@@ -28,7 +28,7 @@
     shape('polyline', {points:row.chart.map((p,i)=>`${x(i)},${y(p.close)}`).join(' '), fill:'none', stroke:'#9ba8b8', 'stroke-width':1.4});
     const [n1,n2]=[row.points[1],row.points[3]];
     shape('line', {x1:x(n1.offset),y1:y(n1.price),x2:x(n2.offset),y2:y(n2.price),stroke:'#e4b85b','stroke-width':1.4});
-    shape('line', {x1:x(n2.offset),y1:y(n2.price),x2:288,y2:y(row.neck_end),stroke:'#e4b85b','stroke-width':1,'stroke-dasharray':'4 3'});
+    shape('line', {x1:x(n2.offset),y1:y(n2.price),x2:174,y2:y(row.neck_end),stroke:'#e4b85b','stroke-width':1,'stroke-dasharray':'4 3'});
     [n1,n2].forEach((p,i)=>{
       const dot=shape('circle',{cx:x(p.offset),cy:y(p.price),r:2.4,fill:'#e4b85b'});
       const title=document.createElementNS(ns,'title');title.textContent=`颈线连接点 ${i+1} · ${p.date} · ${money(p.price)}`;dot.append(title);
@@ -38,24 +38,6 @@
       const dot=shape('circle',{cx:x(p.offset),cy:y(p.price),r:2.8,fill:kind==='top'?'#ff7859':'#45d6ae'});
       const title=document.createElementNS(ns,'title');title.textContent=`${['左肩','头部','右肩'][j]} · ${p.date} · ${money(p.price)}`;dot.append(title);
     });
-    // Dedicated label lanes keep text clear of prices and of adjacent pivots.
-    const color=kind==='top'?'#ff987f':'#62e6c2';
-    const labelY=kind==='top'?16:136;
-    const labelXs=[0,2,4].map(index=>Math.max(26,Math.min(274,x(row.points[index].offset))));
-    for(let i=1;i<3;i++) labelXs[i]=Math.max(labelXs[i],labelXs[i-1]+48);
-    if(labelXs[2]>274){labelXs[2]=274;for(let i=1;i>=0;i--)labelXs[i]=Math.min(labelXs[i],labelXs[i+1]-48);}
-    [0,2,4].forEach((index,j)=>{
-      const p=row.points[index];
-      shape('line',{x1:labelXs[j],y1:labelY+(kind==='top'?5:-12),x2:x(p.offset),y2:y(p.price),stroke:color,'stroke-width':.8,'stroke-dasharray':'2 3',opacity:.65});
-      const label=shape('text',{x:labelXs[j],y:labelY,'text-anchor':'middle',fill:color,'font-size':12,'font-weight':600});
-      label.textContent=['左肩','头部','右肩'][j];
-    });
-    const neckX=(x(n1.offset)+x(n2.offset))/2;
-    const neckY=(y(n1.price)+y(n2.price))/2;
-    const neckLabelY=kind==='top'?136:16;
-    shape('line',{x1:neckX,y1:neckLabelY+(kind==='top'?-12:5),x2:neckX,y2:neckY,stroke:'#e4b85b','stroke-width':.8,'stroke-dasharray':'2 3',opacity:.65});
-    const neckLabel=shape('text',{x:neckX,y:neckLabelY,'text-anchor':'middle',fill:'#e4b85b','font-size':12,'font-weight':600});
-    neckLabel.textContent='颈线';
     return svg;
   }
   function render() {
