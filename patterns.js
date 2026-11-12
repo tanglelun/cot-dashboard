@@ -3,7 +3,7 @@
   if (!root) return;
   const list = document.getElementById('patternList');
   const meta = document.getElementById('patternMeta');
-  let data, kind = 'top';
+  let data, kind = 'bottom';
   const money = value => Number(value).toLocaleString('en-US', {maximumFractionDigits:2, minimumFractionDigits:2});
   function el(tag, text, cls) {
     const node = document.createElement(tag);
