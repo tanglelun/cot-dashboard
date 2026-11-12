@@ -328,6 +328,7 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
             <label class="indicator-option"><span>RSI (14)</span><input type="checkbox" data-indicator="showRsi"></label>
             <label class="indicator-option"><span>MACD</span><input type="checkbox" data-indicator="showMacd" checked></label>
             <label class="indicator-option"><span title="Green: bullish; red: bearish; white: transition. Hollow: close above open; filled: close below open.">TD Sequential + LifeLine</span><input type="checkbox" data-indicator="showTongDaXin"></label>
+            <label class="indicator-option"><span>头肩顶 / 头肩底</span><input type="checkbox" data-indicator="showPatterns"></label>
           </div>
         </div>
         <div class="ma-group" id="maGroup">
@@ -351,6 +352,7 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
   </div>
 </main>
 
+<script src="pattern_overlay.js?v=1"></script>
 <script>
 const params = new URLSearchParams(window.location.search);
 let currentSymbol = (params.get('symbol') || '').trim().toUpperCase();
@@ -429,6 +431,7 @@ const state = {
   touchMode: 'idle', touchTimer: null, touchStartX: 0, touchStartY: 0, touchCurrentX: 0, touchCurrentY: 0,
   maCollapsed: true, showMa: params.get('ma') !== '0', showEma: false, showBollinger: false,
   showVolume: true, showRsi: false, showMacd: true, showTongDaXin: params.get('td') === '1',
+  showPatterns: false,
   marketIndex: null, stockRows: [], activeRange: null,
   universe: params.get('universe') || 'r2kRaw',
   metric: params.get('metric') || 'd',
@@ -1074,7 +1077,12 @@ function drawTongDaXin(candles, xFor, yFor, bodyWidth, wickWidth, chartTop, pric
   ctx.setLineDash([]);
 }
 
+const patternNotice=document.createElement('div');
+patternNotice.style.cssText='font-size:11px;color:#9ba8b8;padding:4px 12px;display:none';
+canvas.parentElement.insertBefore(patternNotice,canvas);
+patternOverlay.load().then(()=>{if(state.showPatterns)draw();});
 function draw(){
+  patternNotice.style.display=state.showPatterns?'block':'none';
   const readoutIndex = state.hover >= state.start && state.hover < state.end ? state.hover : state.end - 1;
   renderMaLegend(state.candles[readoutIndex]);
 
@@ -1175,6 +1183,7 @@ function draw(){
       drawIndicatorLine(candles, 'bbLower', xFor, yFor, '#00bcd4', 0.65, 1.2);
     }
   }
+  if(state.showPatterns) patternOverlay.draw(ctx,currentSymbol,candles,xFor,yFor,{left,right:width-right,top,bottom:priceBottom},patternNotice);
   if(state.showVolume) drawVolumePanel(candles, xFor, step, volumeTop, volumeBottom, maxVolume, height);
   if(state.showRsi) drawRsiPanel(candles, xFor, rsiTop, rsiBottom, width);
   if(state.showMacd) drawMacdPanel(candles, xFor, step, macdTop, macdBottom, width);
