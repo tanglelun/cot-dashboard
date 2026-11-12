@@ -1,8 +1,8 @@
 {
-  "updated": "2026-11-12T06:25:59.689136+00:00",
+  "updated": "2026-11-12T13:14:22.762593+00:00",
   "as_of": "2026-11-11",
   "universe_count": 2478,
-  "scanned": 2464,
+  "scanned": 2465,
   "skipped": [
     {
       "symbol": "ADIG",
@@ -10,7 +10,7 @@
     },
     {
       "symbol": "AKE",
-      "reason": "[Errno 2] No such file or directory: '/tmp/net-patterns-publish/market_data/AKE.json'"
+      "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/AKE.json'"
     },
     {
       "symbol": "APMD",
@@ -18,19 +18,19 @@
     },
     {
       "symbol": "GTXI",
-      "reason": "[Errno 2] No such file or directory: '/tmp/net-patterns-publish/market_data/GTXI.json'"
+      "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/GTXI.json'"
     },
     {
       "symbol": "P5N994",
-      "reason": "[Errno 2] No such file or directory: '/tmp/net-patterns-publish/market_data/P5N994.json'"
+      "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/P5N994.json'"
     },
     {
       "symbol": "PDLI",
-      "reason": "[Errno 2] No such file or directory: '/tmp/net-patterns-publish/market_data/PDLI.json'"
+      "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/PDLI.json'"
     },
     {
       "symbol": "PFBC",
-      "reason": "[Errno 2] No such file or directory: '/tmp/net-patterns-publish/market_data/PFBC.json'"
+      "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/PFBC.json'"
     },
     {
       "symbol": "REF",
@@ -38,23 +38,19 @@
     },
     {
       "symbol": "SBT",
-      "reason": "[Errno 2] No such file or directory: '/tmp/net-patterns-publish/market_data/SBT.json'"
+      "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/SBT.json'"
     },
     {
       "symbol": "SCTX",
       "reason": "Missing/stale daily history"
     },
     {
-      "symbol": "SRI",
-      "reason": "Invalid OHLC range"
-    },
-    {
       "symbol": "THRD",
-      "reason": "[Errno 2] No such file or directory: '/tmp/net-patterns-publish/market_data/THRD.json'"
+      "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/THRD.json'"
     },
     {
       "symbol": "VUECF",
-      "reason": "[Errno 2] No such file or directory: '/tmp/net-patterns-publish/market_data/VUECF.json'"
+      "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/VUECF.json'"
     },
     {
       "symbol": "VYLR",
@@ -83,7 +79,7 @@
       "source": "https://www.ishares.com/us/products/239710/ishares-russell-2000-etf/latest-holdings.csv",
       "label": "Russell 2000 (IWM近似)",
       "count": 1960,
-      "scanned": 1947,
+      "scanned": 1948,
       "proxy": true,
       "source_as_of": "2026-11-10",
       "excluded_equity_holdings": 10
