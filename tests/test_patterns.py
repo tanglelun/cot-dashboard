@@ -44,6 +44,30 @@ class PatternTests(unittest.TestCase):
             self.assertIsNotNone(result['confirmed_on'])
             breakout['volume']=100
             self.assertEqual(detect(bars,kind)['status'],'breakout')
+    def test_structure_tiers_are_independent_of_breakout_and_volume(self):
+        for tier in ('clear','potential'):
+            for tail in (103,98):
+                base=fixture(tail)
+                if tier=='potential':
+                    for i in range(61,80):
+                        c=101+15*(i-60)/10 if i<=70 else 116+(tail-116)*(i-70)/9
+                        base[i].update(open=c,high=c+.2,low=c-.2,close=c)
+                for kind,bars in [('top',base),('bottom',invert(base))]:
+                    with self.subTest(tier=tier,tail=tail,kind=kind):
+                        result=detect(bars,kind)
+                        self.assertEqual(result['structure'],tier)
+                        self.assertEqual(result['has_breakout'],tail==98)
+                        self.assertEqual(result['volume_state'],'unavailable' if tail==98 else 'not_applicable')
+                        if tier=='potential': self.assertIn('shoulder_asymmetry',result['structure_notes'])
+                        for b in bars: b['volume']=100
+                        result=detect(bars,kind)
+                        self.assertEqual(result['volume_state'],'not_expanded' if tail==98 else 'not_applicable')
+                        if tail==98:
+                            next(b for b in bars if b['time']==result['breakout_date'])['volume']=160
+                            result=detect(bars,kind)
+                            self.assertEqual(result['volume_state'],'expanded')
+                            self.assertEqual(result['structure'],tier)
+
     def test_pivots_lie_on_displayed_close_curve(self):
         bars=fixture();result=detect(bars,'top')
         by_date={b['time']:b['close'] for b in bars}

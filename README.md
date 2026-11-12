@@ -140,22 +140,31 @@ two substantial intervening reversals, a prior trend, and a real right-shoulder
 recovery. References: StockCharts ChartSchool [bottom](https://chartschool.stockcharts.com/table-of-contents/chart-analysis/chart-patterns/head-and-shoulders-bottom)
 and [top](https://chartschool.stockcharts.com/table-of-contents/chart-analysis/chart-patterns/head-and-shoulders-top).
 
-These conservative numeric choices are implementation parameters, not universal
-textbook definitions: use 252 completed bars, 3-bar confirmed pivots, 20–120-day
-shoulder span, at least 3 days per structural leg and max/min leg ratio 3.
-Head width cannot exceed 2.5 times the combined inner shoulder legs. Left/right
-headward durations must have ratio 0.5–2. The head must exceed shoulders by
-1.5% of its price, 20% of pattern height and one mean true range. Each shoulder
-reversal must be at least 35% of pattern height and 1.5 mean true ranges;
-the recovery after the right shoulder must be at least 20% and one mean true
-range. Mean true range is measured from 14 bars before the left shoulder through
-the right shoulder. Shoulder height differences are capped at 4% of head price
-and 30% of pattern height; neckline slope over the shoulder span at 35% of height.
+These numeric choices are implementation parameters, not universal textbook
+definitions. Both tiers require 252 completed bars, 3-bar confirmed pivots,
+20–120-day shoulder span, at least 3 days per structural leg, and distinct
+shoulders separated from the head by two meaningful reactions. Head width
+cannot exceed 2.5 times the combined inner shoulder legs. Head prominence
+must exceed 1.5% of price, 20% of pattern height and one mean true range.
+Both shoulder reversals require 35% of height and one mean true range;
+right-shoulder recovery requires 20% and one mean true range. Mean true range
+uses bars from 14 sessions before the left shoulder through the right shoulder.
+These common gates reject broad rounded shapes in both tiers.
 
-Status `candidate` is unbroken structure. `breakout` requires a close 0.5%
-beyond the neckline. `confirmed` additionally requires breakout-day volume
-at least 1.2 times the preceding 20-session mean; missing volume never confirms.
-This is called volume expansion in the UI, not a guarantee of trend reversal.
+`structure=clear` additionally requires shoulder reversals of 1.5 mean true
+ranges, headward duration ratio 0.5–2, max/min leg ratio 3, shoulder height
+difference capped at both 4% of price and 30% of height, and neckline slope
+capped at 35% of height. `potential` permits duration ratio 1/3–3, leg ratio 4,
+shoulder difference up to both 6% of price and 50% of height, and slope up to
+60% of height. `structure_notes` explains every relaxed clear-tier criterion.
+Breakout or volume expansion never upgrades the structure tier.
+
+`has_breakout` requires a close 0.5% beyond the neckline. `volume_state` records
+breakout-day volume versus the preceding 20-session mean: `expanded` at 1.2x,
+`not_expanded` below it, `unavailable` for missing data, and `not_applicable`
+until breakout. The UI displays structure, breakout and volume separately.
+Legacy status remains `candidate`, `breakout`, or `confirmed` for compatibility;
+volume confirmation is not a guarantee of reversal.
 Candidates expire after 20 sessions, breakouts after 10, all right shoulders
 after 25. A head breach or a subsequent 0.5% neckline recross invalidates the
 result. Zero matches are valid and must not trigger looser thresholds.

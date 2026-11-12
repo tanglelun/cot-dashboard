@@ -154,10 +154,11 @@ def detect(bars, kind):
         if ''.join(p[2] for p in points) != 'HLHLH': continue
         (ls,a,_),(n1,b,_),(head,h,_),(n2,d,_),(rs,e,_) = points
         if ls < 20 or not 20 <= rs-ls <= 120 or len(bars)-1-rs > 25: continue
-        if not .5 <= (head-ls)/(rs-head) <= 2: continue
+        time_ratio = (head-ls)/(rs-head)
+        if not 1/3 <= time_ratio <= 3: continue
         legs = [n1-ls, head-n1, n2-head, rs-n2]
         # Avoid a broad U with tiny shoulders at its far ends.
-        if min(legs) < 3 or max(legs) > 3*min(legs): continue
+        if min(legs) < 3 or max(legs) > 4*min(legs): continue
         if n2-n1 > 2.5*((n1-ls)+(rs-n2)): continue
         neck = lambda i: b + (d-b)*(i-n1)/(n2-n1)
         height = h-neck(head)
@@ -165,12 +166,21 @@ def detect(bars, kind):
         atr = sum(true_ranges[max(0,ls-14):rs+1])/len(true_ranges[max(0,ls-14):rs+1])
         if height <= 0 or h-max(a,e) < max(.015*scale, .2*height, atr): continue
         # Both rebounds around the head must be substantial, not incidental wiggles.
-        if min(a-b, e-d) < max(.35*height, 1.5*atr): continue
+        if min(a-b, e-d) < max(.35*height, atr): continue
         # Visible recovery away from the right shoulder is required even for a candidate.
         if e-min(close[rs+1:]) < max(.2*height, atr): continue
-        if abs(a-e) > min(.04*scale, .3*height): continue
+        if abs(a-e) > min(.06*scale, .5*height): continue
         if min(a-neck(ls), e-neck(rs)) < .2*height: continue
-        if abs(neck(rs)-neck(ls)) > .35*height: continue
+        if abs(neck(rs)-neck(ls)) > .6*height: continue
+        # Tiers relax symmetry, slope and rebound strength. Broad-U exclusion
+        # above are mandatory for both tiers, irrespective of breakout/volume.
+        structure_notes = []
+        if min(a-b, e-d) < 1.5*atr: structure_notes.append('weaker_rebound')
+        if not .5 <= time_ratio <= 2: structure_notes.append('time_asymmetry')
+        if max(legs) > 3*min(legs): structure_notes.append('leg_asymmetry')
+        if abs(a-e) > min(.04*scale, .3*height): structure_notes.append('shoulder_asymmetry')
+        if abs(neck(rs)-neck(ls)) > .35*height: structure_notes.append('sloping_neckline')
+        structure = 'potential' if structure_notes else 'clear'
         # A reversal must be preceded by a move into the left shoulder.
         if a-close[ls-20] < max(.03*abs(close[ls-20]), .3*height): continue
         if any(v >= extreme[head] for v in extreme[rs+1:]): continue
@@ -195,7 +205,10 @@ def detect(bars, kind):
         # Retain all daily closes in the pattern window for an auditable mini-chart.
         origin = max(0,ls-10)
         found.append({
-            'kind':kind, 'status':status, 'volume_ratio':round(volume_ratio,2) if volume_ratio is not None else None,
+            'kind':kind, 'structure':structure, 'structure_notes':structure_notes,
+            'has_breakout':breakout is not None,
+            'volume_state':('not_applicable' if breakout is None else 'unavailable' if volume_ratio is None else 'expanded' if volume_ok else 'not_expanded'),
+            'status':status, 'volume_ratio':round(volume_ratio,2) if volume_ratio is not None else None,
             'as_of':bars[-1]['time'], 'price':bars[-1]['close'], 'neckline':round(neckline,4),
             'distance_pct':round((bars[-1]['close']/neckline-1)*100,2),
             'right_shoulder':bars[rs]['time'], 'detected_on':bars[rs+3]['time'],
@@ -206,7 +219,7 @@ def detect(bars, kind):
             'chart':[{'date':r['time'],'close':r['close']} for r in bars[origin:]],
             'neck_start':round(sign*neck(origin),4), 'neck_end':round(neckline,4),
         })
-    return max(found,key=lambda r:r['right_shoulder']) if found else None
+    return max(found,key=lambda r:(r['structure']=='clear',r['right_shoulder'])) if found else None
 
 
 def scan(root, groups, expected):
@@ -232,10 +245,10 @@ def scan(root, groups, expected):
                            'count':len(symbols), 'scanned':count, 'proxy':details.get('proxy',False)}
         for key in ('source_as_of','excluded_equity_holdings'):
             if key in details: coverage[group][key]=details[key]
-    results.sort(key=lambda r:({'confirmed':2,'breakout':1,'candidate':0}[r['status']],r['price_breakout_on'] or r['detected_on']), reverse=True)
+    results.sort(key=lambda r:(r['structure']=='clear',{'confirmed':2,'breakout':1,'candidate':0}[r['status']],r['price_breakout_on'] or r['detected_on']), reverse=True)
     return {'updated':datetime.now(timezone.utc).isoformat(), 'as_of':expected, 'universe_count':len(members),
             'scanned':scanned, 'skipped':skipped, 'constituents':coverage,
-            'method_version':2,'patterns':results}
+            'method_version':3,'patterns':results}
 
 
 def main():

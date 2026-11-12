@@ -16,3 +16,8 @@
 .pattern-method a{color:#9bbcff}
 .pattern-empty{padding:24px 14px;color:var(--muted);font-size:13px}
 @media(max-width:600px){.pattern-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 12px}.pattern-mini svg{margin-left:auto}.pattern-state{text-align:right}.pattern-list{max-height:560px}.pattern-name{max-width:155px}}
+
+.pattern-toolbar select{background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:6px;font:inherit}
+.pattern-badges{display:flex;gap:4px;flex-wrap:wrap}.pattern-badges .pattern-badge{margin-bottom:0}.pattern-state small:first-of-type{margin-top:5px}
+.pattern-badge.structure-clear{color:#b5d9ff;border-color:#4979a7}.pattern-badge.structure-potential{color:#c6c6ce;border-color:#626273}
+@media(max-width:600px){.pattern-badges{justify-content:flex-end}}
