@@ -1,4 +1,4 @@
-"""Daily, price-only head-and-shoulders screening for full index constituents."""
+"""Daily head-and-shoulders screening for index constituents and IWM equities."""
 import argparse
 import csv
 import io
@@ -13,8 +13,9 @@ ROOT = Path(__file__).resolve().parent
 SOURCES = {
     'sp500': 'https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv',
     'nasdaq100': 'https://en.wikipedia.org/wiki/List_of_NASDAQ-100_companies',
+    'russell2000': 'https://www.ishares.com/us/products/239710/ishares-russell-2000-etf/latest-holdings.csv',
 }
-LABELS = {'sp500': 'S&P 500', 'nasdaq100': 'Nasdaq 100'}
+LABELS = {'sp500': 'S&P 500', 'nasdaq100': 'Nasdaq 100', 'russell2000': 'Russell 2000 (IWM近似)'}
 
 
 class Tables(HTMLParser):
@@ -34,8 +35,31 @@ class Tables(HTMLParser):
             self.tables.append(self.table); self.table = None
 
 
+def parse_iwm(text):
+    records = list(csv.reader(io.StringIO(text.lstrip('\ufeff'))))
+    as_of = None
+    header = None
+    for i, row in enumerate(records):
+        if row and row[0].strip() == 'Fund Holdings as of' and len(row) > 1:
+            as_of = datetime.strptime(row[1].strip(), '%b %d, %Y').date().isoformat()
+        if row and row[0].strip() == 'Ticker' and 'Asset Class' in row:
+            header = i; break
+    if not as_of or header is None: raise ValueError('IWM holdings date/header missing')
+    items = []; excluded = 0
+    for values in records[header+1:]:
+        row = dict(zip(records[header], values))
+        if row.get('Asset Class') != 'Equity': continue
+        symbol = row.get('Ticker', '').strip().upper().replace(' ', '-').replace('.', '-')
+        if not re.fullmatch(r'[A-Z][A-Z0-9-]{0,11}',symbol) or 'UNLISTED' in row.get('Exchange','').upper():
+            excluded += 1; continue
+        items.append({'symbol':symbol, 'name':row.get('Name',symbol)})
+    return items, {'source_as_of':as_of, 'proxy':True, 'excluded_equity_holdings':excluded}
+
+
 def parse_members(text, group):
-    if group == 'sp500':
+    if group == 'russell2000':
+        rows, _ = parse_iwm(text)
+    elif group == 'sp500':
         rows = [{'symbol': r['Symbol'], 'name': r['Security']} for r in csv.DictReader(io.StringIO(text))]
     else:
         parser = Tables(); parser.feed(text); rows = []
@@ -51,7 +75,7 @@ def parse_members(text, group):
         symbol = row['symbol'].strip().upper().replace('.', '-')
         if not re.fullmatch(r'[A-Z0-9-]{1,12}', symbol): raise ValueError('Invalid constituent symbol')
         unique[symbol] = {'symbol': symbol, 'name': row['name']}
-    low, high = (490, 510) if group == 'sp500' else (95, 110)
+    low, high = {'sp500':(490,510), 'nasdaq100':(95,110), 'russell2000':(1800,2200)}[group]
     if not low <= len(unique) <= high: raise ValueError(f'Incomplete {group} membership: {len(unique)}')
     return list(unique.values())
 
@@ -67,11 +91,16 @@ def load_members(root, now=None):
         try:
             response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'}, timeout=30)
             response.raise_for_status()
-            groups[group] = {'date': today.isoformat(), 'source': url, 'items': parse_members(response.text, group)}
+            extra = parse_iwm(response.text)[1] if group == 'russell2000' else {}
+            if extra and not 0 <= (today-date.fromisoformat(extra['source_as_of'])).days <= 7:
+                raise ValueError('IWM holdings date is stale or in the future')
+            groups[group] = {'date': today.isoformat(), 'source': url, 'items': parse_members(response.text, group), **extra}
         except Exception as exc:
             saved = cache.get(group, {})
             if not saved.get('items') or not 0 <= (today - date.fromisoformat(saved['date'])).days <= 7:
                 raise RuntimeError(f'No current {group} constituent list: {exc}') from exc
+            if group == 'russell2000' and (not saved.get('source_as_of') or not 0 <= (today-date.fromisoformat(saved['source_as_of'])).days <= 7):
+                raise RuntimeError('IWM cached holdings are stale') from exc
             groups[group] = saved
             print(f'{group}: using dated constituent cache from {saved["date"]}')
     path.write_text(json.dumps(groups, ensure_ascii=False, indent=2) + '\n')
@@ -181,7 +210,7 @@ def detect(bars, kind):
 
 
 def scan(root, groups, expected):
-    members = universe(groups); skipped=[]; results=[]; scanned=0
+    members = universe(groups); skipped=[]; results=[]; scanned=0; scanned_symbols=set()
     for symbol, member in sorted(members.items()):
         try:
             path = root/'market_data'/f'{symbol}.json'
@@ -189,14 +218,23 @@ def scan(root, groups, expected):
             bars = clean_bars(json.loads(path.read_text())['prices'], expected)
         except (OSError, ValueError, KeyError, TypeError) as exc:
             skipped.append({'symbol':symbol,'reason':str(exc)[:120]}); continue
-        scanned += 1
+        scanned += 1; scanned_symbols.add(symbol)
         for kind in ('top','bottom'):
             result=detect(bars,kind)
             if result: results.append({**member,**result})
-    if scanned < len(members)*.90: raise RuntimeError(f'Insufficient current charts: {scanned}/{len(members)}; preserving previous scan')
+    coverage = {}
+    for group, details in groups.items():
+        symbols = {r['symbol'] for r in details['items']}
+        count = len(symbols & scanned_symbols)
+        if count < len(symbols)*.90:
+            raise RuntimeError(f'Insufficient current {group} charts: {count}/{len(symbols)}; preserving previous scan')
+        coverage[group] = {'date':details['date'], 'source':details['source'], 'label':LABELS[group],
+                           'count':len(symbols), 'scanned':count, 'proxy':details.get('proxy',False)}
+        for key in ('source_as_of','excluded_equity_holdings'):
+            if key in details: coverage[group][key]=details[key]
     results.sort(key=lambda r:({'confirmed':2,'breakout':1,'candidate':0}[r['status']],r['price_breakout_on'] or r['detected_on']), reverse=True)
     return {'updated':datetime.now(timezone.utc).isoformat(), 'as_of':expected, 'universe_count':len(members),
-            'scanned':scanned, 'skipped':skipped, 'constituents':{k:{'date':v['date'],'source':v['source'],'count':len(v['items'])} for k,v in groups.items()},
+            'scanned':scanned, 'skipped':skipped, 'constituents':coverage,
             'method_version':2,'patterns':results}
 
 

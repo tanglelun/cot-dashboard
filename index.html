@@ -6,7 +6,7 @@
 <title>Net Data | Market Dashboard</title>
 <link rel="stylesheet" href="nav_market.css">
 <link rel="stylesheet" href="patterns.css">
-<script src="patterns.js?v=2" defer></script>
+<script src="patterns.js?v=3" defer></script>
 <link rel="prefetch" href="market_pulse_view.json" as="fetch" crossorigin="anonymous">
 <style>
 :root{--bg:#000;--panel:#050709;--panel2:#090d12;--border:#202932;--border-soft:#111820;--text:#d1d4dc;--muted:#787b86;--faint:#5d606b;--green:#00d109;--red:#ff4d00;--blue:#2962ff;--hover:#101820;--accent:#00d109}
@@ -121,7 +121,7 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,san
       <div class="pattern-toolbar">
         <div class="cross-tabs"><button type="button" class="cross-tab active" data-pattern="bottom" aria-pressed="true">头肩底</button><button type="button" class="cross-tab" data-pattern="top" aria-pressed="false">头肩顶</button></div>
         <label><input type="checkbox" id="patternsConfirmed">只看颈线突破</label>
-        <span class="section-meta">S&amp;P 500 + Nasdaq 100</span>
+        <span class="section-meta">S&amp;P 500 + Nasdaq 100 + Russell 2000（IWM近似）</span>
       </div>
       <p id="patternDefinition" class="pattern-method">头肩底：下跌后出现三个独立低谷，中间最低；两次明显反弹连接成颈线。</p>
       <div id="patternList" class="pattern-list"></div>
@@ -130,6 +130,7 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,san
         <p>本页使用最近 252 个交易日的收盘线进行严格筛选，识别与小图口径一致。局部峰谷需左右各 3 根日线确认；左右肩总跨度 20–120 日，每个相邻结构点至少相隔 3 日，四段中最长不超过最短的 3 倍。肩部反弹／回落须大于头颈高度的 35% 且大于 1.5 倍平均真实波幅，排除微小波动和过宽的圆弧头部。</p>
         <p>结构候选尚未突破颈线；价格突破需收盘穿越颈线 0.5%；放量突破还要求突破日成交量达到此前 20 日均量的 1.2 倍。量能不足或缺失不会标成放量确认。候选在右肩后最多保留 20 日，突破后保留 10 日，出现头部破坏或反穿颈线会剔除。</p>
         <p>这些数值是本站的保守筛选参数，并非行业统一定义；无结果表示未通过本站规则，不代表市场绝不存在该形态。自动筛选仍需看图复核。参考：<a href="https://chartschool.stockcharts.com/table-of-contents/chart-analysis/chart-patterns/head-and-shoulders-bottom" target="_blank" rel="noopener">头肩底定义</a> · <a href="https://chartschool.stockcharts.com/table-of-contents/chart-analysis/chart-patterns/head-and-shoulders-top" target="_blank" rel="noopener">头肩顶定义</a></p>
+        <p>罗素 2000 范围采用 <a href="https://www.ishares.com/us/products/239710/ishares-russell-2000-etf" target="_blank" rel="noopener">iShares IWM 官方股票持仓</a>作为公开近似名单，不等同于 FTSE Russell 精确指数成分股；已排除现金、期货、未上市及无有效交易代码持仓。</p>
         <div id="patternMembership"></div><div id="patternCoverage"></div>
       </details>
     </section>

@@ -76,7 +76,7 @@
       const coverage=document.getElementById('patternCoverage');
       coverage.textContent=data.skipped.length?`${data.skipped.length} 只因行情缺失、过期或无效未参与：${data.skipped.map(r=>r.symbol).join('、')}`:'完整成分股扫描，无缺失行情。';
       const members=document.getElementById('patternMembership');
-      members.textContent=Object.entries(data.constituents).map(([k,v])=>`${k==='sp500'?'S&P 500':'Nasdaq 100'}：${v.count} 只，名单读取日期 ${v.date}`).join('；');
+      members.textContent=Object.entries(data.constituents).map(([k,v])=>`${v.label || ({sp500:'S&P 500',nasdaq100:'Nasdaq 100',russell2000:'Russell 2000 (IWM近似)'})[k]}：${v.scanned ?? v.count}/${v.count} 只可扫描，名单读取 ${v.date}${v.source_as_of ? '，持仓截至 '+v.source_as_of : ''}${v.excluded_equity_holdings ? '；另排除 '+v.excluded_equity_holdings+' 项未上市或无有效代码持仓' : ''}`).join('；');
       render();
     } catch(error) {
       data=null;meta.textContent='形态数据暂时无法读取';list.replaceChildren(el('div','请稍后重试。原有行情页面不受影响。','pattern-empty'));

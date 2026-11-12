@@ -120,11 +120,19 @@ recovered without downloading every market again.
 ### Homepage head-and-shoulders scanner
 
 `generate_patterns.py` scans the complete S&P 500 and Nasdaq 100 constituent
-union, not the top-100 ranking groups. Membership is refreshed from the S&P
-500 CSV maintained by datasets and Wikipedia's Nasdaq-100 companies table;
+union plus listed equity holdings of IWM as a public Russell 2000 proxy, not
+the top-100 ranking groups. IWM holdings are explicitly labeled approximate
+and are not represented as exact licensed FTSE Russell index membership. Membership is refreshed from the S&P
+500 CSV maintained by datasets, Wikipedia's Nasdaq-100 companies table, and
+iShares' official `latest-holdings.csv` for IWM;
 `pattern_constituents.json` records source/read dates. A failed fetch may use
 that source's cached list for at most seven calendar days. The homepage reports
-constituent dates, coverage, and excluded symbols.
+constituent dates, coverage, and excluded symbols. IWM's embedded holdings date
+must be within seven days of retrieval, including when cached; refreshing the
+HTTP request cannot make old holdings fresh. Cash, derivatives, unlisted and
+invalid-ticker holdings are excluded. Space-separated share classes normalize
+to Yahoo hyphens (MOG A → MOG-A). Source size bounds are 1,800–2,200 listed
+IWM equities, and symbol overlap is deduplicated across all three groups.
 
 Version 2 uses the same closing-price curve for detection and previews so all five
 pivots lie on the displayed curve. It requires three distinct peaks/troughs,
@@ -160,7 +168,7 @@ rounding-bottom examples. The mini-chart marks both real neckline anchors and
 extends the line only to the right, not across the unrelated preceding trend.
 
 After successful stock updates, the market workflow generates and publishes
-`patterns_data.json`. If fewer than 90% of constituent charts are current and
+`patterns_data.json`. If fewer than 90% of charts in any constituent group are current and
 valid, generation fails without replacing the previous scan. Stale/missing
 pattern output triggers the existing hourly recovery path. Run manually with
 `python generate_patterns.py`; tests: `python -m unittest discover -s tests`.
