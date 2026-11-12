@@ -2,6 +2,7 @@
   const root = document.getElementById('patternSection');
   if (!root) return;
   const list = document.getElementById('patternList');
+  const definitions = {bottom:'头肩底：下跌后出现三个独立低谷，中间最低；两次明显反弹连接成颈线。',top:'头肩顶：上涨后出现三个独立高峰，中间最高；两次明显回落连接成颈线。'};
   const meta = document.getElementById('patternMeta');
   let data, kind = 'bottom';
   const money = value => Number(value).toLocaleString('en-US', {maximumFractionDigits:2, minimumFractionDigits:2});
@@ -15,7 +16,7 @@
     const ns = 'http://www.w3.org/2000/svg';
     const svg = document.createElementNS(ns, 'svg');
     svg.setAttribute('viewBox', '0 0 180 66'); svg.setAttribute('role', 'img');
-    svg.setAttribute('aria-label', `${row.symbol} ${kind === 'top' ? '头肩顶' : '头肩底'}：三点为左肩、头部、右肩，虚线为颈线`);
+    svg.setAttribute('aria-label', `${row.symbol} ${kind === 'top' ? '头肩顶' : '头肩底'}：彩色点为左肩、头部、右肩，黄点为两次反弹或回落的颈线连接点`);
     const values = row.chart.map(p => p.close).concat(row.points.map(p => p.price), [row.neck_start, row.neck_end]);
     const lo = Math.min(...values), hi = Math.max(...values);
     const x = i => 6 + i * 168 / Math.max(1, row.chart.length - 1);
@@ -25,7 +26,13 @@
       Object.entries(attrs).forEach(([k,v]) => node.setAttribute(k,v)); svg.append(node); return node;
     }
     shape('polyline', {points:row.chart.map((p,i)=>`${x(i)},${y(p.close)}`).join(' '), fill:'none', stroke:'#9ba8b8', 'stroke-width':1.4});
-    shape('line', {x1:6,y1:y(row.neck_start),x2:174,y2:y(row.neck_end),stroke:'#e4b85b','stroke-width':1,'stroke-dasharray':'4 3'});
+    const [n1,n2]=[row.points[1],row.points[3]];
+    shape('line', {x1:x(n1.offset),y1:y(n1.price),x2:x(n2.offset),y2:y(n2.price),stroke:'#e4b85b','stroke-width':1.4});
+    shape('line', {x1:x(n2.offset),y1:y(n2.price),x2:174,y2:y(row.neck_end),stroke:'#e4b85b','stroke-width':1,'stroke-dasharray':'4 3'});
+    [n1,n2].forEach((p,i)=>{
+      const dot=shape('circle',{cx:x(p.offset),cy:y(p.price),r:2.4,fill:'#e4b85b'});
+      const title=document.createElementNS(ns,'title');title.textContent=`颈线连接点 ${i+1} · ${p.date} · ${money(p.price)}`;dot.append(title);
+    });
     [0,2,4].forEach((index,j)=>{
       const p=row.points[index];
       const dot=shape('circle',{cx:x(p.offset),cy:y(p.price),r:2.8,fill:kind==='top'?'#ff7859':'#45d6ae'});
@@ -35,17 +42,19 @@
   }
   function render() {
     if (!data) return;
-    const rows=data.patterns.filter(r=>r.kind===kind && (!document.getElementById('patternsConfirmed').checked || r.status==='confirmed'));
+    document.getElementById('patternDefinition').textContent=definitions[kind];
+    const rows=data.patterns.filter(r=>r.kind===kind && (!document.getElementById('patternsConfirmed').checked || r.status!=='candidate'));
     list.replaceChildren();
-    if (!rows.length) {list.append(el('div','当前筛选下没有符合规则的形态。','pattern-empty'));return;}
+    if (!rows.length) {list.append(el('div','当前严格筛选下暂无清晰形态，不展示圆弧底或仅有轻微肩部波动的走势。','pattern-empty'));return;}
     rows.forEach(row=>{
       const card=el('a',null,'pattern-row');
       card.href='stock_chart.html?symbol='+encodeURIComponent(row.symbol)+'&universe=all&name='+encodeURIComponent(row.name);
       const identity=el('div'); identity.append(el('strong',row.symbol),el('span',row.name,'pattern-name'),el('small',row.indexes.join(' · '),'pattern-index'));
       const chart=el('div',null,'pattern-mini');chart.append(miniChart(row));
       const price=el('div',null,'pattern-price');price.append(el('strong','$'+money(row.price)),el('small','颈线 $'+money(row.neckline)),el('small','距颈线 '+(row.distance_pct>0?'+':'')+row.distance_pct.toFixed(2)+'%'));
-      const status=el('div',null,'pattern-state');status.append(el('span',row.status==='confirmed'?'已突破颈线':'候选 · 未突破',row.status==='confirmed'?'pattern-badge confirmed':'pattern-badge'));
-      status.append(el('small','右肩 '+row.right_shoulder),el('small',row.status==='confirmed'?'确认 '+row.confirmed_on:'识别 '+row.detected_on));
+      const status=el('div',null,'pattern-state');status.append(el('span',row.status==='confirmed'?'放量突破':row.status==='breakout'?'价格突破 · 量能未确认':'结构候选 · 未突破',row.status==='confirmed'?'pattern-badge confirmed':'pattern-badge'));
+      status.append(el('small','右肩 '+row.right_shoulder),el('small',row.status!=='candidate'?'突破识别 '+row.price_breakout_on:'识别 '+row.detected_on));
+      if(row.status!=='candidate') status.append(el('small',row.volume_ratio==null?'成交量资料不足':'突破日量比 '+row.volume_ratio.toFixed(2)+'×（前20日均量）'));
       card.append(identity,chart,price,status);list.append(card);
     });
   }

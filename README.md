@@ -126,23 +126,38 @@ union, not the top-100 ranking groups. Membership is refreshed from the S&P
 that source's cached list for at most seven calendar days. The homepage reports
 constituent dates, coverage, and excluded symbols.
 
-The price-only heuristic uses the last 252 completed daily bars, 3-bar confirmed
-pivots, 20–120-session patterns, a preceding trend, and alternating five-pivot
-geometry. The head must exceed both shoulders by at least 2% of head price and
-15% of head-to-neckline height. Shoulders differ by at most 6% of head price and
-50% of pattern height; their headward durations have a 0.4–2.5 ratio. Neckline
-slope is capped at 60% of pattern height over the shoulder span. Both shoulders
-must stand at least 20% of pattern height above the neckline (inverted for
-bottoms). The previous 20-session move into the left shoulder must be at least
-3% and 30% of pattern height. EMA/trend-candle colors are unrelated to this scan.
+Version 2 uses the same closing-price curve for detection and previews so all five
+pivots lie on the displayed curve. It requires three distinct peaks/troughs,
+two substantial intervening reversals, a prior trend, and a real right-shoulder
+recovery. References: StockCharts ChartSchool [bottom](https://chartschool.stockcharts.com/table-of-contents/chart-analysis/chart-patterns/head-and-shoulders-bottom)
+and [top](https://chartschool.stockcharts.com/table-of-contents/chart-analysis/chart-patterns/head-and-shoulders-top).
 
-A close 0.5% beyond the extrapolated neckline confirms a price breakout;
-intraday wicks alone do not. Confirmation cannot predate the three-bar right
-shoulder confirmation. Candidates expire 20 sessions after the right shoulder;
-confirmed breakouts expire after 10 sessions. All right shoulders must be within
-25 sessions. A subsequent head breach or 0.5% neckline recross invalidates the
-result. No volume confirmation, probability estimate, or performance claim is
-made. These are mechanical candidates for chart review, not verified outcomes.
+These conservative numeric choices are implementation parameters, not universal
+textbook definitions: use 252 completed bars, 3-bar confirmed pivots, 20–120-day
+shoulder span, at least 3 days per structural leg and max/min leg ratio 3.
+Head width cannot exceed 2.5 times the combined inner shoulder legs. Left/right
+headward durations must have ratio 0.5–2. The head must exceed shoulders by
+1.5% of its price, 20% of pattern height and one mean true range. Each shoulder
+reversal must be at least 35% of pattern height and 1.5 mean true ranges;
+the recovery after the right shoulder must be at least 20% and one mean true
+range. Mean true range is measured from 14 bars before the left shoulder through
+the right shoulder. Shoulder height differences are capped at 4% of head price
+and 30% of pattern height; neckline slope over the shoulder span at 35% of height.
+
+Status `candidate` is unbroken structure. `breakout` requires a close 0.5%
+beyond the neckline. `confirmed` additionally requires breakout-day volume
+at least 1.2 times the preceding 20-session mean; missing volume never confirms.
+This is called volume expansion in the UI, not a guarantee of trend reversal.
+Candidates expire after 20 sessions, breakouts after 10, all right shoulders
+after 25. A head breach or a subsequent 0.5% neckline recross invalidates the
+result. Zero matches are valid and must not trigger looser thresholds.
+
+`tests/fixtures/rounding_bottoms_2026_11_11.json` freezes four former false
+positives from the repository daily OHLCV history (FE, USB, EXC, SLB). Tests
+retain clear synthetic positive examples for both orientations, including
+price-only versus volume-confirmed breakouts, while rejecting these broad
+rounding-bottom examples. The mini-chart marks both real neckline anchors and
+extends the line only to the right, not across the unrelated preceding trend.
 
 After successful stock updates, the market workflow generates and publishes
 `patterns_data.json`. If fewer than 90% of constituent charts are current and

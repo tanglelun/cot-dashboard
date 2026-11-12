@@ -29,8 +29,39 @@ class PatternTests(unittest.TestCase):
     def test_close_breakout_and_inverse(self):
         for kind,bars in [('top',fixture(98)),('bottom',invert(fixture(98)))]:
             result=detect(bars,kind)
+            self.assertEqual(result['status'],'breakout')
+            self.assertIsNone(result['confirmed_on'])
+            self.assertGreaterEqual(result['price_breakout_on'],result['detected_on'])
+    def test_volume_confirmation_is_separate(self):
+        for kind,bars in [('top',fixture(98)),('bottom',invert(fixture(98)))]:
+            for b in bars: b['volume']=100
+            first=detect(bars,kind)
+            breakout=next(b for b in bars if b['time']==first['breakout_date'])
+            breakout['volume']=160
+            result=detect(bars,kind)
             self.assertEqual(result['status'],'confirmed')
-            self.assertGreaterEqual(result['confirmed_on'],result['detected_on'])
+            self.assertAlmostEqual(result['volume_ratio'],1.6)
+            self.assertIsNotNone(result['confirmed_on'])
+            breakout['volume']=100
+            self.assertEqual(detect(bars,kind)['status'],'breakout')
+    def test_pivots_lie_on_displayed_close_curve(self):
+        bars=fixture();result=detect(bars,'top')
+        by_date={b['time']:b['close'] for b in bars}
+        for point in result['points']:
+            self.assertAlmostEqual(point['price'],by_date[point['date']])
+    def test_reviewed_rounding_bottom_false_positives(self):
+        path=Path(__file__).parent/'fixtures'/'rounding_bottoms_2026_11_11.json'
+        samples=json.loads(path.read_text())
+        for symbol,bars in samples.items():
+            with self.subTest(symbol=symbol): self.assertIsNone(detect(bars,'bottom'))
+    def test_wide_head_with_incidental_shoulders_is_rejected(self):
+        anchors=[(0,80),(20,95),(30,110),(33,107),(55,120),(77,107),(80,110),(89,106)]
+        values=[]
+        for (i,a),(j,b) in zip(anchors,anchors[1:]): values.extend(a+(b-a)*k/(j-i) for k in range(j-i))
+        values.append(106)
+        bars=[{'time':(date(2026,1,1)+timedelta(days=i)).isoformat(),'open':c,'high':c+.2,'low':c-.2,'close':c} for i,c in enumerate(values)]
+        self.assertIsNone(detect(bars,'top'))
+        self.assertIsNone(detect(invert(bars),'bottom'))
     def test_wick_alone_does_not_confirm(self):
         bars=fixture();bars[-1]['low']=90
         self.assertEqual(detect(bars,'top')['status'],'candidate')

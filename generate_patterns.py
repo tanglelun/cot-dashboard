@@ -103,14 +103,18 @@ def clean_bars(prices, expected):
 def detect(bars, kind):
     """Invert bottoms so the same geometry, prior-trend and breakout rules apply."""
     sign = 1 if kind == 'top' else -1
-    high = [b['high'] if sign == 1 else -b['low'] for b in bars]
-    low = [b['low'] if sign == 1 else -b['high'] for b in bars]
     close = [sign * b['close'] for b in bars]
+    # Use the same close-price curve shown in the preview: no invisible wick pivots.
+    high = low = close
+    extreme = [b['high'] if sign == 1 else -b['low'] for b in bars]
+    true_ranges = [max(b['high']-b['low'], abs(b['high']-bars[i-1]['close']),
+                       abs(b['low']-bars[i-1]['close'])) if i else b['high']-b['low']
+                   for i, b in enumerate(bars)]
     pivots = []
     for i in range(3, len(bars)-3):
         peak = high[i] > max(high[i-3:i]) and high[i] >= max(high[i+1:i+4])
         trough = low[i] < min(low[i-3:i]) and low[i] <= min(low[i+1:i+4])
-        if peak == trough: continue  # Outside bars have ambiguous intraday order.
+        if peak == trough: continue
         p = (i, high[i] if peak else low[i], 'H' if peak else 'L')
         if pivots and pivots[-1][2] == p[2]:
             if (p[1] - pivots[-1][1]) * (1 if peak else -1) > 0: pivots[-1] = p
@@ -121,17 +125,26 @@ def detect(bars, kind):
         if ''.join(p[2] for p in points) != 'HLHLH': continue
         (ls,a,_),(n1,b,_),(head,h,_),(n2,d,_),(rs,e,_) = points
         if ls < 20 or not 20 <= rs-ls <= 120 or len(bars)-1-rs > 25: continue
-        if not .4 <= (head-ls)/(rs-head) <= 2.5: continue
+        if not .5 <= (head-ls)/(rs-head) <= 2: continue
+        legs = [n1-ls, head-n1, n2-head, rs-n2]
+        # Avoid a broad U with tiny shoulders at its far ends.
+        if min(legs) < 3 or max(legs) > 3*min(legs): continue
+        if n2-n1 > 2.5*((n1-ls)+(rs-n2)): continue
         neck = lambda i: b + (d-b)*(i-n1)/(n2-n1)
         height = h-neck(head)
         scale = abs(h)
-        if height <= 0 or h-max(a,e) < max(.02*scale, .15*height): continue
-        if abs(a-e) > min(.06*scale, .5*height): continue
+        atr = sum(true_ranges[max(0,ls-14):rs+1])/len(true_ranges[max(0,ls-14):rs+1])
+        if height <= 0 or h-max(a,e) < max(.015*scale, .2*height, atr): continue
+        # Both rebounds around the head must be substantial, not incidental wiggles.
+        if min(a-b, e-d) < max(.35*height, 1.5*atr): continue
+        # Visible recovery away from the right shoulder is required even for a candidate.
+        if e-min(close[rs+1:]) < max(.2*height, atr): continue
+        if abs(a-e) > min(.04*scale, .3*height): continue
         if min(a-neck(ls), e-neck(rs)) < .2*height: continue
-        if abs(neck(rs)-neck(ls)) > .6*height: continue
+        if abs(neck(rs)-neck(ls)) > .35*height: continue
         # A reversal must be preceded by a move into the left shoulder.
         if a-close[ls-20] < max(.03*abs(close[ls-20]), .3*height): continue
-        if any(v >= h for v in high[rs+1:]): continue
+        if any(v >= extreme[head] for v in extreme[rs+1:]): continue
         breaks = [i for i in range(rs+1, len(bars)) if close[i] < neck(i)-.005*abs(neck(i))]
         breakout = breaks[0] if breaks else None
         if breakout is not None:
@@ -142,15 +155,24 @@ def detect(bars, kind):
         neckline = sign*neck(last)
         if neckline <= 0: continue
         confirmation = max(rs+3, breakout) if breakout is not None else None
+        volume_ratio = None
+        volume_ok = False
+        if breakout is not None:
+            volumes = [r.get('volume') for r in bars[max(0,breakout-20):breakout+1]]
+            if len(volumes) == 21 and all(isinstance(v,(int,float)) and math.isfinite(v) and v>0 for v in volumes):
+                volume_ratio = volumes[-1]/(sum(volumes[:-1])/20)
+                volume_ok = volume_ratio >= 1.2
+        status = 'confirmed' if volume_ok else 'breakout' if breakout is not None else 'candidate'
         # Retain all daily closes in the pattern window for an auditable mini-chart.
         origin = max(0,ls-10)
         found.append({
-            'kind':kind, 'status':'confirmed' if breakout is not None else 'candidate',
+            'kind':kind, 'status':status, 'volume_ratio':round(volume_ratio,2) if volume_ratio is not None else None,
             'as_of':bars[-1]['time'], 'price':bars[-1]['close'], 'neckline':round(neckline,4),
             'distance_pct':round((bars[-1]['close']/neckline-1)*100,2),
             'right_shoulder':bars[rs]['time'], 'detected_on':bars[rs+3]['time'],
             'breakout_date':bars[breakout]['time'] if breakout is not None else None,
-            'confirmed_on':bars[confirmation]['time'] if confirmation is not None else None,
+            'price_breakout_on':bars[confirmation]['time'] if confirmation is not None else None,
+            'confirmed_on':bars[confirmation]['time'] if volume_ok else None,
             'points':[{'date':bars[i]['time'], 'price':round(sign*v,4), 'offset':i-origin} for i,v,_ in points],
             'chart':[{'date':r['time'],'close':r['close']} for r in bars[origin:]],
             'neck_start':round(sign*neck(origin),4), 'neck_end':round(neckline,4),
@@ -172,10 +194,10 @@ def scan(root, groups, expected):
             result=detect(bars,kind)
             if result: results.append({**member,**result})
     if scanned < len(members)*.90: raise RuntimeError(f'Insufficient current charts: {scanned}/{len(members)}; preserving previous scan')
-    results.sort(key=lambda r:(r['status']=='confirmed',r['confirmed_on'] or r['detected_on']), reverse=True)
+    results.sort(key=lambda r:({'confirmed':2,'breakout':1,'candidate':0}[r['status']],r['price_breakout_on'] or r['detected_on']), reverse=True)
     return {'updated':datetime.now(timezone.utc).isoformat(), 'as_of':expected, 'universe_count':len(members),
             'scanned':scanned, 'skipped':skipped, 'constituents':{k:{'date':v['date'],'source':v['source'],'count':len(v['items'])} for k,v in groups.items()},
-            'method_version':1,'patterns':results}
+            'method_version':2,'patterns':results}
 
 
 def main():
