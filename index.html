@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Net Data | Market Dashboard</title>
 <link rel="stylesheet" href="nav_market.css">
+<link rel="stylesheet" href="patterns.css">
+<script src="patterns.js" defer></script>
 <link rel="prefetch" href="market_pulse_view.json" as="fetch" crossorigin="anonymous">
 <style>
 :root{--bg:#000;--panel:#050709;--panel2:#090d12;--border:#202932;--border-soft:#111820;--text:#d1d4dc;--muted:#787b86;--faint:#5d606b;--green:#00d109;--red:#ff4d00;--blue:#2962ff;--hover:#101820;--accent:#00d109}
@@ -114,6 +116,21 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,san
 
 <main class="container">
   <div class="main-col">
+    <section class="section" id="patternSection" aria-label="头肩形态股票筛选">
+      <div class="section-head"><div><h2>头肩形态 · Head &amp; Shoulders</h2><div class="section-meta" id="patternMeta" role="status">正在读取形态扫描结果…</div></div></div>
+      <div class="pattern-toolbar">
+        <div class="cross-tabs"><button type="button" class="cross-tab active" data-pattern="top" aria-pressed="true">头肩顶</button><button type="button" class="cross-tab" data-pattern="bottom" aria-pressed="false">头肩底</button></div>
+        <label><input type="checkbox" id="patternsConfirmed">只看已突破颈线</label>
+        <span class="section-meta">S&amp;P 500 + Nasdaq 100</span>
+      </div>
+      <div id="patternList" class="pattern-list"></div>
+      <details class="pattern-method"><summary>识别规则与数据范围 · 小图三点为左肩／头部／右肩，虚线为颈线</summary>
+        <p>使用最近 252 个交易日的日线。局部高低点需左右各 3 根日线确认；形态跨度 20–120 个交易日，需有前置趋势、肩部高度与时间对称约束。右肩需在最近 25 个交易日内。</p>
+        <p>“候选”尚未收盘突破颈线，最多保留右肩后 20 个交易日。“已突破颈线”需收盘穿越颈线 0.5%，且发生在最近 10 个交易日；突破后反穿颈线 0.5% 或价格越过头部的形态会剔除。确认日期不会早于右肩高低点可被识别的日期。</p>
+        <p>这是价格形态的自动筛选，不使用成交量确认，也不代表形态一定有效。点击股票可打开日线图复核。<a href="https://www.schwab.com/learn/story/identifying-head-and-shoulders-patterns-stock-charts" target="_blank" rel="noopener">形态说明</a></p>
+        <div id="patternMembership"></div><div id="patternCoverage"></div>
+      </details>
+    </section>
     <div class="section">
       <div class="section-head">
         <div>

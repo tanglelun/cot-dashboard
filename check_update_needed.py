@@ -38,6 +38,8 @@ def recovery_reasons(kind, root=BASE_DIR, expected=None):
                     reasons.append(f'{name} is behind the completed session')
             if read_json(root, 'crossover_data.json').get('updated', '')[:10] < expected:
                 reasons.append('crossover signals have not been regenerated')
+            if read_json(root, 'patterns_data.json').get('as_of', '') < expected:
+                reasons.append('head and shoulders scan is behind the completed session')
         else:
             payload = read_json(root, 'market_pulse_view.json')
             series = {item['key']: item for item in payload.get('series', [])}

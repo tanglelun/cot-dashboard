@@ -70,12 +70,19 @@ jobs:
         continue-on-error: true
         run: python generate_crossover.py
 
+      - name: Screen head and shoulders patterns
+        id: patterns
+        if: steps.stocks.outcome == 'success'
+        continue-on-error: true
+        run: python generate_patterns.py
+
       - name: Select successful outputs
         id: outputs
         env:
           STOCKS_OK: ${{ steps.stocks.outcome }}
           COMMODITIES_OK: ${{ steps.commodities.outcome }}
           INDEXES_OK: ${{ steps.indexes.outcome }}
+          PATTERNS_OK: ${{ steps.patterns.outcome }}
           CROSSOVER_OK: ${{ steps.crossover.outcome }}
         run: |
           patterns=()
@@ -83,6 +90,7 @@ jobs:
           if [[ "$COMMODITIES_OK" == success ]]; then patterns+=("commodities_data.json" "commodities_data/*.json"); fi
           if [[ "$INDEXES_OK" == success ]]; then patterns+=("indexes_data.json" "indexes_data/*.json"); fi
           if [[ "$CROSSOVER_OK" == success ]]; then patterns+=("crossover_data.json"); fi
+          if [[ "$PATTERNS_OK" == success ]]; then patterns+=("patterns_data.json" "pattern_constituents.json"); fi
           echo "files=${patterns[*]}" >> "$GITHUB_OUTPUT"
 
       - name: Commit updated Market page
@@ -99,7 +107,7 @@ jobs:
         run: bash publish_data.sh
 
       - name: Report incomplete refreshes
-        if: steps.stocks.outcome == 'failure' || steps.commodities.outcome == 'failure' || steps.indexes.outcome == 'failure' || steps.crossover.outcome == 'failure'
+        if: steps.stocks.outcome == 'failure' || steps.commodities.outcome == 'failure' || steps.indexes.outcome == 'failure' || steps.crossover.outcome == 'failure' || steps.patterns.outcome == 'failure'
         run: |
           echo "::error::One or more data sources failed. Successful updates were committed; inspect the failed step."
           exit 1

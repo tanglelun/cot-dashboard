@@ -116,3 +116,36 @@ Publishing uses `publish_data.sh`, which supplies the bot identity explicitly fo
 rebases and autostashes on fresh runners. Failed publishes retain the generated
 commit as a downloadable Git bundle artifact for seven days, so data can be
 recovered without downloading every market again.
+
+### Homepage head-and-shoulders scanner
+
+`generate_patterns.py` scans the complete S&P 500 and Nasdaq 100 constituent
+union, not the top-100 ranking groups. Membership is refreshed from the S&P
+500 CSV maintained by datasets and Wikipedia's Nasdaq-100 companies table;
+`pattern_constituents.json` records source/read dates. A failed fetch may use
+that source's cached list for at most seven calendar days. The homepage reports
+constituent dates, coverage, and excluded symbols.
+
+The price-only heuristic uses the last 252 completed daily bars, 3-bar confirmed
+pivots, 20–120-session patterns, a preceding trend, and alternating five-pivot
+geometry. The head must exceed both shoulders by at least 2% of head price and
+15% of head-to-neckline height. Shoulders differ by at most 6% of head price and
+50% of pattern height; their headward durations have a 0.4–2.5 ratio. Neckline
+slope is capped at 60% of pattern height over the shoulder span. Both shoulders
+must stand at least 20% of pattern height above the neckline (inverted for
+bottoms). The previous 20-session move into the left shoulder must be at least
+3% and 30% of pattern height. EMA/trend-candle colors are unrelated to this scan.
+
+A close 0.5% beyond the extrapolated neckline confirms a price breakout;
+intraday wicks alone do not. Confirmation cannot predate the three-bar right
+shoulder confirmation. Candidates expire 20 sessions after the right shoulder;
+confirmed breakouts expire after 10 sessions. All right shoulders must be within
+25 sessions. A subsequent head breach or 0.5% neckline recross invalidates the
+result. No volume confirmation, probability estimate, or performance claim is
+made. These are mechanical candidates for chart review, not verified outcomes.
+
+After successful stock updates, the market workflow generates and publishes
+`patterns_data.json`. If fewer than 90% of constituent charts are current and
+valid, generation fails without replacing the previous scan. Stale/missing
+pattern output triggers the existing hourly recovery path. Run manually with
+`python generate_patterns.py`; tests: `python -m unittest discover -s tests`.

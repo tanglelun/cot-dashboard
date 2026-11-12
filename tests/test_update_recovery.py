@@ -16,6 +16,7 @@ class UpdateRecoveryTests(unittest.TestCase):
         for name in ['market_data/A.json','indexes_data/GSPC.json','commodities_data/GC-F.json','commodities_data/CL-F.json']:
             self.write(name, {'prices':[{'time':'2026-10-22'}]})
         self.write('crossover_data.json', {'updated':'2026-10-23 01:00 UTC'})
+        self.write('patterns_data.json', {'as_of':'2026-10-22'})
     def test_current_market_skips_recovery(self):
         self.market()
         self.assertEqual(recovery_reasons('market',self.root,'2026-10-22')[1],[])
@@ -25,6 +26,9 @@ class UpdateRecoveryTests(unittest.TestCase):
     def test_failed_index_refresh_is_retried(self):
         self.market();self.write('indexes_data/GSPC.json',{'prices':[{'time':'2026-10-21'}]})
         self.assertTrue(recovery_reasons('market',self.root,'2026-10-22')[1])
+    def test_old_pattern_scan_retries(self):
+        self.market();self.write('patterns_data.json',{'as_of':'2026-10-21'})
+        self.assertIn('head and shoulders scan is behind the completed session',recovery_reasons('market',self.root,'2026-10-22')[1])
     def test_current_insight_skips_recovery(self):
         self.write('market_pulse_view.json',{'series':[{'key':k,'latest':{'date':'2026-10-22','sample':500}} for k in ['us500','above_ma50','above_ma200']]})
         self.assertEqual(recovery_reasons('insight',self.root,'2026-10-22')[1],[])
