@@ -1,0 +1,59 @@
+name: Update hourly candles
+on:
+  workflow_dispatch:
+    inputs:
+      symbols:
+        description: Optional comma-separated symbols for a smoke test
+        required: false
+        default: ""
+  schedule:
+    - cron: '42 * * * *'
+permissions:
+  contents: write
+concurrency:
+  group: hourly-candles
+  cancel-in-progress: false
+jobs:
+  hourly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+          sparse-checkout: |
+            update_hourly.py
+            hourly_data
+            market_data/index.json
+            commodities_data.json
+            indexes_data.json
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - name: Refresh actual hourly OHLCV
+        id: refresh
+        continue-on-error: true
+        env:
+          HOURLY_SYMBOLS: ${{ inputs.symbols }}
+        run: python -u update_hourly.py --symbols "$HOURLY_SYMBOLS"
+      - name: Publish successful symbols and coverage report
+        if: always() && steps.refresh.outcome != 'skipped'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add hourly_data
+          if ! git diff --cached --quiet; then
+            git commit -m 'chore: refresh hourly candles'
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              sleep 5
+            done
+            exit 1
+          fi
+      - name: Report insufficient coverage
+        if: steps.refresh.outcome == 'failure'
+        run: exit 1

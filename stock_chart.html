@@ -353,7 +353,7 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
 </main>
 
 <script src="pattern_overlay.js?v=4"></script>
-<script src="kline_periods.js?v=1"></script>
+<script src="kline_periods.js?v=2"></script>
 <script>
 const params = new URLSearchParams(window.location.search);
 let currentSymbol = (params.get('symbol') || '').trim().toUpperCase();
@@ -796,7 +796,7 @@ function drawGrid(left, top, right, priceBottom, bottom, width, height, minPrice
   ctx.strokeStyle = 'rgba(110, 116, 128, 0.28)';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
-  const ticks = Math.min(gridDivisions + 1, candles.length);
+  const ticks = Math.min(gridDivisions + 1, candles.length, Math.max(2,Math.floor((width-left-right)/(candles[0].time.includes('T')?110:65))));
   for(let i=0;i<ticks;i++){
     const idx = Math.floor(i * (candles.length - 1) / Math.max(1, ticks - 1));
     const x = xFor(idx);
@@ -806,7 +806,9 @@ function drawGrid(left, top, right, priceBottom, bottom, width, height, minPrice
       ctx.lineTo(Math.round(x) + 0.5, priceBottom);
       ctx.stroke();
     }
-    ctx.fillText(candles[idx].time.slice(5), x, height - bottom + 8);
+    const tickLabel=klinePeriod.format(candles[idx].time).slice(candles[0].time.includes('T')?0:5);
+    const half=ctx.measureText(tickLabel).width/2;
+    ctx.fillText(tickLabel,Math.max(left+half,Math.min(width-right-half,x)),height-bottom+8);
   }
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
@@ -1213,7 +1215,7 @@ function draw(){
       maxRight:width - 4,
       maxTop:height - bottom - 22
     });
-    const dateText = c.time;
+    const dateText = klinePeriod.format(c.time);
     ctx.font = '12px Inter, Arial, sans-serif';
     const dateWidth = Math.ceil(ctx.measureText(dateText).width) + 18;
     drawAxisLabel(dateText, x - dateWidth / 2, height - bottom + 12, {
@@ -1924,6 +1926,7 @@ async function prefetchCharts(){
 }
 
 async function loadChart(){
+  klinePeriod.cancel();
   if(!currentSymbol){
     setStatus('Missing stock symbol.');
     return;
@@ -1944,7 +1947,7 @@ async function loadChart(){
     if(!data.prices || !data.prices.length) throw new Error('Chart data is empty for ' + symbol);
     currentSymbol = data.symbol;
     fallbackName = data.name || fallbackName || currentSymbol;
-    state.candles = klinePeriod.setData(data.prices);
+    state.candles = klinePeriod.setData(data.prices,currentSymbol);
     calculateMovingAverages(state.candles);
     calculateMacd(state.candles);
     calculateTechnicalIndicators(state.candles);
@@ -1974,7 +1977,7 @@ const klinePeriod=klinePeriods.mount(document.querySelector('.toolbar-left'),can
   calculateTDSequential(state.candles);
   calculateLifeLine(state.candles);
   setRange(state.activeRange || '252');
-});
+},'stocks');
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 setupNavSearch();

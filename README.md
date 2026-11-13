@@ -214,7 +214,30 @@ load. `kline_periods.js` aggregates weekly bars by Monday-based calendar week
 and monthly bars by calendar month using first open, maximum high, minimum low,
 last close and summed volume. The current incomplete week/month remains visible.
 All indicators recalculate on the selected bars, while range buttons continue
-to use the underlying daily date span. Hourly options are explicitly disabled
-until a real intraday data feed is connected; daily bars are never split into
-invented hourly candles. Bond yields and COT position charts are not OHLC charts.
+to use the underlying daily date span. Hourly options use published real 60-minute bars, never split daily candles. Bond yields and COT position charts are not OHLC charts.
 Run aggregation tests with `node tests/test_kline_periods.cjs`.
+
+
+`update_hourly.py` reads the stock/commodity/index inventories and downloads
+Yahoo Finance 60-minute OHLCV for the latest month. The separate hourly GitHub
+workflow runs at minute 42, with a coverage report and explicit failure below
+90%; successful symbols can publish while failed symbols retain their prior
+snapshot. This is an hourly refreshed snapshot, not a live streaming quote.
+See [yfinance interval documentation](https://ranaroussi.github.io/yfinance/reference/api/yfinance.download.html)
+for provider interval limits; availability varies by symbol.
+
+Only completed source bars within supplied regular trading sessions publish.
+UTC timestamps are retained; charts display the exchange timezone. 2/4-hour
+bars anchor to each supplied trading-session start and never bridge sessions.
+Session-end short bars are legitimate; incomplete or gapped aggregates carry a
+`partial` flag. Missing volume remains unknown, not a fabricated zero. Hourly
+fetch failures keep the previous chart period, and asynchronous symbol/period
+changes are guarded against stale responses. Switching periods recalculates
+MA, MACD, TD, LifeLine and pattern overlays from the selected candles. Short
+hourly history may be insufficient for long-window indicators. Hourly payloads
+include fetched/as-of timestamps; snapshots older than three hours are flagged.
+
+Hourly snapshots are served directly from the public repository raw endpoint,
+with a local mirror fallback for development. They are excluded from the Pages
+artifact via `_config.yml`, avoiding a full static-site rebuild on every hourly
+refresh. [GitHub documents that GITHUB_TOKEN pushes do not trigger Pages builds](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).

@@ -1,0 +1,3 @@
+# Hourly snapshots are fetched from the raw data branch, not the Pages artifact.
+exclude:
+  - hourly_data
