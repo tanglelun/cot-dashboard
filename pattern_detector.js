@@ -1,13 +1,13 @@
 /* Close-based daily structures. Geometry mirrors generate_patterns.py v3.
    Replay completed bars so historical records never require future pivots. */
 (function(root){
-function detect(bars,kind){
+function detect(bars,kind,radius=3){
  const sign=kind==='top'?1:-1, close=bars.map(b=>sign*b.close), pivots=[], found=[];
  const extreme=bars.map(b=>sign===1?b.high:-b.low);
  const tr=bars.map((b,i)=>i?Math.max(b.high-b.low,Math.abs(b.high-bars[i-1].close),Math.abs(b.low-bars[i-1].close)):b.high-b.low);
- for(let i=3;i<bars.length-3;i++){
-  const peak=close[i]>Math.max(...close.slice(i-3,i))&&close[i]>=Math.max(...close.slice(i+1,i+4));
-  const trough=close[i]<Math.min(...close.slice(i-3,i))&&close[i]<=Math.min(...close.slice(i+1,i+4));
+ for(let i=radius;i<bars.length-radius;i++){
+  const peak=close[i]>Math.max(...close.slice(i-radius,i))&&close[i]>=Math.max(...close.slice(i+1,i+radius+1));
+  const trough=close[i]<Math.min(...close.slice(i-radius,i))&&close[i]<=Math.min(...close.slice(i+1,i+radius+1));
   if(peak===trough)continue;
   const p={i,v:close[i],type:peak?'H':'L'},prev=pivots.at(-1);
   if(prev&&prev.type===p.type){if((p.v-prev.v)*(peak?1:-1)>0)pivots[pivots.length-1]=p;}else pivots.push(p);
@@ -37,18 +37,30 @@ function detect(bars,kind){
  }
  return found;
 }
-function scan(bars){
+function scan(input){
+ // Preserve real prices; use a conservative OHLC envelope only for inconsistent
+ // vendor ranges. Never let a single bad bar discard 252 otherwise usable days.
+ const bars=input.map(b=>({...b,high:Math.max(b.high,b.open,b.close),low:Math.min(b.low,b.open,b.close),rangeAdjusted:b.low>Math.min(b.open,b.close)||b.high<Math.max(b.open,b.close)}));
  const seen=new Map();let active=new Set();
  for(let end=79;end<bars.length;end++){
   active=new Set();
   const window=bars.slice(Math.max(0,end-251),end+1);
   if(window.some(b=>!['open','high','low','close'].every(k=>Number.isFinite(b[k]))||b.low>Math.min(b.open,b.close)||b.high<Math.max(b.open,b.close)))continue;
-  for(const kind of ['bottom','top'])for(const row of detect(window,kind)){
+  for(const radius of [3,5,8,13])for(const kind of ['bottom','top'])for(const row of detect(window,kind,radius)){
    const key=kind+row.points.map(p=>p.date).join('|');active.add(key);
-   const prev=seen.get(key);seen.set(key,{...row,first_seen:prev?prev.first_seen:bars[end].time,last_seen:bars[end].time,historical:false});
+   const adjusted=window.some(b=>b.time>=row.points[0].date&&b.rangeAdjusted);
+   if(adjusted){row.structure='potential';row.structure_notes.push('inconsistent_ohlc');}
+   const prev=seen.get(key);seen.set(key,{...row,range_adjusted:adjusted,pivot_radius:radius,first_seen:prev?prev.first_seen:bars[end].time,last_seen:bars[end].time,historical:false});
   }
  }
- return [...seen].map(([key,row])=>({...row,historical:!active.has(key)}));
+ const byHead=new Map();
+ for(const [key,value] of seen){
+  const row={...value,historical:!active.has(key)},headKey=row.kind+row.points[2].date,prev=byHead.get(headKey);
+  // Different pivot scales may describe the same head. Keep one representative,
+  // preferring an active structure, then the most recently valid definition.
+  if(!prev || (prev.historical&&!row.historical) || (prev.historical===row.historical && (row.last_seen>prev.last_seen || (row.last_seen===prev.last_seen&&row.structure==='clear'&&prev.structure!=='clear'))))byHead.set(headKey,row);
+ }
+ return [...byHead.values()];
 }
 root.patternDetector={detect,scan};
 if(typeof module!=='undefined')module.exports=root.patternDetector;

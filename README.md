@@ -187,8 +187,8 @@ pattern output triggers the existing hourly recovery path. Run manually with
 Stock and commodity charts share `pattern_detector.js` and `pattern_overlay.js`.
 The independently toggleable indicator scans every loaded daily bar, regardless
 of index membership. A worker replays trailing 252-bar windows over the full
-series and retains each distinct five-pivot structure by its dates. Pivots need
-three subsequent bars to confirm. Geometry, two tiers and volume rules mirror
+series and retains each distinct five-pivot structure by its dates. Pivots use 3, 5, 8 and 13-bar scales and require that many subsequent
+bars to confirm. Different definitions of the same dated head are deduplicated. Geometry, two tiers and volume rules mirror
 the homepage scanner; both retain the broad-U exclusion rules. Tests compare
 both directions with Python and replay reviewed rounding-bottom regressions.
 
@@ -198,3 +198,11 @@ includes first/last valid dates, tier, breakout and volume state. Zoom/pan clips
 real global bar positions, including partially visible structures. Analysis is
 cached by loaded price-array identity and runs off the UI thread. This covers
 available daily history, not intraday data, missing years or weekly resampling.
+
+Historical detection tolerates finite but internally inconsistent provider OHLC
+ranges by expanding the analysis-only high/low envelope to contain open/close;
+original candles are not rewritten. Affected structures are disclosed and
+classified as potential, never clear. Previously one inconsistent bar skipped
+an entire 252-bar window; regression tests now prevent that silent data loss.
+The frozen TNK May–October 2021 fixture covers a larger bottom missed by the
+3-bar-only detector; rounding-bottom exclusions are retained at every scale.
