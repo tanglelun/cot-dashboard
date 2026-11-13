@@ -76,6 +76,7 @@
   select.addEventListener('change',()=>change(select.value));
   return {
    cancel(){++requestId;},
+   dailyQuote(){const last=daily.at(-1);return last?{close:last.close,previousClose:(daily.at(-2)||last).close,time:last.time}:null;},
    setData(bars,newSymbol){
     ++requestId;daily=bars;symbol=newSymbol;
     if(period.endsWith('h')){const target=period;period='1d';select.value='1d';hourData=null;const id=requestId;queueMicrotask(()=>{if(id===requestId)change(target);});return aggregate(daily,'1d');}

@@ -313,7 +313,7 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
 </main>
 
 <script src="pattern_overlay.js?v=4"></script>
-<script src="kline_periods.js?v=2"></script>
+<script src="kline_periods.js?v=3"></script>
 <script>
 const params = new URLSearchParams(window.location.search);
 let currentSymbol = (params.get('symbol') || '').trim().toUpperCase();
@@ -434,13 +434,13 @@ function renderHeader(data){
   document.title = titleName + ' Chart';
 }
 
-function updateHeaderPrice(index){
-  if(!state.candles.length) return;
-  const safeIndex = Math.max(0, Math.min(state.candles.length - 1, index));
-  const candle = state.candles[safeIndex];
-  const prev = state.candles[safeIndex - 1] || candle;
-  const close = Number(candle.close);
-  const prevClose = Number(prev.close);
+function updateHeaderPrice(){
+  const quote=klinePeriod.dailyQuote();
+  if(!quote)return;
+  const close=Number(quote.close);
+  const prevClose=Number(quote.previousClose);
+  document.getElementById('lastPrice').title='最新日K收盘价 · '+quote.time;
+  document.getElementById('change').title='较上一交易日日K收盘价';
   const diff = close - prevClose;
   const pct = prevClose ? diff / prevClose * 100 : 0;
   const changeEl = document.getElementById('change');
