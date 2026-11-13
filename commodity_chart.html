@@ -312,7 +312,8 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
   </div>
 </main>
 
-<script src="pattern_overlay.js?v=3"></script>
+<script src="pattern_overlay.js?v=4"></script>
+<script src="kline_periods.js?v=1"></script>
 <script>
 const params = new URLSearchParams(window.location.search);
 let currentSymbol = (params.get('symbol') || '').trim().toUpperCase();
@@ -411,7 +412,7 @@ function setStatus(text){
 
 function setRange(range){
   const total = state.candles.length;
-  const count = range === 'all' ? Math.min(total, DEFAULT_VISIBLE_CANDLES) : Math.min(total, Number(range));
+  const count = klinePeriod.count(String(range),state.candles);
   state.activeRange = range;
   state.end = total;
   state.start = Math.max(0, total - count);
@@ -1408,7 +1409,7 @@ async function loadChart(){
     if(!prices || !prices.length) throw new Error('Commodity chart data is empty for ' + currentSymbol);
     currentSymbol = data.symbol;
     fallbackName = data.name || fallbackName || currentSymbol;
-    state.candles = prices;
+    state.candles = klinePeriod.setData(prices);
     calculateMovingAverages(state.candles);
     calculateMacd(state.candles);
     renderHeader(data);
@@ -1419,6 +1420,12 @@ async function loadChart(){
   }
 }
 
+const klinePeriod=klinePeriods.mount(document.querySelector('.toolbar-left'),candles=>{
+  state.candles=candles;
+  calculateMovingAverages(state.candles);
+  calculateMacd(state.candles);
+  setRange(state.activeRange || '252');
+});
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 setupNavSearch();

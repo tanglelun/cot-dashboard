@@ -21,7 +21,7 @@ window.patternOverlay = (() => {
     notice.title=rows.map(r=>`${r.points[2].date} ${r.kind==='bottom'?'头肩底':'头肩顶'} · ${r.structure==='clear'?'明确':'潜在'} · ${r.historical?'历史，非当前信号':'当前有效'} · ${r.has_breakout?'已突破':'未突破'} · ${{expanded:'放量',not_expanded:'未放量',unavailable:'量能缺失',not_applicable:'待突破'}[r.volume_state]} · 首次识别 ${r.first_seen} / 最后有效 ${r.last_seen}${r.range_adjusted?' · 原始高低价不一致，按潜在结构复核':''}`).join('\n');
     const adjusted=allBars.filter(b=>b.low>Math.min(b.open,b.close)||b.high<Math.max(b.open,b.close)).length;
     const count=rows.filter(r=>r.historical).length;
-    notice.textContent=`头肩形态 · 已扫描全部 ${allBars.length} 根日线 · 当前窗口 ${rows.length} 个结构（历史 ${count} / 当前有效 ${rows.length-count}）· 历史标记不代表当前信号${adjusted?` · ${adjusted} 根高低价记录不一致，相关结构降为潜在`:""}`;
+    notice.textContent=`头肩形态 · 已扫描全部 ${allBars.length} 根K线 · 当前窗口 ${rows.length} 个结构（历史 ${count} / 当前有效 ${rows.length-count}）· 历史标记不代表当前信号${adjusted?` · ${adjusted} 根高低价记录不一致，相关结构降为潜在`:""}`;
     const offset=allBars.findIndex(c=>c.time===first);
     const indices=new Map(allBars.map((c,i)=>[c.time,i-offset]));
     let visible=false;

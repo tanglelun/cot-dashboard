@@ -206,3 +206,15 @@ classified as potential, never clear. Previously one inconsistent bar skipped
 an entire 252-bar window; regression tests now prevent that silent data loss.
 The frozen TNK May–October 2021 fixture covers a larger bottom missed by the
 3-bar-only detector; rounding-bottom exclusions are retained at every scale.
+
+### K-line periods
+
+Stock, commodity and index K-line pages default to daily bars on every page
+load. `kline_periods.js` aggregates weekly bars by Monday-based calendar week
+and monthly bars by calendar month using first open, maximum high, minimum low,
+last close and summed volume. The current incomplete week/month remains visible.
+All indicators recalculate on the selected bars, while range buttons continue
+to use the underlying daily date span. Hourly options are explicitly disabled
+until a real intraday data feed is connected; daily bars are never split into
+invented hourly candles. Bond yields and COT position charts are not OHLC charts.
+Run aggregation tests with `node tests/test_kline_periods.cjs`.
