@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-13 00:26 UTC",
+  "updated": "2026-11-13 02:58 UTC",
   "stocks": [
     {
       "symbol": "CDNL",
@@ -414,17 +414,6 @@
   ],
   "commodities": [
     {
-      "symbol": "PA=F",
-      "name": "Palladium",
-      "price": 998.0,
-      "change_pct": -4.38,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-12",
-      "sector": "Metals"
-    },
-    {
       "symbol": "TAN",
       "name": "Solar Energy Index",
       "price": 42.33,
@@ -436,10 +425,21 @@
       "sector": "Indexes"
     },
     {
+      "symbol": "PA=F",
+      "name": "Palladium",
+      "price": 1007.0,
+      "change_pct": -3.52,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-11-12",
+      "sector": "Metals"
+    },
+    {
       "symbol": "BZ=F",
       "name": "Brent Crude Oil",
-      "price": 95.88,
-      "change_pct": 3.36,
+      "price": 95.72,
+      "change_pct": 3.19,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
@@ -460,8 +460,8 @@
     {
       "symbol": "PL=F",
       "name": "Platinum",
-      "price": 1525.7,
-      "change_pct": -0.86,
+      "price": 1534.7,
+      "change_pct": -0.28,
       "direction": "down",
       "prev_color": "green",
       "cur_color": "red",
@@ -469,21 +469,10 @@
       "sector": "Metals"
     },
     {
-      "symbol": "ZS=F",
-      "name": "Soybeans",
-      "price": 1219.5,
-      "change_pct": -0.77,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-12",
-      "sector": "Agriculture"
-    },
-    {
       "symbol": "MES=F",
       "name": "S&P 500 Micro",
-      "price": 7647.75,
-      "change_pct": 0.09,
+      "price": 7638.0,
+      "change_pct": -0.03,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "green",

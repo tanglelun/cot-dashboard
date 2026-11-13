@@ -1,312 +1,24 @@
 {
-  "updated": "2026-11-13T00:26:53.588854+00:00",
+  "updated": "2026-11-13T02:58:47.611813+00:00",
   "as_of": "2026-11-12",
   "universe_count": 2478,
-  "scanned": 2362,
+  "scanned": 2465,
   "skipped": [
-    {
-      "symbol": "ADCT",
-      "reason": "Invalid OHLC range"
-    },
     {
       "symbol": "ADIG",
       "reason": "Missing/stale daily history"
-    },
-    {
-      "symbol": "AFL",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "AIG",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "AIZ",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "AJG",
-      "reason": "Invalid OHLC range"
     },
     {
       "symbol": "AKE",
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/AKE.json'"
     },
     {
-      "symbol": "AMBQ",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "AOMR",
-      "reason": "Invalid OHLC range"
-    },
-    {
       "symbol": "APMD",
       "reason": "Missing/stale daily history"
     },
     {
-      "symbol": "AVBC",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "AX",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BANC",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BBUC",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BBW",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BHB",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BNL",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BOC",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BOW",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BRSP",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BRT",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CAH",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CAL",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CBT",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CDP",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CHD",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CMDB",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CNMD",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CON",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CWT",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "DDD",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "DELL",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "DIN",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "DLR",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "ENVA",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "ESNT",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "ESP",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "ESS",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "EVMN",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "FG",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "FLG",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "FUL",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "FVR",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "GCO",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "GNRC",
-      "reason": "Invalid OHLC range"
-    },
-    {
       "symbol": "GTXI",
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/GTXI.json'"
-    },
-    {
-      "symbol": "HBB",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "HIW",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "HMN",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "HOV",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "HUM",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "IBOC",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "IIPR",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "INTT",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "IQV",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "IR",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "JBL",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "KAI",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "KFY",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "KOP",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "KTB",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "LADR",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "LAW",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "LCII",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "LDI",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MAA",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MANE",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MATX",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MCS",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MHO",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MRSH",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MSCI",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "NGS",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "NPB",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "NXDT",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "OPTU",
-      "reason": "Invalid OHLC range"
     },
     {
       "symbol": "P5N994",
@@ -317,52 +29,12 @@
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/PDLI.json'"
     },
     {
-      "symbol": "PDM",
-      "reason": "Invalid OHLC range"
-    },
-    {
       "symbol": "PFBC",
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/PFBC.json'"
     },
     {
-      "symbol": "PINE",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "PNW",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "PRK",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "PRLB",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "QTWO",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "REA",
-      "reason": "Invalid OHLC range"
-    },
-    {
       "symbol": "REF",
       "reason": "Missing/stale daily history"
-    },
-    {
-      "symbol": "RHP",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "ROG",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "RSG",
-      "reason": "Invalid OHLC range"
     },
     {
       "symbol": "SBT",
@@ -373,76 +45,8 @@
       "reason": "Missing/stale daily history"
     },
     {
-      "symbol": "SEG",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "SITC",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "SJM",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "SMBK",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "STE",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "SVV",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "TCBX",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "TCI",
-      "reason": "Invalid OHLC range"
-    },
-    {
       "symbol": "THRD",
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/THRD.json'"
-    },
-    {
-      "symbol": "TKO",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "TRTX",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "TWI",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "TXNM",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "UP",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "UTL",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "VATE",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "VIA",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "VRTS",
-      "reason": "Invalid OHLC range"
     },
     {
       "symbol": "VUECF",
@@ -451,22 +55,6 @@
     {
       "symbol": "VYLR",
       "reason": "Missing/stale daily history"
-    },
-    {
-      "symbol": "WK",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "XPOF",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "XRN",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "ZGN",
-      "reason": "Invalid OHLC range"
     }
   ],
   "constituents": {
@@ -475,7 +63,7 @@
       "source": "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv",
       "label": "S&P 500",
       "count": 503,
-      "scanned": 480,
+      "scanned": 502,
       "proxy": false
     },
     "nasdaq100": {
@@ -491,7 +79,7 @@
       "source": "https://www.ishares.com/us/products/239710/ishares-russell-2000-etf/latest-holdings.csv",
       "label": "Russell 2000 (IWM近似)",
       "count": 1960,
-      "scanned": 1867,
+      "scanned": 1948,
       "proxy": true,
       "source_as_of": "2026-11-11",
       "excluded_equity_holdings": 10
