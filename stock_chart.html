@@ -352,7 +352,7 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
   </div>
 </main>
 
-<script src="pattern_overlay.js?v=1"></script>
+<script src="pattern_overlay.js?v=2"></script>
 <script>
 const params = new URLSearchParams(window.location.search);
 let currentSymbol = (params.get('symbol') || '').trim().toUpperCase();
@@ -1079,7 +1079,7 @@ function drawTongDaXin(candles, xFor, yFor, bodyWidth, wickWidth, chartTop, pric
 
 const patternNotice=document.createElement('div');
 patternNotice.style.cssText='font-size:11px;color:#9ba8b8;padding:4px 12px;display:none';
-canvas.parentElement.insertBefore(patternNotice,canvas);
+canvas.parentElement.before(patternNotice);
 patternOverlay.load().then(()=>{if(state.showPatterns)draw();});
 function draw(){
   patternNotice.style.display=state.showPatterns?'block':'none';
@@ -1183,7 +1183,7 @@ function draw(){
       drawIndicatorLine(candles, 'bbLower', xFor, yFor, '#00bcd4', 0.65, 1.2);
     }
   }
-  if(state.showPatterns) patternOverlay.draw(ctx,currentSymbol,candles,xFor,yFor,{left,right:width-right,top,bottom:priceBottom},patternNotice);
+  if(state.showPatterns) patternOverlay.draw(ctx,currentSymbol,candles,xFor,yFor,{left,right:width-right,top,bottom:priceBottom},patternNotice,state.candles,draw);
   if(state.showVolume) drawVolumePanel(candles, xFor, step, volumeTop, volumeBottom, maxVolume, height);
   if(state.showRsi) drawRsiPanel(candles, xFor, rsiTop, rsiBottom, width);
   if(state.showMacd) drawMacdPanel(candles, xFor, step, macdTop, macdBottom, width);

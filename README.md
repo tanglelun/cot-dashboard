@@ -181,3 +181,20 @@ After successful stock updates, the market workflow generates and publishes
 valid, generation fails without replacing the previous scan. Stale/missing
 pattern output triggers the existing hourly recovery path. Run manually with
 `python generate_patterns.py`; tests: `python -m unittest discover -s tests`.
+
+### Historical chart overlays
+
+Stock and commodity charts share `pattern_detector.js` and `pattern_overlay.js`.
+The independently toggleable indicator scans every loaded daily bar, regardless
+of index membership. A worker replays trailing 252-bar windows over the full
+series and retains each distinct five-pivot structure by its dates. Pivots need
+three subsequent bars to confirm. Geometry, two tiers and volume rules mirror
+the homepage scanner; both retain the broad-U exclusion rules. Tests compare
+both directions with Python and replay reviewed rounding-bottom regressions.
+
+Historical detections remain visible after expiry/invalidation, with dimmed
+lines and a historical label; they are not current signals. The summary tooltip
+includes first/last valid dates, tier, breakout and volume state. Zoom/pan clips
+real global bar positions, including partially visible structures. Analysis is
+cached by loaded price-array identity and runs off the UI thread. This covers
+available daily history, not intraday data, missing years or weekly resampling.
