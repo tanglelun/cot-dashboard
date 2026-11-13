@@ -1,24 +1,312 @@
 {
-  "updated": "2026-11-12T13:14:22.762593+00:00",
-  "as_of": "2026-11-11",
+  "updated": "2026-11-13T00:26:53.588854+00:00",
+  "as_of": "2026-11-12",
   "universe_count": 2478,
-  "scanned": 2465,
+  "scanned": 2362,
   "skipped": [
+    {
+      "symbol": "ADCT",
+      "reason": "Invalid OHLC range"
+    },
     {
       "symbol": "ADIG",
       "reason": "Missing/stale daily history"
+    },
+    {
+      "symbol": "AFL",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "AIG",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "AIZ",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "AJG",
+      "reason": "Invalid OHLC range"
     },
     {
       "symbol": "AKE",
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/AKE.json'"
     },
     {
+      "symbol": "AMBQ",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "AOMR",
+      "reason": "Invalid OHLC range"
+    },
+    {
       "symbol": "APMD",
       "reason": "Missing/stale daily history"
     },
     {
+      "symbol": "AVBC",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "AX",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "BANC",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "BBUC",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "BBW",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "BHB",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "BNL",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "BOC",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "BOW",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "BRSP",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "BRT",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "CAH",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "CAL",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "CBT",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "CDP",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "CHD",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "CMDB",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "CNMD",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "CON",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "CWT",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "DDD",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "DELL",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "DIN",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "DLR",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "ENVA",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "ESNT",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "ESP",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "ESS",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "EVMN",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "FG",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "FLG",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "FUL",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "FVR",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "GCO",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "GNRC",
+      "reason": "Invalid OHLC range"
+    },
+    {
       "symbol": "GTXI",
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/GTXI.json'"
+    },
+    {
+      "symbol": "HBB",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "HIW",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "HMN",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "HOV",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "HUM",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "IBOC",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "IIPR",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "INTT",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "IQV",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "IR",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "JBL",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "KAI",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "KFY",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "KOP",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "KTB",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "LADR",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "LAW",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "LCII",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "LDI",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "MAA",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "MANE",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "MATX",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "MCS",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "MHO",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "MRSH",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "MSCI",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "NGS",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "NPB",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "NXDT",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "OPTU",
+      "reason": "Invalid OHLC range"
     },
     {
       "symbol": "P5N994",
@@ -29,12 +317,52 @@
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/PDLI.json'"
     },
     {
+      "symbol": "PDM",
+      "reason": "Invalid OHLC range"
+    },
+    {
       "symbol": "PFBC",
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/PFBC.json'"
     },
     {
+      "symbol": "PINE",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "PNW",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "PRK",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "PRLB",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "QTWO",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "REA",
+      "reason": "Invalid OHLC range"
+    },
+    {
       "symbol": "REF",
       "reason": "Missing/stale daily history"
+    },
+    {
+      "symbol": "RHP",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "ROG",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "RSG",
+      "reason": "Invalid OHLC range"
     },
     {
       "symbol": "SBT",
@@ -45,8 +373,76 @@
       "reason": "Missing/stale daily history"
     },
     {
+      "symbol": "SEG",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "SITC",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "SJM",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "SMBK",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "STE",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "SVV",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "TCBX",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "TCI",
+      "reason": "Invalid OHLC range"
+    },
+    {
       "symbol": "THRD",
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/THRD.json'"
+    },
+    {
+      "symbol": "TKO",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "TRTX",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "TWI",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "TXNM",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "UP",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "UTL",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "VATE",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "VIA",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "VRTS",
+      "reason": "Invalid OHLC range"
     },
     {
       "symbol": "VUECF",
@@ -55,19 +451,35 @@
     {
       "symbol": "VYLR",
       "reason": "Missing/stale daily history"
+    },
+    {
+      "symbol": "WK",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "XPOF",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "XRN",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "ZGN",
+      "reason": "Invalid OHLC range"
     }
   ],
   "constituents": {
     "sp500": {
-      "date": "2026-11-12",
+      "date": "2026-11-13",
       "source": "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv",
       "label": "S&P 500",
       "count": 503,
-      "scanned": 502,
+      "scanned": 480,
       "proxy": false
     },
     "nasdaq100": {
-      "date": "2026-11-12",
+      "date": "2026-11-13",
       "source": "https://en.wikipedia.org/wiki/List_of_NASDAQ-100_companies",
       "label": "Nasdaq 100",
       "count": 101,
@@ -75,13 +487,13 @@
       "proxy": false
     },
     "russell2000": {
-      "date": "2026-11-12",
+      "date": "2026-11-13",
       "source": "https://www.ishares.com/us/products/239710/ishares-russell-2000-etf/latest-holdings.csv",
       "label": "Russell 2000 (IWM近似)",
       "count": 1960,
-      "scanned": 1948,
+      "scanned": 1867,
       "proxy": true,
-      "source_as_of": "2026-11-10",
+      "source_as_of": "2026-11-11",
       "excluded_equity_holdings": 10
     }
   },
@@ -100,10 +512,10 @@
       "volume_state": "expanded",
       "status": "confirmed",
       "volume_ratio": 2.03,
-      "as_of": "2026-11-11",
-      "price": 88.96,
-      "neckline": 94.8465,
-      "distance_pct": -6.21,
+      "as_of": "2026-11-12",
+      "price": 88.5,
+      "neckline": 94.87,
+      "distance_pct": -6.71,
       "right_shoulder": "2026-10-29",
       "detected_on": "2026-11-03",
       "breakout_date": "2026-11-04",
@@ -332,10 +744,14 @@
         {
           "date": "2026-11-11",
           "close": 88.96
+        },
+        {
+          "date": "2026-11-12",
+          "close": 88.5
         }
       ],
       "neck_start": 93.7171,
-      "neck_end": 94.8465
+      "neck_end": 94.87
     },
     {
       "symbol": "FIP",
@@ -353,10 +769,10 @@
       "volume_state": "expanded",
       "status": "confirmed",
       "volume_ratio": 1.7,
-      "as_of": "2026-11-11",
-      "price": 4.38,
-      "neckline": 2.8869,
-      "distance_pct": 51.72,
+      "as_of": "2026-11-12",
+      "price": 4.23,
+      "neckline": 2.8888,
+      "distance_pct": 46.43,
       "right_shoulder": "2026-11-03",
       "detected_on": "2026-11-06",
       "breakout_date": "2026-11-05",
@@ -549,10 +965,14 @@
         {
           "date": "2026-11-11",
           "close": 4.38
+        },
+        {
+          "date": "2026-11-12",
+          "close": 4.23
         }
       ],
       "neck_start": 2.8137,
-      "neck_end": 2.8869
+      "neck_end": 2.8888
     },
     {
       "symbol": "ALGN",
@@ -569,10 +989,10 @@
       "volume_state": "expanded",
       "status": "confirmed",
       "volume_ratio": 1.7,
-      "as_of": "2026-11-11",
-      "price": 172.08,
-      "neckline": 156.9227,
-      "distance_pct": 9.66,
+      "as_of": "2026-11-12",
+      "price": 166.97,
+      "neckline": 157.0236,
+      "distance_pct": 6.33,
       "right_shoulder": "2026-10-30",
       "detected_on": "2026-11-04",
       "breakout_date": "2026-11-04",
@@ -813,250 +1233,14 @@
         {
           "date": "2026-11-11",
           "close": 172.08
+        },
+        {
+          "date": "2026-11-12",
+          "close": 166.97
         }
       ],
       "neck_start": 151.7764,
-      "neck_end": 156.9227
-    },
-    {
-      "symbol": "FFIV",
-      "name": "F5, Inc.",
-      "indexes": [
-        "S&P 500"
-      ],
-      "kind": "top",
-      "structure": "potential",
-      "structure_notes": [
-        "weaker_rebound"
-      ],
-      "has_breakout": true,
-      "volume_state": "expanded",
-      "status": "confirmed",
-      "volume_ratio": 6.08,
-      "as_of": "2026-11-11",
-      "price": 320.01,
-      "neckline": 450.3486,
-      "distance_pct": -28.94,
-      "right_shoulder": "2026-10-26",
-      "detected_on": "2026-10-29",
-      "breakout_date": "2026-10-28",
-      "price_breakout_on": "2026-10-29",
-      "confirmed_on": "2026-10-29",
-      "points": [
-        {
-          "date": "2026-09-23",
-          "price": 455.99,
-          "offset": 10
-        },
-        {
-          "date": "2026-09-28",
-          "price": 435.56,
-          "offset": 13
-        },
-        {
-          "date": "2026-10-09",
-          "price": 479.83,
-          "offset": 22
-        },
-        {
-          "date": "2026-10-16",
-          "price": 442.03,
-          "offset": 27
-        },
-        {
-          "date": "2026-10-26",
-          "price": 461.6,
-          "offset": 33
-        }
-      ],
-      "chart": [
-        {
-          "date": "2026-09-09",
-          "close": 404.63
-        },
-        {
-          "date": "2026-09-10",
-          "close": 398.48
-        },
-        {
-          "date": "2026-09-11",
-          "close": 411.71
-        },
-        {
-          "date": "2026-09-14",
-          "close": 411.49
-        },
-        {
-          "date": "2026-09-15",
-          "close": 430.88
-        },
-        {
-          "date": "2026-09-16",
-          "close": 423.59
-        },
-        {
-          "date": "2026-09-17",
-          "close": 434.62
-        },
-        {
-          "date": "2026-09-18",
-          "close": 432.03
-        },
-        {
-          "date": "2026-09-21",
-          "close": 450.1
-        },
-        {
-          "date": "2026-09-22",
-          "close": 453.33
-        },
-        {
-          "date": "2026-09-23",
-          "close": 455.99
-        },
-        {
-          "date": "2026-09-24",
-          "close": 446.55
-        },
-        {
-          "date": "2026-09-25",
-          "close": 443.06
-        },
-        {
-          "date": "2026-09-28",
-          "close": 435.56
-        },
-        {
-          "date": "2026-09-29",
-          "close": 438.07
-        },
-        {
-          "date": "2026-09-30",
-          "close": 445.18
-        },
-        {
-          "date": "2026-10-01",
-          "close": 443.68
-        },
-        {
-          "date": "2026-10-02",
-          "close": 454.04
-        },
-        {
-          "date": "2026-10-05",
-          "close": 458.53
-        },
-        {
-          "date": "2026-10-06",
-          "close": 469.79
-        },
-        {
-          "date": "2026-10-07",
-          "close": 466.65
-        },
-        {
-          "date": "2026-10-08",
-          "close": 461.66
-        },
-        {
-          "date": "2026-10-09",
-          "close": 479.83
-        },
-        {
-          "date": "2026-10-12",
-          "close": 473.49
-        },
-        {
-          "date": "2026-10-13",
-          "close": 476.24
-        },
-        {
-          "date": "2026-10-14",
-          "close": 457.26
-        },
-        {
-          "date": "2026-10-15",
-          "close": 456.58
-        },
-        {
-          "date": "2026-10-16",
-          "close": 442.03
-        },
-        {
-          "date": "2026-10-19",
-          "close": 450.8
-        },
-        {
-          "date": "2026-10-20",
-          "close": 456.71
-        },
-        {
-          "date": "2026-10-21",
-          "close": 458.59
-        },
-        {
-          "date": "2026-10-22",
-          "close": 450.08
-        },
-        {
-          "date": "2026-10-23",
-          "close": 455.42
-        },
-        {
-          "date": "2026-10-26",
-          "close": 461.6
-        },
-        {
-          "date": "2026-10-27",
-          "close": 459.36
-        },
-        {
-          "date": "2026-10-28",
-          "close": 365.53
-        },
-        {
-          "date": "2026-10-29",
-          "close": 363.46
-        },
-        {
-          "date": "2026-10-30",
-          "close": 338.34
-        },
-        {
-          "date": "2026-11-02",
-          "close": 324.55
-        },
-        {
-          "date": "2026-11-03",
-          "close": 331.15
-        },
-        {
-          "date": "2026-11-04",
-          "close": 329.72
-        },
-        {
-          "date": "2026-11-05",
-          "close": 311.74
-        },
-        {
-          "date": "2026-11-06",
-          "close": 310.84
-        },
-        {
-          "date": "2026-11-09",
-          "close": 317.75
-        },
-        {
-          "date": "2026-11-10",
-          "close": 317.31
-        },
-        {
-          "date": "2026-11-11",
-          "close": 320.01
-        }
-      ],
-      "neck_start": 429.5521,
-      "neck_end": 450.3486
+      "neck_end": 157.0236
     },
     {
       "symbol": "PDD",
@@ -1074,10 +1258,10 @@
       "volume_state": "not_applicable",
       "status": "candidate",
       "volume_ratio": null,
-      "as_of": "2026-11-11",
-      "price": 79.01,
-      "neckline": 84.7335,
-      "distance_pct": -6.75,
+      "as_of": "2026-11-12",
+      "price": 77.53,
+      "neckline": 84.8553,
+      "distance_pct": -8.63,
       "right_shoulder": "2026-10-28",
       "detected_on": "2026-11-02",
       "breakout_date": null,
@@ -1310,10 +1494,14 @@
         {
           "date": "2026-11-11",
           "close": 79.01
+        },
+        {
+          "date": "2026-11-12",
+          "close": 77.53
         }
       ],
       "neck_start": 78.7671,
-      "neck_end": 84.7335
+      "neck_end": 84.8553
     }
   ]
 }
