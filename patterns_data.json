@@ -1,416 +1,24 @@
 {
-  "updated": "2026-11-13T22:44:47.925664+00:00",
+  "updated": "2026-11-14T02:45:48.586296+00:00",
   "as_of": "2026-11-13",
   "universe_count": 2478,
-  "scanned": 2338,
+  "scanned": 2464,
   "skipped": [
-    {
-      "symbol": "ACH",
-      "reason": "Invalid OHLC range"
-    },
     {
       "symbol": "ADIG",
       "reason": "Missing/stale daily history"
-    },
-    {
-      "symbol": "AES",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "AGX",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "AIZ",
-      "reason": "Invalid OHLC range"
     },
     {
       "symbol": "AKE",
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/AKE.json'"
     },
     {
-      "symbol": "ALG",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "ALL",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "AMPX",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "AP",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "APD",
-      "reason": "Invalid OHLC range"
-    },
-    {
       "symbol": "APMD",
       "reason": "Missing/stale daily history"
     },
     {
-      "symbol": "ASPN",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BANC",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BAX",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BCC",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BDC",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BDN",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BFLY",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BH",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BHE",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BHVN",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BKD",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BNY",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BOW",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BRBS",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BRT",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CALY",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CARR",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CAT",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CI",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CMDB",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CNMD",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CNS",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CON",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "COSO",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CPK",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CSR",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CSW",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "CTS",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "D",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "DFIN",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "DG",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "EGY",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "EIX",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "EME",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "EPAC",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "EQBK",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "ESNT",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "ESP",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "FC",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "FCBM",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "FG",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "FLYX",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "FSS",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "FTV",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "FVR",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "GEF",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "GEF-B",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "GL",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "GPI",
-      "reason": "Invalid OHLC range"
-    },
-    {
       "symbol": "GTXI",
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/GTXI.json'"
-    },
-    {
-      "symbol": "HOG",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "HOMB",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "HZO",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "IIIN",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "IMAX",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "INFQ",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "JCI",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "JILL",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "KIM",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "KOP",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "KRO",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "LAW",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "LBRT",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "LDOS",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "LH",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "LNN",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "LYV",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "LZM",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MAGN",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MAN",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MATV",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MC",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MCB",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MCS",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MD",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MG",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MLM",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MLR",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MOG-A",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MPC",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MPTI",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MTX",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "MYE",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "NGVT",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "NHC",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "NL",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "NVGS",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "NXDT",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "ONT",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "OSG",
-      "reason": "Invalid OHLC range"
     },
     {
       "symbol": "P5N994",
@@ -425,40 +33,8 @@
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/PFBC.json'"
     },
     {
-      "symbol": "PFS",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "PGR",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "PKG",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "RC",
-      "reason": "Invalid OHLC range"
-    },
-    {
       "symbol": "REF",
       "reason": "Missing/stale daily history"
-    },
-    {
-      "symbol": "REX",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "RLGT",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "SAH",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "SBMT",
-      "reason": "Invalid OHLC range"
     },
     {
       "symbol": "SBT",
@@ -469,76 +45,12 @@
       "reason": "Missing/stale daily history"
     },
     {
-      "symbol": "SI",
-      "reason": "Invalid OHLC range"
-    },
-    {
       "symbol": "SITC",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "SNDA",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "SRE",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "SSTK",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "STRW",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "TE",
       "reason": "Invalid OHLC range"
     },
     {
       "symbol": "THRD",
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/THRD.json'"
-    },
-    {
-      "symbol": "TNK",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "TTAM",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "TWIN",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "TXNM",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "UP",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "USNA",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "VENU",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "VHI",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "VMC",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "VPG",
-      "reason": "Invalid OHLC range"
     },
     {
       "symbol": "VUECF",
@@ -547,35 +59,19 @@
     {
       "symbol": "VYLR",
       "reason": "Missing/stale daily history"
-    },
-    {
-      "symbol": "WK",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "YEXT",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "ZBH",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "ZWS",
-      "reason": "Invalid OHLC range"
     }
   ],
   "constituents": {
     "sp500": {
-      "date": "2026-11-13",
+      "date": "2026-11-14",
       "source": "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv",
       "label": "S&P 500",
       "count": 503,
-      "scanned": 475,
+      "scanned": 502,
       "proxy": false
     },
     "nasdaq100": {
-      "date": "2026-11-13",
+      "date": "2026-11-14",
       "source": "https://en.wikipedia.org/wiki/List_of_NASDAQ-100_companies",
       "label": "Nasdaq 100",
       "count": 101,
@@ -583,11 +79,11 @@
       "proxy": false
     },
     "russell2000": {
-      "date": "2026-11-13",
+      "date": "2026-11-14",
       "source": "https://www.ishares.com/us/products/239710/ishares-russell-2000-etf/latest-holdings.csv",
       "label": "Russell 2000 (IWM近似)",
       "count": 1960,
-      "scanned": 1848,
+      "scanned": 1947,
       "proxy": true,
       "source_as_of": "2026-11-12",
       "excluded_equity_holdings": 10
@@ -595,6 +91,264 @@
   },
   "method_version": 3,
   "patterns": [
+    {
+      "symbol": "TNK",
+      "name": "TEEKAY TANKERS LTD CLASS A",
+      "indexes": [
+        "Russell 2000 (IWM近似)"
+      ],
+      "kind": "top",
+      "structure": "clear",
+      "structure_notes": [],
+      "has_breakout": true,
+      "volume_state": "expanded",
+      "status": "confirmed",
+      "volume_ratio": 2.03,
+      "as_of": "2026-11-13",
+      "price": 89.43,
+      "neckline": 94.8935,
+      "distance_pct": -5.76,
+      "right_shoulder": "2026-10-29",
+      "detected_on": "2026-11-03",
+      "breakout_date": "2026-11-04",
+      "price_breakout_on": "2026-11-04",
+      "confirmed_on": "2026-11-04",
+      "points": [
+        {
+          "date": "2026-09-18",
+          "price": 100.92,
+          "offset": 10
+        },
+        {
+          "date": "2026-09-25",
+          "price": 94.07,
+          "offset": 15
+        },
+        {
+          "date": "2026-10-12",
+          "price": 108.43,
+          "offset": 26
+        },
+        {
+          "date": "2026-10-20",
+          "price": 94.47,
+          "offset": 32
+        },
+        {
+          "date": "2026-10-29",
+          "price": 101.23,
+          "offset": 39
+        }
+      ],
+      "chart": [
+        {
+          "date": "2026-09-03",
+          "close": 91.83
+        },
+        {
+          "date": "2026-09-04",
+          "close": 93.37
+        },
+        {
+          "date": "2026-09-08",
+          "close": 92.33
+        },
+        {
+          "date": "2026-09-09",
+          "close": 96.31
+        },
+        {
+          "date": "2026-09-10",
+          "close": 98.25
+        },
+        {
+          "date": "2026-09-11",
+          "close": 100.83
+        },
+        {
+          "date": "2026-09-14",
+          "close": 100.0
+        },
+        {
+          "date": "2026-09-15",
+          "close": 99.25
+        },
+        {
+          "date": "2026-09-16",
+          "close": 100.63
+        },
+        {
+          "date": "2026-09-17",
+          "close": 100.82
+        },
+        {
+          "date": "2026-09-18",
+          "close": 100.92
+        },
+        {
+          "date": "2026-09-21",
+          "close": 98.76
+        },
+        {
+          "date": "2026-09-22",
+          "close": 95.6
+        },
+        {
+          "date": "2026-09-23",
+          "close": 94.54
+        },
+        {
+          "date": "2026-09-24",
+          "close": 94.08
+        },
+        {
+          "date": "2026-09-25",
+          "close": 94.07
+        },
+        {
+          "date": "2026-09-28",
+          "close": 95.71
+        },
+        {
+          "date": "2026-09-29",
+          "close": 96.81
+        },
+        {
+          "date": "2026-09-30",
+          "close": 97.06
+        },
+        {
+          "date": "2026-10-01",
+          "close": 101.01
+        },
+        {
+          "date": "2026-10-02",
+          "close": 103.1
+        },
+        {
+          "date": "2026-10-05",
+          "close": 103.38
+        },
+        {
+          "date": "2026-10-06",
+          "close": 101.24
+        },
+        {
+          "date": "2026-10-07",
+          "close": 102.12
+        },
+        {
+          "date": "2026-10-08",
+          "close": 106.62
+        },
+        {
+          "date": "2026-10-09",
+          "close": 106.14
+        },
+        {
+          "date": "2026-10-12",
+          "close": 108.43
+        },
+        {
+          "date": "2026-10-13",
+          "close": 106.39
+        },
+        {
+          "date": "2026-10-14",
+          "close": 101.56
+        },
+        {
+          "date": "2026-10-15",
+          "close": 97.03
+        },
+        {
+          "date": "2026-10-16",
+          "close": 96.82
+        },
+        {
+          "date": "2026-10-19",
+          "close": 94.8
+        },
+        {
+          "date": "2026-10-20",
+          "close": 94.47
+        },
+        {
+          "date": "2026-10-21",
+          "close": 95.99
+        },
+        {
+          "date": "2026-10-22",
+          "close": 95.31
+        },
+        {
+          "date": "2026-10-23",
+          "close": 99.47
+        },
+        {
+          "date": "2026-10-26",
+          "close": 101.0
+        },
+        {
+          "date": "2026-10-27",
+          "close": 98.1
+        },
+        {
+          "date": "2026-10-28",
+          "close": 99.29
+        },
+        {
+          "date": "2026-10-29",
+          "close": 101.23
+        },
+        {
+          "date": "2026-10-30",
+          "close": 100.8
+        },
+        {
+          "date": "2026-11-02",
+          "close": 95.47
+        },
+        {
+          "date": "2026-11-03",
+          "close": 95.58
+        },
+        {
+          "date": "2026-11-04",
+          "close": 88.88
+        },
+        {
+          "date": "2026-11-05",
+          "close": 81.97
+        },
+        {
+          "date": "2026-11-06",
+          "close": 85.71
+        },
+        {
+          "date": "2026-11-09",
+          "close": 85.12
+        },
+        {
+          "date": "2026-11-10",
+          "close": 85.7
+        },
+        {
+          "date": "2026-11-11",
+          "close": 88.96
+        },
+        {
+          "date": "2026-11-12",
+          "close": 88.5
+        },
+        {
+          "date": "2026-11-13",
+          "close": 89.43
+        }
+      ],
+      "neck_start": 93.7171,
+      "neck_end": 94.8935
+    },
     {
       "symbol": "FIP",
       "name": "FTAI INFRASTRUCTURE",
