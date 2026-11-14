@@ -1,8 +1,8 @@
 {
-  "updated": "2026-11-14T02:45:48.586296+00:00",
+  "updated": "2026-11-14T11:48:51.050989+00:00",
   "as_of": "2026-11-13",
   "universe_count": 2478,
-  "scanned": 2464,
+  "scanned": 2465,
   "skipped": [
     {
       "symbol": "ADIG",
@@ -45,10 +45,6 @@
       "reason": "Missing/stale daily history"
     },
     {
-      "symbol": "SITC",
-      "reason": "Invalid OHLC range"
-    },
-    {
       "symbol": "THRD",
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/THRD.json'"
     },
@@ -83,7 +79,7 @@
       "source": "https://www.ishares.com/us/products/239710/ishares-russell-2000-etf/latest-holdings.csv",
       "label": "Russell 2000 (IWM近似)",
       "count": 1960,
-      "scanned": 1947,
+      "scanned": 1948,
       "proxy": true,
       "source_as_of": "2026-11-12",
       "excluded_equity_holdings": 10
