@@ -418,7 +418,7 @@ function setRange(range){
   state.start = Math.max(0, total - count);
   state.hover = -1;
   state.hoverY = null;
-  updateHeaderPrice(total - 1);
+  updateHeaderPrice();
   document.querySelectorAll('#ranges .btn').forEach(item => item.classList.toggle('active', item.dataset.range === range));
   draw();
 }
@@ -430,17 +430,18 @@ function renderHeader(data){
   document.getElementById('name').textContent = data.sector || 'Commodity';
   document.getElementById('sector').textContent = data.sector || 'Category';
   document.getElementById('mcap').textContent = data.unit || data.marketCap || 'Unit';
-  updateHeaderPrice(candles.length - 1);
+  updateHeaderPrice();
   document.title = titleName + ' Chart';
 }
 
-function updateHeaderPrice(){
-  const quote=klinePeriod.dailyQuote();
+function updateHeaderPrice(index=null){
+  const candle=Number.isInteger(index)&&index>=0&&index<state.candles.length?state.candles[index]:null;
+  const quote=candle?{close:candle.close,previousClose:(state.candles[index-1]||candle).close,time:candle.time}:klinePeriod.dailyQuote();
   if(!quote)return;
   const close=Number(quote.close);
   const prevClose=Number(quote.previousClose);
-  document.getElementById('lastPrice').title='最新日K收盘价 · '+quote.time;
-  document.getElementById('change').title='较上一交易日日K收盘价';
+  document.getElementById('lastPrice').title=(candle?'所选K线收盘价 · ':'最新日K收盘价 · ')+quote.time;
+  document.getElementById('change').title=candle?'较前一根K线收盘价':'较上一交易日日K收盘价';
   const diff = close - prevClose;
   const pct = prevClose ? diff / prevClose * 100 : 0;
   const changeEl = document.getElementById('change');
@@ -450,7 +451,7 @@ function updateHeaderPrice(){
 }
 
 function updateHeaderForHover(){
-  const selected = state.hover >= 0 ? state.hover : state.candles.length - 1;
+  const selected = state.hover >= state.start && state.hover < state.end ? state.hover : null;
   updateHeaderPrice(selected);
 }
 
