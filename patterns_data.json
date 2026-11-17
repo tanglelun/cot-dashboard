@@ -1,8 +1,8 @@
 {
-  "updated": "2026-11-14T11:48:51.050989+00:00",
-  "as_of": "2026-11-13",
+  "updated": "2026-11-17T03:57:25.757741+00:00",
+  "as_of": "2026-11-16",
   "universe_count": 2478,
-  "scanned": 2465,
+  "scanned": 2459,
   "skipped": [
     {
       "symbol": "ADIG",
@@ -17,8 +17,36 @@
       "reason": "Missing/stale daily history"
     },
     {
+      "symbol": "ARL",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "BFS",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "BKH",
+      "reason": "Missing/stale daily history"
+    },
+    {
+      "symbol": "CPF",
+      "reason": "Invalid OHLC range"
+    },
+    {
+      "symbol": "GHC",
+      "reason": "Invalid OHLC range"
+    },
+    {
       "symbol": "GTXI",
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/GTXI.json'"
+    },
+    {
+      "symbol": "ITGR",
+      "reason": "Missing/stale daily history"
+    },
+    {
+      "symbol": "NWE",
+      "reason": "Missing/stale daily history"
     },
     {
       "symbol": "P5N994",
@@ -41,10 +69,6 @@
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/SBT.json'"
     },
     {
-      "symbol": "SCTX",
-      "reason": "Missing/stale daily history"
-    },
-    {
       "symbol": "THRD",
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/THRD.json'"
     },
@@ -59,7 +83,7 @@
   ],
   "constituents": {
     "sp500": {
-      "date": "2026-11-14",
+      "date": "2026-11-17",
       "source": "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv",
       "label": "S&P 500",
       "count": 503,
@@ -67,7 +91,7 @@
       "proxy": false
     },
     "nasdaq100": {
-      "date": "2026-11-14",
+      "date": "2026-11-17",
       "source": "https://en.wikipedia.org/wiki/List_of_NASDAQ-100_companies",
       "label": "Nasdaq 100",
       "count": 101,
@@ -75,14 +99,14 @@
       "proxy": false
     },
     "russell2000": {
-      "date": "2026-11-14",
+      "date": "2026-11-17",
       "source": "https://www.ishares.com/us/products/239710/ishares-russell-2000-etf/latest-holdings.csv",
       "label": "Russell 2000 (IWM近似)",
       "count": 1960,
-      "scanned": 1948,
+      "scanned": 1942,
       "proxy": true,
-      "source_as_of": "2026-11-12",
-      "excluded_equity_holdings": 10
+      "source_as_of": "2026-11-13",
+      "excluded_equity_holdings": 11
     }
   },
   "method_version": 3,
@@ -100,10 +124,10 @@
       "volume_state": "expanded",
       "status": "confirmed",
       "volume_ratio": 2.03,
-      "as_of": "2026-11-13",
-      "price": 89.43,
-      "neckline": 94.8935,
-      "distance_pct": -5.76,
+      "as_of": "2026-11-16",
+      "price": 87.62,
+      "neckline": 94.9171,
+      "distance_pct": -7.69,
       "right_shoulder": "2026-10-29",
       "detected_on": "2026-11-03",
       "breakout_date": "2026-11-04",
@@ -340,10 +364,230 @@
         {
           "date": "2026-11-13",
           "close": 89.43
+        },
+        {
+          "date": "2026-11-16",
+          "close": 87.62
         }
       ],
       "neck_start": 93.7171,
-      "neck_end": 94.8935
+      "neck_end": 94.9171
+    },
+    {
+      "symbol": "INSG",
+      "name": "INSEEGO",
+      "indexes": [
+        "Russell 2000 (IWM近似)"
+      ],
+      "kind": "top",
+      "structure": "potential",
+      "structure_notes": [
+        "leg_asymmetry"
+      ],
+      "has_breakout": true,
+      "volume_state": "expanded",
+      "status": "confirmed",
+      "volume_ratio": 1.2,
+      "as_of": "2026-11-16",
+      "price": 3.75,
+      "neckline": 3.8306,
+      "distance_pct": -2.1,
+      "right_shoulder": "2026-11-11",
+      "detected_on": "2026-11-16",
+      "breakout_date": "2026-11-16",
+      "price_breakout_on": "2026-11-16",
+      "confirmed_on": "2026-11-16",
+      "points": [
+        {
+          "date": "2026-10-06",
+          "price": 4.73,
+          "offset": 10
+        },
+        {
+          "date": "2026-10-14",
+          "price": 4.02,
+          "offset": 16
+        },
+        {
+          "date": "2026-10-28",
+          "price": 5.13,
+          "offset": 26
+        },
+        {
+          "date": "2026-11-06",
+          "price": 3.88,
+          "offset": 33
+        },
+        {
+          "date": "2026-11-11",
+          "price": 4.54,
+          "offset": 36
+        }
+      ],
+      "chart": [
+        {
+          "date": "2026-09-22",
+          "close": 4.23
+        },
+        {
+          "date": "2026-09-23",
+          "close": 4.1
+        },
+        {
+          "date": "2026-09-24",
+          "close": 4.0
+        },
+        {
+          "date": "2026-09-25",
+          "close": 3.76
+        },
+        {
+          "date": "2026-09-28",
+          "close": 3.61
+        },
+        {
+          "date": "2026-09-29",
+          "close": 3.87
+        },
+        {
+          "date": "2026-09-30",
+          "close": 3.66
+        },
+        {
+          "date": "2026-10-01",
+          "close": 4.37
+        },
+        {
+          "date": "2026-10-02",
+          "close": 4.61
+        },
+        {
+          "date": "2026-10-05",
+          "close": 4.62
+        },
+        {
+          "date": "2026-10-06",
+          "close": 4.73
+        },
+        {
+          "date": "2026-10-07",
+          "close": 4.57
+        },
+        {
+          "date": "2026-10-08",
+          "close": 4.46
+        },
+        {
+          "date": "2026-10-09",
+          "close": 4.58
+        },
+        {
+          "date": "2026-10-12",
+          "close": 4.3
+        },
+        {
+          "date": "2026-10-13",
+          "close": 4.19
+        },
+        {
+          "date": "2026-10-14",
+          "close": 4.02
+        },
+        {
+          "date": "2026-10-15",
+          "close": 4.15
+        },
+        {
+          "date": "2026-10-16",
+          "close": 4.12
+        },
+        {
+          "date": "2026-10-19",
+          "close": 4.19
+        },
+        {
+          "date": "2026-10-20",
+          "close": 4.3
+        },
+        {
+          "date": "2026-10-21",
+          "close": 4.41
+        },
+        {
+          "date": "2026-10-22",
+          "close": 4.19
+        },
+        {
+          "date": "2026-10-23",
+          "close": 4.24
+        },
+        {
+          "date": "2026-10-26",
+          "close": 4.43
+        },
+        {
+          "date": "2026-10-27",
+          "close": 4.96
+        },
+        {
+          "date": "2026-10-28",
+          "close": 5.13
+        },
+        {
+          "date": "2026-10-29",
+          "close": 4.96
+        },
+        {
+          "date": "2026-10-30",
+          "close": 4.58
+        },
+        {
+          "date": "2026-11-02",
+          "close": 4.53
+        },
+        {
+          "date": "2026-11-03",
+          "close": 4.53
+        },
+        {
+          "date": "2026-11-04",
+          "close": 4.83
+        },
+        {
+          "date": "2026-11-05",
+          "close": 3.93
+        },
+        {
+          "date": "2026-11-06",
+          "close": 3.88
+        },
+        {
+          "date": "2026-11-09",
+          "close": 4.22
+        },
+        {
+          "date": "2026-11-10",
+          "close": 4.25
+        },
+        {
+          "date": "2026-11-11",
+          "close": 4.54
+        },
+        {
+          "date": "2026-11-12",
+          "close": 4.44
+        },
+        {
+          "date": "2026-11-13",
+          "close": 4.03
+        },
+        {
+          "date": "2026-11-16",
+          "close": 3.75
+        }
+      ],
+      "neck_start": 4.1518,
+      "neck_end": 3.8306
     },
     {
       "symbol": "FIP",
@@ -361,10 +605,10 @@
       "volume_state": "expanded",
       "status": "confirmed",
       "volume_ratio": 1.7,
-      "as_of": "2026-11-13",
-      "price": 3.93,
-      "neckline": 2.8906,
-      "distance_pct": 35.96,
+      "as_of": "2026-11-16",
+      "price": 3.76,
+      "neckline": 2.8925,
+      "distance_pct": 29.99,
       "right_shoulder": "2026-11-03",
       "detected_on": "2026-11-06",
       "breakout_date": "2026-11-05",
@@ -565,10 +809,14 @@
         {
           "date": "2026-11-13",
           "close": 3.93
+        },
+        {
+          "date": "2026-11-16",
+          "close": 3.76
         }
       ],
       "neck_start": 2.8137,
-      "neck_end": 2.8906
+      "neck_end": 2.8925
     },
     {
       "symbol": "ALGN",
@@ -585,10 +833,10 @@
       "volume_state": "expanded",
       "status": "confirmed",
       "volume_ratio": 1.7,
-      "as_of": "2026-11-13",
-      "price": 168.32,
-      "neckline": 157.1245,
-      "distance_pct": 7.13,
+      "as_of": "2026-11-16",
+      "price": 165.98,
+      "neckline": 157.2255,
+      "distance_pct": 5.57,
       "right_shoulder": "2026-10-30",
       "detected_on": "2026-11-04",
       "breakout_date": "2026-11-04",
@@ -837,10 +1085,14 @@
         {
           "date": "2026-11-13",
           "close": 168.32
+        },
+        {
+          "date": "2026-11-16",
+          "close": 165.98
         }
       ],
       "neck_start": 151.7764,
-      "neck_end": 157.1245
+      "neck_end": 157.2255
     },
     {
       "symbol": "PDD",
@@ -858,10 +1110,10 @@
       "volume_state": "not_applicable",
       "status": "candidate",
       "volume_ratio": null,
-      "as_of": "2026-11-13",
-      "price": 78.97,
-      "neckline": 84.9771,
-      "distance_pct": -7.07,
+      "as_of": "2026-11-16",
+      "price": 78.11,
+      "neckline": 85.0988,
+      "distance_pct": -8.21,
       "right_shoulder": "2026-10-28",
       "detected_on": "2026-11-02",
       "breakout_date": null,
@@ -1102,10 +1354,14 @@
         {
           "date": "2026-11-13",
           "close": 78.97
+        },
+        {
+          "date": "2026-11-16",
+          "close": 78.11
         }
       ],
       "neck_start": 78.7671,
-      "neck_end": 84.9771
+      "neck_end": 85.0988
     }
   ]
 }
