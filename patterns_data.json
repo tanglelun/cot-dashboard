@@ -1,8 +1,8 @@
 {
-  "updated": "2026-11-17T04:52:32.818245+00:00",
+  "updated": "2026-11-17T13:52:48.733614+00:00",
   "as_of": "2026-11-16",
   "universe_count": 2478,
-  "scanned": 2459,
+  "scanned": 2463,
   "skipped": [
     {
       "symbol": "ADIG",
@@ -17,24 +17,8 @@
       "reason": "Missing/stale daily history"
     },
     {
-      "symbol": "ARL",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "BFS",
-      "reason": "Invalid OHLC range"
-    },
-    {
       "symbol": "BKH",
       "reason": "Missing/stale daily history"
-    },
-    {
-      "symbol": "CPF",
-      "reason": "Invalid OHLC range"
-    },
-    {
-      "symbol": "GHC",
-      "reason": "Invalid OHLC range"
     },
     {
       "symbol": "GTXI",
@@ -103,7 +87,7 @@
       "source": "https://www.ishares.com/us/products/239710/ishares-russell-2000-etf/latest-holdings.csv",
       "label": "Russell 2000 (IWM近似)",
       "count": 1960,
-      "scanned": 1942,
+      "scanned": 1946,
       "proxy": true,
       "source_as_of": "2026-11-13",
       "excluded_equity_holdings": 11

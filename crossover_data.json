@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-17 04:52 UTC",
+  "updated": "2026-11-17 13:52 UTC",
   "stocks": [
     {
       "symbol": "RXT",
@@ -504,15 +504,15 @@
   ],
   "commodities": [
     {
-      "symbol": "BZ=F",
-      "name": "Brent Crude Oil",
-      "price": 91.78,
-      "change_pct": -4.24,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-11-16",
-      "sector": "Energy"
+      "symbol": "CT=F",
+      "name": "Cotton",
+      "price": 81.09,
+      "change_pct": 5.31,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-11-17",
+      "sector": "Agriculture"
     },
     {
       "symbol": "BDRY",
@@ -537,39 +537,6 @@
       "sector": "Indexes"
     },
     {
-      "symbol": "GF=F",
-      "name": "Feeder Cattle",
-      "price": 333.25,
-      "change_pct": -1.7,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-11-16",
-      "sector": "Livestock"
-    },
-    {
-      "symbol": "LE=F",
-      "name": "Live Cattle",
-      "price": 224.38,
-      "change_pct": 1.69,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-11-16",
-      "sector": "Livestock"
-    },
-    {
-      "symbol": "ZO=F",
-      "name": "Oats",
-      "price": 355.5,
-      "change_pct": -1.66,
-      "direction": "up",
-      "prev_color": "white",
-      "cur_color": "green",
-      "date": "2026-11-16",
-      "sector": "Agriculture"
-    },
-    {
       "symbol": "KRBN",
       "name": "EU Carbon Permits",
       "price": 34.49,
@@ -581,14 +548,25 @@
       "sector": "Indexes"
     },
     {
-      "symbol": "ZM=F",
-      "name": "Soybean Meal",
-      "price": 333.4,
-      "change_pct": 1.09,
+      "symbol": "ZC=F",
+      "name": "Corn",
+      "price": 450.75,
+      "change_pct": 0.45,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
-      "date": "2026-11-16",
+      "date": "2026-11-17",
+      "sector": "Agriculture"
+    },
+    {
+      "symbol": "ZM=F",
+      "name": "Soybean Meal",
+      "price": 335.6,
+      "change_pct": 0.3,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-11-17",
       "sector": "Agriculture"
     }
   ]
