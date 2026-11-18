@@ -1,4 +1,5 @@
 """Daily head-and-shoulders screening for index constituents and IWM equities."""
+from double_patterns import detect_double
 import argparse
 import csv
 import io
@@ -223,7 +224,7 @@ def detect(bars, kind):
 
 
 def scan(root, groups, expected):
-    members = universe(groups); skipped=[]; results=[]; scanned=0; scanned_symbols=set()
+    members = universe(groups); skipped=[]; results=[]; double_results=[]; scanned=0; scanned_symbols=set()
     for symbol, member in sorted(members.items()):
         try:
             path = root/'market_data'/f'{symbol}.json'
@@ -235,6 +236,9 @@ def scan(root, groups, expected):
         for kind in ('top','bottom'):
             result=detect(bars,kind)
             if result: results.append({**member,**result})
+            result = detect_double(bars, kind)
+            if result: double_results.append({**member, **result})
+    double_results.sort(key=lambda r:(r["structure"]=="clear",r["price_breakout_on"] or r["detected_on"]),reverse=True)
     coverage = {}
     for group, details in groups.items():
         symbols = {r['symbol'] for r in details['items']}
@@ -248,7 +252,7 @@ def scan(root, groups, expected):
     results.sort(key=lambda r:(r['structure']=='clear',{'confirmed':2,'breakout':1,'candidate':0}[r['status']],r['price_breakout_on'] or r['detected_on']), reverse=True)
     return {'updated':datetime.now(timezone.utc).isoformat(), 'as_of':expected, 'universe_count':len(members),
             'scanned':scanned, 'skipped':skipped, 'constituents':coverage,
-            'method_version':3,'patterns':results}
+            'method_version':3,'patterns':results,'double_patterns':double_results}
 
 
 def main():

@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="nav_market.css">
 <link rel="stylesheet" href="patterns.css?v=6">
 <script src="patterns.js?v=6" defer></script>
+<script src="double_patterns.js?v=1" defer></script>
 <link rel="prefetch" href="market_pulse_view.json" as="fetch" crossorigin="anonymous">
 <style>
 :root{--bg:#000;--panel:#050709;--panel2:#090d12;--border:#202932;--border-soft:#111820;--text:#d1d4dc;--muted:#787b86;--faint:#5d606b;--green:#00d109;--red:#ff4d00;--blue:#2962ff;--hover:#101820;--accent:#00d109}
@@ -132,6 +133,24 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,san
         <p>这些数值是本站的筛选参数，并非行业统一定义；无结果表示未通过本站规则，不代表市场绝不存在该形态。自动筛选仍需看图复核。参考：<a href="https://chartschool.stockcharts.com/table-of-contents/chart-analysis/chart-patterns/head-and-shoulders-bottom" target="_blank" rel="noopener">头肩底定义</a> · <a href="https://chartschool.stockcharts.com/table-of-contents/chart-analysis/chart-patterns/head-and-shoulders-top" target="_blank" rel="noopener">头肩顶定义</a></p>
         <p>罗素 2000 范围采用 <a href="https://www.ishares.com/us/products/239710/ishares-russell-2000-etf" target="_blank" rel="noopener">iShares IWM 官方股票持仓</a>作为公开近似名单，不等同于 FTSE Russell 精确指数成分股；已排除现金、期货、未上市及无有效交易代码持仓。</p>
         <div id="patternMembership"></div><div id="patternCoverage"></div>
+      </details>
+    </section>
+    <section class="section" id="doublePatternSection" aria-label="双底双顶股票筛选">
+      <div class="section-head"><div><h2>双底 / 双顶 · W Bottom / M Top</h2><div class="section-meta" id="doublePatternMeta" role="status">正在读取形态扫描结果…</div></div></div>
+      <div class="pattern-toolbar">
+        <div class="cross-tabs"><button type="button" class="cross-tab active" data-pattern="bottom" aria-pressed="true">双底（W底）</button><button type="button" class="cross-tab" data-pattern="top" aria-pressed="false">双顶（M顶）</button></div>
+        <label>结构 <select id="doublePatternStructure" aria-label="结构档位"><option value="all">全部结构</option><option value="clear">明确结构</option><option value="potential">潜在结构</option></select></label>
+        <label><input type="checkbox" id="doublePatternsConfirmed">只看颈线突破</label>
+        <span class="section-meta">S&amp;P 500 + Nasdaq 100 + Russell 2000（IWM近似）</span>
+      </div>
+      <p id="doublePatternDefinition" class="pattern-method">双底（W底）：下跌后两次测试相近低点，中间反弹高点为颈线。</p>
+      <div id="doublePatternList" class="pattern-list"></div>
+      <details class="pattern-method"><summary>定义与筛选规则</summary>
+        <p>双底（W底）：下跌后出现两个相近低谷，中间有明显反弹；双顶（M顶）：上涨后出现两个相近高峰，中间有明显回落。颈线为中间反弹高点／回落低点。双底呈 W 形，双顶呈 M 形。</p>
+        <p>扫描最近 252 根日线，以左右各 3、5、8 根确认独立峰谷；两次测试间隔 10–100 个交易日，中间波幅至少为价格的 3% 且达到 2 倍平均真实波幅。两端差异最多为价格的 5% 且不超过形态高度的 40%，排除单个圆弧及微小波动。</p>
+        <p>结构与突破独立标注。收盘越过颈线 0.5% 记为突破，突破日量比达到前 20 日均量的 1.2 倍记为放量。未突破最多保留第二峰谷后 20 个交易日，突破后最多保留 10 日；创新极值或反穿颈线则剔除。这是持续跟踪列表，不只展示当天新增。上述阈值是本站筛选参数，自动识别需看图复核。</p>
+        <p>定义参考：<a href="https://chartschool.stockcharts.com/table-of-contents/chart-analysis/chart-patterns/double-top-reversal" target="_blank" rel="noopener">双顶</a> · <a href="https://chartschool.stockcharts.com/table-of-contents/chart-analysis/chart-patterns/double-bottom-reversal" target="_blank" rel="noopener">双底</a></p>
+        <div id="doublePatternMembership"></div><div id="doublePatternCoverage"></div>
       </details>
     </section>
     <div class="section">
