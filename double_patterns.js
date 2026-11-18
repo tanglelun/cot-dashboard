@@ -49,7 +49,7 @@
     if (!rows.length) {list.append(el('div','当前筛选下暂无符合条件的结构。两档均排除圆弧底和缺少两次独立测试的走势。','pattern-empty'));return;}
     rows.forEach(row=>{
       const card=el('a',null,'pattern-row');
-      card.href='stock_chart.html?symbol='+encodeURIComponent(row.symbol)+'&universe=all&name='+encodeURIComponent(row.name);
+      card.href='stock_chart.html?symbol='+encodeURIComponent(row.symbol)+'&universe=home-patterns&sort=rank&dir=asc&list=double-patterns&kind='+kind+'&structure='+encodeURIComponent(tier)+'&breakout='+String(document.getElementById('doublePatternsConfirmed').checked)+'&name='+encodeURIComponent(row.name);
       const identity=el('div'); identity.append(el('strong',row.symbol),el('span',row.name,'pattern-name'),el('small',row.indexes.join(' · '),'pattern-index'));
       const chart=el('div',null,'pattern-mini');chart.append(miniChart(row));
       const price=el('div',null,'pattern-price');price.append(el('strong','$'+money(row.price)),el('small','颈线 $'+money(row.neckline)),el('small','距颈线 '+(row.distance_pct>0?'+':'')+row.distance_pct.toFixed(2)+'%'));

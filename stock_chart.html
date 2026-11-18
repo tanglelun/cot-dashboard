@@ -1757,7 +1757,7 @@ function renderStockList(){
       '<span class="stock-main"><span class="stock-symbol">'+symbol+'</span></span>' +
       '<span class="stock-value'+valueClass+'">'+(row.unavailable ? '—' : fmtPct(metric))+'</span>' +
       '</button><button class="favorite-btn" type="button" data-favorite="'+symbol+'" aria-label="'+(favoriteSymbols.has(symbol) ? '取消收藏 ' : '收藏 ')+symbol+'" aria-pressed="'+favoriteSymbols.has(symbol)+'">'+(favoriteSymbols.has(symbol) ? '★' : '☆')+'</button></div>';
-  }).join('') || '<div class="favorites-empty">还没有收藏。点击股票旁的 ☆，即可加入这里。</div>';
+  }).join('') || '<div class="favorites-empty">'+(state.universe === 'favorites' ? '还没有收藏。点击股票旁的 ☆，即可加入这里。' : '当前列表暂无符合条件的股票。')+'</div>';
   stockListEl.querySelectorAll('.stock-row[data-symbol]').forEach(button => {
     stockButtonBySymbol.set(button.dataset.symbol, button);
   });
@@ -1791,6 +1791,7 @@ function updateUrl(row){
   next.set('sort', state.sortKey);
   next.set('dir', state.sortDir);
   if(params.get('list')) next.set('list', params.get('list'));
+  for(const key of ['kind','structure','breakout']) if(params.has(key)) next.set(key, params.get(key));
   if(params.get('td')) next.set('td', params.get('td'));
   if(params.get('ma')) next.set('ma', params.get('ma'));
   window.history.replaceState(null, '', window.location.pathname + '?' + next.toString());
@@ -1877,7 +1878,31 @@ function setupStockControls(){
 async function loadMarketIndex(){
   try{
     let data;
-    if(params.get('list') === 'crossover'){
+    if(['patterns','double-patterns'].includes(params.get('list'))){
+      const response = await fetch('patterns_data.json', {cache:'no-store'});
+      if(!response.ok) throw new Error('形态列表暂时无法读取');
+      const payload = await response.json();
+      const doubles = params.get('list') === 'double-patterns';
+      const source = doubles ? payload.double_patterns : payload.patterns;
+      if(!Array.isArray(source)) throw new Error('形态列表暂时无法读取');
+      const kind = params.get('kind') === 'top' ? 'top' : 'bottom';
+      const tier = params.get('structure') || 'all';
+      const selected = source.filter(r=>r.kind===kind && (tier==='all' || r.structure===tier) && (params.get('breakout')!=='true' || r.has_breakout));
+      let quotes = [];
+      try {
+        const quoteResponse = await fetch('market_data/index.json', {cache:'no-store'});
+        if(quoteResponse.ok){
+          const index = await quoteResponse.json();
+          quotes = [...(index.stocks || []), ...Object.values(index.groups || {}).flatMap(g=>g.stocks || [])];
+        }
+      } catch(error) { /* Pattern navigation remains usable without quote metadata. */ }
+      const bySymbol = new Map(quotes.map(r=>[rowSymbol(r),r]));
+      const stocks = selected.map((r,i)=>({...bySymbol.get(r.symbol),unavailable:!bySymbol.has(r.symbol),symbol:r.symbol,name:r.name,price:r.price,rank:i+1}));
+      const label = (doubles ? (kind==='bottom'?'双底（W底）':'双顶（M顶）') : (kind==='bottom'?'头肩底':'头肩顶')) +
+        ' · ' + (tier==='clear'?'明确结构':tier==='potential'?'潜在结构':'全部结构') + (params.get('breakout')==='true'?' · 已突破':'');
+      data = {stocks, groups:{'home-patterns':{label,stocks}}};
+      document.querySelector('.stock-panel-title').textContent = label.split(' · ')[0] + ' (' + stocks.length + ')';
+    }else if(params.get('list') === 'crossover'){
       const response = await fetch('crossover_data.json', { cache:'no-store' });
       if(!response.ok) throw new Error('No crossover data');
       const cd = await response.json();
