@@ -237,6 +237,7 @@ tr:hover td:first-child{background:var(--tv-hover)}
 }
 
 </style>
+<script src="ranking_utils.js?v=1"></script>
 </head>
 <body>
 <nav class="site-nav" aria-label="Primary">
@@ -278,7 +279,7 @@ tr:hover td:first-child{background:var(--tv-hover)}
 
 <div class="market-view" id="stockMarketView">
   <div class="tabs" id="tabHeaders">
-    <button class="tab active" data-tab="r2000" onclick="switchTab('r2000')">Russell 2000</button>
+    <button class="tab active" data-tab="r2000" onclick="switchTab('r2000')">Russell 2000（IWM近似）</button>
     <button class="tab" data-tab="sp500" onclick="switchTab('sp500')">S&P 500</button>
     <button class="tab" data-tab="nasdaq" onclick="switchTab('nasdaq')">Nasdaq 100</button>
   </div>
@@ -630,7 +631,7 @@ const ndqRaw = [
 ];
 
 // ===== APP ENGINE =====
-function createApp(mountId, rawData, label, groupKey) {
+function createApp(mountId, rawData, label, groupKey, coverage, asOf) {
   const data = rawData;
   let curTime = 'd', curSort = {key:'gain',dir:'desc'}, curSector = 'all', curPage = 1;
   const PP = 9999;
@@ -684,13 +685,13 @@ function createApp(mountId, rawData, label, groupKey) {
   function chartUrl(d){
     return 'stock_chart.html?symbol='+encodeURIComponent(d.t)+
       '&name='+encodeURIComponent(d.n)+
-      '&universe='+encodeURIComponent(groupKey)+
+      '&list=ranking&sector='+encodeURIComponent(curSector)+'&q='+encodeURIComponent(document.getElementById(mountId+'_srch').value.trim())+'&universe='+encodeURIComponent(groupKey)+
       '&metric='+encodeURIComponent(curTime)+
       '&sort='+encodeURIComponent(curSort.key)+
       '&dir='+encodeURIComponent(curSort.dir);
   }
   function render(){
-    var arr=[].concat(data);
+    var arr=rankingUtils.topRows(data,curTime);
     var q=document.getElementById(mountId+'_srch').value.toLowerCase().trim();
     if(q)arr=arr.filter(function(d){return d.t.toLowerCase().includes(q)||d.n.toLowerCase().includes(q)});
     if(curSector!=='all')arr=arr.filter(function(d){return d.s===curSector});
@@ -701,7 +702,7 @@ function createApp(mountId, rawData, label, groupKey) {
       if(k==='mcapNum')return dir==='desc'?b.mn-a.mn:a.mn-b.mn;
       return dir==='asc'?a.r-b.r:b.r-a.r;
     });
-    document.getElementById(mountId+'_cnt').textContent=arr.length;
+    document.querySelector('#'+mountId+' .stats').textContent='当前显示 '+arr.length+' 只（涨幅前100名） · 完整名单 '+coverage.total+' 只 · 本周期可排名 '+coverage.eligible[curTime]+' 只 · 行情缺失/过期 '+coverage.missing.length+' 只 · 历史不足 '+(data.length-coverage.eligible[curTime])+' 只 · 日线截至 '+asOf+' · 名单读取 '+coverage.membership_checked+(coverage.source_as_of?' · 持仓截至 '+coverage.source_as_of:'');
     var tp=Math.ceil(arr.length/PP);
     if(curPage>tp)curPage=tp||1;
     var start=(curPage-1)*PP,page=arr.slice(start,start+PP);
@@ -722,7 +723,8 @@ function createApp(mountId, rawData, label, groupKey) {
   }
   window[mountId+'_goPage']=function(n){curPage=n;render();};
   window[mountId+'_setTime']=function(t){
-    curTime=t;curPage=1;
+    curTime=t;curPage=1;curSort={key:'gain',dir:'desc'};
+    document.querySelectorAll('#'+mountId+' .cb[data-s]').forEach(b=>b.classList.toggle('active',b.dataset.s==='gain'));
     [].forEach.call(document.querySelectorAll('#'+mountId+' .cb[data-t]'),function(b){b.classList.remove('active')});
     var btn=document.querySelector('#'+mountId+' .cb[data-t="'+t+'"]');
     if(btn)btn.classList.add('active');
@@ -1193,9 +1195,12 @@ function setupMarketType(){
 }
 setupNavSearch();
 setupMarketType();
-createApp('app-r2000', r2kRaw, 'Russell 2000', 'r2kRaw');
-createApp('app-sp500', spRaw, 'S&P 500', 'spRaw');
-createApp('app-nasdaq', ndqRaw, 'Nasdaq 100', 'ndqRaw');
+fetch('rankings_data.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('unavailable');return r.json();}).then(payload=>{
+  for(const [mount,key] of [['app-r2000','r2kRaw'],['app-sp500','spRaw'],['app-nasdaq','ndqRaw']]){
+    const group=payload.groups[key];if(!group || !Array.isArray(group.stocks))throw Error('invalid');
+    createApp(mount,group.stocks,group.label,key,group,payload.as_of);
+  }
+}).catch(()=>{for(const id of ['app-r2000','app-sp500','app-nasdaq'])document.getElementById(id).textContent='完整成分股榜单暂时无法读取，请刷新重试。';});
 </script>
 </body>
 </html>

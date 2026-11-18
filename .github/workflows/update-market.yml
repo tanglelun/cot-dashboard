@@ -64,6 +64,12 @@ jobs:
         continue-on-error: true
         run: python update_indexes.py
 
+      - name: Build full constituent ranking universes
+        id: rankings
+        if: steps.stocks.outcome == 'success'
+        continue-on-error: true
+        run: python generate_rankings.py
+
       - name: Generate Crossover signals
         id: crossover
         if: steps.stocks.outcome == 'success'
@@ -79,6 +85,7 @@ jobs:
       - name: Select successful outputs
         id: outputs
         env:
+          RANKINGS_OK: ${{ steps.rankings.outcome }}
           STOCKS_OK: ${{ steps.stocks.outcome }}
           COMMODITIES_OK: ${{ steps.commodities.outcome }}
           INDEXES_OK: ${{ steps.indexes.outcome }}
@@ -86,6 +93,7 @@ jobs:
           CROSSOVER_OK: ${{ steps.crossover.outcome }}
         run: |
           patterns=()
+          if [[ "$RANKINGS_OK" == success ]]; then patterns+=("rankings_data.json" "pattern_constituents.json"); fi
           if [[ "$STOCKS_OK" == success ]]; then patterns+=("russell2000_top100.html" "market_data/*.json"); fi
           if [[ "$COMMODITIES_OK" == success ]]; then patterns+=("commodities_data.json" "commodities_data/*.json"); fi
           if [[ "$INDEXES_OK" == success ]]; then patterns+=("indexes_data.json" "indexes_data/*.json"); fi
@@ -107,7 +115,7 @@ jobs:
         run: bash publish_data.sh
 
       - name: Report incomplete refreshes
-        if: steps.stocks.outcome == 'failure' || steps.commodities.outcome == 'failure' || steps.indexes.outcome == 'failure' || steps.crossover.outcome == 'failure' || steps.patterns.outcome == 'failure'
+        if: steps.rankings.outcome == 'failure' || steps.stocks.outcome == 'failure' || steps.commodities.outcome == 'failure' || steps.indexes.outcome == 'failure' || steps.crossover.outcome == 'failure' || steps.patterns.outcome == 'failure'
         run: |
           echo "::error::One or more data sources failed. Successful updates were committed; inspect the failed step."
           exit 1

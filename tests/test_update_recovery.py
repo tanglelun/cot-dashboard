@@ -17,6 +17,7 @@ class UpdateRecoveryTests(unittest.TestCase):
             self.write(name, {'prices':[{'time':'2026-10-22'}]})
         self.write('crossover_data.json', {'updated':'2026-10-23 01:00 UTC'})
         self.write('patterns_data.json', {'as_of':'2026-10-22'})
+        self.write('rankings_data.json', {'as_of':'2026-10-22'})
     def test_current_market_skips_recovery(self):
         self.market()
         self.assertEqual(recovery_reasons('market',self.root,'2026-10-22')[1],[])

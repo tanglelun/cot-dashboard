@@ -53,7 +53,7 @@ def parse_iwm(text):
         symbol = row.get('Ticker', '').strip().upper().replace(' ', '-').replace('.', '-')
         if not re.fullmatch(r'[A-Z][A-Z0-9-]{0,11}',symbol) or 'UNLISTED' in row.get('Exchange','').upper():
             excluded += 1; continue
-        items.append({'symbol':symbol, 'name':row.get('Name',symbol)})
+        items.append({'symbol':symbol, 'name':row.get('Name',symbol), 'sector':row.get('Sector','未知')})
     return items, {'source_as_of':as_of, 'proxy':True, 'excluded_equity_holdings':excluded}
 
 
@@ -61,7 +61,7 @@ def parse_members(text, group):
     if group == 'russell2000':
         rows, _ = parse_iwm(text)
     elif group == 'sp500':
-        rows = [{'symbol': r['Symbol'], 'name': r['Security']} for r in csv.DictReader(io.StringIO(text))]
+        rows = [{'symbol': r['Symbol'], 'name': r['Security'], 'sector':r.get('GICS Sector','未知')} for r in csv.DictReader(io.StringIO(text))]
     else:
         parser = Tables(); parser.feed(text); rows = []
         for table in parser.tables:
@@ -75,7 +75,7 @@ def parse_members(text, group):
     for row in rows:
         symbol = row['symbol'].strip().upper().replace('.', '-')
         if not re.fullmatch(r'[A-Z0-9-]{1,12}', symbol): raise ValueError('Invalid constituent symbol')
-        unique[symbol] = {'symbol': symbol, 'name': row['name']}
+        unique[symbol] = {'symbol': symbol, 'name': row['name'], 'sector':row.get('sector','未知')}
     low, high = {'sp500':(490,510), 'nasdaq100':(95,110), 'russell2000':(1800,2200)}[group]
     if not low <= len(unique) <= high: raise ValueError(f'Incomplete {group} membership: {len(unique)}')
     return list(unique.values())

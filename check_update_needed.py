@@ -21,6 +21,8 @@ def recovery_reasons(kind, root=BASE_DIR, expected=None):
             index = read_json(root, 'market_data/index.json')
             if not index.get('stocks') or index.get('updated', '') < expected:
                 reasons.append('stock directory is behind the completed session')
+            if read_json(root, 'rankings_data.json').get('as_of', '') < expected:
+                reasons.append('full constituent rankings are behind the completed session')
             # The index alone cannot detect the old all-chart-refresh regression.
             symbols = [row['symbol'] for row in index.get('stocks', [])]
             fresh = 0

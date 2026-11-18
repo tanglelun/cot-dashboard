@@ -355,6 +355,7 @@ canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:cro
 
 <script src="pattern_overlay.js?v=4"></script>
 <script src="double_pattern_overlay.js?v=1"></script>
+<script src="ranking_utils.js?v=1"></script>
 <script src="kline_periods.js?v=3"></script>
 <script>
 const params = new URLSearchParams(window.location.search);
@@ -1683,6 +1684,12 @@ function groupEntries(){
 }
 
 function getBaseRows(){
+  if(state.rankingSource && state.universe === params.get('universe')){
+    const query=(params.get('q')||'').toLowerCase(),sector=params.get('sector')||'all';
+    return rankingUtils.topRows(state.rankingSource,state.metric)
+      .filter(r=>(sector==='all'||r.s===sector)&&(!query||r.t.toLowerCase().includes(query)||r.n.toLowerCase().includes(query)))
+      .map(r=>({...r,symbol:r.t,name:r.n,price:r.p,sector:r.s,rank:r.r,marketCap:r.c,marketCapNum:r.mn}));
+  }
   const index = state.marketIndex || {};
   const groups = index.groups || {};
   if(state.universe === 'favorites'){
@@ -1799,7 +1806,7 @@ function updateUrl(row){
   next.set('sort', state.sortKey);
   next.set('dir', state.sortDir);
   if(params.get('list')) next.set('list', params.get('list'));
-  for(const key of ['kind','structure','breakout']) if(params.has(key)) next.set(key, params.get(key));
+  for(const key of ['kind','structure','breakout','sector','q']) if(params.has(key)) next.set(key, params.get(key));
   if(params.get('td')) next.set('td', params.get('td'));
   if(params.get('ma')) next.set('ma', params.get('ma'));
   window.history.replaceState(null, '', window.location.pathname + '?' + next.toString());
@@ -1886,7 +1893,18 @@ function setupStockControls(){
 async function loadMarketIndex(){
   try{
     let data;
-    if(['patterns','double-patterns'].includes(params.get('list'))){
+    if(params.get('list') === 'ranking'){
+      const response=await fetch('rankings_data.json',{cache:'no-store'});
+      if(!response.ok)throw Error('Rankings unavailable');
+      const payload=await response.json(),key=params.get('universe'),group=payload.groups[key];
+      if(!group)throw Error('Unknown ranking universe');
+      state.rankingSource=group.stocks;
+      const query=(params.get('q')||'').toLowerCase(),sector=params.get('sector')||'all';
+      const stocks=rankingUtils.topRows(group.stocks,state.metric)
+        .filter(r=>(sector==='all'||r.s===sector)&&(!query||r.t.toLowerCase().includes(query)||r.n.toLowerCase().includes(query)))
+        .map(r=>({...r,symbol:r.t,name:r.n,price:r.p,sector:r.s,rank:r.r,marketCap:r.c,marketCapNum:r.mn}));
+      data={stocks,groups:{[key]:{label:group.label+' · 涨幅前100',stocks}}};
+    }else if(['patterns','double-patterns'].includes(params.get('list'))){
       const response = await fetch('patterns_data.json', {cache:'no-store'});
       if(!response.ok) throw new Error('形态列表暂时无法读取');
       const payload = await response.json();
