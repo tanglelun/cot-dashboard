@@ -69,7 +69,8 @@ def parse_members(text, group):
             header = table[0]
             if 'Ticker' in header and 'Company' in header:
                 a, b = header.index('Ticker'), header.index('Company')
-                rows = [{'symbol': r[a], 'name': r[b]} for r in table[1:] if len(r) > max(a, b)]
+                sector = next((i for i, title in enumerate(header) if 'sector' in title.lower()), None)
+                rows = [{'symbol': r[a], 'name': r[b], 'sector':r[sector] if sector is not None and len(r)>sector else '未知'} for r in table[1:] if len(r) > max(a, b)]
                 break
     unique = {}
     for row in rows:

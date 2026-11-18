@@ -9,6 +9,16 @@ ROOT=Path(__file__).resolve().parent
 GROUPS={'r2kRaw':'russell2000','spRaw':'sp500','ndqRaw':'nasdaq100'}
 SECTORS={'Information Technology':'科技','Technology':'科技','Health Care':'医疗','Healthcare':'医疗','Industrials':'工业','Energy':'能源','Financials':'金融','Materials':'基础材料','Communication Services':'通信','Consumer Discretionary':'消费周期','Consumer Staples':'消费防御','Utilities':'公用事业','Real Estate':'房地产'}
 
+# Map source industry categories into the page's sector filters.
+INDUSTRIES={
+ '科技':'Communication Equipment|Computer Communications Equipment|Computer Hardware|Computer Peripheral Equipment|Computer Services|Computer Software|EDP Services|Electronic Components|Semiconductors|Software',
+ '医疗':'Biotechnology|Medical Electronics|Medical/Dental Instruments',
+ '工业':'Aerospace|Construction & Materials|Diversified Commercial Services|Diversified Industrials|Industrial Machinery|Industrial Specialties|Military, Government, Technical|Ordnance & Accessories|Railroads|Transportation Services|Trucking',
+ '消费周期':'Automobiles & Parts|Catalog/Specialty Distribution|Clothing/Shoe/Accessory Stores|Consumer Electronics|Department/Specialty Retail Stores|Garments & Clothing|Hotels/Resorts|Miscellaneous Amusement & Recreation Services|Motor Vehicles|Restaurants|Retail|Specialty Retailers',
+ '消费防御':'Packaged Foods|Soft Drinks', '通信':'Cable & Other Pay Television Services|Telecommunications Services',
+ '公用事业':'Conventional Electricity|Electric Utilities|Power Generation', '能源':'Oil & Gas Production|Oil Equipment & Services', '基础材料':'Major Chemicals'}
+SECTORS.update({industry:sector for sector,industries in INDUSTRIES.items() for industry in industries.split('|')})
+
 def cap_number(value):
     try:
         text=str(value).replace('$','').replace(',','').strip()
@@ -31,6 +41,7 @@ def returns(bars, expected):
 
 
 def build(root, groups, expected):
+    sp_sectors={r['symbol']:r.get('sector','未知') for r in groups['sp500']['items']}
     payload={'as_of':expected,'updated':datetime.now(timezone.utc).isoformat(),'groups':{}}
     for key,group in GROUPS.items():
         source=groups[group];rows=[];missing=[]
@@ -40,7 +51,7 @@ def build(root, groups, expected):
                 path=root/'market_data'/f'{symbol}.json'
                 if not path.exists(): path=root/'market_data'/f'{symbol.replace("-", ".")}.json'
                 chart=json.loads(path.read_text());metrics=returns(chart['prices'],expected)
-                rows.append({'t':symbol,'n':member['name'],'s':SECTORS.get(member.get('sector'),member.get('sector','未知')),'c':chart.get('marketCap',''),'mn':cap_number(chart.get('marketCap')),**metrics})
+                rows.append({'t':symbol,'n':member['name'],'s':SECTORS.get(sp_sectors.get(symbol,member.get('sector')),sp_sectors.get(symbol,member.get('sector','未知'))),'c':chart.get('marketCap',''),'mn':cap_number(chart.get('marketCap')),**metrics})
             except (OSError,ValueError,KeyError,TypeError) as exc:missing.append({'symbol':symbol,'reason':str(exc)[:100]})
         if len(rows)<.90*len(source['items']): raise ValueError(f'{group}: insufficient fresh coverage {len(rows)}/{len(source["items"])}')
         payload['groups'][key]={'label':{'russell2000':'Russell 2000（IWM完整持仓近似）','sp500':'S&P 500','nasdaq100':'Nasdaq 100'}[group],
