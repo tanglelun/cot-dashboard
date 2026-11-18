@@ -1,8 +1,8 @@
 {
-  "updated": "2026-11-18T04:02:15.005736+00:00",
+  "updated": "2026-11-18T13:27:37.257844+00:00",
   "as_of": "2026-11-17",
   "universe_count": 2477,
-  "scanned": 2460,
+  "scanned": 2463,
   "skipped": [
     {
       "symbol": "ACH",
@@ -14,19 +14,15 @@
     },
     {
       "symbol": "AKE",
-      "reason": "[Errno 2] No such file or directory: '/tmp/net-cot-publish/market_data/AKE.json'"
+      "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/AKE.json'"
     },
     {
       "symbol": "APMD",
       "reason": "Missing/stale daily history"
     },
     {
-      "symbol": "BFS",
-      "reason": "Invalid OHLC range"
-    },
-    {
       "symbol": "GTXI",
-      "reason": "[Errno 2] No such file or directory: '/tmp/net-cot-publish/market_data/GTXI.json'"
+      "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/GTXI.json'"
     },
     {
       "symbol": "HZN",
@@ -37,20 +33,12 @@
       "reason": "Missing/stale daily history"
     },
     {
-      "symbol": "KWY",
-      "reason": "Invalid OHLC range"
-    },
-    {
       "symbol": "P5N994",
-      "reason": "[Errno 2] No such file or directory: '/tmp/net-cot-publish/market_data/P5N994.json'"
+      "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/P5N994.json'"
     },
     {
       "symbol": "PDLI",
-      "reason": "[Errno 2] No such file or directory: '/tmp/net-cot-publish/market_data/PDLI.json'"
-    },
-    {
-      "symbol": "PFBC",
-      "reason": "[Errno 2] No such file or directory: '/tmp/net-cot-publish/market_data/PFBC.json'"
+      "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/PDLI.json'"
     },
     {
       "symbol": "REF",
@@ -58,15 +46,15 @@
     },
     {
       "symbol": "SBT",
-      "reason": "[Errno 2] No such file or directory: '/tmp/net-cot-publish/market_data/SBT.json'"
+      "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/SBT.json'"
     },
     {
       "symbol": "THRD",
-      "reason": "[Errno 2] No such file or directory: '/tmp/net-cot-publish/market_data/THRD.json'"
+      "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/THRD.json'"
     },
     {
       "symbol": "VUECF",
-      "reason": "[Errno 2] No such file or directory: '/tmp/net-cot-publish/market_data/VUECF.json'"
+      "reason": "Missing/stale daily history"
     },
     {
       "symbol": "VYLR",
@@ -95,7 +83,7 @@
       "source": "https://www.ishares.com/us/products/239710/ishares-russell-2000-etf/latest-holdings.csv",
       "label": "Russell 2000 (IWM近似)",
       "count": 1959,
-      "scanned": 1943,
+      "scanned": 1946,
       "proxy": true,
       "source_as_of": "2026-11-16",
       "excluded_equity_holdings": 11
@@ -106,6 +94,7 @@
     {
       "symbol": "TNK",
       "name": "TEEKAY TANKERS LTD CLASS A",
+      "sector": "Energy",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -372,6 +361,7 @@
     {
       "symbol": "INTT",
       "name": "INTEST CORP",
+      "sector": "Information Technology",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -594,6 +584,7 @@
     {
       "symbol": "INSG",
       "name": "INSEEGO",
+      "sector": "Information Technology",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -814,6 +805,7 @@
     {
       "symbol": "FIP",
       "name": "FTAI INFRASTRUCTURE",
+      "sector": "Industrials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -1047,6 +1039,7 @@
     {
       "symbol": "ALGN",
       "name": "Align Technology",
+      "sector": "Health Care",
       "indexes": [
         "S&P 500"
       ],
@@ -1327,6 +1320,7 @@
     {
       "symbol": "ATEX",
       "name": "ANTERIX",
+      "sector": "Communication",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -1531,6 +1525,7 @@
     {
       "symbol": "PDD",
       "name": "PDD Holdings",
+      "sector": "EDP Services",
       "indexes": [
         "Nasdaq 100"
       ],
@@ -1806,6 +1801,7 @@
     {
       "symbol": "GENC",
       "name": "GENCOR INDUSTRIES INC",
+      "sector": "Industrials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -2073,6 +2069,7 @@
     {
       "symbol": "HTFL",
       "name": "HEARTFLOW INC",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -2212,6 +2209,7 @@
     {
       "symbol": "JJSF",
       "name": "J AND J SNACK FOODS CORP",
+      "sector": "Consumer Staples",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -2583,6 +2581,7 @@
     {
       "symbol": "MSGE",
       "name": "MADISON SQUARE GARDEN ENTERTAINMEN",
+      "sector": "Communication",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -2862,6 +2861,7 @@
     {
       "symbol": "TRST",
       "name": "TRUSTCO BANK CORP",
+      "sector": "Financials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -3129,6 +3129,7 @@
     {
       "symbol": "TXN",
       "name": "Texas Instruments",
+      "sector": "Information Technology",
       "indexes": [
         "S&P 500",
         "Nasdaq 100"
@@ -3269,6 +3270,7 @@
     {
       "symbol": "YSWY",
       "name": "YESWAY INC CLASS A",
+      "sector": "Consumer Staples",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -3608,6 +3610,7 @@
     {
       "symbol": "ADSK",
       "name": "Autodesk",
+      "sector": "Information Technology",
       "indexes": [
         "S&P 500",
         "Nasdaq 100"
@@ -3924,6 +3927,7 @@
     {
       "symbol": "AVAH",
       "name": "AVEANNA HEALTHCARE HOLDINGS INC",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -4195,6 +4199,7 @@
     {
       "symbol": "BKE",
       "name": "BUCKLE",
+      "sector": "Consumer Discretionary",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -4562,6 +4567,7 @@
     {
       "symbol": "CSR",
       "name": "CENTERSPACE",
+      "sector": "Real Estate",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -4833,6 +4839,7 @@
     {
       "symbol": "HQY",
       "name": "HEALTHEQUITY",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -5200,6 +5207,7 @@
     {
       "symbol": "NCNO",
       "name": "NCINO",
+      "sector": "Information Technology",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -5495,6 +5503,7 @@
     {
       "symbol": "PBFS",
       "name": "PIONEER BANCORP INC",
+      "sector": "Financials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -5786,6 +5795,7 @@
     {
       "symbol": "RBKB",
       "name": "RHINEBECK BANCORP INC",
+      "sector": "Financials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -5997,6 +6007,7 @@
     {
       "symbol": "SDGR",
       "name": "SCHRODINGER INC",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -6208,6 +6219,7 @@
     {
       "symbol": "SMHI",
       "name": "SEACOR MARINE HOLDINGS INC",
+      "sector": "Energy",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -6539,6 +6551,7 @@
     {
       "symbol": "SPB",
       "name": "SPECTRUM BRANDS HOLDINGS",
+      "sector": "Consumer Staples",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -6922,6 +6935,7 @@
     {
       "symbol": "STLN",
       "name": "STARLING ONCOLOGY",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -7169,6 +7183,7 @@
     {
       "symbol": "ADBE",
       "name": "Adobe Inc.",
+      "sector": "Information Technology",
       "indexes": [
         "S&P 500",
         "Nasdaq 100"
@@ -7357,6 +7372,7 @@
     {
       "symbol": "CBL",
       "name": "CBL ASSOCIATES PROPERTIES",
+      "sector": "Real Estate",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -7540,6 +7556,7 @@
     {
       "symbol": "CSTL",
       "name": "CASTLE BIOSCIENCES",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -7715,6 +7732,7 @@
     {
       "symbol": "FELE",
       "name": "FRANKLIN ELECTRIC",
+      "sector": "Industrials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -7966,6 +7984,7 @@
     {
       "symbol": "QNST",
       "name": "QUINSTREET INC",
+      "sector": "Communication",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -8305,6 +8324,7 @@
     {
       "symbol": "AMCR",
       "name": "Amcor",
+      "sector": "Materials",
       "indexes": [
         "S&P 500"
       ],
@@ -8636,6 +8656,7 @@
     {
       "symbol": "CTRI",
       "name": "CENTURI HOLDINGS INC",
+      "sector": "Industrials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -8903,6 +8924,7 @@
     {
       "symbol": "MPWR",
       "name": "Monolithic Power Systems",
+      "sector": "Information Technology",
       "indexes": [
         "S&P 500",
         "Nasdaq 100"
@@ -9171,6 +9193,7 @@
     {
       "symbol": "OXY",
       "name": "Occidental Petroleum",
+      "sector": "Energy",
       "indexes": [
         "S&P 500"
       ],
@@ -9398,6 +9421,7 @@
     {
       "symbol": "SUPN",
       "name": "SUPERNUS",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -9629,6 +9653,7 @@
     {
       "symbol": "TCI",
       "name": "TRANSCONTINENTAL REALTY INVESTORS",
+      "sector": "Real Estate",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -10116,6 +10141,7 @@
     {
       "symbol": "TRMK",
       "name": "TRUSTMARK",
+      "sector": "Financials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -10299,6 +10325,7 @@
     {
       "symbol": "BL",
       "name": "BLACKLINE",
+      "sector": "Information Technology",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -10526,6 +10553,7 @@
     {
       "symbol": "EPSN",
       "name": "EPSILON ENERGY LTD",
+      "sector": "Energy",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -10801,6 +10829,7 @@
     {
       "symbol": "FDX",
       "name": "FedEx",
+      "sector": "Industrials",
       "indexes": [
         "S&P 500"
       ],
@@ -11120,6 +11149,7 @@
     {
       "symbol": "LYB",
       "name": "LyondellBasell",
+      "sector": "Materials",
       "indexes": [
         "S&P 500"
       ],
@@ -11455,6 +11485,7 @@
     {
       "symbol": "LYTS",
       "name": "LSI INDUSTRIES INC",
+      "sector": "Industrials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -11670,6 +11701,7 @@
     {
       "symbol": "NEXT",
       "name": "NEXTDECADE",
+      "sector": "Energy",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -11829,6 +11861,7 @@
     {
       "symbol": "OPK",
       "name": "OPKO HEALTH",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -12076,6 +12109,7 @@
     {
       "symbol": "ANAB",
       "name": "ANAPTYSBIO",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -12243,6 +12277,7 @@
     {
       "symbol": "ANIK",
       "name": "ANIKA THERAPEUTICS INC",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -12602,6 +12637,7 @@
     {
       "symbol": "BRO",
       "name": "Brown & Brown",
+      "sector": "Financials",
       "indexes": [
         "S&P 500"
       ],
@@ -12761,6 +12797,7 @@
     {
       "symbol": "KVHI",
       "name": "KVH INDUSTRIES INC",
+      "sector": "Information Technology",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -12936,6 +12973,7 @@
     {
       "symbol": "PAYX",
       "name": "Paychex",
+      "sector": "Industrials",
       "indexes": [
         "S&P 500",
         "Nasdaq 100"
@@ -13096,6 +13134,7 @@
     {
       "symbol": "PRTA",
       "name": "PROTHENA PLC",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -13259,6 +13298,7 @@
     {
       "symbol": "RFIL",
       "name": "RF INDUSTRIES LTD",
+      "sector": "Information Technology",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -13418,6 +13458,7 @@
     {
       "symbol": "STT",
       "name": "State Street Corporation",
+      "sector": "Financials",
       "indexes": [
         "S&P 500"
       ],
@@ -13589,6 +13630,7 @@
     {
       "symbol": "VSAT",
       "name": "VIASAT INC",
+      "sector": "Information Technology",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -13764,6 +13806,7 @@
     {
       "symbol": "LDOS",
       "name": "Leidos",
+      "sector": "Industrials",
       "indexes": [
         "S&P 500"
       ],
@@ -14103,6 +14146,7 @@
     {
       "symbol": "LOCO",
       "name": "EL POLLO LOCO INC",
+      "sector": "Consumer Discretionary",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -14278,6 +14322,7 @@
     {
       "symbol": "SHOO",
       "name": "STEVEN MADDEN",
+      "sector": "Consumer Discretionary",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -14457,6 +14502,7 @@
     {
       "symbol": "EE",
       "name": "EXCELERATE ENERGY CLASS A",
+      "sector": "Energy",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -14676,6 +14722,7 @@
     {
       "symbol": "EQT",
       "name": "EQT Corporation",
+      "sector": "Energy",
       "indexes": [
         "S&P 500"
       ],
@@ -14975,6 +15022,7 @@
     {
       "symbol": "GRMN",
       "name": "Garmin",
+      "sector": "Consumer Discretionary",
       "indexes": [
         "S&P 500"
       ],
@@ -15166,6 +15214,7 @@
     {
       "symbol": "OFG",
       "name": "OFG BANCORP",
+      "sector": "Financials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -15389,6 +15438,7 @@
     {
       "symbol": "OKE",
       "name": "Oneok",
+      "sector": "Energy",
       "indexes": [
         "S&P 500"
       ],
@@ -15676,6 +15726,7 @@
     {
       "symbol": "EBS",
       "name": "EMERGENT BIOSOLUTIONS",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -15887,6 +15938,7 @@
     {
       "symbol": "MCHP",
       "name": "Microchip Technology",
+      "sector": "Information Technology",
       "indexes": [
         "S&P 500",
         "Nasdaq 100"
@@ -16099,6 +16151,7 @@
     {
       "symbol": "NWSA",
       "name": "News Corp (Class A)",
+      "sector": "Communication Services",
       "indexes": [
         "S&P 500"
       ],
@@ -16414,6 +16467,7 @@
     {
       "symbol": "NXDR",
       "name": "NEXTDOOR HOLDINGS CLASS A",
+      "sector": "Communication",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -16781,6 +16835,7 @@
     {
       "symbol": "ROK",
       "name": "Rockwell Automation",
+      "sector": "Industrials",
       "indexes": [
         "S&P 500"
       ],
@@ -16992,6 +17047,7 @@
     {
       "symbol": "SRTA",
       "name": "STRATA CRITICAL MEDICAL CLASS A",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -17175,6 +17231,7 @@
     {
       "symbol": "VMRK",
       "name": "Vivmark Residential",
+      "sector": "Real Estate",
       "indexes": [
         "S&P 500"
       ],
@@ -17358,6 +17415,7 @@
     {
       "symbol": "BSX",
       "name": "Boston Scientific",
+      "sector": "Health Care",
       "indexes": [
         "S&P 500"
       ],
@@ -17561,6 +17619,7 @@
     {
       "symbol": "CASS",
       "name": "CASS INFORMATION SYSTEMS INC",
+      "sector": "Financials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -17752,6 +17811,7 @@
     {
       "symbol": "GTN",
       "name": "GRAY MEDIA INC",
+      "sector": "Communication",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -17935,6 +17995,7 @@
     {
       "symbol": "LVS",
       "name": "Las Vegas Sands",
+      "sector": "Consumer Discretionary",
       "indexes": [
         "S&P 500"
       ],
@@ -18138,6 +18199,7 @@
     {
       "symbol": "MATX",
       "name": "MATSON INC",
+      "sector": "Industrials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -18405,6 +18467,7 @@
     {
       "symbol": "WTI",
       "name": "W AND T OFFSHORE",
+      "sector": "Energy",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -18684,6 +18747,7 @@
     {
       "symbol": "BCAL",
       "name": "CALIFORNIA BANCORP",
+      "sector": "Financials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -18951,6 +19015,7 @@
     {
       "symbol": "CLFD",
       "name": "CLEARFIELD INC",
+      "sector": "Information Technology",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -19146,6 +19211,7 @@
     {
       "symbol": "EGY",
       "name": "VAALCO ENERGY INC",
+      "sector": "Energy",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -19413,6 +19479,7 @@
     {
       "symbol": "PACB",
       "name": "PACIFIC BIOSCIENCES OF CALIFORNIA",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -19624,6 +19691,7 @@
     {
       "symbol": "SWKS",
       "name": "Skyworks Solutions",
+      "sector": "Information Technology",
       "indexes": [
         "S&P 500"
       ],
@@ -19867,6 +19935,7 @@
     {
       "symbol": "VTS",
       "name": "VITESSE ENERGY INC",
+      "sector": "Energy",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -20142,6 +20211,7 @@
     {
       "symbol": "XPOF",
       "name": "XPONENTIAL FITNESS CLASS A",
+      "sector": "Consumer Discretionary",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -20397,6 +20467,7 @@
     {
       "symbol": "FBLA",
       "name": "FB BANCORP",
+      "sector": "Financials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -20604,6 +20675,7 @@
     {
       "symbol": "MRVI",
       "name": "MARAVAI LIFESCIENCES HOLDINGS CLAS",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -20815,6 +20887,7 @@
     {
       "symbol": "OXY",
       "name": "Occidental Petroleum",
+      "sector": "Energy",
       "indexes": [
         "S&P 500"
       ],
@@ -21082,6 +21155,7 @@
     {
       "symbol": "PWP",
       "name": "PERELLA WEINBERG PARTNERS CLASS A",
+      "sector": "Financials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -21345,6 +21419,7 @@
     {
       "symbol": "INR",
       "name": "INFINITY NATURAL RESOURCES INC CLA",
+      "sector": "Energy",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -21578,6 +21653,7 @@
     {
       "symbol": "NSIT",
       "name": "INSIGHT ENTERPRISES INC",
+      "sector": "Information Technology",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -21731,6 +21807,7 @@
     {
       "symbol": "OMER",
       "name": "OMEROS",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -21928,6 +22005,7 @@
     {
       "symbol": "OSCR",
       "name": "OSCAR HEALTH CLASS A",
+      "sector": "Financials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -22113,6 +22191,7 @@
     {
       "symbol": "STC",
       "name": "STEWART INFO SERVICES CORP",
+      "sector": "Financials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -22266,6 +22345,7 @@
     {
       "symbol": "ABSI",
       "name": "ABSCI CORP",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -22479,6 +22559,7 @@
     {
       "symbol": "AUPH",
       "name": "AURINIA PHARMACEUTICALS",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -22744,6 +22825,7 @@
     {
       "symbol": "AVNT",
       "name": "AVIENT CORP",
+      "sector": "Materials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -23098,6 +23180,7 @@
     {
       "symbol": "CDRE",
       "name": "CADRE HOLDINGS",
+      "sector": "Industrials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -23475,6 +23558,7 @@
     {
       "symbol": "INTU",
       "name": "Intuit",
+      "sector": "Information Technology",
       "indexes": [
         "S&P 500",
         "Nasdaq 100"
@@ -23805,6 +23889,7 @@
     {
       "symbol": "LCNB",
       "name": "LCNB CORP",
+      "sector": "Financials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -24210,6 +24295,7 @@
     {
       "symbol": "LYB",
       "name": "LyondellBasell",
+      "sector": "Materials",
       "indexes": [
         "S&P 500"
       ],
@@ -24436,6 +24522,7 @@
     {
       "symbol": "MGY",
       "name": "MAGNOLIA OIL GAS CORP CLASS A",
+      "sector": "Energy",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -24662,6 +24749,7 @@
     {
       "symbol": "MITK",
       "name": "MITEK SYSTEMS INC",
+      "sector": "Information Technology",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -24979,6 +25067,7 @@
     {
       "symbol": "RELL",
       "name": "RICHARDSON ELECTRONICS LTD",
+      "sector": "Information Technology",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -25124,6 +25213,7 @@
     {
       "symbol": "SVV",
       "name": "SAVERS VALUE VILLAGE",
+      "sector": "Consumer Discretionary",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -25305,6 +25395,7 @@
     {
       "symbol": "SYK",
       "name": "Stryker Corporation",
+      "sector": "Health Care",
       "indexes": [
         "S&P 500"
       ],
@@ -25706,6 +25797,7 @@
     {
       "symbol": "TILE",
       "name": "INTERFACE",
+      "sector": "Industrials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -26047,6 +26139,7 @@
     {
       "symbol": "VSAT",
       "name": "VIASAT INC",
+      "sector": "Information Technology",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -26192,6 +26285,7 @@
     {
       "symbol": "DNA",
       "name": "GINKGO BIOWORKS HOLDINGS CLASS A",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -26389,6 +26483,7 @@
     {
       "symbol": "EPM",
       "name": "EVOLUTION PETROLEUM CORP",
+      "sector": "Energy",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -26647,6 +26742,7 @@
     {
       "symbol": "EQT",
       "name": "EQT Corporation",
+      "sector": "Energy",
       "indexes": [
         "S&P 500"
       ],
@@ -26872,6 +26968,7 @@
     {
       "symbol": "EYE",
       "name": "NATIONAL VISION HOLDINGS",
+      "sector": "Consumer Discretionary",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -27033,6 +27130,7 @@
     {
       "symbol": "GRAL",
       "name": "GRAIL INC",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -27246,6 +27344,7 @@
     {
       "symbol": "HII",
       "name": "Huntington Ingalls Industries",
+      "sector": "Industrials",
       "indexes": [
         "S&P 500"
       ],
@@ -27615,6 +27714,7 @@
     {
       "symbol": "JCAP",
       "name": "JEFFERSON CAPITAL INC",
+      "sector": "Financials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -27861,6 +27961,7 @@
     {
       "symbol": "WMK",
       "name": "WEIS MARKETS",
+      "sector": "Consumer Staples",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -28023,6 +28124,7 @@
     {
       "symbol": "JKHY",
       "name": "Jack Henry & Associates",
+      "sector": "Financials",
       "indexes": [
         "S&P 500"
       ],
@@ -28348,6 +28450,7 @@
     {
       "symbol": "MNTK",
       "name": "MONTAUK RENEWABLES INC",
+      "sector": "Utilities",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -28561,6 +28664,7 @@
     {
       "symbol": "NOG",
       "name": "NORTHERN OIL AND GAS",
+      "sector": "Energy",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -28790,6 +28894,7 @@
     {
       "symbol": "WHWK",
       "name": "WHITEHAWK THERAPEUTICS",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -28967,6 +29072,7 @@
     {
       "symbol": "CLFD",
       "name": "CLEARFIELD INC",
+      "sector": "Information Technology",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -29128,6 +29234,7 @@
     {
       "symbol": "CWK",
       "name": "CUSHMAN AND WAKEFIELD LTD",
+      "sector": "Real Estate",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -29469,6 +29576,7 @@
     {
       "symbol": "DXCM",
       "name": "Dexcom",
+      "sector": "Health Care",
       "indexes": [
         "S&P 500",
         "Nasdaq 100"
@@ -29627,6 +29735,7 @@
     {
       "symbol": "ENVA",
       "name": "ENOVA INTERNATIONAL",
+      "sector": "Financials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -29792,6 +29901,7 @@
     {
       "symbol": "EXE",
       "name": "Expand Energy",
+      "sector": "Energy",
       "indexes": [
         "S&P 500"
       ],
@@ -30017,6 +30127,7 @@
     {
       "symbol": "GOLF",
       "name": "ACUSHNET HOLDINGS CORP",
+      "sector": "Consumer Discretionary",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -30203,6 +30314,7 @@
     {
       "symbol": "HAL",
       "name": "Halliburton",
+      "sector": "Energy",
       "indexes": [
         "S&P 500"
       ],
@@ -30504,6 +30616,7 @@
     {
       "symbol": "HAL",
       "name": "Halliburton",
+      "sector": "Energy",
       "indexes": [
         "S&P 500"
       ],
@@ -30709,6 +30822,7 @@
     {
       "symbol": "JPM",
       "name": "JPMorgan Chase",
+      "sector": "Financials",
       "indexes": [
         "S&P 500"
       ],
@@ -30866,6 +30980,7 @@
     {
       "symbol": "PLBY",
       "name": "PLAYBOY INC",
+      "sector": "Consumer Discretionary",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -31231,6 +31346,7 @@
     {
       "symbol": "RICK",
       "name": "RCI HOSPITALITY HOLDINGS INC",
+      "sector": "Consumer Discretionary",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -31573,6 +31689,7 @@
     {
       "symbol": "WTW",
       "name": "Willis Towers Watson",
+      "sector": "Financials",
       "indexes": [
         "S&P 500"
       ],
@@ -31902,6 +32019,7 @@
     {
       "symbol": "APH",
       "name": "Amphenol",
+      "sector": "Information Technology",
       "indexes": [
         "S&P 500"
       ],
@@ -32063,6 +32181,7 @@
     {
       "symbol": "DLX",
       "name": "DELUXE",
+      "sector": "Industrials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -32268,6 +32387,7 @@
     {
       "symbol": "IMRX",
       "name": "IMMUNEERING CLASS A",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -32453,6 +32573,7 @@
     {
       "symbol": "PDD",
       "name": "PDD Holdings",
+      "sector": "EDP Services",
       "indexes": [
         "Nasdaq 100"
       ],
@@ -32634,6 +32755,7 @@
     {
       "symbol": "SLB",
       "name": "Schlumberger",
+      "sector": "Energy",
       "indexes": [
         "S&P 500"
       ],
@@ -32839,6 +32961,7 @@
     {
       "symbol": "TITN",
       "name": "TITAN MACHINERY INC",
+      "sector": "Industrials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -33012,6 +33135,7 @@
     {
       "symbol": "VTOL",
       "name": "BRISTOW GROUP",
+      "sector": "Energy",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -33193,6 +33317,7 @@
     {
       "symbol": "WHK",
       "name": "WHITEHAWK MINERALS CORP CLASS A",
+      "sector": "Energy",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -33354,6 +33479,7 @@
     {
       "symbol": "CURV",
       "name": "TORRID HOLDINGS INC",
+      "sector": "Consumer Discretionary",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -33551,6 +33677,7 @@
     {
       "symbol": "EXTR",
       "name": "EXTREME NETWORKS",
+      "sector": "Information Technology",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -33784,6 +33911,7 @@
     {
       "symbol": "GCBC",
       "name": "GREENE BANCORP",
+      "sector": "Financials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -34053,6 +34181,7 @@
     {
       "symbol": "IRMD",
       "name": "IRADIMED",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -34238,6 +34367,7 @@
     {
       "symbol": "NRIX",
       "name": "NURIX THERAPEUTICS",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -34579,6 +34709,7 @@
     {
       "symbol": "NUE",
       "name": "Nucor",
+      "sector": "Materials",
       "indexes": [
         "S&P 500"
       ],
@@ -34841,6 +34972,7 @@
     {
       "symbol": "PDEX",
       "name": "PRO DEX INC",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -35123,6 +35255,7 @@
     {
       "symbol": "ABNB",
       "name": "Airbnb",
+      "sector": "Consumer Discretionary",
       "indexes": [
         "S&P 500",
         "Nasdaq 100"
@@ -35333,6 +35466,7 @@
     {
       "symbol": "ECVT",
       "name": "ECOVYST",
+      "sector": "Materials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -35562,6 +35696,7 @@
     {
       "symbol": "FIVN",
       "name": "FIVE9",
+      "sector": "Information Technology",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -35811,6 +35946,7 @@
     {
       "symbol": "PRM",
       "name": "PERIMETER GROUP",
+      "sector": "Materials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -36036,6 +36172,7 @@
     {
       "symbol": "SM",
       "name": "SM ENERGY",
+      "sector": "Energy",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -36305,6 +36442,7 @@
     {
       "symbol": "CSTL",
       "name": "CASTLE BIOSCIENCES",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -36518,6 +36656,7 @@
     {
       "symbol": "CTKB",
       "name": "CYTEK BIOSCIENCES",
+      "sector": "Health Care",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -36731,6 +36870,7 @@
     {
       "symbol": "CTS",
       "name": "CTS CORP",
+      "sector": "Information Technology",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -36944,6 +37084,7 @@
     {
       "symbol": "IBM",
       "name": "IBM",
+      "sector": "Information Technology",
       "indexes": [
         "S&P 500"
       ],
@@ -37217,6 +37358,7 @@
     {
       "symbol": "PANW",
       "name": "Palo Alto Networks",
+      "sector": "Information Technology",
       "indexes": [
         "S&P 500",
         "Nasdaq 100"
@@ -37427,6 +37569,7 @@
     {
       "symbol": "CLVT",
       "name": "CLARIVATE PLC",
+      "sector": "Industrials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -37616,6 +37759,7 @@
     {
       "symbol": "ENVA",
       "name": "ENOVA INTERNATIONAL",
+      "sector": "Financials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -37841,6 +37985,7 @@
     {
       "symbol": "FET",
       "name": "FORUM ENERGY TECHNOLOGIES INC",
+      "sector": "Energy",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -38054,6 +38199,7 @@
     {
       "symbol": "NSP",
       "name": "INSPERITY",
+      "sector": "Industrials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -38411,6 +38557,7 @@
     {
       "symbol": "TPL",
       "name": "Texas Pacific Land Corporation",
+      "sector": "Energy",
       "indexes": [
         "S&P 500"
       ],
@@ -38700,6 +38847,7 @@
     {
       "symbol": "TRNS",
       "name": "TRANSCAT",
+      "sector": "Industrials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -38969,6 +39117,7 @@
     {
       "symbol": "BRBS",
       "name": "BLUE RIDGE BANKSHARES INC",
+      "sector": "Financials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -39250,6 +39399,7 @@
     {
       "symbol": "MZTI",
       "name": "MARZETTI",
+      "sector": "Consumer Staples",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -39608,6 +39758,7 @@
     {
       "symbol": "SNPS",
       "name": "Synopsys",
+      "sector": "Information Technology",
       "indexes": [
         "S&P 500",
         "Nasdaq 100"
@@ -39806,6 +39957,7 @@
     {
       "symbol": "CSGP",
       "name": "CoStar Group",
+      "sector": "Real Estate",
       "indexes": [
         "S&P 500"
       ],
@@ -40147,6 +40299,7 @@
     {
       "symbol": "LARK",
       "name": "LANDMARK BANCORP INC",
+      "sector": "Financials",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
@@ -40414,8 +40567,247 @@
       ]
     },
     {
+      "symbol": "PFBC",
+      "name": "PREFERRED BANK",
+      "sector": "Financials",
+      "indexes": [
+        "Russell 2000 (IWM近似)"
+      ],
+      "kind": "top",
+      "structure": "potential",
+      "structure_notes": [
+        "time_asymmetry"
+      ],
+      "has_breakout": false,
+      "status": "candidate",
+      "volume_state": "not_applicable",
+      "volume_ratio": null,
+      "as_of": "2026-11-17",
+      "price": 101.81,
+      "neckline": 101.99,
+      "neck_start": 101.99,
+      "neck_end": 101.99,
+      "distance_pct": -0.18,
+      "second_extreme": "2026-10-22",
+      "detected_on": "2026-10-29",
+      "breakout_date": null,
+      "price_breakout_on": null,
+      "points": [
+        {
+          "date": "2026-09-25",
+          "price": 109.48,
+          "offset": 10
+        },
+        {
+          "date": "2026-10-14",
+          "price": 101.99,
+          "offset": 23
+        },
+        {
+          "date": "2026-10-22",
+          "price": 108.62,
+          "offset": 29
+        }
+      ],
+      "chart": [
+        {
+          "date": "2026-09-11",
+          "close": 102.98
+        },
+        {
+          "date": "2026-09-14",
+          "close": 105.12
+        },
+        {
+          "date": "2026-09-15",
+          "close": 105.81
+        },
+        {
+          "date": "2026-09-16",
+          "close": 106.18
+        },
+        {
+          "date": "2026-09-17",
+          "close": 105.85
+        },
+        {
+          "date": "2026-09-18",
+          "close": 105.42
+        },
+        {
+          "date": "2026-09-21",
+          "close": 106.36
+        },
+        {
+          "date": "2026-09-22",
+          "close": 106.29
+        },
+        {
+          "date": "2026-09-23",
+          "close": 105.8
+        },
+        {
+          "date": "2026-09-24",
+          "close": 108.58
+        },
+        {
+          "date": "2026-09-25",
+          "close": 109.48
+        },
+        {
+          "date": "2026-09-28",
+          "close": 109.02
+        },
+        {
+          "date": "2026-09-29",
+          "close": 106.25
+        },
+        {
+          "date": "2026-09-30",
+          "close": 104.73
+        },
+        {
+          "date": "2026-10-01",
+          "close": 105.99
+        },
+        {
+          "date": "2026-10-02",
+          "close": 106.48
+        },
+        {
+          "date": "2026-10-05",
+          "close": 105.23
+        },
+        {
+          "date": "2026-10-06",
+          "close": 104.54
+        },
+        {
+          "date": "2026-10-07",
+          "close": 103.03
+        },
+        {
+          "date": "2026-10-08",
+          "close": 102.63
+        },
+        {
+          "date": "2026-10-09",
+          "close": 102.58
+        },
+        {
+          "date": "2026-10-12",
+          "close": 103.35
+        },
+        {
+          "date": "2026-10-13",
+          "close": 102.56
+        },
+        {
+          "date": "2026-10-14",
+          "close": 101.99
+        },
+        {
+          "date": "2026-10-15",
+          "close": 103.59
+        },
+        {
+          "date": "2026-10-16",
+          "close": 104.41
+        },
+        {
+          "date": "2026-10-19",
+          "close": 103.59
+        },
+        {
+          "date": "2026-10-20",
+          "close": 105.09
+        },
+        {
+          "date": "2026-10-21",
+          "close": 105.38
+        },
+        {
+          "date": "2026-10-22",
+          "close": 108.62
+        },
+        {
+          "date": "2026-10-23",
+          "close": 106.72
+        },
+        {
+          "date": "2026-10-26",
+          "close": 106.09
+        },
+        {
+          "date": "2026-10-27",
+          "close": 106.28
+        },
+        {
+          "date": "2026-10-28",
+          "close": 107.08
+        },
+        {
+          "date": "2026-10-29",
+          "close": 106.98
+        },
+        {
+          "date": "2026-10-30",
+          "close": 105.65
+        },
+        {
+          "date": "2026-11-02",
+          "close": 106.93
+        },
+        {
+          "date": "2026-11-03",
+          "close": 106.27
+        },
+        {
+          "date": "2026-11-04",
+          "close": 106.87
+        },
+        {
+          "date": "2026-11-05",
+          "close": 103.49
+        },
+        {
+          "date": "2026-11-06",
+          "close": 102.89
+        },
+        {
+          "date": "2026-11-09",
+          "close": 104.13
+        },
+        {
+          "date": "2026-11-10",
+          "close": 103.73
+        },
+        {
+          "date": "2026-11-11",
+          "close": 103.17
+        },
+        {
+          "date": "2026-11-12",
+          "close": 103.47
+        },
+        {
+          "date": "2026-11-13",
+          "close": 103.78
+        },
+        {
+          "date": "2026-11-16",
+          "close": 103.57
+        },
+        {
+          "date": "2026-11-17",
+          "close": 101.81
+        }
+      ]
+    },
+    {
       "symbol": "IQV",
       "name": "IQVIA",
+      "sector": "Health Care",
       "indexes": [
         "S&P 500"
       ],
@@ -40657,6 +41049,7 @@
     {
       "symbol": "CMRC",
       "name": "BIGCOMMERCE HOLDINGS SERIES",
+      "sector": "Information Technology",
       "indexes": [
         "Russell 2000 (IWM近似)"
       ],
