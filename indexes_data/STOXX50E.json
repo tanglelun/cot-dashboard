@@ -7,7 +7,7 @@
   "flag": "🇪🇺",
   "sector": "Europe",
   "unit": "Index Points",
-  "updated": "2026-11-17",
+  "updated": "2026-11-18",
   "prices": [
     {
       "time": "2007-03-30",
@@ -39391,7 +39391,7 @@
       "high": 6323.1401,
       "low": 6210.23,
       "close": 6212.1099,
-      "volume": 0
+      "volume": 20312800
     }
   ]
 }
