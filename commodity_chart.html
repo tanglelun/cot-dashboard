@@ -460,7 +460,7 @@ function resizeCanvas(){
 }
 
 function syncCanvasSize(rect){
-  const dpr = window.devicePixelRatio || 1;
+  const dpr = Math.min(window.devicePixelRatio || 1, window.matchMedia('(pointer: coarse), (max-width: 768px)').matches ? 2 : 3);
   const nextWidth = Math.max(1, Math.floor(rect.width * dpr));
   const nextHeight = Math.max(1, Math.floor(rect.height * dpr));
   if(canvas.width !== nextWidth || canvas.height !== nextHeight){
@@ -478,7 +478,7 @@ function queueLayoutRedraw(width, height){
   requestAnimationFrame(() => {
     pendingLayoutRedraw = false;
     const rect = canvas.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = Math.min(window.devicePixelRatio || 1, window.matchMedia('(pointer: coarse), (max-width: 768px)').matches ? 2 : 3);
     const bitmapWidth = Math.max(1, Math.floor(rect.width * dpr));
     const bitmapHeight = Math.max(1, Math.floor(rect.height * dpr));
     const cssChanged = Math.abs(rect.width - width) > 0.5 || Math.abs(rect.height - height) > 0.5;
@@ -551,13 +551,14 @@ function renderMaLegend(candle){
   maToggle.setAttribute('aria-label', state.maCollapsed || denseLineMode ? 'Expand moving averages' : 'Collapse moving averages');
   maToggle.title = denseLineMode ? 'Moving averages hidden in dense line mode' : (state.maCollapsed ? 'Expand moving averages' : 'Collapse moving averages');
   if(state.maCollapsed || denseLineMode){
-    target.innerHTML = '';
+    if(target.firstChild) target.replaceChildren();
     return;
   }
-  target.innerHTML = MOVING_AVERAGES.map(ma => {
+  const legend = MOVING_AVERAGES.map(ma => {
     const value = candle && candle[ma.key] ? fmt(candle[ma.key]) : '--';
     return '<span class="ma-item" style="color:'+ma.color+';opacity:'+ma.alpha+'"><span class="ma-dot" style="background:'+ma.color+'"></span>'+ma.label+' '+value+'</span>';
   }).join('');
+  if(target.innerHTML !== legend) target.innerHTML = legend;
 }
 
 function drawMovingAverage(ma, candles, xFor, yFor){
@@ -748,7 +749,8 @@ function updateHistoryMeta(){
   const shown = visible.length ? visible[0].time + ' to ' + visible[visible.length - 1].time : '--';
   const hint = document.querySelector('.hint');
   if(hint){
-    hint.textContent = 'History ' + first + ' to ' + last + ' · Showing ' + shown + ' · Drag to pan · Wheel or pinch to zoom';
+    const text = 'History ' + first + ' to ' + last + ' · Showing ' + shown + ' · Drag to pan · Wheel or pinch to zoom';
+    if(hint.textContent !== text) hint.textContent = text;
   }
 }
 
@@ -767,7 +769,15 @@ const patternNotice=document.createElement('div');
 patternNotice.style.cssText='font-size:11px;color:#9ba8b8;padding:4px 12px;display:none';
 canvas.parentElement.before(patternNotice);
 document.getElementById('patternToggle').addEventListener('change',event=>{state.showPatterns=event.target.checked;draw();});
+let drawFrame = null;
 function draw(){
+  if(drawFrame !== null) return;
+  drawFrame = requestAnimationFrame(() => {
+    drawFrame = null;
+    drawNow();
+  });
+}
+function drawNow(){
   patternNotice.style.display=state.showPatterns?'block':'none';
   const readoutIndex = state.hover >= state.start && state.hover < state.end ? state.hover : state.end - 1;
   renderMaLegend(state.candles[readoutIndex]);
