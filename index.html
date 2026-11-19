@@ -6,7 +6,7 @@
 <title>Net Data | Market Dashboard</title>
 <link rel="stylesheet" href="nav_market.css">
 <link rel="stylesheet" href="patterns.css?v=6">
-<script src="double_patterns.js?v=2" defer></script>
+<script src="double_patterns.js?v=3" defer></script>
 <link rel="prefetch" href="market_pulse_view.json" as="fetch" crossorigin="anonymous">
 <style>
 :root{--bg:#000;--panel:#050709;--panel2:#090d12;--border:#202932;--border-soft:#111820;--text:#d1d4dc;--muted:#787b86;--faint:#5d606b;--green:#00d109;--red:#ff4d00;--blue:#2962ff;--hover:#101820;--accent:#00d109}
@@ -119,6 +119,7 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,san
       <div class="section-head"><div><h2>双底 / 双顶 · W Bottom / M Top</h2><div class="section-meta" id="doublePatternMeta" role="status">正在读取形态扫描结果…</div></div></div>
       <div class="pattern-toolbar">
         <div class="cross-tabs"><button type="button" class="cross-tab active" data-pattern="bottom" aria-pressed="true">双底（W底）</button><button type="button" class="cross-tab" data-pattern="top" aria-pressed="false">双顶（M顶）</button></div>
+        <label>指数 <select id="doublePatternIndex" aria-label="指数筛选"><option value="all">全部</option><option value="sp500">标普500</option><option value="nasdaq100">纳指100</option><option value="russell2000">罗素2000（IWM近似）</option></select></label>
         <label>结构 <select id="doublePatternStructure" aria-label="结构档位"><option value="all">全部结构</option><option value="clear">明确结构</option><option value="potential">潜在结构</option></select></label>
         <label><input type="checkbox" id="doublePatternsConfirmed">只看颈线突破</label>
         <span class="section-meta">S&amp;P 500 + Nasdaq 100 + Russell 2000（IWM近似）</span>

@@ -44,12 +44,16 @@
     if (!data) return;
     document.getElementById('doublePatternDefinition').textContent=definitions[kind];
     const tier=document.getElementById('doublePatternStructure').value;
-    const rows=data.double_patterns.filter(r=>r.kind===kind && (tier==='all' || r.structure===tier) && (!document.getElementById('doublePatternsConfirmed').checked || r.has_breakout));
+    const index=document.getElementById('doublePatternIndex').value;
+    const indexLabel=data.constituents[index]?.label || {sp500:'S&P 500',nasdaq100:'Nasdaq 100',russell2000:'Russell 2000 (IWM近似)'}[index];
+    const scoped=data.double_patterns.filter(r=>index==='all'||r.indexes.includes(indexLabel));
+    root.querySelectorAll('[data-pattern]').forEach(button=>{const k=button.dataset.pattern;button.textContent=(k==='top'?'双顶（M顶）':'双底（W底）')+' ('+scoped.filter(r=>r.kind===k).length+')';});
+    const rows=scoped.filter(r=>r.kind===kind && (tier==='all' || r.structure===tier) && (!document.getElementById('doublePatternsConfirmed').checked || r.has_breakout));
     list.replaceChildren();
     if (!rows.length) {list.append(el('div','当前筛选下暂无符合条件的结构。两档均排除圆弧底和缺少两次独立测试的走势。','pattern-empty'));return;}
     rows.forEach(row=>{
       const card=el('a',null,'pattern-row');
-      card.href='stock_chart.html?symbol='+encodeURIComponent(row.symbol)+'&universe=home-patterns&sort=rank&dir=asc&list=double-patterns&kind='+kind+'&structure='+encodeURIComponent(tier)+'&breakout='+String(document.getElementById('doublePatternsConfirmed').checked)+'&name='+encodeURIComponent(row.name);
+      card.href='stock_chart.html?symbol='+encodeURIComponent(row.symbol)+'&universe=home-patterns&sort=rank&dir=asc&list=double-patterns&kind='+kind+'&patternIndex='+encodeURIComponent(index)+'&structure='+encodeURIComponent(tier)+'&breakout='+String(document.getElementById('doublePatternsConfirmed').checked)+'&name='+encodeURIComponent(row.name);
       const identity=el('div'); identity.append(el('strong',row.symbol),el('span',row.name,'pattern-name'),el('small',row.indexes.join(' · '),'pattern-index'));
       const chart=el('div',null,'pattern-mini');chart.append(miniChart(row));
       const price=el('div',null,'pattern-price');price.append(el('strong','$'+money(row.price)),el('small','颈线 $'+money(row.neckline)),el('small','距颈线 '+(row.distance_pct>0?'+':'')+row.distance_pct.toFixed(2)+'%'));
@@ -74,6 +78,7 @@
   }));
   document.getElementById('doublePatternsConfirmed').addEventListener('change',render);
   document.getElementById('doublePatternStructure').addEventListener('change',render);
+  document.getElementById('doublePatternIndex').addEventListener('change',render);
   async function load() {
     meta.textContent='正在读取形态扫描结果…';
     try {

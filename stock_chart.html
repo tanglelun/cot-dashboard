@@ -1816,7 +1816,7 @@ function updateUrl(row){
   next.set('sort', state.sortKey);
   next.set('dir', state.sortDir);
   if(params.get('list')) next.set('list', params.get('list'));
-  for(const key of ['kind','structure','breakout','sector','q']) if(params.has(key)) next.set(key, params.get(key));
+  for(const key of ['kind','structure','breakout','sector','q','patternIndex']) if(params.has(key)) next.set(key, params.get(key));
   if(params.get('td')) next.set('td', params.get('td'));
   if(params.get('ma')) next.set('ma', params.get('ma'));
   window.history.replaceState(null, '', window.location.pathname + '?' + next.toString());
@@ -1923,7 +1923,9 @@ async function loadMarketIndex(){
       if(!Array.isArray(source)) throw new Error('形态列表暂时无法读取');
       const kind = params.get('kind') === 'top' ? 'top' : 'bottom';
       const tier = params.get('structure') || 'all';
-      const selected = source.filter(r=>r.kind===kind && (tier==='all' || r.structure===tier) && (params.get('breakout')!=='true' || r.has_breakout));
+      const patternIndex=params.get('patternIndex') || 'all';
+      const indexLabel=payload.constituents[patternIndex]?.label || {sp500:'S&P 500',nasdaq100:'Nasdaq 100',russell2000:'Russell 2000 (IWM近似)'}[patternIndex];
+      const selected = source.filter(r=>(patternIndex==='all'||r.indexes.includes(indexLabel)) && r.kind===kind && (tier==='all' || r.structure===tier) && (params.get('breakout')!=='true' || r.has_breakout));
       let quotes = [];
       try {
         const quoteResponse = await fetch('market_data/index.json', {cache:'no-store'});
@@ -1935,7 +1937,7 @@ async function loadMarketIndex(){
       const bySymbol = new Map(quotes.map(r=>[rowSymbol(r),r]));
       const stocks = selected.map((r,i)=>({...bySymbol.get(r.symbol),unavailable:!bySymbol.has(r.symbol),symbol:r.symbol,name:r.name,price:r.price,rank:i+1}));
       const label = (doubles ? (kind==='bottom'?'双底（W底）':'双顶（M顶）') : (kind==='bottom'?'头肩底':'头肩顶')) +
-        ' · ' + (tier==='clear'?'明确结构':tier==='potential'?'潜在结构':'全部结构') + (params.get('breakout')==='true'?' · 已突破':'');
+        (patternIndex==='all'?'':' · '+indexLabel) + ' · ' + (tier==='clear'?'明确结构':tier==='potential'?'潜在结构':'全部结构') + (params.get('breakout')==='true'?' · 已突破':'');
       data = {stocks, groups:{'home-patterns':{label,stocks}}};
       document.querySelector('.stock-panel-title').textContent = label.split(' · ')[0] + ' (' + stocks.length + ')';
     }else if(params.get('list') === 'crossover'){
