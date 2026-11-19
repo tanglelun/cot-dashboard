@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-18 22:05 UTC",
+  "updated": "2026-11-19 03:57 UTC",
   "stocks": [
     {
       "symbol": "AGL",
@@ -416,8 +416,8 @@
     {
       "symbol": "BZ=F",
       "name": "Brent Crude Oil",
-      "price": 88.77,
-      "change_pct": -4.69,
+      "price": 89.06,
+      "change_pct": -4.38,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
@@ -471,21 +471,10 @@
     {
       "symbol": "ZS=F",
       "name": "Soybeans",
-      "price": 1216.0,
-      "change_pct": -0.78,
+      "price": 1213.25,
+      "change_pct": -1.0,
       "direction": "down",
       "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-11-18",
-      "sector": "Agriculture"
-    },
-    {
-      "symbol": "ZC=F",
-      "name": "Corn",
-      "price": 448.25,
-      "change_pct": 0.34,
-      "direction": "up",
-      "prev_color": "red",
       "cur_color": "white",
       "date": "2026-11-18",
       "sector": "Agriculture"
