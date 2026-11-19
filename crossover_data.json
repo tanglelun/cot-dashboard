@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-19 03:57 UTC",
+  "updated": "2026-11-19 13:50 UTC",
   "stocks": [
     {
       "symbol": "AGL",
@@ -414,36 +414,47 @@
   ],
   "commodities": [
     {
-      "symbol": "BZ=F",
-      "name": "Brent Crude Oil",
-      "price": 89.06,
-      "change_pct": -4.38,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-18",
-      "sector": "Energy"
-    },
-    {
       "symbol": "CT=F",
       "name": "Cotton",
-      "price": 80.23,
-      "change_pct": 3.76,
+      "price": 80.19,
+      "change_pct": 6.96,
       "direction": "up",
       "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-11-18",
+      "cur_color": "white",
+      "date": "2026-11-19",
       "sector": "Agriculture"
     },
     {
-      "symbol": "KC=F",
-      "name": "Coffee",
-      "price": 276.05,
-      "change_pct": -3.68,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "red",
-      "date": "2026-11-18",
+      "symbol": "KE=F",
+      "name": "Hard Red Winter Wheat",
+      "price": 638.25,
+      "change_pct": 4.76,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-11-19",
+      "sector": "Agriculture"
+    },
+    {
+      "symbol": "ZO=F",
+      "name": "Oats",
+      "price": 366.0,
+      "change_pct": 4.42,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-11-19",
+      "sector": "Agriculture"
+    },
+    {
+      "symbol": "ZC=F",
+      "name": "Corn",
+      "price": 450.25,
+      "change_pct": 3.39,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-11-19",
       "sector": "Agriculture"
     },
     {
@@ -458,26 +469,26 @@
       "sector": "Indexes"
     },
     {
-      "symbol": "LE=F",
-      "name": "Live Cattle",
-      "price": 223.93,
-      "change_pct": 2.35,
+      "symbol": "ZS=F",
+      "name": "Soybeans",
+      "price": 1223.25,
+      "change_pct": 0.53,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-11-19",
+      "sector": "Agriculture"
+    },
+    {
+      "symbol": "GF=F",
+      "name": "Feeder Cattle",
+      "price": 337.0,
+      "change_pct": 0.42,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "green",
       "date": "2026-11-18",
       "sector": "Livestock"
-    },
-    {
-      "symbol": "ZS=F",
-      "name": "Soybeans",
-      "price": 1213.25,
-      "change_pct": -1.0,
-      "direction": "down",
-      "prev_color": "green",
-      "cur_color": "white",
-      "date": "2026-11-18",
-      "sector": "Agriculture"
     }
   ]
 }
