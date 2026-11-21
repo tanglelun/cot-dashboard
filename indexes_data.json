@@ -227,9 +227,9 @@
       "country": "CA",
       "flag": "🇨🇦",
       "unit": "Index Points",
-      "price": 33189.85,
-      "day": -838.85,
-      "pct": -2.47,
+      "price": 33189.9,
+      "day": -838.8,
+      "pct": -2.46,
       "week": -8.08,
       "month": -7.74,
       "ytd": 4.66,
@@ -269,7 +269,7 @@
       "week": 85.96,
       "month": 88.6,
       "ytd": 140.07,
-      "year": 51.69,
+      "year": 53.18,
       "date": "Nov/20"
     },
     {
@@ -934,9 +934,9 @@
           "country": "CA",
           "flag": "🇨🇦",
           "unit": "Index Points",
-          "price": 33189.85,
-          "day": -838.85,
-          "pct": -2.47,
+          "price": 33189.9,
+          "day": -838.8,
+          "pct": -2.46,
           "week": -8.08,
           "month": -7.74,
           "ytd": 4.66,
@@ -981,7 +981,7 @@
           "week": 85.96,
           "month": 88.6,
           "ytd": 140.07,
-          "year": 51.69,
+          "year": 53.18,
           "date": "Nov/20"
         },
         {
