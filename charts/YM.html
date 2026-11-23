@@ -69,7 +69,11 @@
         .legend-item { display: inline-flex; align-items: center; gap: 6px; }
         .legend-swatch { width: 18px; height: 3px; border-radius: 999px; display: inline-block; }
         .legend-bar { background: var(--tv-green); }
-        .legend-line { background: var(--tv-blue); }
+        .legend-line { background: #fff; }
+        .commodity-switcher { display: none; gap: 8px; }
+        .commodity-switcher button { min-height: 44px; flex: 1; padding: 8px 12px; border: 1px solid var(--tv-border); border-radius: 6px; background: transparent; color: #fff; font: inherit; cursor: pointer; }
+        .commodity-switcher button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+        .commodity-switcher button:active { background: var(--tv-hover); }
         .chart-wrap { position: relative; flex: 1; min-height: 420px; }
         canvas { display: block; width: 100%; height: 100%; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 8px; }
         .tooltip { position: fixed; pointer-events: none; display: none; background: rgba(19, 23, 34, 0.96); color: var(--tv-text); padding: 8px 10px; border-radius: 4px; border: 1px solid var(--tv-border); font-size: 12px; line-height: 1.35; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35); }
@@ -79,6 +83,7 @@
         @media (max-width: 900px) {
             .page { display: flex; flex-direction: column; }
             .commodity-sidebar { display: none; }
+            .commodity-switcher { display: flex; }
         }
         @media (max-width: 640px) {
             .site-nav { min-height: 58px; padding: 10px 14px; gap: 10px; flex-wrap: wrap; }
@@ -137,6 +142,10 @@
                     </div>
                 </div>
             </div>
+            <nav class="commodity-switcher" aria-label="切换品种">
+                <button type="button" id="previousCommodity" aria-label="上一个品种">↑ 上一个</button>
+                <button type="button" id="nextCommodity" aria-label="下一个品种">↓ 下一个</button>
+            </nav>
             <div class="chart-wrap">
                 <canvas id="chart"></canvas>
                 <div id="tooltip" class="tooltip"></div>
@@ -217,6 +226,8 @@
         }
 
         function setupCommoditySwitching() {
+            document.getElementById('previousCommodity').addEventListener('click', () => switchCommodity(-1));
+            document.getElementById('nextCommodity').addEventListener('click', () => switchCommodity(1));
             window.addEventListener('keydown', event => {
                 if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
                 if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
@@ -321,7 +332,7 @@
             }
 
             if (indexValues.length) {
-                ctx.fillStyle = '#2962ff';
+                ctx.fillStyle = '#fff';
                 ctx.textAlign = 'left';
                 ctx.textBaseline = 'middle';
                 for (let tick = 0; tick <= 4; tick++) {
@@ -357,7 +368,7 @@
                 }))
                 .filter(point => point.y !== null);
             if (linePoints.length > 1) {
-                ctx.strokeStyle = '#2962ff';
+                ctx.strokeStyle = '#fff';
                 ctx.lineWidth = 2.5;
                 ctx.beginPath();
                 linePoints.forEach((point, index) => {
@@ -372,7 +383,7 @@
                         const x = pad.left + state.hoverIndex * step + step / 2;
                         const y = indexYFor(point.index);
                         ctx.fillStyle = '#131722';
-                        ctx.strokeStyle = '#2962ff';
+                        ctx.strokeStyle = '#fff';
                         ctx.lineWidth = 2;
                         ctx.beginPath();
                         ctx.arc(x, y, 4, 0, Math.PI * 2);
@@ -500,7 +511,7 @@
 
             state.hoverIndex = index;
             const point = points[state.start + index];
-            const indexLine = point.index === null ? '' : `<br><span style="color:#82a6ff">Futures Index: ${point.index.toFixed(2)}</span>`;
+            const indexLine = point.index === null ? '' : `<br><span style="color:#fff">Futures Index: ${point.index.toFixed(2)}</span>`;
             tooltip.innerHTML = `<strong>${point.date}</strong><br><span class="${point.value >= 0 ? 'value-pos' : 'value-neg'}">Net: ${formatNumber(point.value)}</span>${indexLine}`;
             tooltip.style.display = 'block';
             tooltip.style.left = `${Math.min(event.clientX + 12, window.innerWidth - tooltip.offsetWidth - 12)}px`;
