@@ -214,7 +214,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         .legend-bar {{ background: var(--tv-green); }}
         .legend-line {{ background: #fff; }}
         .commodity-switcher {{ display: none; gap: 8px; }}
-        .commodity-switcher button {{ min-height: 44px; flex: 1; padding: 8px 12px; border: 1px solid var(--tv-border); border-radius: 6px; background: transparent; color: #fff; font: inherit; cursor: pointer; }}
+        .commodity-switcher button {{ min-height: 44px; flex: 1; padding: 8px 12px; border: 0; border-radius: 6px; background: rgba(255, 255, 255, 0.07); color: #fff; font: inherit; cursor: pointer; }}
         .commodity-switcher button:focus-visible {{ outline: 2px solid #fff; outline-offset: 2px; }}
         .commodity-switcher button:active {{ background: var(--tv-hover); }}
         .chart-wrap {{ position: relative; flex: 1; min-height: 420px; }}
@@ -285,14 +285,14 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
                     </div>
                 </div>
             </div>
-            <nav class="commodity-switcher" aria-label="切换品种">
-                <button type="button" id="previousCommodity" aria-label="上一个品种">↑ 上一个</button>
-                <button type="button" id="nextCommodity" aria-label="下一个品种">↓ 下一个</button>
-            </nav>
             <div class="chart-wrap">
                 <canvas id="chart"></canvas>
                 <div id="tooltip" class="tooltip"></div>
             </div>
+            <nav class="commodity-switcher" aria-label="切换品种">
+                <button type="button" id="previousCommodity" aria-label="上一个品种">上一个</button>
+                <button type="button" id="nextCommodity" aria-label="下一个品种">下一个</button>
+            </nav>
         </section>
     </main>
     <script>
