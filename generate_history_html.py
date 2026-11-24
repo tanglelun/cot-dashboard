@@ -218,7 +218,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         .commodity-switcher button:focus-visible {{ outline: 2px solid #fff; outline-offset: 2px; }}
         .commodity-switcher button:active {{ background: var(--tv-hover); }}
         .chart-wrap {{ position: relative; flex: 1; min-height: 420px; }}
-        canvas {{ display: block; width: 100%; height: 100%; background: var(--tv-panel); border: 1px solid var(--tv-border); border-radius: 8px; }}
+        canvas {{ display: block; width: 100%; height: 100%; background: var(--tv-panel); border: 0; border-radius: 0; }}
         .tooltip {{ position: fixed; pointer-events: none; display: none; background: rgba(19, 23, 34, 0.96); color: var(--tv-text); padding: 8px 10px; border-radius: 4px; border: 1px solid var(--tv-border); font-size: 12px; line-height: 1.35; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35); }}
         .value-pos {{ color: var(--tv-green); }}
         .value-neg {{ color: var(--tv-red); }}
@@ -242,7 +242,8 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             .nav-search {{ order: 4; min-width: 0; margin-left: 0; padding-top: 8px; }}
             .nav-search input {{ height: 40px; font-size: 14px; }}
             .toolbar {{ align-items: stretch; flex-direction: column; gap: 8px; }}
-            .page {{ height: calc(100dvh - 78px); }}
+            .page {{ height: calc(100dvh - 78px); width: 100%; }}
+            .toolbar, .commodity-switcher {{ margin-inline: 10px; }}
             .chart-wrap {{ min-height: 360px; }}
         }}
     </style>
@@ -421,7 +422,8 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             }}
 
             const hasIndex = points.some(point => point.index !== null);
-            const pad = {{ left: 76, right: hasIndex ? 76 : 24, top: 28, bottom: 122 }};
+            const compact = width <= 640;
+            const pad = {{ left: compact ? 64 : 76, right: hasIndex ? (compact ? 48 : 76) : 24, top: 28, bottom: 122 }};
             const plotW = width - pad.left - pad.right;
             const plotH = height - pad.top - pad.bottom;
             const slider = {{
