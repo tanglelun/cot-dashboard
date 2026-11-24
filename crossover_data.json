@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-24 06:24 UTC",
+  "updated": "2026-11-24 15:14 UTC",
   "stocks": [
     {
       "symbol": "SITM",
@@ -394,10 +394,32 @@
   ],
   "commodities": [
     {
+      "symbol": "CT=F",
+      "name": "Cotton",
+      "price": 81.11,
+      "change_pct": 4.62,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-11-24",
+      "sector": "Agriculture"
+    },
+    {
+      "symbol": "CC=F",
+      "name": "Cocoa",
+      "price": 5416.0,
+      "change_pct": 4.44,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-11-24",
+      "sector": "Agriculture"
+    },
+    {
       "symbol": "ZC=F",
       "name": "Corn",
-      "price": 449.25,
-      "change_pct": 3.45,
+      "price": 449.5,
+      "change_pct": 3.51,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
@@ -407,46 +429,35 @@
     {
       "symbol": "ZW=F",
       "name": "Wheat",
-      "price": 593.25,
-      "change_pct": 2.82,
+      "price": 592.5,
+      "change_pct": 2.69,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
       "date": "2026-11-24",
       "sector": "Agriculture"
+    },
+    {
+      "symbol": "BDRY",
+      "name": "Containerized Freight Index",
+      "price": 12.98,
+      "change_pct": 2.5,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-11-24",
+      "sector": "Indexes"
     },
     {
       "symbol": "KE=F",
       "name": "Hard Red Winter Wheat",
-      "price": 634.25,
-      "change_pct": 2.09,
+      "price": 636.0,
+      "change_pct": 2.37,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
       "date": "2026-11-24",
       "sector": "Agriculture"
-    },
-    {
-      "symbol": "CC=F",
-      "name": "Cocoa",
-      "price": 5186.0,
-      "change_pct": 1.19,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-11-23",
-      "sector": "Agriculture"
-    },
-    {
-      "symbol": "GF=F",
-      "name": "Feeder Cattle",
-      "price": 334.32,
-      "change_pct": -0.33,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-23",
-      "sector": "Livestock"
     }
   ]
 }
