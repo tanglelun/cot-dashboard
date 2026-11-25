@@ -1,12 +1,16 @@
 {
-  "updated": "2026-11-24T15:14:48.866012+00:00",
-  "as_of": "2026-11-23",
+  "updated": "2026-11-25T02:32:51.231741+00:00",
+  "as_of": "2026-11-24",
   "universe_count": 2473,
-  "scanned": 2463,
+  "scanned": 2459,
   "skipped": [
     {
       "symbol": "AKE",
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/AKE.json'"
+    },
+    {
+      "symbol": "BH-A",
+      "reason": "Missing/stale daily history"
     },
     {
       "symbol": "ENVXW",
@@ -37,17 +41,29 @@
       "reason": "[Errno 2] No such file or directory: '/home/runner/work/cot-dashboard/cot-dashboard/market_data/THRD.json'"
     },
     {
+      "symbol": "UA",
+      "reason": "Missing/stale daily history"
+    },
+    {
+      "symbol": "VABK",
+      "reason": "Missing/stale daily history"
+    },
+    {
       "symbol": "VUECF",
       "reason": "Missing/stale daily history"
     },
     {
       "symbol": "VYLR",
       "reason": "Missing/stale daily history"
+    },
+    {
+      "symbol": "WHG",
+      "reason": "Invalid OHLC range"
     }
   ],
   "constituents": {
     "sp500": {
-      "date": "2026-11-24",
+      "date": "2026-11-25",
       "source": "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv",
       "label": "S&P 500",
       "count": 503,
@@ -55,7 +71,7 @@
       "proxy": false
     },
     "nasdaq100": {
-      "date": "2026-11-24",
+      "date": "2026-11-25",
       "source": "https://en.wikipedia.org/wiki/List_of_NASDAQ-100_companies",
       "label": "Nasdaq 100",
       "count": 101,
@@ -63,11 +79,11 @@
       "proxy": false
     },
     "russell2000": {
-      "date": "2026-11-24",
+      "date": "2026-11-25",
       "source": "https://www.ishares.com/us/products/239710/ishares-russell-2000-etf/latest-holdings.csv",
       "label": "Russell 2000 (IWM近似)",
       "count": 1955,
-      "scanned": 1947,
+      "scanned": 1943,
       "proxy": true,
       "source_as_of": "2026-11-23",
       "excluded_equity_holdings": 10
@@ -91,10 +107,10 @@
       "volume_state": "expanded",
       "status": "confirmed",
       "volume_ratio": 1.2,
-      "as_of": "2026-11-23",
-      "price": 3.48,
-      "neckline": 3.7894,
-      "distance_pct": -8.17,
+      "as_of": "2026-11-24",
+      "price": 3.43,
+      "neckline": 3.7812,
+      "distance_pct": -9.29,
       "right_shoulder": "2026-11-11",
       "detected_on": "2026-11-16",
       "breakout_date": "2026-11-16",
@@ -307,10 +323,14 @@
         {
           "date": "2026-11-23",
           "close": 3.48
+        },
+        {
+          "date": "2026-11-24",
+          "close": 3.43
         }
       ],
       "neck_start": 4.1518,
-      "neck_end": 3.7894
+      "neck_end": 3.7812
     },
     {
       "symbol": "ATEX",
@@ -328,10 +348,10 @@
       "volume_state": "not_applicable",
       "status": "candidate",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 73.45,
-      "neckline": 62.952,
-      "distance_pct": 16.68,
+      "as_of": "2026-11-24",
+      "price": 75.11,
+      "neckline": 62.488,
+      "distance_pct": 20.2,
       "right_shoulder": "2026-11-12",
       "detected_on": "2026-11-17",
       "breakout_date": null,
@@ -528,13 +548,969 @@
         {
           "date": "2026-11-23",
           "close": 73.45
+        },
+        {
+          "date": "2026-11-24",
+          "close": 75.11
         }
       ],
       "neck_start": 81.512,
-      "neck_end": 62.952
+      "neck_end": 62.488
     }
   ],
   "double_patterns": [
+    {
+      "symbol": "DNLI",
+      "name": "DENALI THERAPEUTICS",
+      "sector": "Health Care",
+      "indexes": [
+        "Russell 2000 (IWM近似)"
+      ],
+      "kind": "bottom",
+      "structure": "clear",
+      "structure_notes": [],
+      "has_breakout": true,
+      "status": "breakout",
+      "volume_state": "not_expanded",
+      "volume_ratio": 1.07,
+      "as_of": "2026-11-24",
+      "price": 21.3,
+      "neckline": 20.96,
+      "neck_start": 20.96,
+      "neck_end": 20.96,
+      "distance_pct": 1.62,
+      "second_extreme": "2026-11-17",
+      "detected_on": "2026-11-20",
+      "breakout_date": "2026-11-24",
+      "price_breakout_on": "2026-11-24",
+      "points": [
+        {
+          "date": "2026-10-23",
+          "price": 18.41,
+          "offset": 10
+        },
+        {
+          "date": "2026-11-04",
+          "price": 20.96,
+          "offset": 18
+        },
+        {
+          "date": "2026-11-17",
+          "price": 18.0,
+          "offset": 27
+        }
+      ],
+      "chart": [
+        {
+          "date": "2026-10-09",
+          "close": 19.45
+        },
+        {
+          "date": "2026-10-12",
+          "close": 18.95
+        },
+        {
+          "date": "2026-10-13",
+          "close": 18.4
+        },
+        {
+          "date": "2026-10-14",
+          "close": 17.87
+        },
+        {
+          "date": "2026-10-15",
+          "close": 18.34
+        },
+        {
+          "date": "2026-10-16",
+          "close": 17.61
+        },
+        {
+          "date": "2026-10-19",
+          "close": 18.04
+        },
+        {
+          "date": "2026-10-20",
+          "close": 18.93
+        },
+        {
+          "date": "2026-10-21",
+          "close": 18.68
+        },
+        {
+          "date": "2026-10-22",
+          "close": 18.66
+        },
+        {
+          "date": "2026-10-23",
+          "close": 18.41
+        },
+        {
+          "date": "2026-10-26",
+          "close": 18.66
+        },
+        {
+          "date": "2026-10-27",
+          "close": 19.22
+        },
+        {
+          "date": "2026-10-28",
+          "close": 19.29
+        },
+        {
+          "date": "2026-10-29",
+          "close": 19.32
+        },
+        {
+          "date": "2026-10-30",
+          "close": 18.94
+        },
+        {
+          "date": "2026-11-02",
+          "close": 18.86
+        },
+        {
+          "date": "2026-11-03",
+          "close": 19.45
+        },
+        {
+          "date": "2026-11-04",
+          "close": 20.96
+        },
+        {
+          "date": "2026-11-05",
+          "close": 19.72
+        },
+        {
+          "date": "2026-11-06",
+          "close": 20.07
+        },
+        {
+          "date": "2026-11-09",
+          "close": 20.33
+        },
+        {
+          "date": "2026-11-10",
+          "close": 19.85
+        },
+        {
+          "date": "2026-11-11",
+          "close": 19.73
+        },
+        {
+          "date": "2026-11-12",
+          "close": 18.89
+        },
+        {
+          "date": "2026-11-13",
+          "close": 18.74
+        },
+        {
+          "date": "2026-11-16",
+          "close": 18.08
+        },
+        {
+          "date": "2026-11-17",
+          "close": 18.0
+        },
+        {
+          "date": "2026-11-18",
+          "close": 18.4
+        },
+        {
+          "date": "2026-11-19",
+          "close": 18.2
+        },
+        {
+          "date": "2026-11-20",
+          "close": 18.45
+        },
+        {
+          "date": "2026-11-23",
+          "close": 19.86
+        },
+        {
+          "date": "2026-11-24",
+          "close": 21.3
+        }
+      ]
+    },
+    {
+      "symbol": "EGHT",
+      "name": "8X8 INC",
+      "sector": "Information Technology",
+      "indexes": [
+        "Russell 2000 (IWM近似)"
+      ],
+      "kind": "top",
+      "structure": "clear",
+      "structure_notes": [],
+      "has_breakout": false,
+      "status": "candidate",
+      "volume_state": "not_applicable",
+      "volume_ratio": null,
+      "as_of": "2026-11-24",
+      "price": 2.03,
+      "neckline": 1.94,
+      "neck_start": 1.94,
+      "neck_end": 1.94,
+      "distance_pct": 4.64,
+      "second_extreme": "2026-11-12",
+      "detected_on": "2026-11-24",
+      "breakout_date": null,
+      "price_breakout_on": null,
+      "points": [
+        {
+          "date": "2026-10-01",
+          "price": 2.31,
+          "offset": 10
+        },
+        {
+          "date": "2026-10-16",
+          "price": 1.94,
+          "offset": 21
+        },
+        {
+          "date": "2026-11-12",
+          "price": 2.33,
+          "offset": 40
+        }
+      ],
+      "chart": [
+        {
+          "date": "2026-09-17",
+          "close": 1.81
+        },
+        {
+          "date": "2026-09-18",
+          "close": 1.77
+        },
+        {
+          "date": "2026-09-21",
+          "close": 1.87
+        },
+        {
+          "date": "2026-09-22",
+          "close": 1.99
+        },
+        {
+          "date": "2026-09-23",
+          "close": 2.29
+        },
+        {
+          "date": "2026-09-24",
+          "close": 2.28
+        },
+        {
+          "date": "2026-09-25",
+          "close": 2.3
+        },
+        {
+          "date": "2026-09-28",
+          "close": 2.23
+        },
+        {
+          "date": "2026-09-29",
+          "close": 2.17
+        },
+        {
+          "date": "2026-09-30",
+          "close": 2.25
+        },
+        {
+          "date": "2026-10-01",
+          "close": 2.31
+        },
+        {
+          "date": "2026-10-02",
+          "close": 2.28
+        },
+        {
+          "date": "2026-10-05",
+          "close": 2.24
+        },
+        {
+          "date": "2026-10-06",
+          "close": 2.17
+        },
+        {
+          "date": "2026-10-07",
+          "close": 2.14
+        },
+        {
+          "date": "2026-10-08",
+          "close": 2.16
+        },
+        {
+          "date": "2026-10-09",
+          "close": 2.11
+        },
+        {
+          "date": "2026-10-12",
+          "close": 2.04
+        },
+        {
+          "date": "2026-10-13",
+          "close": 2.05
+        },
+        {
+          "date": "2026-10-14",
+          "close": 2.01
+        },
+        {
+          "date": "2026-10-15",
+          "close": 2.07
+        },
+        {
+          "date": "2026-10-16",
+          "close": 1.94
+        },
+        {
+          "date": "2026-10-19",
+          "close": 2.0
+        },
+        {
+          "date": "2026-10-20",
+          "close": 2.12
+        },
+        {
+          "date": "2026-10-21",
+          "close": 2.08
+        },
+        {
+          "date": "2026-10-22",
+          "close": 2.07
+        },
+        {
+          "date": "2026-10-23",
+          "close": 2.13
+        },
+        {
+          "date": "2026-10-26",
+          "close": 2.2
+        },
+        {
+          "date": "2026-10-27",
+          "close": 2.26
+        },
+        {
+          "date": "2026-10-28",
+          "close": 2.22
+        },
+        {
+          "date": "2026-10-29",
+          "close": 2.27
+        },
+        {
+          "date": "2026-10-30",
+          "close": 2.09
+        },
+        {
+          "date": "2026-11-02",
+          "close": 2.08
+        },
+        {
+          "date": "2026-11-03",
+          "close": 2.09
+        },
+        {
+          "date": "2026-11-04",
+          "close": 2.26
+        },
+        {
+          "date": "2026-11-05",
+          "close": 2.25
+        },
+        {
+          "date": "2026-11-06",
+          "close": 2.13
+        },
+        {
+          "date": "2026-11-09",
+          "close": 2.17
+        },
+        {
+          "date": "2026-11-10",
+          "close": 2.17
+        },
+        {
+          "date": "2026-11-11",
+          "close": 2.3
+        },
+        {
+          "date": "2026-11-12",
+          "close": 2.33
+        },
+        {
+          "date": "2026-11-13",
+          "close": 2.31
+        },
+        {
+          "date": "2026-11-16",
+          "close": 2.31
+        },
+        {
+          "date": "2026-11-17",
+          "close": 2.16
+        },
+        {
+          "date": "2026-11-18",
+          "close": 2.16
+        },
+        {
+          "date": "2026-11-19",
+          "close": 1.95
+        },
+        {
+          "date": "2026-11-20",
+          "close": 1.96
+        },
+        {
+          "date": "2026-11-23",
+          "close": 2.01
+        },
+        {
+          "date": "2026-11-24",
+          "close": 2.03
+        }
+      ]
+    },
+    {
+      "symbol": "GMRS",
+      "name": "GMR SOLUTIONS INC CLASS A",
+      "sector": "Health Care",
+      "indexes": [
+        "Russell 2000 (IWM近似)"
+      ],
+      "kind": "bottom",
+      "structure": "clear",
+      "structure_notes": [],
+      "has_breakout": false,
+      "status": "candidate",
+      "volume_state": "not_applicable",
+      "volume_ratio": null,
+      "as_of": "2026-11-24",
+      "price": 10.98,
+      "neckline": 12.51,
+      "neck_start": 12.51,
+      "neck_end": 12.51,
+      "distance_pct": -12.23,
+      "second_extreme": "2026-11-19",
+      "detected_on": "2026-11-24",
+      "breakout_date": null,
+      "price_breakout_on": null,
+      "points": [
+        {
+          "date": "2026-10-19",
+          "price": 9.98,
+          "offset": 10
+        },
+        {
+          "date": "2026-11-05",
+          "price": 12.51,
+          "offset": 23
+        },
+        {
+          "date": "2026-11-19",
+          "price": 10.01,
+          "offset": 33
+        }
+      ],
+      "chart": [
+        {
+          "date": "2026-10-05",
+          "close": 9.98
+        },
+        {
+          "date": "2026-10-06",
+          "close": 10.2
+        },
+        {
+          "date": "2026-10-07",
+          "close": 10.09
+        },
+        {
+          "date": "2026-10-08",
+          "close": 10.54
+        },
+        {
+          "date": "2026-10-09",
+          "close": 10.38
+        },
+        {
+          "date": "2026-10-12",
+          "close": 10.6
+        },
+        {
+          "date": "2026-10-13",
+          "close": 10.59
+        },
+        {
+          "date": "2026-10-14",
+          "close": 10.72
+        },
+        {
+          "date": "2026-10-15",
+          "close": 10.39
+        },
+        {
+          "date": "2026-10-16",
+          "close": 10.0
+        },
+        {
+          "date": "2026-10-19",
+          "close": 9.98
+        },
+        {
+          "date": "2026-10-20",
+          "close": 10.48
+        },
+        {
+          "date": "2026-10-21",
+          "close": 10.4
+        },
+        {
+          "date": "2026-10-22",
+          "close": 10.77
+        },
+        {
+          "date": "2026-10-23",
+          "close": 10.73
+        },
+        {
+          "date": "2026-10-26",
+          "close": 10.81
+        },
+        {
+          "date": "2026-10-27",
+          "close": 10.66
+        },
+        {
+          "date": "2026-10-28",
+          "close": 10.92
+        },
+        {
+          "date": "2026-10-29",
+          "close": 11.42
+        },
+        {
+          "date": "2026-10-30",
+          "close": 11.19
+        },
+        {
+          "date": "2026-11-02",
+          "close": 11.11
+        },
+        {
+          "date": "2026-11-03",
+          "close": 11.39
+        },
+        {
+          "date": "2026-11-04",
+          "close": 12.39
+        },
+        {
+          "date": "2026-11-05",
+          "close": 12.51
+        },
+        {
+          "date": "2026-11-06",
+          "close": 12.44
+        },
+        {
+          "date": "2026-11-09",
+          "close": 11.27
+        },
+        {
+          "date": "2026-11-10",
+          "close": 10.99
+        },
+        {
+          "date": "2026-11-11",
+          "close": 11.76
+        },
+        {
+          "date": "2026-11-12",
+          "close": 11.3
+        },
+        {
+          "date": "2026-11-13",
+          "close": 11.54
+        },
+        {
+          "date": "2026-11-16",
+          "close": 11.72
+        },
+        {
+          "date": "2026-11-17",
+          "close": 11.19
+        },
+        {
+          "date": "2026-11-18",
+          "close": 10.71
+        },
+        {
+          "date": "2026-11-19",
+          "close": 10.01
+        },
+        {
+          "date": "2026-11-20",
+          "close": 10.12
+        },
+        {
+          "date": "2026-11-23",
+          "close": 10.31
+        },
+        {
+          "date": "2026-11-24",
+          "close": 10.98
+        }
+      ]
+    },
+    {
+      "symbol": "LGIH",
+      "name": "LGI HOMES",
+      "sector": "Consumer Discretionary",
+      "indexes": [
+        "Russell 2000 (IWM近似)"
+      ],
+      "kind": "bottom",
+      "structure": "clear",
+      "structure_notes": [],
+      "has_breakout": false,
+      "status": "candidate",
+      "volume_state": "not_applicable",
+      "volume_ratio": null,
+      "as_of": "2026-11-24",
+      "price": 41.87,
+      "neckline": 48.9,
+      "neck_start": 48.9,
+      "neck_end": 48.9,
+      "distance_pct": -14.38,
+      "second_extreme": "2026-11-19",
+      "detected_on": "2026-11-24",
+      "breakout_date": null,
+      "price_breakout_on": null,
+      "points": [
+        {
+          "date": "2026-10-21",
+          "price": 40.01,
+          "offset": 10
+        },
+        {
+          "date": "2026-11-04",
+          "price": 48.9,
+          "offset": 20
+        },
+        {
+          "date": "2026-11-19",
+          "price": 38.88,
+          "offset": 31
+        }
+      ],
+      "chart": [
+        {
+          "date": "2026-10-07",
+          "close": 44.61
+        },
+        {
+          "date": "2026-10-08",
+          "close": 44.98
+        },
+        {
+          "date": "2026-10-09",
+          "close": 43.82
+        },
+        {
+          "date": "2026-10-12",
+          "close": 44.0
+        },
+        {
+          "date": "2026-10-13",
+          "close": 45.29
+        },
+        {
+          "date": "2026-10-14",
+          "close": 42.35
+        },
+        {
+          "date": "2026-10-15",
+          "close": 44.08
+        },
+        {
+          "date": "2026-10-16",
+          "close": 43.01
+        },
+        {
+          "date": "2026-10-19",
+          "close": 41.07
+        },
+        {
+          "date": "2026-10-20",
+          "close": 43.1
+        },
+        {
+          "date": "2026-10-21",
+          "close": 40.01
+        },
+        {
+          "date": "2026-10-22",
+          "close": 42.77
+        },
+        {
+          "date": "2026-10-23",
+          "close": 42.47
+        },
+        {
+          "date": "2026-10-26",
+          "close": 42.14
+        },
+        {
+          "date": "2026-10-27",
+          "close": 42.77
+        },
+        {
+          "date": "2026-10-28",
+          "close": 41.61
+        },
+        {
+          "date": "2026-10-29",
+          "close": 43.74
+        },
+        {
+          "date": "2026-10-30",
+          "close": 44.37
+        },
+        {
+          "date": "2026-11-02",
+          "close": 47.42
+        },
+        {
+          "date": "2026-11-03",
+          "close": 43.51
+        },
+        {
+          "date": "2026-11-04",
+          "close": 48.9
+        },
+        {
+          "date": "2026-11-05",
+          "close": 47.15
+        },
+        {
+          "date": "2026-11-06",
+          "close": 45.57
+        },
+        {
+          "date": "2026-11-09",
+          "close": 46.6
+        },
+        {
+          "date": "2026-11-10",
+          "close": 43.94
+        },
+        {
+          "date": "2026-11-11",
+          "close": 42.64
+        },
+        {
+          "date": "2026-11-12",
+          "close": 41.12
+        },
+        {
+          "date": "2026-11-13",
+          "close": 41.29
+        },
+        {
+          "date": "2026-11-16",
+          "close": 41.52
+        },
+        {
+          "date": "2026-11-17",
+          "close": 40.21
+        },
+        {
+          "date": "2026-11-18",
+          "close": 40.84
+        },
+        {
+          "date": "2026-11-19",
+          "close": 38.88
+        },
+        {
+          "date": "2026-11-20",
+          "close": 38.88
+        },
+        {
+          "date": "2026-11-23",
+          "close": 40.26
+        },
+        {
+          "date": "2026-11-24",
+          "close": 41.87
+        }
+      ]
+    },
+    {
+      "symbol": "PAL",
+      "name": "PROFICIENT AUTO LOGISTICS",
+      "sector": "Industrials",
+      "indexes": [
+        "Russell 2000 (IWM近似)"
+      ],
+      "kind": "bottom",
+      "structure": "clear",
+      "structure_notes": [],
+      "has_breakout": false,
+      "status": "candidate",
+      "volume_state": "not_applicable",
+      "volume_ratio": null,
+      "as_of": "2026-11-24",
+      "price": 3.0,
+      "neckline": 3.38,
+      "neck_start": 3.38,
+      "neck_end": 3.38,
+      "distance_pct": -11.24,
+      "second_extreme": "2026-11-17",
+      "detected_on": "2026-11-24",
+      "breakout_date": null,
+      "price_breakout_on": null,
+      "points": [
+        {
+          "date": "2026-10-29",
+          "price": 2.42,
+          "offset": 10
+        },
+        {
+          "date": "2026-11-09",
+          "price": 3.38,
+          "offset": 17
+        },
+        {
+          "date": "2026-11-17",
+          "price": 2.49,
+          "offset": 23
+        }
+      ],
+      "chart": [
+        {
+          "date": "2026-10-15",
+          "close": 3.16
+        },
+        {
+          "date": "2026-10-16",
+          "close": 3.185
+        },
+        {
+          "date": "2026-10-19",
+          "close": 2.89
+        },
+        {
+          "date": "2026-10-20",
+          "close": 2.82
+        },
+        {
+          "date": "2026-10-21",
+          "close": 2.73
+        },
+        {
+          "date": "2026-10-22",
+          "close": 2.72
+        },
+        {
+          "date": "2026-10-23",
+          "close": 2.71
+        },
+        {
+          "date": "2026-10-26",
+          "close": 2.55
+        },
+        {
+          "date": "2026-10-27",
+          "close": 2.44
+        },
+        {
+          "date": "2026-10-28",
+          "close": 2.47
+        },
+        {
+          "date": "2026-10-29",
+          "close": 2.42
+        },
+        {
+          "date": "2026-10-30",
+          "close": 2.615
+        },
+        {
+          "date": "2026-11-02",
+          "close": 2.96
+        },
+        {
+          "date": "2026-11-03",
+          "close": 2.95
+        },
+        {
+          "date": "2026-11-04",
+          "close": 2.94
+        },
+        {
+          "date": "2026-11-05",
+          "close": 2.73
+        },
+        {
+          "date": "2026-11-06",
+          "close": 3.02
+        },
+        {
+          "date": "2026-11-09",
+          "close": 3.38
+        },
+        {
+          "date": "2026-11-10",
+          "close": 3.23
+        },
+        {
+          "date": "2026-11-11",
+          "close": 3.17
+        },
+        {
+          "date": "2026-11-12",
+          "close": 3.06
+        },
+        {
+          "date": "2026-11-13",
+          "close": 2.62
+        },
+        {
+          "date": "2026-11-16",
+          "close": 2.6
+        },
+        {
+          "date": "2026-11-17",
+          "close": 2.49
+        },
+        {
+          "date": "2026-11-18",
+          "close": 2.96
+        },
+        {
+          "date": "2026-11-19",
+          "close": 2.82
+        },
+        {
+          "date": "2026-11-20",
+          "close": 2.73
+        },
+        {
+          "date": "2026-11-23",
+          "close": 2.92
+        },
+        {
+          "date": "2026-11-24",
+          "close": 3.0
+        }
+      ]
+    },
     {
       "symbol": "ACIW",
       "name": "ACI WORLDWIDE",
@@ -549,12 +1525,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 52.03,
+      "as_of": "2026-11-24",
+      "price": 51.53,
       "neckline": 48.59,
       "neck_start": 48.59,
       "neck_end": 48.59,
-      "distance_pct": 7.08,
+      "distance_pct": 6.05,
       "second_extreme": "2026-11-11",
       "detected_on": "2026-11-23",
       "breakout_date": null,
@@ -948,6 +1924,10 @@
         {
           "date": "2026-11-23",
           "close": 52.03
+        },
+        {
+          "date": "2026-11-24",
+          "close": 51.53
         }
       ]
     },
@@ -965,12 +1945,12 @@
       "status": "confirmed",
       "volume_state": "expanded",
       "volume_ratio": 1.36,
-      "as_of": "2026-11-23",
-      "price": 379.55,
+      "as_of": "2026-11-24",
+      "price": 391.17,
       "neckline": 413.6,
       "neck_start": 413.6,
       "neck_end": 413.6,
-      "distance_pct": -8.23,
+      "distance_pct": -5.42,
       "second_extreme": "2026-11-16",
       "detected_on": "2026-11-23",
       "breakout_date": "2026-11-18",
@@ -1124,6 +2104,10 @@
         {
           "date": "2026-11-23",
           "close": 379.55
+        },
+        {
+          "date": "2026-11-24",
+          "close": 391.17
         }
       ]
     },
@@ -1141,12 +2125,12 @@
       "status": "confirmed",
       "volume_state": "expanded",
       "volume_ratio": 1.36,
-      "as_of": "2026-11-23",
-      "price": 83.15,
+      "as_of": "2026-11-24",
+      "price": 83.63,
       "neckline": 82.0,
       "neck_start": 82.0,
       "neck_end": 82.0,
-      "distance_pct": 1.4,
+      "distance_pct": 1.99,
       "second_extreme": "2026-11-05",
       "detected_on": "2026-11-17",
       "breakout_date": "2026-11-23",
@@ -1420,6 +2404,10 @@
         {
           "date": "2026-11-23",
           "close": 83.15
+        },
+        {
+          "date": "2026-11-24",
+          "close": 83.63
         }
       ]
     },
@@ -1437,12 +2425,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 101.99,
+      "as_of": "2026-11-24",
+      "price": 102.15,
       "neckline": 91.08,
       "neck_start": 91.08,
       "neck_end": 91.08,
-      "distance_pct": 11.98,
+      "distance_pct": 12.15,
       "second_extreme": "2026-11-11",
       "detected_on": "2026-11-23",
       "breakout_date": null,
@@ -1908,6 +2896,10 @@
         {
           "date": "2026-11-23",
           "close": 101.99
+        },
+        {
+          "date": "2026-11-24",
+          "close": 102.15
         }
       ]
     },
@@ -1925,12 +2917,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 37.23,
+      "as_of": "2026-11-24",
+      "price": 37.55,
       "neckline": 36.56,
       "neck_start": 36.56,
       "neck_end": 36.56,
-      "distance_pct": 1.83,
+      "distance_pct": 2.71,
       "second_extreme": "2026-11-18",
       "detected_on": "2026-11-23",
       "breakout_date": null,
@@ -2060,6 +3052,10 @@
         {
           "date": "2026-11-23",
           "close": 37.23
+        },
+        {
+          "date": "2026-11-24",
+          "close": 37.55
         }
       ]
     },
@@ -2077,12 +3073,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 113.04,
+      "as_of": "2026-11-24",
+      "price": 113.59,
       "neckline": 96.34,
       "neck_start": 96.34,
       "neck_end": 96.34,
-      "distance_pct": 17.33,
+      "distance_pct": 17.91,
       "second_extreme": "2026-11-10",
       "detected_on": "2026-11-20",
       "breakout_date": null,
@@ -2392,6 +3388,10 @@
         {
           "date": "2026-11-23",
           "close": 113.04
+        },
+        {
+          "date": "2026-11-24",
+          "close": 113.59
         }
       ]
     },
@@ -2409,12 +3409,12 @@
       "status": "confirmed",
       "volume_state": "expanded",
       "volume_ratio": 1.27,
-      "as_of": "2026-11-23",
-      "price": 21.15,
+      "as_of": "2026-11-24",
+      "price": 21.23,
       "neckline": 21.23,
       "neck_start": 21.23,
       "neck_end": 21.23,
-      "distance_pct": -0.38,
+      "distance_pct": 0.0,
       "second_extreme": "2026-10-22",
       "detected_on": "2026-11-03",
       "breakout_date": "2026-11-20",
@@ -2676,6 +3676,10 @@
         {
           "date": "2026-11-23",
           "close": 21.15
+        },
+        {
+          "date": "2026-11-24",
+          "close": 21.23
         }
       ]
     },
@@ -2693,12 +3697,12 @@
       "status": "confirmed",
       "volume_state": "expanded",
       "volume_ratio": 1.47,
-      "as_of": "2026-11-23",
-      "price": 26.99,
+      "as_of": "2026-11-24",
+      "price": 26.07,
       "neckline": 27.5,
       "neck_start": 27.5,
       "neck_end": 27.5,
-      "distance_pct": -1.85,
+      "distance_pct": -5.2,
       "second_extreme": "2026-10-29",
       "detected_on": "2026-11-03",
       "breakout_date": "2026-11-20",
@@ -2888,6 +3892,10 @@
         {
           "date": "2026-11-23",
           "close": 26.99
+        },
+        {
+          "date": "2026-11-24",
+          "close": 26.07
         }
       ]
     },
@@ -2905,12 +3913,12 @@
       "status": "breakout",
       "volume_state": "not_expanded",
       "volume_ratio": 1.02,
-      "as_of": "2026-11-23",
-      "price": 551.2,
+      "as_of": "2026-11-24",
+      "price": 529.25,
       "neckline": 571.25,
       "neck_start": 571.25,
       "neck_end": 571.25,
-      "distance_pct": -3.51,
+      "distance_pct": -7.35,
       "second_extreme": "2026-11-10",
       "detected_on": "2026-11-20",
       "breakout_date": "2026-11-19",
@@ -3172,178 +4180,10 @@
         {
           "date": "2026-11-23",
           "close": 551.2
-        }
-      ]
-    },
-    {
-      "symbol": "DNLI",
-      "name": "DENALI THERAPEUTICS",
-      "sector": "Health Care",
-      "indexes": [
-        "Russell 2000 (IWM近似)"
-      ],
-      "kind": "bottom",
-      "structure": "clear",
-      "structure_notes": [],
-      "has_breakout": false,
-      "status": "candidate",
-      "volume_state": "not_applicable",
-      "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 19.86,
-      "neckline": 20.96,
-      "neck_start": 20.96,
-      "neck_end": 20.96,
-      "distance_pct": -5.25,
-      "second_extreme": "2026-11-17",
-      "detected_on": "2026-11-20",
-      "breakout_date": null,
-      "price_breakout_on": null,
-      "points": [
-        {
-          "date": "2026-10-23",
-          "price": 18.41,
-          "offset": 10
         },
         {
-          "date": "2026-11-04",
-          "price": 20.96,
-          "offset": 18
-        },
-        {
-          "date": "2026-11-17",
-          "price": 18.0,
-          "offset": 27
-        }
-      ],
-      "chart": [
-        {
-          "date": "2026-10-09",
-          "close": 19.45
-        },
-        {
-          "date": "2026-10-12",
-          "close": 18.95
-        },
-        {
-          "date": "2026-10-13",
-          "close": 18.4
-        },
-        {
-          "date": "2026-10-14",
-          "close": 17.87
-        },
-        {
-          "date": "2026-10-15",
-          "close": 18.34
-        },
-        {
-          "date": "2026-10-16",
-          "close": 17.61
-        },
-        {
-          "date": "2026-10-19",
-          "close": 18.04
-        },
-        {
-          "date": "2026-10-20",
-          "close": 18.93
-        },
-        {
-          "date": "2026-10-21",
-          "close": 18.68
-        },
-        {
-          "date": "2026-10-22",
-          "close": 18.66
-        },
-        {
-          "date": "2026-10-23",
-          "close": 18.41
-        },
-        {
-          "date": "2026-10-26",
-          "close": 18.66
-        },
-        {
-          "date": "2026-10-27",
-          "close": 19.22
-        },
-        {
-          "date": "2026-10-28",
-          "close": 19.29
-        },
-        {
-          "date": "2026-10-29",
-          "close": 19.32
-        },
-        {
-          "date": "2026-10-30",
-          "close": 18.94
-        },
-        {
-          "date": "2026-11-02",
-          "close": 18.86
-        },
-        {
-          "date": "2026-11-03",
-          "close": 19.45
-        },
-        {
-          "date": "2026-11-04",
-          "close": 20.96
-        },
-        {
-          "date": "2026-11-05",
-          "close": 19.72
-        },
-        {
-          "date": "2026-11-06",
-          "close": 20.07
-        },
-        {
-          "date": "2026-11-09",
-          "close": 20.33
-        },
-        {
-          "date": "2026-11-10",
-          "close": 19.85
-        },
-        {
-          "date": "2026-11-11",
-          "close": 19.73
-        },
-        {
-          "date": "2026-11-12",
-          "close": 18.89
-        },
-        {
-          "date": "2026-11-13",
-          "close": 18.74
-        },
-        {
-          "date": "2026-11-16",
-          "close": 18.08
-        },
-        {
-          "date": "2026-11-17",
-          "close": 18.0
-        },
-        {
-          "date": "2026-11-18",
-          "close": 18.4
-        },
-        {
-          "date": "2026-11-19",
-          "close": 18.2
-        },
-        {
-          "date": "2026-11-20",
-          "close": 18.45
-        },
-        {
-          "date": "2026-11-23",
-          "close": 19.86
+          "date": "2026-11-24",
+          "close": 529.25
         }
       ]
     },
@@ -3361,12 +4201,12 @@
       "status": "confirmed",
       "volume_state": "expanded",
       "volume_ratio": 1.49,
-      "as_of": "2026-11-23",
-      "price": 54.74,
+      "as_of": "2026-11-24",
+      "price": 55.62,
       "neckline": 57.47,
       "neck_start": 57.47,
       "neck_end": 57.47,
-      "distance_pct": -4.75,
+      "distance_pct": -3.22,
       "second_extreme": "2026-10-30",
       "detected_on": "2026-11-11",
       "breakout_date": "2026-11-20",
@@ -3696,6 +4536,10 @@
         {
           "date": "2026-11-23",
           "close": 54.74
+        },
+        {
+          "date": "2026-11-24",
+          "close": 55.62
         }
       ]
     },
@@ -3713,12 +4557,12 @@
       "status": "breakout",
       "volume_state": "not_expanded",
       "volume_ratio": 1.14,
-      "as_of": "2026-11-23",
-      "price": 83.64,
+      "as_of": "2026-11-24",
+      "price": 84.79,
       "neckline": 85.27,
       "neck_start": 85.27,
       "neck_end": 85.27,
-      "distance_pct": -1.91,
+      "distance_pct": -0.56,
       "second_extreme": "2026-10-30",
       "detected_on": "2026-11-06",
       "breakout_date": "2026-11-20",
@@ -4000,6 +4844,10 @@
         {
           "date": "2026-11-23",
           "close": 83.64
+        },
+        {
+          "date": "2026-11-24",
+          "close": 84.79
         }
       ]
     },
@@ -4017,12 +4865,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 28.99,
+      "as_of": "2026-11-24",
+      "price": 29.08,
       "neckline": 23.95,
       "neck_start": 23.95,
       "neck_end": 23.95,
-      "distance_pct": 21.04,
+      "distance_pct": 21.42,
       "second_extreme": "2026-11-09",
       "detected_on": "2026-11-19",
       "breakout_date": null,
@@ -4228,6 +5076,10 @@
         {
           "date": "2026-11-23",
           "close": 28.99
+        },
+        {
+          "date": "2026-11-24",
+          "close": 29.08
         }
       ]
     },
@@ -4245,12 +5097,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 86.93,
+      "as_of": "2026-11-24",
+      "price": 88.12,
       "neckline": 81.19,
       "neck_start": 81.19,
       "neck_end": 81.19,
-      "distance_pct": 7.07,
+      "distance_pct": 8.54,
       "second_extreme": "2026-11-09",
       "detected_on": "2026-11-19",
       "breakout_date": null,
@@ -4572,6 +5424,10 @@
         {
           "date": "2026-11-23",
           "close": 86.93
+        },
+        {
+          "date": "2026-11-24",
+          "close": 88.12
         }
       ]
     },
@@ -4589,12 +5445,12 @@
       "status": "confirmed",
       "volume_state": "expanded",
       "volume_ratio": 1.26,
-      "as_of": "2026-11-23",
-      "price": 11.41,
+      "as_of": "2026-11-24",
+      "price": 12.08,
       "neckline": 13.32,
       "neck_start": 13.32,
       "neck_end": 13.32,
-      "distance_pct": -14.34,
+      "distance_pct": -9.31,
       "second_extreme": "2026-11-13",
       "detected_on": "2026-11-18",
       "breakout_date": "2026-11-19",
@@ -4736,6 +5592,10 @@
         {
           "date": "2026-11-23",
           "close": 11.41
+        },
+        {
+          "date": "2026-11-24",
+          "close": 12.08
         }
       ]
     },
@@ -4753,12 +5613,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 37.11,
+      "as_of": "2026-11-24",
+      "price": 36.79,
       "neckline": 34.79,
       "neck_start": 34.79,
       "neck_end": 34.79,
-      "distance_pct": 6.67,
+      "distance_pct": 5.75,
       "second_extreme": "2026-11-16",
       "detected_on": "2026-11-19",
       "breakout_date": null,
@@ -4912,6 +5772,10 @@
         {
           "date": "2026-11-23",
           "close": 37.11
+        },
+        {
+          "date": "2026-11-24",
+          "close": 36.79
         }
       ]
     },
@@ -4929,12 +5793,12 @@
       "status": "confirmed",
       "volume_state": "expanded",
       "volume_ratio": 1.22,
-      "as_of": "2026-11-23",
-      "price": 52.7,
+      "as_of": "2026-11-24",
+      "price": 53.38,
       "neckline": 54.94,
       "neck_start": 54.94,
       "neck_end": 54.94,
-      "distance_pct": -4.08,
+      "distance_pct": -2.84,
       "second_extreme": "2026-10-23",
       "detected_on": "2026-10-30",
       "breakout_date": "2026-11-18",
@@ -5196,6 +6060,10 @@
         {
           "date": "2026-11-23",
           "close": 52.7
+        },
+        {
+          "date": "2026-11-24",
+          "close": 53.38
         }
       ]
     },
@@ -5214,12 +6082,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 49.86,
+      "as_of": "2026-11-24",
+      "price": 50.08,
       "neckline": 49.12,
       "neck_start": 49.12,
       "neck_end": 49.12,
-      "distance_pct": 1.51,
+      "distance_pct": 1.95,
       "second_extreme": "2026-11-12",
       "detected_on": "2026-11-17",
       "breakout_date": null,
@@ -5361,6 +6229,10 @@
         {
           "date": "2026-11-23",
           "close": 49.86
+        },
+        {
+          "date": "2026-11-24",
+          "close": 50.08
         }
       ]
     },
@@ -5378,12 +6250,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 17.36,
+      "as_of": "2026-11-24",
+      "price": 17.05,
       "neckline": 18.2,
       "neck_start": 18.2,
       "neck_end": 18.2,
-      "distance_pct": -4.62,
+      "distance_pct": -6.32,
       "second_extreme": "2026-11-05",
       "detected_on": "2026-11-17",
       "breakout_date": null,
@@ -5645,6 +6517,10 @@
         {
           "date": "2026-11-23",
           "close": 17.36
+        },
+        {
+          "date": "2026-11-24",
+          "close": 17.05
         }
       ]
     },
@@ -5662,12 +6538,12 @@
       "status": "confirmed",
       "volume_state": "expanded",
       "volume_ratio": 2.1,
-      "as_of": "2026-11-23",
-      "price": 48.31,
+      "as_of": "2026-11-24",
+      "price": 46.6,
       "neckline": 51.95,
       "neck_start": 51.95,
       "neck_end": 51.95,
-      "distance_pct": -7.01,
+      "distance_pct": -10.3,
       "second_extreme": "2026-11-12",
       "detected_on": "2026-11-17",
       "breakout_date": "2026-11-13",
@@ -5801,6 +6677,10 @@
         {
           "date": "2026-11-23",
           "close": 48.31
+        },
+        {
+          "date": "2026-11-24",
+          "close": 46.6
         }
       ]
     },
@@ -5818,12 +6698,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 57.05,
+      "as_of": "2026-11-24",
+      "price": 57.26,
       "neckline": 53.59,
       "neck_start": 53.59,
       "neck_end": 53.59,
-      "distance_pct": 6.46,
+      "distance_pct": 6.85,
       "second_extreme": "2026-11-10",
       "detected_on": "2026-11-17",
       "breakout_date": null,
@@ -6085,6 +6965,10 @@
         {
           "date": "2026-11-23",
           "close": 57.05
+        },
+        {
+          "date": "2026-11-24",
+          "close": 57.26
         }
       ]
     },
@@ -6103,12 +6987,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 385.46,
+      "as_of": "2026-11-24",
+      "price": 384.68,
       "neckline": 343.69,
       "neck_start": 343.69,
       "neck_end": 343.69,
-      "distance_pct": 12.15,
+      "distance_pct": 11.93,
       "second_extreme": "2026-11-12",
       "detected_on": "2026-11-17",
       "breakout_date": null,
@@ -6250,6 +7134,10 @@
         {
           "date": "2026-11-23",
           "close": 385.46
+        },
+        {
+          "date": "2026-11-24",
+          "close": 384.68
         }
       ]
     },
@@ -6267,12 +7155,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 20.23,
+      "as_of": "2026-11-24",
+      "price": 20.01,
       "neckline": 19.32,
       "neck_start": 19.32,
       "neck_end": 19.32,
-      "distance_pct": 4.71,
+      "distance_pct": 3.57,
       "second_extreme": "2026-11-10",
       "detected_on": "2026-11-17",
       "breakout_date": null,
@@ -6606,6 +7494,10 @@
         {
           "date": "2026-11-23",
           "close": 20.23
+        },
+        {
+          "date": "2026-11-24",
+          "close": 20.01
         }
       ]
     },
@@ -6624,12 +7516,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 255.33,
+      "as_of": "2026-11-24",
+      "price": 255.7,
       "neckline": 203.18,
       "neck_start": 203.18,
       "neck_end": 203.18,
-      "distance_pct": 25.67,
+      "distance_pct": 25.85,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-16",
       "breakout_date": null,
@@ -6939,6 +7831,10 @@
         {
           "date": "2026-11-23",
           "close": 255.33
+        },
+        {
+          "date": "2026-11-24",
+          "close": 255.7
         }
       ]
     },
@@ -6956,12 +7852,12 @@
       "status": "confirmed",
       "volume_state": "expanded",
       "volume_ratio": 1.99,
-      "as_of": "2026-11-23",
-      "price": 11.595,
+      "as_of": "2026-11-24",
+      "price": 11.86,
       "neckline": 12.18,
       "neck_start": 12.18,
       "neck_end": 12.18,
-      "distance_pct": -4.8,
+      "distance_pct": -2.63,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-16",
       "breakout_date": "2026-11-13",
@@ -7227,6 +8123,10 @@
         {
           "date": "2026-11-23",
           "close": 11.595
+        },
+        {
+          "date": "2026-11-24",
+          "close": 11.86
         }
       ]
     },
@@ -7244,12 +8144,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 45.38,
+      "as_of": "2026-11-24",
+      "price": 44.93,
       "neckline": 39.65,
       "neck_start": 39.65,
       "neck_end": 39.65,
-      "distance_pct": 14.45,
+      "distance_pct": 13.32,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-16",
       "breakout_date": null,
@@ -7611,6 +8511,10 @@
         {
           "date": "2026-11-23",
           "close": 45.38
+        },
+        {
+          "date": "2026-11-24",
+          "close": 44.93
         }
       ]
     },
@@ -7628,12 +8532,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 686.0,
+      "as_of": "2026-11-24",
+      "price": 687.02,
       "neckline": 665.39,
       "neck_start": 665.39,
       "neck_end": 665.39,
-      "distance_pct": 3.1,
+      "distance_pct": 3.25,
       "second_extreme": "2026-11-11",
       "detected_on": "2026-11-16",
       "breakout_date": null,
@@ -7787,6 +8691,10 @@
         {
           "date": "2026-11-23",
           "close": 686.0
+        },
+        {
+          "date": "2026-11-24",
+          "close": 687.02
         }
       ]
     },
@@ -7804,12 +8712,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 55.25,
+      "as_of": "2026-11-24",
+      "price": 56.21,
       "neckline": 54.35,
       "neck_start": 54.35,
       "neck_end": 54.35,
-      "distance_pct": 1.66,
+      "distance_pct": 3.42,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-16",
       "breakout_date": null,
@@ -8075,6 +8983,10 @@
         {
           "date": "2026-11-23",
           "close": 55.25
+        },
+        {
+          "date": "2026-11-24",
+          "close": 56.21
         }
       ]
     },
@@ -8092,12 +9004,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 94.04,
+      "as_of": "2026-11-24",
+      "price": 95.59,
       "neckline": 87.25,
       "neck_start": 87.25,
       "neck_end": 87.25,
-      "distance_pct": 7.78,
+      "distance_pct": 9.56,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-16",
       "breakout_date": null,
@@ -8459,6 +9371,10 @@
         {
           "date": "2026-11-23",
           "close": 94.04
+        },
+        {
+          "date": "2026-11-24",
+          "close": 95.59
         }
       ]
     },
@@ -8476,12 +9392,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 20.65,
+      "as_of": "2026-11-24",
+      "price": 21.15,
       "neckline": 17.95,
       "neck_start": 17.95,
       "neck_end": 17.95,
-      "distance_pct": 15.04,
+      "distance_pct": 17.83,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-16",
       "breakout_date": null,
@@ -8771,6 +9687,10 @@
         {
           "date": "2026-11-23",
           "close": 20.65
+        },
+        {
+          "date": "2026-11-24",
+          "close": 21.15
         }
       ]
     },
@@ -8788,7 +9708,7 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
+      "as_of": "2026-11-24",
       "price": 17.65,
       "neckline": 17.33,
       "neck_start": 17.33,
@@ -9079,6 +9999,10 @@
         {
           "date": "2026-11-23",
           "close": 17.65
+        },
+        {
+          "date": "2026-11-24",
+          "close": 17.65
         }
       ]
     },
@@ -9096,12 +10020,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 96.4,
+      "as_of": "2026-11-24",
+      "price": 94.76,
       "neckline": 82.43,
       "neck_start": 82.43,
       "neck_end": 82.43,
-      "distance_pct": 16.95,
+      "distance_pct": 14.96,
       "second_extreme": "2026-11-11",
       "detected_on": "2026-11-16",
       "breakout_date": null,
@@ -9247,6 +10171,10 @@
         {
           "date": "2026-11-23",
           "close": 96.4
+        },
+        {
+          "date": "2026-11-24",
+          "close": 94.76
         }
       ]
     },
@@ -9264,12 +10192,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 12.7,
+      "as_of": "2026-11-24",
+      "price": 12.84,
       "neckline": 12.69,
       "neck_start": 12.69,
       "neck_end": 12.69,
-      "distance_pct": 0.08,
+      "distance_pct": 1.18,
       "second_extreme": "2026-11-09",
       "detected_on": "2026-11-16",
       "breakout_date": null,
@@ -9475,6 +10403,10 @@
         {
           "date": "2026-11-23",
           "close": 12.7
+        },
+        {
+          "date": "2026-11-24",
+          "close": 12.84
         }
       ]
     },
@@ -9492,12 +10424,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 24.4,
+      "as_of": "2026-11-24",
+      "price": 24.99,
       "neckline": 22.6,
       "neck_start": 22.6,
       "neck_end": 22.6,
-      "distance_pct": 7.96,
+      "distance_pct": 10.58,
       "second_extreme": "2026-11-09",
       "detected_on": "2026-11-16",
       "breakout_date": null,
@@ -9703,6 +10635,10 @@
         {
           "date": "2026-11-23",
           "close": 24.4
+        },
+        {
+          "date": "2026-11-24",
+          "close": 24.99
         }
       ]
     },
@@ -9720,12 +10656,12 @@
       "status": "confirmed",
       "volume_state": "expanded",
       "volume_ratio": 5.85,
-      "as_of": "2026-11-23",
-      "price": 7.23,
+      "as_of": "2026-11-24",
+      "price": 7.08,
       "neckline": 8.04,
       "neck_start": 8.04,
       "neck_end": 8.04,
-      "distance_pct": -10.07,
+      "distance_pct": -11.94,
       "second_extreme": "2026-10-30",
       "detected_on": "2026-11-11",
       "breakout_date": "2026-11-16",
@@ -10051,6 +10987,10 @@
         {
           "date": "2026-11-23",
           "close": 7.23
+        },
+        {
+          "date": "2026-11-24",
+          "close": 7.08
         }
       ]
     },
@@ -10068,12 +11008,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 81.48,
+      "as_of": "2026-11-24",
+      "price": 79.79,
       "neckline": 75.99,
       "neck_start": 75.99,
       "neck_end": 75.99,
-      "distance_pct": 7.22,
+      "distance_pct": 5.0,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-16",
       "breakout_date": null,
@@ -10451,198 +11391,10 @@
         {
           "date": "2026-11-23",
           "close": 81.48
-        }
-      ]
-    },
-    {
-      "symbol": "CSTL",
-      "name": "CASTLE BIOSCIENCES",
-      "sector": "Health Care",
-      "indexes": [
-        "Russell 2000 (IWM近似)"
-      ],
-      "kind": "bottom",
-      "structure": "clear",
-      "structure_notes": [],
-      "has_breakout": false,
-      "status": "candidate",
-      "volume_state": "not_applicable",
-      "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 34.09,
-      "neckline": 38.51,
-      "neck_start": 38.51,
-      "neck_end": 38.51,
-      "distance_pct": -11.48,
-      "second_extreme": "2026-11-06",
-      "detected_on": "2026-11-13",
-      "breakout_date": null,
-      "price_breakout_on": null,
-      "points": [
-        {
-          "date": "2026-10-16",
-          "price": 31.96,
-          "offset": 10
         },
         {
-          "date": "2026-10-29",
-          "price": 38.51,
-          "offset": 19
-        },
-        {
-          "date": "2026-11-06",
-          "price": 32.52,
-          "offset": 25
-        }
-      ],
-      "chart": [
-        {
-          "date": "2026-10-02",
-          "close": 35.56
-        },
-        {
-          "date": "2026-10-05",
-          "close": 36.65
-        },
-        {
-          "date": "2026-10-06",
-          "close": 33.36
-        },
-        {
-          "date": "2026-10-07",
-          "close": 33.0
-        },
-        {
-          "date": "2026-10-08",
-          "close": 33.71
-        },
-        {
-          "date": "2026-10-09",
-          "close": 34.42
-        },
-        {
-          "date": "2026-10-12",
-          "close": 32.76
-        },
-        {
-          "date": "2026-10-13",
-          "close": 32.88
-        },
-        {
-          "date": "2026-10-14",
-          "close": 33.11
-        },
-        {
-          "date": "2026-10-15",
-          "close": 33.8
-        },
-        {
-          "date": "2026-10-16",
-          "close": 31.96
-        },
-        {
-          "date": "2026-10-19",
-          "close": 32.165
-        },
-        {
-          "date": "2026-10-20",
-          "close": 33.15
-        },
-        {
-          "date": "2026-10-21",
-          "close": 34.37
-        },
-        {
-          "date": "2026-10-22",
-          "close": 33.19
-        },
-        {
-          "date": "2026-10-23",
-          "close": 33.08
-        },
-        {
-          "date": "2026-10-26",
-          "close": 33.3
-        },
-        {
-          "date": "2026-10-27",
-          "close": 34.51
-        },
-        {
-          "date": "2026-10-28",
-          "close": 36.68
-        },
-        {
-          "date": "2026-10-29",
-          "close": 38.51
-        },
-        {
-          "date": "2026-10-30",
-          "close": 37.16
-        },
-        {
-          "date": "2026-11-02",
-          "close": 34.94
-        },
-        {
-          "date": "2026-11-03",
-          "close": 35.14
-        },
-        {
-          "date": "2026-11-04",
-          "close": 35.75
-        },
-        {
-          "date": "2026-11-05",
-          "close": 34.2
-        },
-        {
-          "date": "2026-11-06",
-          "close": 32.52
-        },
-        {
-          "date": "2026-11-09",
-          "close": 34.38
-        },
-        {
-          "date": "2026-11-10",
-          "close": 34.42
-        },
-        {
-          "date": "2026-11-11",
-          "close": 33.99
-        },
-        {
-          "date": "2026-11-12",
-          "close": 34.5
-        },
-        {
-          "date": "2026-11-13",
-          "close": 33.79
-        },
-        {
-          "date": "2026-11-16",
-          "close": 32.75
-        },
-        {
-          "date": "2026-11-17",
-          "close": 32.98
-        },
-        {
-          "date": "2026-11-18",
-          "close": 33.38
-        },
-        {
-          "date": "2026-11-19",
-          "close": 33.405
-        },
-        {
-          "date": "2026-11-20",
-          "close": 32.86
-        },
-        {
-          "date": "2026-11-23",
-          "close": 34.09
+          "date": "2026-11-24",
+          "close": 79.79
         }
       ]
     },
@@ -10660,12 +11412,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 98.11,
+      "as_of": "2026-11-24",
+      "price": 98.4,
       "neckline": 101.24,
       "neck_start": 101.24,
       "neck_end": 101.24,
-      "distance_pct": -3.09,
+      "distance_pct": -2.81,
       "second_extreme": "2026-11-06",
       "detected_on": "2026-11-13",
       "breakout_date": null,
@@ -10911,6 +11663,10 @@
         {
           "date": "2026-11-23",
           "close": 98.11
+        },
+        {
+          "date": "2026-11-24",
+          "close": 98.4
         }
       ]
     },
@@ -10928,12 +11684,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 18.24,
+      "as_of": "2026-11-24",
+      "price": 18.46,
       "neckline": 14.21,
       "neck_start": 14.21,
       "neck_end": 14.21,
-      "distance_pct": 28.36,
+      "distance_pct": 29.91,
       "second_extreme": "2026-11-06",
       "detected_on": "2026-11-13",
       "breakout_date": null,
@@ -11267,6 +12023,10 @@
         {
           "date": "2026-11-23",
           "close": 18.24
+        },
+        {
+          "date": "2026-11-24",
+          "close": 18.46
         }
       ]
     },
@@ -11284,12 +12044,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 43.46,
+      "as_of": "2026-11-24",
+      "price": 44.7,
       "neckline": 41.26,
       "neck_start": 41.26,
       "neck_end": 41.26,
-      "distance_pct": 5.33,
+      "distance_pct": 8.34,
       "second_extreme": "2026-11-02",
       "detected_on": "2026-11-12",
       "breakout_date": null,
@@ -11615,6 +12375,10 @@
         {
           "date": "2026-11-23",
           "close": 43.46
+        },
+        {
+          "date": "2026-11-24",
+          "close": 44.7
         }
       ]
     },
@@ -11633,12 +12397,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 1333.88,
+      "as_of": "2026-11-24",
+      "price": 1190.16,
       "neckline": 1479.89,
       "neck_start": 1479.89,
       "neck_end": 1479.89,
-      "distance_pct": -9.87,
+      "distance_pct": -19.58,
       "second_extreme": "2026-11-05",
       "detected_on": "2026-11-12",
       "breakout_date": null,
@@ -11900,6 +12664,10 @@
         {
           "date": "2026-11-23",
           "close": 1333.88
+        },
+        {
+          "date": "2026-11-24",
+          "close": 1190.16
         }
       ]
     },
@@ -11917,12 +12685,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 45.35,
+      "as_of": "2026-11-24",
+      "price": 44.75,
       "neckline": 35.38,
       "neck_start": 35.38,
       "neck_end": 35.38,
-      "distance_pct": 28.18,
+      "distance_pct": 26.48,
       "second_extreme": "2026-11-02",
       "detected_on": "2026-11-12",
       "breakout_date": null,
@@ -12404,6 +13172,186 @@
         {
           "date": "2026-11-23",
           "close": 45.35
+        },
+        {
+          "date": "2026-11-24",
+          "close": 44.75
+        }
+      ]
+    },
+    {
+      "symbol": "CSTL",
+      "name": "CASTLE BIOSCIENCES",
+      "sector": "Health Care",
+      "indexes": [
+        "Russell 2000 (IWM近似)"
+      ],
+      "kind": "bottom",
+      "structure": "clear",
+      "structure_notes": [],
+      "has_breakout": false,
+      "status": "candidate",
+      "volume_state": "not_applicable",
+      "volume_ratio": null,
+      "as_of": "2026-11-24",
+      "price": 34.65,
+      "neckline": 38.51,
+      "neck_start": 38.51,
+      "neck_end": 38.51,
+      "distance_pct": -10.02,
+      "second_extreme": "2026-11-06",
+      "detected_on": "2026-11-11",
+      "breakout_date": null,
+      "price_breakout_on": null,
+      "points": [
+        {
+          "date": "2026-10-23",
+          "price": 33.08,
+          "offset": 10
+        },
+        {
+          "date": "2026-10-29",
+          "price": 38.51,
+          "offset": 14
+        },
+        {
+          "date": "2026-11-06",
+          "price": 32.52,
+          "offset": 20
+        }
+      ],
+      "chart": [
+        {
+          "date": "2026-10-09",
+          "close": 34.42
+        },
+        {
+          "date": "2026-10-12",
+          "close": 32.76
+        },
+        {
+          "date": "2026-10-13",
+          "close": 32.88
+        },
+        {
+          "date": "2026-10-14",
+          "close": 33.11
+        },
+        {
+          "date": "2026-10-15",
+          "close": 33.8
+        },
+        {
+          "date": "2026-10-16",
+          "close": 31.96
+        },
+        {
+          "date": "2026-10-19",
+          "close": 32.165
+        },
+        {
+          "date": "2026-10-20",
+          "close": 33.15
+        },
+        {
+          "date": "2026-10-21",
+          "close": 34.37
+        },
+        {
+          "date": "2026-10-22",
+          "close": 33.19
+        },
+        {
+          "date": "2026-10-23",
+          "close": 33.08
+        },
+        {
+          "date": "2026-10-26",
+          "close": 33.3
+        },
+        {
+          "date": "2026-10-27",
+          "close": 34.51
+        },
+        {
+          "date": "2026-10-28",
+          "close": 36.68
+        },
+        {
+          "date": "2026-10-29",
+          "close": 38.51
+        },
+        {
+          "date": "2026-10-30",
+          "close": 37.16
+        },
+        {
+          "date": "2026-11-02",
+          "close": 34.94
+        },
+        {
+          "date": "2026-11-03",
+          "close": 35.14
+        },
+        {
+          "date": "2026-11-04",
+          "close": 35.75
+        },
+        {
+          "date": "2026-11-05",
+          "close": 34.2
+        },
+        {
+          "date": "2026-11-06",
+          "close": 32.52
+        },
+        {
+          "date": "2026-11-09",
+          "close": 34.38
+        },
+        {
+          "date": "2026-11-10",
+          "close": 34.42
+        },
+        {
+          "date": "2026-11-11",
+          "close": 33.99
+        },
+        {
+          "date": "2026-11-12",
+          "close": 34.5
+        },
+        {
+          "date": "2026-11-13",
+          "close": 33.79
+        },
+        {
+          "date": "2026-11-16",
+          "close": 32.75
+        },
+        {
+          "date": "2026-11-17",
+          "close": 32.98
+        },
+        {
+          "date": "2026-11-18",
+          "close": 33.38
+        },
+        {
+          "date": "2026-11-19",
+          "close": 33.405
+        },
+        {
+          "date": "2026-11-20",
+          "close": 32.86
+        },
+        {
+          "date": "2026-11-23",
+          "close": 34.09
+        },
+        {
+          "date": "2026-11-24",
+          "close": 34.65
         }
       ]
     },
@@ -12421,12 +13369,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 310.67,
+      "as_of": "2026-11-24",
+      "price": 308.29,
       "neckline": 279.54,
       "neck_start": 279.54,
       "neck_end": 279.54,
-      "distance_pct": 11.14,
+      "distance_pct": 10.28,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-11",
       "breakout_date": null,
@@ -12740,6 +13688,10 @@
         {
           "date": "2026-11-23",
           "close": 310.67
+        },
+        {
+          "date": "2026-11-24",
+          "close": 308.29
         }
       ]
     },
@@ -12757,12 +13709,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 1.6,
+      "as_of": "2026-11-24",
+      "price": 1.66,
       "neckline": 1.32,
       "neck_start": 1.32,
       "neck_end": 1.32,
-      "distance_pct": 21.21,
+      "distance_pct": 25.76,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-11",
       "breakout_date": null,
@@ -13004,6 +13956,10 @@
         {
           "date": "2026-11-23",
           "close": 1.6
+        },
+        {
+          "date": "2026-11-24",
+          "close": 1.66
         }
       ]
     },
@@ -13021,12 +13977,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 46.49,
+      "as_of": "2026-11-24",
+      "price": 50.14,
       "neckline": 50.5,
       "neck_start": 50.5,
       "neck_end": 50.5,
-      "distance_pct": -7.94,
+      "distance_pct": -0.71,
       "second_extreme": "2026-11-05",
       "detected_on": "2026-11-10",
       "breakout_date": null,
@@ -13188,182 +14144,10 @@
         {
           "date": "2026-11-23",
           "close": 46.49
-        }
-      ]
-    },
-    {
-      "symbol": "BRO",
-      "name": "Brown & Brown",
-      "sector": "Financials",
-      "indexes": [
-        "S&P 500"
-      ],
-      "kind": "top",
-      "structure": "clear",
-      "structure_notes": [],
-      "has_breakout": false,
-      "status": "candidate",
-      "volume_state": "not_applicable",
-      "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 72.73,
-      "neckline": 65.88,
-      "neck_start": 65.88,
-      "neck_end": 65.88,
-      "distance_pct": 10.4,
-      "second_extreme": "2026-11-05",
-      "detected_on": "2026-11-10",
-      "breakout_date": null,
-      "price_breakout_on": null,
-      "points": [
-        {
-          "date": "2026-10-22",
-          "price": 74.49,
-          "offset": 10
         },
         {
-          "date": "2026-10-28",
-          "price": 65.88,
-          "offset": 14
-        },
-        {
-          "date": "2026-11-05",
-          "price": 74.38,
-          "offset": 20
-        }
-      ],
-      "chart": [
-        {
-          "date": "2026-10-08",
-          "close": 63.75
-        },
-        {
-          "date": "2026-10-09",
-          "close": 62.88
-        },
-        {
-          "date": "2026-10-12",
-          "close": 63.65
-        },
-        {
-          "date": "2026-10-13",
-          "close": 64.05
-        },
-        {
-          "date": "2026-10-14",
-          "close": 64.8
-        },
-        {
-          "date": "2026-10-15",
-          "close": 67.98
-        },
-        {
-          "date": "2026-10-16",
-          "close": 69.4
-        },
-        {
-          "date": "2026-10-19",
-          "close": 69.22
-        },
-        {
-          "date": "2026-10-20",
-          "close": 70.9
-        },
-        {
-          "date": "2026-10-21",
-          "close": 70.53
-        },
-        {
-          "date": "2026-10-22",
-          "close": 74.49
-        },
-        {
-          "date": "2026-10-23",
-          "close": 72.97
-        },
-        {
-          "date": "2026-10-26",
-          "close": 71.08
-        },
-        {
-          "date": "2026-10-27",
-          "close": 67.55
-        },
-        {
-          "date": "2026-10-28",
-          "close": 65.88
-        },
-        {
-          "date": "2026-10-29",
-          "close": 67.84
-        },
-        {
-          "date": "2026-10-30",
-          "close": 69.76
-        },
-        {
-          "date": "2026-11-02",
-          "close": 71.88
-        },
-        {
-          "date": "2026-11-03",
-          "close": 70.92
-        },
-        {
-          "date": "2026-11-04",
-          "close": 73.89
-        },
-        {
-          "date": "2026-11-05",
-          "close": 74.38
-        },
-        {
-          "date": "2026-11-06",
-          "close": 72.12
-        },
-        {
-          "date": "2026-11-09",
-          "close": 71.0
-        },
-        {
-          "date": "2026-11-10",
-          "close": 71.89
-        },
-        {
-          "date": "2026-11-11",
-          "close": 71.39
-        },
-        {
-          "date": "2026-11-12",
-          "close": 70.55
-        },
-        {
-          "date": "2026-11-13",
-          "close": 71.93
-        },
-        {
-          "date": "2026-11-16",
-          "close": 73.51
-        },
-        {
-          "date": "2026-11-17",
-          "close": 72.25
-        },
-        {
-          "date": "2026-11-18",
-          "close": 72.9
-        },
-        {
-          "date": "2026-11-19",
-          "close": 72.35
-        },
-        {
-          "date": "2026-11-20",
-          "close": 73.07
-        },
-        {
-          "date": "2026-11-23",
-          "close": 72.73
+          "date": "2026-11-24",
+          "close": 50.14
         }
       ]
     },
@@ -13381,12 +14165,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 6.75,
+      "as_of": "2026-11-24",
+      "price": 6.85,
       "neckline": 7.78,
       "neck_start": 7.78,
       "neck_end": 7.78,
-      "distance_pct": -13.24,
+      "distance_pct": -11.95,
       "second_extreme": "2026-11-05",
       "detected_on": "2026-11-10",
       "breakout_date": null,
@@ -13556,6 +14340,10 @@
         {
           "date": "2026-11-23",
           "close": 6.75
+        },
+        {
+          "date": "2026-11-24",
+          "close": 6.85
         }
       ]
     },
@@ -13574,12 +14362,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 112.54,
+      "as_of": "2026-11-24",
+      "price": 115.08,
       "neckline": 108.21,
       "neck_start": 108.21,
       "neck_end": 108.21,
-      "distance_pct": 4.0,
+      "distance_pct": 6.35,
       "second_extreme": "2026-11-05",
       "detected_on": "2026-11-10",
       "breakout_date": null,
@@ -13733,6 +14521,10 @@
         {
           "date": "2026-11-23",
           "close": 112.54
+        },
+        {
+          "date": "2026-11-24",
+          "close": 115.08
         }
       ]
     },
@@ -13750,12 +14542,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 8.55,
+      "as_of": "2026-11-24",
+      "price": 8.9,
       "neckline": 9.1,
       "neck_start": 9.1,
       "neck_end": 9.1,
-      "distance_pct": -6.04,
+      "distance_pct": -2.2,
       "second_extreme": "2026-11-05",
       "detected_on": "2026-11-10",
       "breakout_date": null,
@@ -13913,6 +14705,10 @@
         {
           "date": "2026-11-23",
           "close": 8.55
+        },
+        {
+          "date": "2026-11-24",
+          "close": 8.9
         }
       ]
     },
@@ -13930,12 +14726,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 123.47,
+      "as_of": "2026-11-24",
+      "price": 128.37,
       "neckline": 113.55,
       "neck_start": 113.55,
       "neck_end": 113.55,
-      "distance_pct": 8.74,
+      "distance_pct": 13.05,
       "second_extreme": "2026-11-02",
       "detected_on": "2026-11-09",
       "breakout_date": null,
@@ -14269,6 +15065,10 @@
         {
           "date": "2026-11-23",
           "close": 123.47
+        },
+        {
+          "date": "2026-11-24",
+          "close": 128.37
         }
       ]
     },
@@ -14286,12 +15086,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 15.39,
+      "as_of": "2026-11-24",
+      "price": 15.61,
       "neckline": 14.42,
       "neck_start": 14.42,
       "neck_end": 14.42,
-      "distance_pct": 6.73,
+      "distance_pct": 8.25,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-09",
       "breakout_date": null,
@@ -14461,6 +15261,10 @@
         {
           "date": "2026-11-23",
           "close": 15.39
+        },
+        {
+          "date": "2026-11-24",
+          "close": 15.61
         }
       ]
     },
@@ -14478,12 +15282,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 48.42,
+      "as_of": "2026-11-24",
+      "price": 49.37,
       "neckline": 48.56,
       "neck_start": 48.56,
       "neck_end": 48.56,
-      "distance_pct": -0.29,
+      "distance_pct": 1.67,
       "second_extreme": "2026-10-27",
       "detected_on": "2026-11-06",
       "breakout_date": null,
@@ -14777,6 +15581,10 @@
         {
           "date": "2026-11-23",
           "close": 48.42
+        },
+        {
+          "date": "2026-11-24",
+          "close": 49.37
         }
       ]
     },
@@ -14794,12 +15602,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 279.07,
+      "as_of": "2026-11-24",
+      "price": 282.02,
       "neckline": 295.4,
       "neck_start": 295.4,
       "neck_end": 295.4,
-      "distance_pct": -5.53,
+      "distance_pct": -4.53,
       "second_extreme": "2026-11-03",
       "detected_on": "2026-11-06",
       "breakout_date": null,
@@ -14985,6 +15793,10 @@
         {
           "date": "2026-11-23",
           "close": 279.07
+        },
+        {
+          "date": "2026-11-24",
+          "close": 282.02
         }
       ]
     },
@@ -15002,12 +15814,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 42.33,
+      "as_of": "2026-11-24",
+      "price": 44.14,
       "neckline": 46.01,
       "neck_start": 46.01,
       "neck_end": 46.01,
-      "distance_pct": -8.0,
+      "distance_pct": -4.06,
       "second_extreme": "2026-10-30",
       "detected_on": "2026-11-04",
       "breakout_date": null,
@@ -15205,6 +16017,10 @@
         {
           "date": "2026-11-23",
           "close": 42.33
+        },
+        {
+          "date": "2026-11-24",
+          "close": 44.14
         }
       ]
     },
@@ -15222,7 +16038,7 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
+      "as_of": "2026-11-24",
       "price": 4.45,
       "neckline": 4.96,
       "neck_start": 4.96,
@@ -15477,6 +16293,10 @@
         {
           "date": "2026-11-23",
           "close": 4.45
+        },
+        {
+          "date": "2026-11-24",
+          "close": 4.45
         }
       ]
     },
@@ -15494,12 +16314,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 16.52,
+      "as_of": "2026-11-24",
+      "price": 16.35,
       "neckline": 16.31,
       "neck_start": 16.31,
       "neck_end": 16.31,
-      "distance_pct": 1.29,
+      "distance_pct": 0.25,
       "second_extreme": "2026-10-28",
       "detected_on": "2026-11-02",
       "breakout_date": null,
@@ -15701,6 +16521,10 @@
         {
           "date": "2026-11-23",
           "close": 16.52
+        },
+        {
+          "date": "2026-11-24",
+          "close": 16.35
         }
       ]
     },
@@ -15718,12 +16542,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 7.38,
+      "as_of": "2026-11-24",
+      "price": 7.06,
       "neckline": 6.53,
       "neck_start": 6.53,
       "neck_end": 6.53,
-      "distance_pct": 13.02,
+      "distance_pct": 8.12,
       "second_extreme": "2026-10-28",
       "detected_on": "2026-11-02",
       "breakout_date": null,
@@ -15929,6 +16753,542 @@
         {
           "date": "2026-11-23",
           "close": 7.38
+        },
+        {
+          "date": "2026-11-24",
+          "close": 7.06
+        }
+      ]
+    },
+    {
+      "symbol": "GLIBA",
+      "name": "LIBERTY CAPITAL SERIES A",
+      "sector": "Communication",
+      "indexes": [
+        "Russell 2000 (IWM近似)"
+      ],
+      "kind": "top",
+      "structure": "potential",
+      "structure_notes": [
+        "unequal_extremes"
+      ],
+      "has_breakout": false,
+      "status": "candidate",
+      "volume_state": "not_applicable",
+      "volume_ratio": null,
+      "as_of": "2026-11-24",
+      "price": 26.7,
+      "neckline": 19.61,
+      "neck_start": 19.61,
+      "neck_end": 19.61,
+      "distance_pct": 36.16,
+      "second_extreme": "2026-11-12",
+      "detected_on": "2026-11-24",
+      "breakout_date": null,
+      "price_breakout_on": null,
+      "points": [
+        {
+          "date": "2026-08-14",
+          "price": 27.08,
+          "offset": 10
+        },
+        {
+          "date": "2026-10-12",
+          "price": 19.61,
+          "offset": 50
+        },
+        {
+          "date": "2026-11-12",
+          "price": 28.29,
+          "offset": 73
+        }
+      ],
+      "chart": [
+        {
+          "date": "2026-07-31",
+          "close": 23.64
+        },
+        {
+          "date": "2026-08-03",
+          "close": 24.24
+        },
+        {
+          "date": "2026-08-04",
+          "close": 24.58
+        },
+        {
+          "date": "2026-08-05",
+          "close": 24.17
+        },
+        {
+          "date": "2026-08-06",
+          "close": 24.42
+        },
+        {
+          "date": "2026-08-07",
+          "close": 24.6
+        },
+        {
+          "date": "2026-08-10",
+          "close": 25.42
+        },
+        {
+          "date": "2026-08-11",
+          "close": 25.0
+        },
+        {
+          "date": "2026-08-12",
+          "close": 25.73
+        },
+        {
+          "date": "2026-08-13",
+          "close": 26.89
+        },
+        {
+          "date": "2026-08-14",
+          "close": 27.08
+        },
+        {
+          "date": "2026-08-17",
+          "close": 26.14
+        },
+        {
+          "date": "2026-08-18",
+          "close": 26.52
+        },
+        {
+          "date": "2026-08-19",
+          "close": 26.43
+        },
+        {
+          "date": "2026-08-20",
+          "close": 26.12
+        },
+        {
+          "date": "2026-08-21",
+          "close": 25.99
+        },
+        {
+          "date": "2026-08-24",
+          "close": 26.3
+        },
+        {
+          "date": "2026-08-25",
+          "close": 26.85
+        },
+        {
+          "date": "2026-08-26",
+          "close": 26.85
+        },
+        {
+          "date": "2026-08-27",
+          "close": 26.65
+        },
+        {
+          "date": "2026-08-28",
+          "close": 26.65
+        },
+        {
+          "date": "2026-08-31",
+          "close": 26.7
+        },
+        {
+          "date": "2026-09-01",
+          "close": 26.46
+        },
+        {
+          "date": "2026-09-02",
+          "close": 26.73
+        },
+        {
+          "date": "2026-09-03",
+          "close": 26.67
+        },
+        {
+          "date": "2026-09-04",
+          "close": 26.62
+        },
+        {
+          "date": "2026-09-08",
+          "close": 26.19
+        },
+        {
+          "date": "2026-09-09",
+          "close": 25.87
+        },
+        {
+          "date": "2026-09-10",
+          "close": 26.1
+        },
+        {
+          "date": "2026-09-11",
+          "close": 26.05
+        },
+        {
+          "date": "2026-09-14",
+          "close": 26.08
+        },
+        {
+          "date": "2026-09-15",
+          "close": 25.73
+        },
+        {
+          "date": "2026-09-16",
+          "close": 25.02
+        },
+        {
+          "date": "2026-09-17",
+          "close": 24.36
+        },
+        {
+          "date": "2026-09-18",
+          "close": 24.12
+        },
+        {
+          "date": "2026-09-21",
+          "close": 24.26
+        },
+        {
+          "date": "2026-09-22",
+          "close": 24.34
+        },
+        {
+          "date": "2026-09-23",
+          "close": 23.44
+        },
+        {
+          "date": "2026-09-24",
+          "close": 23.46
+        },
+        {
+          "date": "2026-09-25",
+          "close": 23.65
+        },
+        {
+          "date": "2026-09-28",
+          "close": 23.45
+        },
+        {
+          "date": "2026-09-29",
+          "close": 22.95
+        },
+        {
+          "date": "2026-09-30",
+          "close": 23.12
+        },
+        {
+          "date": "2026-10-01",
+          "close": 23.47
+        },
+        {
+          "date": "2026-10-02",
+          "close": 23.16
+        },
+        {
+          "date": "2026-10-05",
+          "close": 23.61
+        },
+        {
+          "date": "2026-10-06",
+          "close": 23.65
+        },
+        {
+          "date": "2026-10-07",
+          "close": 23.54
+        },
+        {
+          "date": "2026-10-08",
+          "close": 23.59
+        },
+        {
+          "date": "2026-10-09",
+          "close": 20.08
+        },
+        {
+          "date": "2026-10-12",
+          "close": 19.61
+        },
+        {
+          "date": "2026-10-13",
+          "close": 20.36
+        },
+        {
+          "date": "2026-10-14",
+          "close": 19.93
+        },
+        {
+          "date": "2026-10-15",
+          "close": 20.37
+        },
+        {
+          "date": "2026-10-16",
+          "close": 20.45
+        },
+        {
+          "date": "2026-10-19",
+          "close": 20.27
+        },
+        {
+          "date": "2026-10-20",
+          "close": 20.14
+        },
+        {
+          "date": "2026-10-21",
+          "close": 19.87
+        },
+        {
+          "date": "2026-10-22",
+          "close": 21.14
+        },
+        {
+          "date": "2026-10-23",
+          "close": 21.36
+        },
+        {
+          "date": "2026-10-26",
+          "close": 20.86
+        },
+        {
+          "date": "2026-10-27",
+          "close": 21.19
+        },
+        {
+          "date": "2026-10-28",
+          "close": 21.0
+        },
+        {
+          "date": "2026-10-29",
+          "close": 21.51
+        },
+        {
+          "date": "2026-10-30",
+          "close": 22.48
+        },
+        {
+          "date": "2026-11-02",
+          "close": 22.98
+        },
+        {
+          "date": "2026-11-03",
+          "close": 22.69
+        },
+        {
+          "date": "2026-11-04",
+          "close": 23.07
+        },
+        {
+          "date": "2026-11-05",
+          "close": 24.71
+        },
+        {
+          "date": "2026-11-06",
+          "close": 26.33
+        },
+        {
+          "date": "2026-11-09",
+          "close": 27.29
+        },
+        {
+          "date": "2026-11-10",
+          "close": 27.43
+        },
+        {
+          "date": "2026-11-11",
+          "close": 28.2
+        },
+        {
+          "date": "2026-11-12",
+          "close": 28.29
+        },
+        {
+          "date": "2026-11-13",
+          "close": 27.16
+        },
+        {
+          "date": "2026-11-16",
+          "close": 27.89
+        },
+        {
+          "date": "2026-11-17",
+          "close": 27.09
+        },
+        {
+          "date": "2026-11-18",
+          "close": 27.7
+        },
+        {
+          "date": "2026-11-19",
+          "close": 26.68
+        },
+        {
+          "date": "2026-11-20",
+          "close": 26.4
+        },
+        {
+          "date": "2026-11-23",
+          "close": 26.62
+        },
+        {
+          "date": "2026-11-24",
+          "close": 26.7
+        }
+      ]
+    },
+    {
+      "symbol": "OCGN",
+      "name": "OCUGEN",
+      "sector": "Health Care",
+      "indexes": [
+        "Russell 2000 (IWM近似)"
+      ],
+      "kind": "bottom",
+      "structure": "potential",
+      "structure_notes": [
+        "unequal_extremes"
+      ],
+      "has_breakout": false,
+      "status": "candidate",
+      "volume_state": "not_applicable",
+      "volume_ratio": null,
+      "as_of": "2026-11-24",
+      "price": 0.879,
+      "neckline": 0.972,
+      "neck_start": 0.972,
+      "neck_end": 0.972,
+      "distance_pct": -9.57,
+      "second_extreme": "2026-11-19",
+      "detected_on": "2026-11-24",
+      "breakout_date": null,
+      "price_breakout_on": null,
+      "points": [
+        {
+          "date": "2026-10-30",
+          "price": 0.703,
+          "offset": 10
+        },
+        {
+          "date": "2026-11-09",
+          "price": 0.972,
+          "offset": 16
+        },
+        {
+          "date": "2026-11-19",
+          "price": 0.733,
+          "offset": 24
+        }
+      ],
+      "chart": [
+        {
+          "date": "2026-10-16",
+          "close": 0.78
+        },
+        {
+          "date": "2026-10-19",
+          "close": 0.787
+        },
+        {
+          "date": "2026-10-20",
+          "close": 0.813
+        },
+        {
+          "date": "2026-10-21",
+          "close": 0.815
+        },
+        {
+          "date": "2026-10-22",
+          "close": 0.79
+        },
+        {
+          "date": "2026-10-23",
+          "close": 0.74
+        },
+        {
+          "date": "2026-10-26",
+          "close": 0.708
+        },
+        {
+          "date": "2026-10-27",
+          "close": 0.757
+        },
+        {
+          "date": "2026-10-28",
+          "close": 0.776
+        },
+        {
+          "date": "2026-10-29",
+          "close": 0.744
+        },
+        {
+          "date": "2026-10-30",
+          "close": 0.703
+        },
+        {
+          "date": "2026-11-02",
+          "close": 0.725
+        },
+        {
+          "date": "2026-11-03",
+          "close": 0.745
+        },
+        {
+          "date": "2026-11-04",
+          "close": 0.875
+        },
+        {
+          "date": "2026-11-05",
+          "close": 0.817
+        },
+        {
+          "date": "2026-11-06",
+          "close": 0.925
+        },
+        {
+          "date": "2026-11-09",
+          "close": 0.972
+        },
+        {
+          "date": "2026-11-10",
+          "close": 0.95
+        },
+        {
+          "date": "2026-11-11",
+          "close": 0.96
+        },
+        {
+          "date": "2026-11-12",
+          "close": 0.874
+        },
+        {
+          "date": "2026-11-13",
+          "close": 0.828
+        },
+        {
+          "date": "2026-11-16",
+          "close": 0.773
+        },
+        {
+          "date": "2026-11-17",
+          "close": 0.757
+        },
+        {
+          "date": "2026-11-18",
+          "close": 0.739
+        },
+        {
+          "date": "2026-11-19",
+          "close": 0.733
+        },
+        {
+          "date": "2026-11-20",
+          "close": 0.768
+        },
+        {
+          "date": "2026-11-23",
+          "close": 0.838
+        },
+        {
+          "date": "2026-11-24",
+          "close": 0.879
         }
       ]
     },
@@ -15949,12 +17309,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 302.11,
+      "as_of": "2026-11-24",
+      "price": 310.79,
       "neckline": 285.37,
       "neck_start": 285.37,
       "neck_end": 285.37,
-      "distance_pct": 5.87,
+      "distance_pct": 8.91,
       "second_extreme": "2026-11-16",
       "detected_on": "2026-11-23",
       "breakout_date": null,
@@ -16108,6 +17468,10 @@
         {
           "date": "2026-11-23",
           "close": 302.11
+        },
+        {
+          "date": "2026-11-24",
+          "close": 310.79
         }
       ]
     },
@@ -16128,12 +17492,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 6.19,
+      "as_of": "2026-11-24",
+      "price": 6.22,
       "neckline": 6.03,
       "neck_start": 6.03,
       "neck_end": 6.03,
-      "distance_pct": 2.65,
+      "distance_pct": 3.15,
       "second_extreme": "2026-11-18",
       "detected_on": "2026-11-23",
       "breakout_date": null,
@@ -16271,6 +17635,10 @@
         {
           "date": "2026-11-23",
           "close": 6.19
+        },
+        {
+          "date": "2026-11-24",
+          "close": 6.22
         }
       ]
     },
@@ -16291,12 +17659,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 132.78,
+      "as_of": "2026-11-24",
+      "price": 130.85,
       "neckline": 125.46,
       "neck_start": 125.46,
       "neck_end": 125.46,
-      "distance_pct": 5.83,
+      "distance_pct": 4.3,
       "second_extreme": "2026-11-16",
       "detected_on": "2026-11-23",
       "breakout_date": null,
@@ -16450,6 +17818,180 @@
         {
           "date": "2026-11-23",
           "close": 132.78
+        },
+        {
+          "date": "2026-11-24",
+          "close": 130.85
+        }
+      ]
+    },
+    {
+      "symbol": "STRO",
+      "name": "SUTRO BIOPHARMA INC",
+      "sector": "Health Care",
+      "indexes": [
+        "Russell 2000 (IWM近似)"
+      ],
+      "kind": "bottom",
+      "structure": "potential",
+      "structure_notes": [
+        "unequal_extremes"
+      ],
+      "has_breakout": false,
+      "status": "candidate",
+      "volume_state": "not_applicable",
+      "volume_ratio": null,
+      "as_of": "2026-11-24",
+      "price": 10.52,
+      "neckline": 10.61,
+      "neck_start": 10.61,
+      "neck_end": 10.61,
+      "distance_pct": -0.85,
+      "second_extreme": "2026-11-18",
+      "detected_on": "2026-11-23",
+      "breakout_date": null,
+      "price_breakout_on": null,
+      "points": [
+        {
+          "date": "2026-10-27",
+          "price": 8.87,
+          "offset": 10
+        },
+        {
+          "date": "2026-11-09",
+          "price": 10.61,
+          "offset": 19
+        },
+        {
+          "date": "2026-11-18",
+          "price": 8.5,
+          "offset": 26
+        }
+      ],
+      "chart": [
+        {
+          "date": "2026-10-13",
+          "close": 11.01
+        },
+        {
+          "date": "2026-10-14",
+          "close": 10.52
+        },
+        {
+          "date": "2026-10-15",
+          "close": 11.46
+        },
+        {
+          "date": "2026-10-16",
+          "close": 10.94
+        },
+        {
+          "date": "2026-10-19",
+          "close": 11.26
+        },
+        {
+          "date": "2026-10-20",
+          "close": 11.54
+        },
+        {
+          "date": "2026-10-21",
+          "close": 10.79
+        },
+        {
+          "date": "2026-10-22",
+          "close": 10.29
+        },
+        {
+          "date": "2026-10-23",
+          "close": 9.33
+        },
+        {
+          "date": "2026-10-26",
+          "close": 8.89
+        },
+        {
+          "date": "2026-10-27",
+          "close": 8.87
+        },
+        {
+          "date": "2026-10-28",
+          "close": 9.29
+        },
+        {
+          "date": "2026-10-29",
+          "close": 9.14
+        },
+        {
+          "date": "2026-10-30",
+          "close": 9.1
+        },
+        {
+          "date": "2026-11-02",
+          "close": 9.11
+        },
+        {
+          "date": "2026-11-03",
+          "close": 9.51
+        },
+        {
+          "date": "2026-11-04",
+          "close": 9.94
+        },
+        {
+          "date": "2026-11-05",
+          "close": 9.2
+        },
+        {
+          "date": "2026-11-06",
+          "close": 9.62
+        },
+        {
+          "date": "2026-11-09",
+          "close": 10.61
+        },
+        {
+          "date": "2026-11-10",
+          "close": 10.17
+        },
+        {
+          "date": "2026-11-11",
+          "close": 10.26
+        },
+        {
+          "date": "2026-11-12",
+          "close": 9.59
+        },
+        {
+          "date": "2026-11-13",
+          "close": 9.82
+        },
+        {
+          "date": "2026-11-16",
+          "close": 9.32
+        },
+        {
+          "date": "2026-11-17",
+          "close": 8.92
+        },
+        {
+          "date": "2026-11-18",
+          "close": 8.5
+        },
+        {
+          "date": "2026-11-19",
+          "close": 8.72
+        },
+        {
+          "date": "2026-11-20",
+          "close": 8.6
+        },
+        {
+          "date": "2026-11-23",
+          "close": 8.83
+        },
+        {
+          "date": "2026-11-24",
+          "close": 10.52
         }
       ]
     },
@@ -16469,12 +18011,12 @@
       "status": "breakout",
       "volume_state": "not_expanded",
       "volume_ratio": 0.8,
-      "as_of": "2026-11-23",
-      "price": 165.65,
+      "as_of": "2026-11-24",
+      "price": 164.14,
       "neckline": 165.07,
       "neck_start": 165.07,
       "neck_end": 165.07,
-      "distance_pct": 0.35,
+      "distance_pct": -0.56,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-11",
       "breakout_date": "2026-11-20",
@@ -16632,6 +18174,10 @@
         {
           "date": "2026-11-23",
           "close": 165.65
+        },
+        {
+          "date": "2026-11-24",
+          "close": 164.14
         }
       ]
     },
@@ -16651,12 +18197,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 149.89,
+      "as_of": "2026-11-24",
+      "price": 151.97,
       "neckline": 150.0,
       "neck_start": 150.0,
       "neck_end": 150.0,
-      "distance_pct": -0.07,
+      "distance_pct": 1.31,
       "second_extreme": "2026-11-13",
       "detected_on": "2026-11-20",
       "breakout_date": null,
@@ -16798,6 +18344,10 @@
         {
           "date": "2026-11-23",
           "close": 149.89
+        },
+        {
+          "date": "2026-11-24",
+          "close": 151.97
         }
       ]
     },
@@ -16817,12 +18367,12 @@
       "status": "confirmed",
       "volume_state": "expanded",
       "volume_ratio": 1.33,
-      "as_of": "2026-11-23",
-      "price": 30.57,
+      "as_of": "2026-11-24",
+      "price": 30.9,
       "neckline": 31.54,
       "neck_start": 31.54,
       "neck_end": 31.54,
-      "distance_pct": -3.08,
+      "distance_pct": -2.03,
       "second_extreme": "2026-10-30",
       "detected_on": "2026-11-11",
       "breakout_date": "2026-11-20",
@@ -17116,6 +18666,164 @@
         {
           "date": "2026-11-23",
           "close": 30.57
+        },
+        {
+          "date": "2026-11-24",
+          "close": 30.9
+        }
+      ]
+    },
+    {
+      "symbol": "SLDB",
+      "name": "SOLID BIOSCIENCES INC",
+      "sector": "Health Care",
+      "indexes": [
+        "Russell 2000 (IWM近似)"
+      ],
+      "kind": "bottom",
+      "structure": "potential",
+      "structure_notes": [
+        "unequal_extremes"
+      ],
+      "has_breakout": false,
+      "status": "candidate",
+      "volume_state": "not_applicable",
+      "volume_ratio": null,
+      "as_of": "2026-11-24",
+      "price": 7.26,
+      "neckline": 7.6,
+      "neck_start": 7.6,
+      "neck_end": 7.6,
+      "distance_pct": -4.47,
+      "second_extreme": "2026-11-17",
+      "detected_on": "2026-11-20",
+      "breakout_date": null,
+      "price_breakout_on": null,
+      "points": [
+        {
+          "date": "2026-11-02",
+          "price": 6.0,
+          "offset": 10
+        },
+        {
+          "date": "2026-11-11",
+          "price": 7.6,
+          "offset": 17
+        },
+        {
+          "date": "2026-11-17",
+          "price": 6.23,
+          "offset": 21
+        }
+      ],
+      "chart": [
+        {
+          "date": "2026-10-19",
+          "close": 5.92
+        },
+        {
+          "date": "2026-10-20",
+          "close": 6.4
+        },
+        {
+          "date": "2026-10-21",
+          "close": 6.41
+        },
+        {
+          "date": "2026-10-22",
+          "close": 6.19
+        },
+        {
+          "date": "2026-10-23",
+          "close": 5.92
+        },
+        {
+          "date": "2026-10-26",
+          "close": 5.81
+        },
+        {
+          "date": "2026-10-27",
+          "close": 6.19
+        },
+        {
+          "date": "2026-10-28",
+          "close": 6.48
+        },
+        {
+          "date": "2026-10-29",
+          "close": 6.39
+        },
+        {
+          "date": "2026-10-30",
+          "close": 6.2
+        },
+        {
+          "date": "2026-11-02",
+          "close": 6.0
+        },
+        {
+          "date": "2026-11-03",
+          "close": 6.28
+        },
+        {
+          "date": "2026-11-04",
+          "close": 6.52
+        },
+        {
+          "date": "2026-11-05",
+          "close": 6.18
+        },
+        {
+          "date": "2026-11-06",
+          "close": 6.59
+        },
+        {
+          "date": "2026-11-09",
+          "close": 7.02
+        },
+        {
+          "date": "2026-11-10",
+          "close": 7.17
+        },
+        {
+          "date": "2026-11-11",
+          "close": 7.6
+        },
+        {
+          "date": "2026-11-12",
+          "close": 7.0
+        },
+        {
+          "date": "2026-11-13",
+          "close": 6.84
+        },
+        {
+          "date": "2026-11-16",
+          "close": 6.48
+        },
+        {
+          "date": "2026-11-17",
+          "close": 6.23
+        },
+        {
+          "date": "2026-11-18",
+          "close": 6.35
+        },
+        {
+          "date": "2026-11-19",
+          "close": 6.44
+        },
+        {
+          "date": "2026-11-20",
+          "close": 6.25
+        },
+        {
+          "date": "2026-11-23",
+          "close": 6.6
+        },
+        {
+          "date": "2026-11-24",
+          "close": 7.26
         }
       ]
     },
@@ -17135,12 +18843,12 @@
       "status": "breakout",
       "volume_state": "not_expanded",
       "volume_ratio": 0.96,
-      "as_of": "2026-11-23",
-      "price": 251.92,
+      "as_of": "2026-11-24",
+      "price": 252.01,
       "neckline": 258.11,
       "neck_start": 258.11,
       "neck_end": 258.11,
-      "distance_pct": -2.4,
+      "distance_pct": -2.36,
       "second_extreme": "2026-10-23",
       "detected_on": "2026-10-28",
       "breakout_date": "2026-11-19",
@@ -17374,6 +19082,10 @@
         {
           "date": "2026-11-23",
           "close": 251.92
+        },
+        {
+          "date": "2026-11-24",
+          "close": 252.01
         }
       ]
     },
@@ -17393,12 +19105,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 157.53,
+      "as_of": "2026-11-24",
+      "price": 151.98,
       "neckline": 147.54,
       "neck_start": 147.54,
       "neck_end": 147.54,
-      "distance_pct": 6.77,
+      "distance_pct": 3.01,
       "second_extreme": "2026-11-16",
       "detected_on": "2026-11-19",
       "breakout_date": null,
@@ -17524,6 +19236,10 @@
         {
           "date": "2026-11-23",
           "close": 157.53
+        },
+        {
+          "date": "2026-11-24",
+          "close": 151.98
         }
       ]
     },
@@ -17543,7 +19259,7 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
+      "as_of": "2026-11-24",
       "price": 21.18,
       "neckline": 26.16,
       "neck_start": 26.16,
@@ -17694,6 +19410,10 @@
         {
           "date": "2026-11-23",
           "close": 21.18
+        },
+        {
+          "date": "2026-11-24",
+          "close": 21.18
         }
       ]
     },
@@ -17713,12 +19433,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 115.96,
+      "as_of": "2026-11-24",
+      "price": 116.74,
       "neckline": 111.68,
       "neck_start": 111.68,
       "neck_end": 111.68,
-      "distance_pct": 3.83,
+      "distance_pct": 4.53,
       "second_extreme": "2026-11-13",
       "detected_on": "2026-11-18",
       "breakout_date": null,
@@ -17848,6 +19568,10 @@
         {
           "date": "2026-11-23",
           "close": 115.96
+        },
+        {
+          "date": "2026-11-24",
+          "close": 116.74
         }
       ]
     },
@@ -17868,12 +19592,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 57.59,
+      "as_of": "2026-11-24",
+      "price": 58.91,
       "neckline": 55.88,
       "neck_start": 55.88,
       "neck_end": 55.88,
-      "distance_pct": 3.06,
+      "distance_pct": 5.42,
       "second_extreme": "2026-11-06",
       "detected_on": "2026-11-18",
       "breakout_date": null,
@@ -18155,6 +19879,10 @@
         {
           "date": "2026-11-23",
           "close": 57.59
+        },
+        {
+          "date": "2026-11-24",
+          "close": 58.91
         }
       ]
     },
@@ -18175,12 +19903,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 84.43,
+      "as_of": "2026-11-24",
+      "price": 84.09,
       "neckline": 88.75,
       "neck_start": 88.75,
       "neck_end": 88.75,
-      "distance_pct": -4.87,
+      "distance_pct": -5.25,
       "second_extreme": "2026-11-06",
       "detected_on": "2026-11-18",
       "breakout_date": null,
@@ -18478,6 +20206,10 @@
         {
           "date": "2026-11-23",
           "close": 84.43
+        },
+        {
+          "date": "2026-11-24",
+          "close": 84.09
         }
       ]
     },
@@ -18498,12 +20230,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 43.84,
+      "as_of": "2026-11-24",
+      "price": 45.03,
       "neckline": 39.1,
       "neck_start": 39.1,
       "neck_end": 39.1,
-      "distance_pct": 12.12,
+      "distance_pct": 15.17,
       "second_extreme": "2026-11-11",
       "detected_on": "2026-11-18",
       "breakout_date": null,
@@ -18653,6 +20385,10 @@
         {
           "date": "2026-11-23",
           "close": 43.84
+        },
+        {
+          "date": "2026-11-24",
+          "close": 45.03
         }
       ]
     },
@@ -18672,12 +20408,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 53.0,
+      "as_of": "2026-11-24",
+      "price": 53.89,
       "neckline": 58.09,
       "neck_start": 58.09,
       "neck_end": 58.09,
-      "distance_pct": -8.76,
+      "distance_pct": -7.23,
       "second_extreme": "2026-11-06",
       "detected_on": "2026-11-18",
       "breakout_date": null,
@@ -18895,6 +20631,10 @@
         {
           "date": "2026-11-23",
           "close": 53.0
+        },
+        {
+          "date": "2026-11-24",
+          "close": 53.89
         }
       ]
     },
@@ -18914,12 +20654,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 67.94,
+      "as_of": "2026-11-24",
+      "price": 65.62,
       "neckline": 57.65,
       "neck_start": 57.65,
       "neck_end": 57.65,
-      "distance_pct": 17.85,
+      "distance_pct": 13.82,
       "second_extreme": "2026-11-11",
       "detected_on": "2026-11-18",
       "breakout_date": null,
@@ -19153,6 +20893,10 @@
         {
           "date": "2026-11-23",
           "close": 67.94
+        },
+        {
+          "date": "2026-11-24",
+          "close": 65.62
         }
       ]
     },
@@ -19172,12 +20916,12 @@
       "status": "breakout",
       "volume_state": "not_expanded",
       "volume_ratio": 0.71,
-      "as_of": "2026-11-23",
-      "price": 99.67,
+      "as_of": "2026-11-24",
+      "price": 100.42,
       "neckline": 101.99,
       "neck_start": 101.99,
       "neck_end": 101.99,
-      "distance_pct": -2.27,
+      "distance_pct": -1.54,
       "second_extreme": "2026-10-22",
       "detected_on": "2026-10-29",
       "breakout_date": "2026-11-18",
@@ -19407,6 +21151,10 @@
         {
           "date": "2026-11-23",
           "close": 99.67
+        },
+        {
+          "date": "2026-11-24",
+          "close": 100.42
         }
       ]
     },
@@ -19426,12 +21174,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 6.01,
+      "as_of": "2026-11-24",
+      "price": 6.3,
       "neckline": 5.72,
       "neck_start": 5.72,
       "neck_end": 5.72,
-      "distance_pct": 5.07,
+      "distance_pct": 10.14,
       "second_extreme": "2026-11-11",
       "detected_on": "2026-11-18",
       "breakout_date": null,
@@ -19637,6 +21385,10 @@
         {
           "date": "2026-11-23",
           "close": 6.01
+        },
+        {
+          "date": "2026-11-24",
+          "close": 6.3
         }
       ]
     },
@@ -19656,7 +21408,7 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
+      "as_of": "2026-11-24",
       "price": 4.45,
       "neckline": 3.74,
       "neck_start": 3.74,
@@ -19855,6 +21607,10 @@
         {
           "date": "2026-11-23",
           "close": 4.45
+        },
+        {
+          "date": "2026-11-24",
+          "close": 4.45
         }
       ]
     },
@@ -19874,12 +21630,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 60.9,
+      "as_of": "2026-11-24",
+      "price": 60.55,
       "neckline": 63.28,
       "neck_start": 63.28,
       "neck_end": 63.28,
-      "distance_pct": -3.76,
+      "distance_pct": -4.31,
       "second_extreme": "2026-11-12",
       "detected_on": "2026-11-17",
       "breakout_date": null,
@@ -20029,6 +21785,10 @@
         {
           "date": "2026-11-23",
           "close": 60.9
+        },
+        {
+          "date": "2026-11-24",
+          "close": 60.55
         }
       ]
     },
@@ -20048,12 +21808,12 @@
       "status": "confirmed",
       "volume_state": "expanded",
       "volume_ratio": 5.42,
-      "as_of": "2026-11-23",
-      "price": 13.32,
+      "as_of": "2026-11-24",
+      "price": 14.72,
       "neckline": 16.2,
       "neck_start": 16.2,
       "neck_end": 16.2,
-      "distance_pct": -17.78,
+      "distance_pct": -9.14,
       "second_extreme": "2026-10-29",
       "detected_on": "2026-11-03",
       "breakout_date": "2026-11-17",
@@ -20243,6 +22003,10 @@
         {
           "date": "2026-11-23",
           "close": 13.32
+        },
+        {
+          "date": "2026-11-24",
+          "close": 14.72
         }
       ]
     },
@@ -20262,12 +22026,12 @@
       "status": "breakout",
       "volume_state": "not_expanded",
       "volume_ratio": 0.77,
-      "as_of": "2026-11-23",
-      "price": 25.79,
+      "as_of": "2026-11-24",
+      "price": 26.06,
       "neckline": 30.37,
       "neck_start": 30.37,
       "neck_end": 30.37,
-      "distance_pct": -15.08,
+      "distance_pct": -14.19,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-11",
       "breakout_date": "2026-11-17",
@@ -20445,6 +22209,10 @@
         {
           "date": "2026-11-23",
           "close": 25.79
+        },
+        {
+          "date": "2026-11-24",
+          "close": 26.06
         }
       ]
     },
@@ -20464,12 +22232,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 31.03,
+      "as_of": "2026-11-24",
+      "price": 32.32,
       "neckline": 23.44,
       "neck_start": 23.44,
       "neck_end": 23.44,
-      "distance_pct": 32.38,
+      "distance_pct": 37.88,
       "second_extreme": "2026-11-10",
       "detected_on": "2026-11-17",
       "breakout_date": null,
@@ -20703,6 +22471,10 @@
         {
           "date": "2026-11-23",
           "close": 31.03
+        },
+        {
+          "date": "2026-11-24",
+          "close": 32.32
         }
       ]
     },
@@ -20722,12 +22494,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 45.84,
+      "as_of": "2026-11-24",
+      "price": 46.67,
       "neckline": 48.99,
       "neck_start": 48.99,
       "neck_end": 48.99,
-      "distance_pct": -6.43,
+      "distance_pct": -4.74,
       "second_extreme": "2026-11-12",
       "detected_on": "2026-11-17",
       "breakout_date": null,
@@ -20873,6 +22645,10 @@
         {
           "date": "2026-11-23",
           "close": 45.84
+        },
+        {
+          "date": "2026-11-24",
+          "close": 46.67
         }
       ]
     },
@@ -20892,12 +22668,12 @@
       "status": "breakout",
       "volume_state": "not_expanded",
       "volume_ratio": 1.02,
-      "as_of": "2026-11-23",
-      "price": 14.96,
+      "as_of": "2026-11-24",
+      "price": 15.21,
       "neckline": 15.69,
       "neck_start": 15.69,
       "neck_end": 15.69,
-      "distance_pct": -4.65,
+      "distance_pct": -3.06,
       "second_extreme": "2026-10-28",
       "detected_on": "2026-11-04",
       "breakout_date": "2026-11-16",
@@ -21155,6 +22931,10 @@
         {
           "date": "2026-11-23",
           "close": 14.96
+        },
+        {
+          "date": "2026-11-24",
+          "close": 15.21
         }
       ]
     },
@@ -21175,12 +22955,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 44.26,
+      "as_of": "2026-11-24",
+      "price": 44.0,
       "neckline": 37.79,
       "neck_start": 37.79,
       "neck_end": 37.79,
-      "distance_pct": 17.12,
+      "distance_pct": 16.43,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-16",
       "breakout_date": null,
@@ -21526,6 +23306,10 @@
         {
           "date": "2026-11-23",
           "close": 44.26
+        },
+        {
+          "date": "2026-11-24",
+          "close": 44.0
         }
       ]
     },
@@ -21545,12 +23329,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 30.3,
+      "as_of": "2026-11-24",
+      "price": 30.0,
       "neckline": 24.55,
       "neck_start": 24.55,
       "neck_end": 24.55,
-      "distance_pct": 23.42,
+      "distance_pct": 22.2,
       "second_extreme": "2026-11-09",
       "detected_on": "2026-11-16",
       "breakout_date": null,
@@ -21920,6 +23704,10 @@
         {
           "date": "2026-11-23",
           "close": 30.3
+        },
+        {
+          "date": "2026-11-24",
+          "close": 30.0
         }
       ]
     },
@@ -21940,12 +23728,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 154.62,
+      "as_of": "2026-11-24",
+      "price": 154.77,
       "neckline": 149.59,
       "neck_start": 149.59,
       "neck_end": 149.59,
-      "distance_pct": 3.36,
+      "distance_pct": 3.46,
       "second_extreme": "2026-11-11",
       "detected_on": "2026-11-16",
       "breakout_date": null,
@@ -22083,6 +23871,10 @@
         {
           "date": "2026-11-23",
           "close": 154.62
+        },
+        {
+          "date": "2026-11-24",
+          "close": 154.77
         }
       ]
     },
@@ -22103,12 +23895,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 275.46,
+      "as_of": "2026-11-24",
+      "price": 279.42,
       "neckline": 268.03,
       "neck_start": 268.03,
       "neck_end": 268.03,
-      "distance_pct": 2.77,
+      "distance_pct": 4.25,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-16",
       "breakout_date": null,
@@ -22430,6 +24222,10 @@
         {
           "date": "2026-11-23",
           "close": 275.46
+        },
+        {
+          "date": "2026-11-24",
+          "close": 279.42
         }
       ]
     },
@@ -22449,12 +24245,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 19.1,
+      "as_of": "2026-11-24",
+      "price": 19.72,
       "neckline": 18.41,
       "neck_start": 18.41,
       "neck_end": 18.41,
-      "distance_pct": 3.75,
+      "distance_pct": 7.12,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-16",
       "breakout_date": null,
@@ -22852,6 +24648,10 @@
         {
           "date": "2026-11-23",
           "close": 19.1
+        },
+        {
+          "date": "2026-11-24",
+          "close": 19.72
         }
       ]
     },
@@ -22871,12 +24671,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 9.42,
+      "as_of": "2026-11-24",
+      "price": 9.73,
       "neckline": 8.76,
       "neck_start": 8.76,
       "neck_end": 8.76,
-      "distance_pct": 7.53,
+      "distance_pct": 11.07,
       "second_extreme": "2026-11-09",
       "detected_on": "2026-11-16",
       "breakout_date": null,
@@ -23050,6 +24850,10 @@
         {
           "date": "2026-11-23",
           "close": 9.42
+        },
+        {
+          "date": "2026-11-24",
+          "close": 9.73
         }
       ]
     },
@@ -23069,12 +24873,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 316.15,
+      "as_of": "2026-11-24",
+      "price": 324.08,
       "neckline": 269.75,
       "neck_start": 269.75,
       "neck_end": 269.75,
-      "distance_pct": 17.2,
+      "distance_pct": 20.14,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-16",
       "breakout_date": null,
@@ -23468,6 +25272,10 @@
         {
           "date": "2026-11-23",
           "close": 316.15
+        },
+        {
+          "date": "2026-11-24",
+          "close": 324.08
         }
       ]
     },
@@ -23487,12 +25295,12 @@
       "status": "breakout",
       "volume_state": "not_expanded",
       "volume_ratio": 0.73,
-      "as_of": "2026-11-23",
-      "price": 7.75,
+      "as_of": "2026-11-24",
+      "price": 7.52,
       "neckline": 9.71,
       "neck_start": 9.71,
       "neck_end": 9.71,
-      "distance_pct": -20.19,
+      "distance_pct": -22.55,
       "second_extreme": "2026-10-28",
       "detected_on": "2026-11-02",
       "breakout_date": "2026-11-13",
@@ -23682,6 +25490,10 @@
         {
           "date": "2026-11-23",
           "close": 7.75
+        },
+        {
+          "date": "2026-11-24",
+          "close": 7.52
         }
       ]
     },
@@ -23702,12 +25514,12 @@
       "status": "confirmed",
       "volume_state": "expanded",
       "volume_ratio": 1.31,
-      "as_of": "2026-11-23",
-      "price": 3.15,
+      "as_of": "2026-11-24",
+      "price": 3.28,
       "neckline": 3.45,
       "neck_start": 3.45,
       "neck_end": 3.45,
-      "distance_pct": -8.7,
+      "distance_pct": -4.93,
       "second_extreme": "2026-10-27",
       "detected_on": "2026-11-03",
       "breakout_date": "2026-11-13",
@@ -23957,6 +25769,10 @@
         {
           "date": "2026-11-23",
           "close": 3.15
+        },
+        {
+          "date": "2026-11-24",
+          "close": 3.28
         }
       ]
     },
@@ -23976,12 +25792,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 48.42,
+      "as_of": "2026-11-24",
+      "price": 49.37,
       "neckline": 56.27,
       "neck_start": 56.27,
       "neck_end": 56.27,
-      "distance_pct": -13.95,
+      "distance_pct": -12.26,
       "second_extreme": "2026-11-06",
       "detected_on": "2026-11-13",
       "breakout_date": null,
@@ -24199,6 +26015,10 @@
         {
           "date": "2026-11-23",
           "close": 48.42
+        },
+        {
+          "date": "2026-11-24",
+          "close": 49.37
         }
       ]
     },
@@ -24218,12 +26038,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 17.25,
+      "as_of": "2026-11-24",
+      "price": 17.66,
       "neckline": 15.46,
       "neck_start": 15.46,
       "neck_end": 15.46,
-      "distance_pct": 11.58,
+      "distance_pct": 14.23,
       "second_extreme": "2026-11-10",
       "detected_on": "2026-11-13",
       "breakout_date": null,
@@ -24377,6 +26197,10 @@
         {
           "date": "2026-11-23",
           "close": 17.25
+        },
+        {
+          "date": "2026-11-24",
+          "close": 17.66
         }
       ]
     },
@@ -24396,12 +26220,12 @@
       "status": "breakout",
       "volume_state": "not_expanded",
       "volume_ratio": 0.39,
-      "as_of": "2026-11-23",
-      "price": 103.55,
+      "as_of": "2026-11-24",
+      "price": 105.45,
       "neckline": 117.81,
       "neck_start": 117.81,
       "neck_end": 117.81,
-      "distance_pct": -12.1,
+      "distance_pct": -10.49,
       "second_extreme": "2026-10-29",
       "detected_on": "2026-11-05",
       "breakout_date": "2026-11-13",
@@ -24607,6 +26431,10 @@
         {
           "date": "2026-11-23",
           "close": 103.55
+        },
+        {
+          "date": "2026-11-24",
+          "close": 105.45
         }
       ]
     },
@@ -24626,12 +26454,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 286.57,
+      "as_of": "2026-11-24",
+      "price": 292.81,
       "neckline": 257.05,
       "neck_start": 257.05,
       "neck_end": 257.05,
-      "distance_pct": 11.48,
+      "distance_pct": 13.91,
       "second_extreme": "2026-11-03",
       "detected_on": "2026-11-13",
       "breakout_date": null,
@@ -24993,6 +26821,10 @@
         {
           "date": "2026-11-23",
           "close": 286.57
+        },
+        {
+          "date": "2026-11-24",
+          "close": 292.81
         }
       ]
     },
@@ -25013,12 +26845,12 @@
       "status": "confirmed",
       "volume_state": "expanded",
       "volume_ratio": 1.94,
-      "as_of": "2026-11-23",
-      "price": 21.24,
+      "as_of": "2026-11-24",
+      "price": 21.11,
       "neckline": 20.75,
       "neck_start": 20.75,
       "neck_end": 20.75,
-      "distance_pct": 2.36,
+      "distance_pct": 1.73,
       "second_extreme": "2026-10-28",
       "detected_on": "2026-11-02",
       "breakout_date": "2026-11-13",
@@ -25256,6 +27088,10 @@
         {
           "date": "2026-11-23",
           "close": 21.24
+        },
+        {
+          "date": "2026-11-24",
+          "close": 21.11
         }
       ]
     },
@@ -25276,12 +27112,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 79.07,
+      "as_of": "2026-11-24",
+      "price": 79.09,
       "neckline": 74.28,
       "neck_start": 74.28,
       "neck_end": 74.28,
-      "distance_pct": 6.45,
+      "distance_pct": 6.48,
       "second_extreme": "2026-11-10",
       "detected_on": "2026-11-13",
       "breakout_date": null,
@@ -25435,6 +27271,10 @@
         {
           "date": "2026-11-23",
           "close": 79.07
+        },
+        {
+          "date": "2026-11-24",
+          "close": 79.09
         }
       ]
     },
@@ -25454,12 +27294,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 171.62,
+      "as_of": "2026-11-24",
+      "price": 177.34,
       "neckline": 142.54,
       "neck_start": 142.54,
       "neck_end": 142.54,
-      "distance_pct": 20.4,
+      "distance_pct": 24.41,
       "second_extreme": "2026-11-05",
       "detected_on": "2026-11-12",
       "breakout_date": null,
@@ -25777,6 +27617,10 @@
         {
           "date": "2026-11-23",
           "close": 171.62
+        },
+        {
+          "date": "2026-11-24",
+          "close": 177.34
         }
       ]
     },
@@ -25796,12 +27640,12 @@
       "status": "confirmed",
       "volume_state": "expanded",
       "volume_ratio": 5.28,
-      "as_of": "2026-11-23",
-      "price": 1.2,
+      "as_of": "2026-11-24",
+      "price": 1.06,
       "neckline": 2.04,
       "neck_start": 2.04,
       "neck_end": 2.04,
-      "distance_pct": -41.18,
+      "distance_pct": -48.04,
       "second_extreme": "2026-11-09",
       "detected_on": "2026-11-12",
       "breakout_date": "2026-11-10",
@@ -26007,6 +27851,10 @@
         {
           "date": "2026-11-23",
           "close": 1.2
+        },
+        {
+          "date": "2026-11-24",
+          "close": 1.06
         }
       ]
     },
@@ -26026,12 +27874,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 22.23,
+      "as_of": "2026-11-24",
+      "price": 22.92,
       "neckline": 28.48,
       "neck_start": 28.48,
       "neck_end": 28.48,
-      "distance_pct": -21.95,
+      "distance_pct": -19.52,
       "second_extreme": "2026-11-05",
       "detected_on": "2026-11-12",
       "breakout_date": null,
@@ -26253,6 +28101,10 @@
         {
           "date": "2026-11-23",
           "close": 22.23
+        },
+        {
+          "date": "2026-11-24",
+          "close": 22.92
         }
       ]
     },
@@ -26272,12 +28124,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 3.11,
+      "as_of": "2026-11-24",
+      "price": 3.18,
       "neckline": 3.46,
       "neck_start": 3.46,
       "neck_end": 3.46,
-      "distance_pct": -10.12,
+      "distance_pct": -8.09,
       "second_extreme": "2026-11-05",
       "detected_on": "2026-11-12",
       "breakout_date": null,
@@ -26447,6 +28299,10 @@
         {
           "date": "2026-11-23",
           "close": 3.11
+        },
+        {
+          "date": "2026-11-24",
+          "close": 3.18
         }
       ]
     },
@@ -26466,12 +28322,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 13.19,
+      "as_of": "2026-11-24",
+      "price": 13.3,
       "neckline": 11.04,
       "neck_start": 11.04,
       "neck_end": 11.04,
-      "distance_pct": 19.47,
+      "distance_pct": 20.47,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-11",
       "breakout_date": null,
@@ -26805,6 +28661,10 @@
         {
           "date": "2026-11-23",
           "close": 13.19
+        },
+        {
+          "date": "2026-11-24",
+          "close": 13.3
         }
       ]
     },
@@ -26825,12 +28685,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 82.42,
+      "as_of": "2026-11-24",
+      "price": 84.64,
       "neckline": 88.48,
       "neck_start": 88.48,
       "neck_end": 88.48,
-      "distance_pct": -6.85,
+      "distance_pct": -4.34,
       "second_extreme": "2026-11-06",
       "detected_on": "2026-11-11",
       "breakout_date": null,
@@ -26980,6 +28840,10 @@
         {
           "date": "2026-11-23",
           "close": 82.42
+        },
+        {
+          "date": "2026-11-24",
+          "close": 84.64
         }
       ]
     },
@@ -27000,12 +28864,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 82.94,
+      "as_of": "2026-11-24",
+      "price": 84.38,
       "neckline": 89.42,
       "neck_start": 89.42,
       "neck_end": 89.42,
-      "distance_pct": -7.25,
+      "distance_pct": -5.64,
       "second_extreme": "2026-11-06",
       "detected_on": "2026-11-11",
       "breakout_date": null,
@@ -27183,6 +29047,10 @@
         {
           "date": "2026-11-23",
           "close": 82.94
+        },
+        {
+          "date": "2026-11-24",
+          "close": 84.38
         }
       ]
     },
@@ -27202,7 +29070,7 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
+      "as_of": "2026-11-24",
       "price": 1.15,
       "neckline": 0.983,
       "neck_start": 0.983,
@@ -27565,6 +29433,10 @@
         {
           "date": "2026-11-23",
           "close": 1.15
+        },
+        {
+          "date": "2026-11-24",
+          "close": 1.15
         }
       ]
     },
@@ -27585,12 +29457,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 25.77,
+      "as_of": "2026-11-24",
+      "price": 26.06,
       "neckline": 25.67,
       "neck_start": 25.67,
       "neck_end": 25.67,
-      "distance_pct": 0.39,
+      "distance_pct": 1.52,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-11",
       "breakout_date": null,
@@ -27924,6 +29796,10 @@
         {
           "date": "2026-11-23",
           "close": 25.77
+        },
+        {
+          "date": "2026-11-24",
+          "close": 26.06
         }
       ]
     },
@@ -27943,12 +29819,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 28.83,
+      "as_of": "2026-11-24",
+      "price": 29.89,
       "neckline": 27.75,
       "neck_start": 27.75,
       "neck_end": 27.75,
-      "distance_pct": 3.89,
+      "distance_pct": 7.71,
       "second_extreme": "2026-11-05",
       "detected_on": "2026-11-10",
       "breakout_date": null,
@@ -28102,6 +29978,10 @@
         {
           "date": "2026-11-23",
           "close": 28.83
+        },
+        {
+          "date": "2026-11-24",
+          "close": 29.89
         }
       ]
     },
@@ -28121,12 +30001,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 3.58,
+      "as_of": "2026-11-24",
+      "price": 3.91,
       "neckline": 4.02,
       "neck_start": 4.02,
       "neck_end": 4.02,
-      "distance_pct": -10.95,
+      "distance_pct": -2.74,
       "second_extreme": "2026-11-05",
       "detected_on": "2026-11-10",
       "breakout_date": null,
@@ -28304,6 +30184,10 @@
         {
           "date": "2026-11-23",
           "close": 3.58
+        },
+        {
+          "date": "2026-11-24",
+          "close": 3.91
         }
       ]
     },
@@ -28323,12 +30207,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 37.69,
+      "as_of": "2026-11-24",
+      "price": 37.63,
       "neckline": 42.05,
       "neck_start": 42.05,
       "neck_end": 42.05,
-      "distance_pct": -10.37,
+      "distance_pct": -10.51,
       "second_extreme": "2026-11-05",
       "detected_on": "2026-11-10",
       "breakout_date": null,
@@ -28502,6 +30386,10 @@
         {
           "date": "2026-11-23",
           "close": 37.69
+        },
+        {
+          "date": "2026-11-24",
+          "close": 37.63
         }
       ]
     },
@@ -28521,12 +30409,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 2.22,
+      "as_of": "2026-11-24",
+      "price": 2.26,
       "neckline": 2.0,
       "neck_start": 2.0,
       "neck_end": 2.0,
-      "distance_pct": 11.0,
+      "distance_pct": 13.0,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-09",
       "breakout_date": null,
@@ -28716,6 +30604,10 @@
         {
           "date": "2026-11-23",
           "close": 2.22
+        },
+        {
+          "date": "2026-11-24",
+          "close": 2.26
         }
       ]
     },
@@ -28735,12 +30627,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 34.51,
+      "as_of": "2026-11-24",
+      "price": 34.78,
       "neckline": 33.5,
       "neck_start": 33.5,
       "neck_end": 33.5,
-      "distance_pct": 3.01,
+      "distance_pct": 3.82,
       "second_extreme": "2026-11-02",
       "detected_on": "2026-11-09",
       "breakout_date": null,
@@ -29002,6 +30894,10 @@
         {
           "date": "2026-11-23",
           "close": 34.51
+        },
+        {
+          "date": "2026-11-24",
+          "close": 34.78
         }
       ]
     },
@@ -29021,12 +30917,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 83.53,
+      "as_of": "2026-11-24",
+      "price": 84.3,
       "neckline": 76.68,
       "neck_start": 76.68,
       "neck_end": 76.68,
-      "distance_pct": 8.93,
+      "distance_pct": 9.94,
       "second_extreme": "2026-11-04",
       "detected_on": "2026-11-09",
       "breakout_date": null,
@@ -29204,6 +31100,10 @@
         {
           "date": "2026-11-23",
           "close": 83.53
+        },
+        {
+          "date": "2026-11-24",
+          "close": 84.3
         }
       ]
     },
@@ -29224,12 +31124,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 248.15,
+      "as_of": "2026-11-24",
+      "price": 248.01,
       "neckline": 233.75,
       "neck_start": 233.75,
       "neck_end": 233.75,
-      "distance_pct": 6.16,
+      "distance_pct": 6.1,
       "second_extreme": "2026-11-02",
       "detected_on": "2026-11-09",
       "breakout_date": null,
@@ -29483,6 +31383,10 @@
         {
           "date": "2026-11-23",
           "close": 248.15
+        },
+        {
+          "date": "2026-11-24",
+          "close": 248.01
         }
       ]
     },
@@ -29503,12 +31407,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 67.94,
+      "as_of": "2026-11-24",
+      "price": 65.62,
       "neckline": 73.02,
       "neck_start": 73.02,
       "neck_end": 73.02,
-      "distance_pct": -6.96,
+      "distance_pct": -10.13,
       "second_extreme": "2026-11-02",
       "detected_on": "2026-11-09",
       "breakout_date": null,
@@ -29782,6 +31686,10 @@
         {
           "date": "2026-11-23",
           "close": 67.94
+        },
+        {
+          "date": "2026-11-24",
+          "close": 65.62
         }
       ]
     },
@@ -29801,12 +31709,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 34.09,
+      "as_of": "2026-11-24",
+      "price": 34.65,
       "neckline": 31.96,
       "neck_start": 31.96,
       "neck_end": 31.96,
-      "distance_pct": 6.66,
+      "distance_pct": 8.42,
       "second_extreme": "2026-10-29",
       "detected_on": "2026-11-05",
       "breakout_date": null,
@@ -30012,6 +31920,10 @@
         {
           "date": "2026-11-23",
           "close": 34.09
+        },
+        {
+          "date": "2026-11-24",
+          "close": 34.65
         }
       ]
     },
@@ -30031,12 +31943,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 58.78,
+      "as_of": "2026-11-24",
+      "price": 56.32,
       "neckline": 53.06,
       "neck_start": 53.06,
       "neck_end": 53.06,
-      "distance_pct": 10.78,
+      "distance_pct": 6.14,
       "second_extreme": "2026-10-29",
       "detected_on": "2026-11-05",
       "breakout_date": null,
@@ -30242,6 +32154,10 @@
         {
           "date": "2026-11-23",
           "close": 58.78
+        },
+        {
+          "date": "2026-11-24",
+          "close": 56.32
         }
       ]
     },
@@ -30261,12 +32177,12 @@
       "status": "candidate",
       "volume_state": "not_applicable",
       "volume_ratio": null,
-      "as_of": "2026-11-23",
-      "price": 233.0,
+      "as_of": "2026-11-24",
+      "price": 235.62,
       "neckline": 219.93,
       "neck_start": 219.93,
       "neck_end": 219.93,
-      "distance_pct": 5.94,
+      "distance_pct": 7.13,
       "second_extreme": "2026-10-29",
       "detected_on": "2026-11-05",
       "breakout_date": null,
@@ -30532,6 +32448,10 @@
         {
           "date": "2026-11-23",
           "close": 233.0
+        },
+        {
+          "date": "2026-11-24",
+          "close": 235.62
         }
       ]
     }
