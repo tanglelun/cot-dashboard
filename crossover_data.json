@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-25 02:32 UTC",
+  "updated": "2026-11-25 05:10 UTC",
   "stocks": [
     {
       "symbol": "SVCO",
@@ -332,16 +332,6 @@
       "date": "2026-11-24"
     },
     {
-      "symbol": "ADSK",
-      "name": "Autodesk, Inc. - Common Stock",
-      "price": 255.7,
-      "change_pct": 0.14,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
-      "date": "2026-11-24"
-    },
-    {
       "symbol": "MAR",
       "name": "Marriott International - Class A Common Stock",
       "price": 416.23,
@@ -350,50 +340,38 @@
       "prev_color": "white",
       "cur_color": "red",
       "date": "2026-11-24"
+    },
+    {
+      "symbol": "ADSK",
+      "name": "Autodesk, Inc. - Common Stock",
+      "price": 255.7,
+      "change_pct": 0.14,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "green",
+      "date": "2026-11-24"
     }
   ],
   "commodities": [
     {
-      "symbol": "HE=F",
-      "name": "Lean Hogs",
-      "price": 56.27,
-      "change_pct": 7.29,
+      "symbol": "CT=F",
+      "name": "Cotton",
+      "price": 79.12,
+      "change_pct": 2.05,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
-      "date": "2026-11-24",
-      "sector": "Livestock"
-    },
-    {
-      "symbol": "CT=F",
-      "name": "Cotton",
-      "price": 82.34,
-      "change_pct": 6.2,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "green",
       "date": "2026-11-24",
       "sector": "Agriculture"
     },
     {
       "symbol": "CC=F",
       "name": "Cocoa",
-      "price": 5444.0,
-      "change_pct": 4.97,
+      "price": 5281.0,
+      "change_pct": 1.83,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
-      "date": "2026-11-24",
-      "sector": "Agriculture"
-    },
-    {
-      "symbol": "ZC=F",
-      "name": "Corn",
-      "price": 450.25,
-      "change_pct": 3.68,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
       "date": "2026-11-24",
       "sector": "Agriculture"
     }
