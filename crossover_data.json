@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-25 05:10 UTC",
+  "updated": "2026-11-25 14:58 UTC",
   "stocks": [
     {
       "symbol": "SVCO",
@@ -332,16 +332,6 @@
       "date": "2026-11-24"
     },
     {
-      "symbol": "MAR",
-      "name": "Marriott International - Class A Common Stock",
-      "price": 416.23,
-      "change_pct": 0.14,
-      "direction": "down",
-      "prev_color": "white",
-      "cur_color": "red",
-      "date": "2026-11-24"
-    },
-    {
       "symbol": "ADSK",
       "name": "Autodesk, Inc. - Common Stock",
       "price": 255.7,
@@ -350,30 +340,51 @@
       "prev_color": "red",
       "cur_color": "green",
       "date": "2026-11-24"
+    },
+    {
+      "symbol": "MAR",
+      "name": "Marriott International - Class A Common Stock",
+      "price": 416.23,
+      "change_pct": 0.14,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-11-24"
     }
   ],
   "commodities": [
     {
-      "symbol": "CT=F",
-      "name": "Cotton",
-      "price": 79.12,
-      "change_pct": 2.05,
+      "symbol": "ZC=F",
+      "name": "Corn",
+      "price": 452.25,
+      "change_pct": 4.21,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
-      "date": "2026-11-24",
+      "date": "2026-11-25",
       "sector": "Agriculture"
     },
     {
-      "symbol": "CC=F",
-      "name": "Cocoa",
-      "price": 5281.0,
-      "change_pct": 1.83,
+      "symbol": "CT=F",
+      "name": "Cotton",
+      "price": 81.57,
+      "change_pct": 3.1,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",
-      "date": "2026-11-24",
+      "date": "2026-11-25",
       "sector": "Agriculture"
+    },
+    {
+      "symbol": "BDRY",
+      "name": "Containerized Freight Index",
+      "price": 12.83,
+      "change_pct": 1.4,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-11-25",
+      "sector": "Indexes"
     }
   ]
 }
