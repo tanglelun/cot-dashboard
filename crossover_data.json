@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-25 22:40 UTC",
+  "updated": "2026-11-26 04:28 UTC",
   "stocks": [
     {
       "symbol": "AXON",
@@ -24,8 +24,8 @@
     {
       "symbol": "ADSK",
       "name": "Autodesk, Inc. - Common Stock",
-      "price": 246.78,
-      "change_pct": -3.49,
+      "price": 246.79,
+      "change_pct": -3.48,
       "direction": "down",
       "prev_color": "green",
       "cur_color": "red",
