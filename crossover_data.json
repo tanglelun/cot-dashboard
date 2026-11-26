@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26 04:28 UTC",
+  "updated": "2026-11-26 14:22 UTC",
   "stocks": [
     {
       "symbol": "AXON",
@@ -82,9 +82,9 @@
       "date": "2026-11-25"
     },
     {
-      "symbol": "CARR",
-      "name": "Carrier Global Corporation Common Stock",
-      "price": 53.9,
+      "symbol": "QCOM",
+      "name": "QUALCOMM Incorporated - Common Stock",
+      "price": 168.66,
       "change_pct": 2.24,
       "direction": "up",
       "prev_color": "red",
@@ -92,9 +92,9 @@
       "date": "2026-11-25"
     },
     {
-      "symbol": "QCOM",
-      "name": "QUALCOMM Incorporated - Common Stock",
-      "price": 168.66,
+      "symbol": "CARR",
+      "name": "Carrier Global Corporation Common Stock",
+      "price": 53.9,
       "change_pct": 2.24,
       "direction": "up",
       "prev_color": "red",
@@ -224,21 +224,10 @@
   ],
   "commodities": [
     {
-      "symbol": "HE=F",
-      "name": "Lean Hogs",
-      "price": 55.5,
-      "change_pct": 7.14,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-11-25",
-      "sector": "Livestock"
-    },
-    {
-      "symbol": "ZC=F",
-      "name": "Corn",
-      "price": 456.25,
-      "change_pct": 5.13,
+      "symbol": "SB=F",
+      "name": "Sugar",
+      "price": 18.34,
+      "change_pct": 3.85,
       "direction": "up",
       "prev_color": "red",
       "cur_color": "white",
@@ -246,21 +235,32 @@
       "sector": "Agriculture"
     },
     {
-      "symbol": "SB=F",
-      "name": "Sugar",
-      "price": 18.42,
-      "change_pct": 4.3,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
+      "symbol": "BZ=F",
+      "name": "Brent Crude Oil",
+      "price": 91.34,
+      "change_pct": -3.46,
+      "direction": "down",
+      "prev_color": "white",
+      "cur_color": "red",
+      "date": "2026-11-26",
+      "sector": "Energy"
+    },
+    {
+      "symbol": "ZO=F",
+      "name": "Oats",
+      "price": 353.25,
+      "change_pct": -2.42,
+      "direction": "down",
+      "prev_color": "green",
+      "cur_color": "red",
       "date": "2026-11-25",
       "sector": "Agriculture"
     },
     {
       "symbol": "CT=F",
       "name": "Cotton",
-      "price": 81.97,
-      "change_pct": 3.6,
+      "price": 79.65,
+      "change_pct": 0.67,
       "direction": "up",
       "prev_color": "white",
       "cur_color": "green",

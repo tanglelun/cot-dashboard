@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26T04:28:42.189220+00:00",
+  "updated": "2026-11-26T14:22:47.819186+00:00",
   "as_of": "2026-11-25",
   "universe_count": 2473,
   "scanned": 2462,
@@ -73,7 +73,7 @@
       "count": 1955,
       "scanned": 1946,
       "proxy": true,
-      "source_as_of": "2026-11-24",
+      "source_as_of": "2026-11-25",
       "excluded_equity_holdings": 10
     }
   },
