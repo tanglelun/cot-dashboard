@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-27 04:36 UTC",
+  "updated": "2026-11-27 14:17 UTC",
   "stocks": [
     {
       "symbol": "AXON",
@@ -224,26 +224,26 @@
   ],
   "commodities": [
     {
-      "symbol": "SB=F",
-      "name": "Sugar",
-      "price": 18.34,
-      "change_pct": 3.85,
-      "direction": "up",
-      "prev_color": "red",
-      "cur_color": "white",
-      "date": "2026-11-25",
-      "sector": "Agriculture"
-    },
-    {
       "symbol": "BZ=F",
       "name": "Brent Crude Oil",
-      "price": 92.27,
-      "change_pct": -2.47,
+      "price": 91.55,
+      "change_pct": -3.23,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",
-      "date": "2026-11-26",
+      "date": "2026-11-27",
       "sector": "Energy"
+    },
+    {
+      "symbol": "SB=F",
+      "name": "Sugar",
+      "price": 18.89,
+      "change_pct": 3.0,
+      "direction": "up",
+      "prev_color": "white",
+      "cur_color": "green",
+      "date": "2026-11-27",
+      "sector": "Agriculture"
     },
     {
       "symbol": "ZO=F",
@@ -254,6 +254,17 @@
       "prev_color": "green",
       "cur_color": "red",
       "date": "2026-11-25",
+      "sector": "Agriculture"
+    },
+    {
+      "symbol": "KC=F",
+      "name": "Coffee",
+      "price": 281.15,
+      "change_pct": 2.0,
+      "direction": "up",
+      "prev_color": "red",
+      "cur_color": "white",
+      "date": "2026-11-27",
       "sector": "Agriculture"
     },
     {
