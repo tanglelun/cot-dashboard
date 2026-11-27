@@ -1,3 +1,6 @@
+/* Navigation fonts are self-contained, including pages with cached legacy markup. */
+@font-face{font-family:Geist;src:url("assets/fonts/Geist-500.ttf") format("truetype");font-style:normal;font-weight:500;font-display:swap}
+@font-face{font-family:Geist;src:url("assets/fonts/Geist-600.ttf") format("truetype");font-style:normal;font-weight:600;font-display:swap}
 .nav-market{position:relative;display:flex;align-items:center}
 .market-trigger{display:inline-flex;align-items:center;gap:7px;border:0;background:transparent;cursor:pointer;font:inherit}
 .market-trigger::after{content:"";width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px)}
@@ -15,13 +18,13 @@
   .market-menu{position:static;opacity:1;visibility:visible;pointer-events:auto;transform:none;box-shadow:none;background:transparent;border:0;padding:0 0 0 12px;margin-top:0}
   .market-menu::before{display:none}
 }
-.site-nav,.nav{height:auto!important;min-height:64px!important;display:flex!important;align-items:center!important;gap:28px!important;padding:0 24px!important;background:#000!important;border-bottom:1px solid #1b1f2a!important;color:#fff!important;font-family:Inter,Arial,sans-serif!important}
-.site-brand,.brand{display:inline-flex!important;align-items:center!important;gap:10px!important;color:#fff!important;text-decoration:none!important;font-size:25px!important;font-weight:800!important;letter-spacing:0!important;white-space:nowrap!important}
+.site-nav,.nav{height:auto!important;min-height:64px!important;display:flex!important;align-items:center!important;gap:28px!important;padding:0 24px!important;background:#000!important;border-bottom:1px solid #1b1f2a!important;color:#fff!important;font-family:Geist,Arial,sans-serif!important}
+.site-brand,.brand{display:inline-flex!important;align-items:center!important;gap:10px!important;color:#fff!important;text-decoration:none!important;font-size:25px!important;font-weight:600!important;letter-spacing:0!important;white-space:nowrap!important}
 .site-brand .brand-mark,.brand .logo{position:relative!important;width:22px!important;height:26px!important;display:inline-block!important;flex:0 0 22px!important;background:transparent!important;border-radius:0!important;transform:none!important}
 .site-brand .brand-mark::before,.brand .logo::before{content:""!important;position:absolute!important;left:7px!important;top:1px!important;width:10px!important;height:24px!important;background:#fff!important;border:0!important;border-radius:10px 10px 10px 1px!important;transform:skew(-18deg) rotate(22deg)!important}
 .site-brand .brand-mark::after,.brand .logo::after{content:""!important;position:absolute!important;left:2px!important;bottom:2px!important;width:13px!important;height:3px!important;background:#fff!important;border:0!important;border-radius:999px!important;transform:rotate(-34deg)!important}
 .site-nav .nav-links,.nav .nav-links{display:flex;align-items:center;gap:28px!important}
-.site-nav .nav-link,.nav .nav-link{height:auto!important;padding:0!important;color:#f3f4f6!important;text-decoration:none!important;font-family:Inter,Arial,sans-serif!important;font-size:15px!important;font-weight:650!important;line-height:1.2!important;white-space:nowrap!important}
+.site-nav .nav-link,.nav .nav-link{height:auto!important;padding:0!important;color:#f3f4f6!important;text-decoration:none!important;font-family:Geist,Arial,sans-serif!important;font-size:15px!important;font-weight:500!important;line-height:1.2!important;white-space:nowrap!important}
 .site-nav .nav-link:hover,.site-nav .nav-link.active,.nav .nav-link:hover,.nav .nav-link.active{color:#b8ff00!important}
 .site-nav .nav-link.active:not(.market-trigger)::after,.nav .nav-link.active:not(.market-trigger)::after{display:none!important}
 .site-nav .market-trigger::after,.nav .market-trigger::after{display:block!important;flex:0 0 7px!important}
@@ -34,3 +37,6 @@
   .site-nav .nav-check:checked ~ .nav-links,.nav .nav-check:checked ~ .nav-links{display:flex!important}
   .site-nav .nav-link,.nav .nav-link{height:40px!important;display:flex!important;align-items:center!important;padding:0 4px!important;font-size:14px!important}
 }
+
+/* Active, hover and focus states must not change navigation weight. */
+.site-nav .nav-link,.nav .nav-link,.site-nav .nav-link:is(.active,:hover,:focus),.nav .nav-link:is(.active,:hover,:focus){font-family:Geist,Arial,sans-serif!important;font-weight:500!important;font-synthesis:none}
