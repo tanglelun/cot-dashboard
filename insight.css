@@ -34,3 +34,7 @@ body:has(#fearView) .range-tab,body:has(#fearView) .pill{border:0!important}
  #fearTimeline{width:100%;margin-top:48px}
  #fearTimeline .canvas-wrap{height:400px;min-height:0}
 }
+/* Neutral surfaces for inactive Insight navigation. */
+#tabs .tab:not(.active),#fearModeTabs{background:#141414}
+#tabs .tab:not(.active),#fearModeTabs .fear-mode-tab:not(.active){color:#888}
+#tabs .tab:not(.active):hover,#fearModeTabs .fear-mode-tab:not(.active):hover{color:#fff}
