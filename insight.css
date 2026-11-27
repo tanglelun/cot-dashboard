@@ -1,0 +1,36 @@
+/* Insight sections are separated by alignment and space, not frames. */
+body:has(#fearView) .wrap{max-width:1440px;margin-inline:auto}
+#tabs{margin-bottom:0;gap:8px!important}
+#tabs .tab{border:0!important}
+#fearView{padding:0!important;min-height:0}
+#fearModeTabs{margin:0 0 32px!important;padding:4px!important;border-radius:12px!important}
+#fearOverview{grid-template-columns:minmax(0,640px) minmax(280px,1fr)!important;gap:64px!important;padding:0!important;min-height:0;align-items:center}
+#fearOverview .gauge-card{max-width:640px;width:100%}
+#fearOverview .gauge-title{display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin:0 0 16px}
+#fearTitle{font-size:18px;font-weight:600;letter-spacing:0;text-transform:none}
+#fearDate{border:0;padding:0;height:auto;font-size:14px}
+#fearOverview .gauge-wrap{width:100%;min-height:0;margin:0}
+#fearScore{font-size:40px;bottom:8px;font-weight:600}
+#fearState{font-size:18px;font-weight:500;margin:8px 0 0}
+#fearPrevious{min-height:0;padding:0;gap:24px;width:100%;max-width:480px;justify-self:end}
+#fearPrevious .previous-row{grid-template-columns:minmax(96px,1fr) minmax(100px,1.2fr) 48px;gap:16px;padding:16px 0!important}
+#fearPrevious .previous-label{font-weight:400;line-height:1.5}
+#fearPrevious .previous-rating{font-size:16px;font-weight:500;line-height:1.5}
+#fearPrevious .previous-line{display:none}
+#fearPrevious .previous-score{height:48px;min-width:48px;justify-self:end;font-size:18px;font-weight:500}
+body:has(#fearView) .range-tab,body:has(#fearView) .pill{border:0!important}
+@media(max-width:900px){
+ #fearOverview{grid-template-columns:1fr!important;gap:48px!important}
+ #fearOverview .gauge-card{max-width:560px;justify-self:center}
+ #fearPrevious{max-width:560px;justify-self:center;gap:8px}
+ #fearPrevious .previous-row{grid-template-columns:minmax(88px,1fr) minmax(100px,1.2fr) 44px;gap:12px}
+ #fearPrevious .previous-score{min-width:44px;height:44px}
+ #fearModeTabs{margin-bottom:24px!important}
+ #tabs{display:grid;grid-template-columns:1fr 1fr;width:100%}
+ #tabs .tab{width:100%;white-space:normal}
+}
+@media(max-width:720px){
+ #fearScore{position:static;transform:none;text-align:center;margin-top:8px}
+ #fearTimeline{width:100%;margin-top:48px}
+ #fearTimeline .canvas-wrap{height:400px;min-height:0}
+}
