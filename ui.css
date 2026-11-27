@@ -226,3 +226,9 @@ body:has(.commodity-sidebar) .toolbar{padding:16px 0!important;gap:16px!importan
 body:has(.group-head) .tabs,body:has(.group-head) .group-head th{background:#141414}
 body:has(.group-head) .group-head th,body:has(.group-head) .tab:not(.active){color:#888}
 body:has(.group-head) .tab:not(.active):hover,body:has(.group-head) tr:hover td{background:#202020}
+/* Keep native scrolling without a light track on dark pages. */
+*{scrollbar-color:#3a3a3a transparent!important}
+::-webkit-scrollbar{width:8px;height:8px;background:transparent!important}
+::-webkit-scrollbar-track,::-webkit-scrollbar-corner{background:transparent!important}
+::-webkit-scrollbar-thumb{background:#3a3a3a!important;border:0!important;border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:#505050!important}
