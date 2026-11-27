@@ -696,7 +696,7 @@ body{font-family:Geist,Arial,sans-serif;background:var(--bg);color:var(--ink);pa
   .indicator-table th{font-size:11px}
 }
 </style>
-<link rel="stylesheet" href="ui.css?v=1">
+<link rel="stylesheet" href="ui.css?v=2">
 <script src="ui.js?v=1" defer></script>
 </head>
 <body>
