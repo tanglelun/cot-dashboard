@@ -11,7 +11,7 @@
   --panel:#fff;--accent:#7cff00;--blue:#1277ff;--teal:#00b8a9;--red:#ff4d4d;
 }
 *{box-sizing:border-box}
-body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--ink);font-weight:700}
+body{margin:0;font-family:Geist,Arial,sans-serif;background:var(--bg);color:var(--ink);font-weight:700}
 .nav{height:68px;background:#000;border-bottom:1px solid #141923;display:flex;align-items:center;gap:28px;padding:0 28px;color:#fff}
 .brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none;font-size:28px;font-weight:900;letter-spacing:-.5px}
 .logo{width:26px;height:42px;border-radius:14px;background:#fff;transform:rotate(35deg)}
@@ -28,7 +28,7 @@ body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(
 h1{margin:0;font-size:clamp(28px,4vw,52px);line-height:.95;letter-spacing:-1.2px}
 .sub{color:var(--muted);font-size:14px;margin-top:10px;font-weight:800}
 .compare-tabs{display:inline-flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:8px;background:#fff;margin:14px 0 0}
-.compare-tab{height:34px;border:0;border-radius:6px;background:transparent;color:var(--muted);padding:0 14px;font:900 13px Inter,Arial,sans-serif;cursor:pointer}
+.compare-tab{height:34px;border:0;border-radius:6px;background:transparent;color:var(--muted);padding:0 14px;font:900 13px Geist,Arial,sans-serif;cursor:pointer}
 .compare-tab.active{background:#000;color:#fff}
 .controls{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;margin-bottom:14px}
 .series-card{border:1px solid var(--line);background:var(--panel);padding:12px;border-radius:8px}
@@ -41,7 +41,7 @@ h1{margin:0;font-size:clamp(28px,4vw,52px);line-height:.95;letter-spacing:-1.2px
 label{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
 select{
   width:100%;height:38px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);
-  padding:0 34px 0 10px;font:800 14px Inter,Arial,sans-serif;outline:none;
+  padding:0 34px 0 10px;font:800 14px Geist,Arial,sans-serif;outline:none;
   appearance:none;-webkit-appearance:none;
   background-image:linear-gradient(45deg,transparent 50%,#111 50%),linear-gradient(135deg,#111 50%,transparent 50%);
   background-position:calc(100% - 17px) 16px,calc(100% - 11px) 16px;
@@ -50,7 +50,7 @@ select{
 }
 select:focus{border-color:#9ca3af}
 .toolbar{display:flex;align-items:center;gap:8px;justify-content:flex-end;flex-wrap:wrap}
-.btn{height:38px;border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:6px;padding:0 13px;font:900 13px Inter,Arial,sans-serif;cursor:pointer}
+.btn{height:38px;border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:6px;padding:0 13px;font:900 13px Geist,Arial,sans-serif;cursor:pointer}
 .btn.active{background:#000;color:#fff;border-color:#000}
 .btn.mode.active{background:var(--accent);color:#000;border-color:var(--accent)}
 .chart-shell{border:1px solid var(--line);background:#fff;min-height:560px;position:relative}
@@ -85,6 +85,8 @@ canvas{width:100%;height:100%;display:block}
   .canvas-wrap{height:470px}
 }
 </style>
+<link rel="stylesheet" href="ui.css?v=1">
+<script src="ui.js?v=1" defer></script>
 </head>
 <body>
 <nav class="nav">
@@ -445,7 +447,7 @@ async function draw(){
   const yExtentB = state.indexed ? yExtentA : extent(b);
   const yA = value => top + (1 - (value - yExtentA[0]) / (yExtentA[1] - yExtentA[0])) * plotH;
   const yB = value => top + (1 - (value - yExtentB[0]) / (yExtentB[1] - yExtentB[0])) * plotH;
-  ctx.font = '700 11px Inter, Arial, sans-serif';
+  ctx.font = '700 11px Geist, Arial, sans-serif';
   ctx.lineWidth = 1;
   for(let i=0;i<=5;i++){
     const y = top + plotH * i / 5;

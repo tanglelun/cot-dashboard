@@ -166,7 +166,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         }}
         * {{ box-sizing: border-box; }}
         html, body {{ height: 100%; }}
-        body {{ margin: 0; background: var(--tv-bg); color: var(--tv-text); font-family: Inter, Arial, sans-serif; }}
+        body {{ margin: 0; background: var(--tv-bg); color: var(--tv-text); font-family: Geist, Arial, sans-serif; }}
         .site-nav {{ min-height: 64px; display: flex; align-items: center; gap: 28px; padding: 0 24px; background: #000; border-bottom: 1px solid #1b1f2a; position: relative; z-index: 30; }}
         .site-brand {{ display: inline-flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; font-size: 25px; font-weight: 800; letter-spacing: 0; white-space: nowrap; }}
         .brand-mark {{ position: relative; width: 22px; height: 26px; display: inline-block; }}
@@ -247,6 +247,8 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             .chart-wrap {{ min-height: 360px; }}
         }}
     </style>
+<link rel="stylesheet" href="../ui.css?v=1">
+<script src="../ui.js?v=1" defer></script>
 </head>
 <body>
     <nav class="site-nav" aria-label="Primary">
@@ -416,7 +418,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
 
             if (!points.length) {{
                 ctx.fillStyle = '#787b86';
-                ctx.font = '14px Inter, Arial, sans-serif';
+                ctx.font = '14px Geist, Arial, sans-serif';
                 ctx.fillText('No chart data available', 28, 38);
                 return;
             }}
@@ -463,7 +465,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             ctx.strokeStyle = '#2a2e39';
             ctx.lineWidth = 1;
             ctx.fillStyle = '#787b86';
-            ctx.font = '12px Inter, Arial, sans-serif';
+            ctx.font = '12px Geist, Arial, sans-serif';
             ctx.textAlign = 'right';
             ctx.textBaseline = 'middle';
             for (let tick = 0; tick <= 4; tick++) {{
@@ -627,7 +629,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             }});
 
             ctx.fillStyle = '#787b86';
-            ctx.font = '12px Inter, Arial, sans-serif';
+            ctx.font = '12px Geist, Arial, sans-serif';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'top';
             ctx.fillText(points[state.start].date, slider.left, slider.bottom + 8);
@@ -864,7 +866,7 @@ html = f'''<!DOCTYPE html>
         }}
         * {{ box-sizing: border-box; }}
         html, body {{ max-width: 100%; overflow-x: hidden; }}
-        body {{ font-family: Inter, Arial, sans-serif; background: var(--tv-bg); color: var(--tv-text); padding: 0; margin: 0; }}
+        body {{ font-family: Geist, Arial, sans-serif; background: var(--tv-bg); color: var(--tv-text); padding: 0; margin: 0; }}
         .site-nav {{ min-height: 64px; display: flex; align-items: center; gap: 28px; padding: 0 24px; background: #000; border-bottom: 1px solid #1b1f2a; position: relative; z-index: 30; }}
         .site-brand {{ display: inline-flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; font-size: 25px; font-weight: 800; letter-spacing: 0; white-space: nowrap; }}
         .brand-mark {{ position: relative; width: 22px; height: 26px; display: inline-block; }}
@@ -902,7 +904,7 @@ html = f'''<!DOCTYPE html>
         th {{ background: var(--tv-panel-2); color: var(--tv-muted); padding: 6px; text-align: center; font-weight: 800; position: sticky; top: 0; border-bottom: 1px solid var(--tv-border); }}
         .group-head th {{ height: 40px; padding-top: 10px; padding-bottom: 10px; vertical-align: middle; }}
         th:first-child {{ text-align: left; position: sticky; left: 0; min-width: 150px; max-width: 210px; background: var(--tv-panel-2); z-index: 10; white-space: normal; }}
-        td {{ padding: 6px; text-align: center; border-top: 1px solid var(--tv-border-soft); font-family: Inter, Arial, sans-serif; font-size: 11px; }}
+        td {{ padding: 6px; text-align: center; border-top: 1px solid var(--tv-border-soft); font-family: Geist, Arial, sans-serif; font-size: 11px; }}
         td:first-child {{ text-align: left; position: sticky; left: 0; min-width: 150px; max-width: 210px; background: #000; font-weight: 800; z-index: 5; white-space: normal; }}
         tr.category {{ background: rgba(255,255,255,.10) !important; }}
         tr.category th {{ background: rgba(255,255,255,.10); color: #fff; text-align: left; padding: 9px 10px; font-size: 13px; min-width: auto; max-width: none; }}
@@ -942,6 +944,8 @@ html = f'''<!DOCTYPE html>
             tr.category th:first-child {{ width: auto; min-width: auto; max-width: none; white-space: normal; }}
         }}
     </style>
+<link rel="stylesheet" href="ui.css?v=1">
+<script src="ui.js?v=1" defer></script>
 </head>
 <body>
     <nav class="site-nav" aria-label="Primary">
