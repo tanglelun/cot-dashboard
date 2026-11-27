@@ -222,3 +222,7 @@ body:has(.commodity-sidebar) .toolbar{padding:16px 0!important;gap:16px!importan
 }
 /* Visibility is immediate once the intent timer fires, so keyboard focus can enter. */
 .ui-menu .market-menu{transition:opacity 120ms ease!important}
+/* Neutral COT table surfaces; retain position and selection colors. */
+body:has(.group-head) .tabs,body:has(.group-head) .group-head th{background:#141414}
+body:has(.group-head) .group-head th,body:has(.group-head) .tab:not(.active){color:#888}
+body:has(.group-head) .tab:not(.active):hover,body:has(.group-head) tr:hover td{background:#202020}
