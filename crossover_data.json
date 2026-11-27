@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26 14:22 UTC",
+  "updated": "2026-11-27 04:36 UTC",
   "stocks": [
     {
       "symbol": "AXON",
@@ -237,8 +237,8 @@
     {
       "symbol": "BZ=F",
       "name": "Brent Crude Oil",
-      "price": 91.34,
-      "change_pct": -3.46,
+      "price": 92.27,
+      "change_pct": -2.47,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",

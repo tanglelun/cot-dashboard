@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26T14:22:47.819186+00:00",
+  "updated": "2026-11-27T04:36:36.852504+00:00",
   "as_of": "2026-11-25",
   "universe_count": 2473,
   "scanned": 2462,
@@ -51,7 +51,7 @@
   ],
   "constituents": {
     "sp500": {
-      "date": "2026-11-26",
+      "date": "2026-11-27",
       "source": "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv",
       "label": "S&P 500",
       "count": 503,
@@ -59,7 +59,7 @@
       "proxy": false
     },
     "nasdaq100": {
-      "date": "2026-11-26",
+      "date": "2026-11-27",
       "source": "https://en.wikipedia.org/wiki/List_of_NASDAQ-100_companies",
       "label": "Nasdaq 100",
       "count": 101,
@@ -67,7 +67,7 @@
       "proxy": false
     },
     "russell2000": {
-      "date": "2026-11-26",
+      "date": "2026-11-27",
       "source": "https://www.ishares.com/us/products/239710/ishares-russell-2000-etf/latest-holdings.csv",
       "label": "Russell 2000 (IWM近似)",
       "count": 1955,
