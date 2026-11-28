@@ -313,3 +313,7 @@ body:has(.group-head) .tabs{background:transparent!important;border:0!important;
 body:has(.group-head) .tab{border-radius:4px!important}
 body:has(.group-head) .table-scroll{border:0!important;border-radius:4px!important}
 @media(max-width:900px){body:has(.group-head)>.container{padding:16px 8px!important}}
+
+/* Use the supplied SVG in full search fields as well as icon buttons. */
+.nav-search-mark:has(.ui-icon){width:32px!important;height:32px!important;left:8px!important;border:0!important;border-radius:0!important;background:transparent!important}
+.nav-search-mark:has(.ui-icon)::after{display:none!important}
