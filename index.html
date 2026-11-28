@@ -42,6 +42,7 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:Geist,Arial,san
 .container{width:100%;max-width:100%;margin:0;padding:16px clamp(10px,1.3vw,24px) 28px;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:14px;align-items:start}
 .main-col{min-width:0}
 .side-col{display:flex;flex-direction:column;gap:14px}
+@media(min-width:1101px){.side-col{align-self:stretch}.side-col>.section:last-child{flex:1}}
 .section{margin:0;border:1px solid var(--border);border-radius:8px;background:var(--panel);overflow:hidden}
 .section-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
 .section-head h2{margin:0;color:#fff;font-size:16px;font-weight:800}
