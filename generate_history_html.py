@@ -248,7 +248,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             .chart-wrap {{ min-height: 360px; }}
         }}
     </style>
-<link rel="stylesheet" href="../ui.css?v=4">
+<link rel="stylesheet" href="../ui.css?v=sidebar-280">
 <script src="../ui.js?v=search-24" defer></script>
 </head>
 <body>
@@ -943,7 +943,7 @@ html = f'''<!DOCTYPE html>
             tr.category th:first-child {{ width: auto; min-width: auto; max-width: none; white-space: normal; }}
         }}
     </style>
-<link rel="stylesheet" href="ui.css?v=cot-5">
+<link rel="stylesheet" href="ui.css?v=sidebar-280">
 <script src="ui.js?v=search-24" defer></script>
 </head>
 <body>
