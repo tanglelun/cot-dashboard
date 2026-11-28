@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-27 19:05 UTC",
+  "updated": "2026-11-28 04:13 UTC",
   "stocks": [
     {
       "symbol": "TROX",
@@ -489,8 +489,8 @@
     {
       "symbol": "BZ=F",
       "name": "Brent Crude Oil",
-      "price": 90.35,
-      "change_pct": -4.5,
+      "price": 90.84,
+      "change_pct": -3.98,
       "direction": "down",
       "prev_color": "white",
       "cur_color": "red",

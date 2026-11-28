@@ -7,7 +7,7 @@
   "flag": "🇲🇽",
   "sector": "Americas",
   "unit": "Index Points",
-  "updated": "2026-11-27",
+  "updated": "2026-11-28",
   "prices": [
     {
       "time": "1991-11-08",
@@ -70238,8 +70238,8 @@
       "open": 70520.8594,
       "high": 72017.9297,
       "low": 70520.8594,
-      "close": 71809.2578,
-      "volume": 81901737
+      "close": 71657.8984,
+      "volume": 130176477
     }
   ]
 }
