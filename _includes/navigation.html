@@ -1,0 +1,34 @@
+{% assign prefix = include.prefix | default: "" %}
+{% assign commercial = include.commercial | default: "cot_noncommercial_history.html" %}
+{% if include.variant == "compare" %}
+<nav class="nav" aria-label="Primary">
+  <a class="brand" href="{{ prefix }}index.html" aria-label="Net Data home"><img class="logo" src="{{ prefix }}assets/icons/net-data-logo.svg" width="22" height="26" alt=""></a>
+  <input class="nav-check" type="checkbox" id="nav-check">
+  <label class="nav-toggle" for="nav-check" aria-label="Open menu"><span></span></label>
+{% else %}
+<nav class="site-nav" aria-label="Primary">
+  <a class="site-brand" href="{{ prefix }}index.html" aria-label="Net Data home"><img class="brand-mark" src="{{ prefix }}assets/icons/net-data-logo.svg" width="22" height="26" alt=""></a>
+  <input class="nav-check" type="checkbox" id="navMenu">
+  <label class="nav-toggle" for="navMenu" aria-label="Toggle navigation"><span></span><span></span><span></span></label>
+{% endif %}
+  <div class="nav-links">
+    <a class="nav-link{% if include.active == 'Commercial' %} active{% endif %}" href="{{ prefix }}{{ commercial }}">Commercial</a>
+    <div class="nav-market">
+      <button class="nav-link market-trigger{% if include.active == 'Market' %} active{% endif %}" type="button" aria-haspopup="true">Market</button>
+      <div class="market-menu" aria-label="Market sections">
+        <a class="market-menu-link" href="{{ prefix }}russell2000_top100.html?market=stock">Tops</a>
+        <a class="market-menu-link" href="{{ prefix }}russell2000_top100.html?market=commodities">Commodities</a>
+        <a class="market-menu-link" href="{{ prefix }}russell2000_top100.html?market=indexes">Indexes</a>
+        <a class="market-menu-link" href="{{ prefix }}russell2000_top100.html?market=shares">Stock</a>
+        <a class="market-menu-link" href="{{ prefix }}russell2000_top100.html?market=currencies">Currencies</a>
+        <a class="market-menu-link" href="{{ prefix }}russell2000_top100.html?market=crypto">Crypto</a>
+        <a class="market-menu-link{% if include.active == 'Bonds' %} active{% endif %}" href="{{ prefix }}russell2000_top100.html?market=bonds">Bonds</a>
+      </div>
+    </div>
+    <a class="nav-link{% if include.active == 'Indicators' %} active{% endif %}" href="{{ prefix }}economy.html">Indicators</a>
+    <a class="nav-link{% if include.active == 'Insight' %} active{% endif %}" href="{{ prefix }}market_pulse.html">Insight</a>
+    <a class="nav-link{% if include.active == 'Compare' %} active{% endif %}" href="{{ prefix }}compare.html">Compare</a>
+    <a class="nav-link{% if include.active == 'Calendar' %} active{% endif %}" href="{{ prefix }}calendar.html">Calendar</a>
+  </div>
+  <a class="nav-search-icon" href="{{ prefix }}search.html" aria-label="Search"><span aria-hidden="true"></span></a>
+</nav>

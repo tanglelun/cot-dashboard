@@ -141,14 +141,16 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             "index": index_value,
         })
 
-    html = f'''<!DOCTYPE html>
+    html = f'''---
+---
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{safe_title}</title>
     <link rel="preload" href="../assets/fonts/Geist-500.ttf" as="font" type="font/ttf" crossorigin>
-<link rel="stylesheet" href="../nav_market.css?v=5">
+{{% include navigation-styles.html prefix="../" %}}
     <style>
         :root {{
             --tv-bg: #000;
@@ -252,20 +254,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
 <script src="../ui.js?v=search-24" defer></script>
 </head>
 <body>
-    <nav class="site-nav" aria-label="Primary">
-        <a class="site-brand" href="../index.html" aria-label="Net Data home"><img class="brand-mark" src="../assets/icons/net-data-logo.svg" width="22" height="26" alt=""></a>
-        <input class="nav-check" type="checkbox" id="navMenu">
-        <label class="nav-toggle" for="navMenu" aria-label="Toggle navigation"><span></span><span></span><span></span></label>
-        <div class="nav-links">
-            <a class="nav-link active" href="../cot_noncommercial_history.html">Commercial</a>
-            <div class="nav-market"><button class="nav-link market-trigger" type="button" aria-haspopup="true">Market</button><div class="market-menu" aria-label="Market sections"><a class="market-menu-link" href="../russell2000_top100.html?market=stock">Tops</a><a class="market-menu-link" href="../russell2000_top100.html?market=commodities">Commodities</a><a class="market-menu-link" href="../russell2000_top100.html?market=indexes">Indexes</a><a class="market-menu-link" href="../russell2000_top100.html?market=shares">Stock</a><a class="market-menu-link" href="../russell2000_top100.html?market=currencies">Currencies</a><a class="market-menu-link" href="../russell2000_top100.html?market=crypto">Crypto</a><a class="market-menu-link" href="../russell2000_top100.html?market=bonds">Bonds</a></div></div>
-            <a class="nav-link" href="../economy.html">Indicators</a>
-            <a class="nav-link" href="../market_pulse.html">Insight</a>
-            <a class="nav-link" href="../compare.html">Compare</a>
-            <a class="nav-link" href="../calendar.html">Calendar</a>
-        </div>
-        <a class="nav-search-icon" href="../search.html" aria-label="Search"><span aria-hidden="true"></span></a>
-    </nav>
+    {{% include navigation.html prefix="../" active="Commercial" %}}
     <main class="page">
         <aside class="commodity-sidebar" aria-label="Commodity charts">
             <div class="commodity-sidebar-head">
@@ -839,14 +828,16 @@ for category, comms in categories.items():
         html_rows_net += '</tr>\n'
         html_rows_all += '</tr>\n'
 
-html = f'''<!DOCTYPE html>
+html = f'''---
+---
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CFTC Non-Commercial Positions</title>
     <link rel="preload" href="assets/fonts/Geist-500.ttf" as="font" type="font/ttf" crossorigin>
-<link rel="stylesheet" href="nav_market.css?v=5">
+{{% include navigation-styles.html %}}
     <style>
         :root {{
             --tv-bg: #000;
@@ -947,20 +938,7 @@ html = f'''<!DOCTYPE html>
 <script src="ui.js?v=search-24" defer></script>
 </head>
 <body>
-    <nav class="site-nav" aria-label="Primary">
-        <a class="site-brand" href="index.html" aria-label="Net Data home"><img class="brand-mark" src="assets/icons/net-data-logo.svg" width="22" height="26" alt=""></a>
-        <input class="nav-check" type="checkbox" id="navMenu">
-        <label class="nav-toggle" for="navMenu" aria-label="Toggle navigation"><span></span><span></span><span></span></label>
-        <div class="nav-links">
-            <a class="nav-link active" href="cot_noncommercial_history.html">Commercial</a>
-            <div class="nav-market"><button class="nav-link market-trigger" type="button" aria-haspopup="true">Market</button><div class="market-menu" aria-label="Market sections"><a class="market-menu-link" href="russell2000_top100.html?market=stock">Tops</a><a class="market-menu-link" href="russell2000_top100.html?market=commodities">Commodities</a><a class="market-menu-link" href="russell2000_top100.html?market=indexes">Indexes</a><a class="market-menu-link" href="russell2000_top100.html?market=shares">Stock</a><a class="market-menu-link" href="russell2000_top100.html?market=currencies">Currencies</a><a class="market-menu-link" href="russell2000_top100.html?market=crypto">Crypto</a><a class="market-menu-link" href="russell2000_top100.html?market=bonds">Bonds</a></div></div>
-            <a class="nav-link" href="economy.html">Indicators</a>
-            <a class="nav-link" href="market_pulse.html">Insight</a>
-            <a class="nav-link" href="compare.html">Compare</a>
-            <a class="nav-link" href="calendar.html">Calendar</a>
-        </div>
-        <a class="nav-search-icon" href="search.html" aria-label="Search"><span aria-hidden="true"></span></a>
-    </nav>
+    {{% include navigation.html active="Commercial" %}}
     <div class="container">
         <div class="page-head">
             <h1>CFTC Non-Commercial Positions</h1>
