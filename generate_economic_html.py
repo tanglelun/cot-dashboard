@@ -555,7 +555,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Indicators - G20 Data</title>
 <link rel="preload" href="assets/fonts/Geist-500.ttf" as="font" type="font/ttf" crossorigin>
-<link rel="stylesheet" href="nav_market.css?v=2">
+<link rel="stylesheet" href="nav_market.css?v=3">
 <style>
 :root{
   --bg:#fff;
