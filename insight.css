@@ -38,3 +38,13 @@ body:has(#fearView) .range-tab,body:has(#fearView) .pill{border:0!important}
 #tabs .tab:not(.active),#fearModeTabs{background:#141414}
 #tabs .tab:not(.active),#fearModeTabs .fear-mode-tab:not(.active){color:#888}
 #tabs .tab:not(.active):hover,#fearModeTabs .fear-mode-tab:not(.active):hover{color:#fff}
+/* Match the shared black-card, four-pixel workspace layout. */
+body:has(#fearView) .top{background:#000;padding:16px!important;margin:0 0 4px!important;min-height:0}
+#tabs{gap:4px!important}
+#tabs .tab,#fearModeTabs,#fearModeTabs .fear-mode-tab{border-radius:4px!important}
+body:has(#fearView) #fearView{padding:24px!important}
+body:has(#fearView) .chart-card{margin-bottom:4px}
+@media(max-width:900px){
+ body:has(#fearView) .top{padding:16px!important}
+ body:has(#fearView) #fearView{padding:16px!important}
+}
