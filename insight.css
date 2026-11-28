@@ -48,3 +48,10 @@ body:has(#fearView) .chart-card{margin-bottom:4px}
  body:has(#fearView) .top{padding:16px!important}
  body:has(#fearView) #fearView{padding:16px!important}
 }
+
+/* Extend the active card to the viewport bottom without stretching its chart. */
+body:has(#fearView){min-height:100dvh;display:flex;flex-direction:column}
+body:has(#fearView) .site-nav{flex-shrink:0}
+body:has(#fearView) .wrap{flex:1;display:flex;flex-direction:column;width:100%;box-sizing:border-box}
+body:has(#fearView) .top{flex-shrink:0}
+body:has(#fearView) .chart-card{flex:1;margin-bottom:0}
