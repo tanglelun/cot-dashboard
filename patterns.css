@@ -21,3 +21,8 @@
 .pattern-badges{display:flex;gap:4px;flex-wrap:wrap}.pattern-badges .pattern-badge{margin-bottom:0}.pattern-state small:first-of-type{margin-top:5px}
 .pattern-badge.structure-clear{color:#b5d9ff;border-color:#4979a7}.pattern-badge.structure-potential{color:#c6c6ce;border-color:#626273}
 @media(max-width:600px){.pattern-badges{justify-content:flex-end}}
+
+.pattern-link{color:inherit;text-decoration:none;min-width:0}
+.pattern-link:focus-visible{outline:2px solid var(--blue)}
+.pattern-details{margin-top:8px;color:var(--muted);font-size:13px}
+.pattern-details summary{cursor:pointer;width:fit-content}

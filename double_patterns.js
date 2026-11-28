@@ -52,22 +52,25 @@
     list.replaceChildren();
     if (!rows.length) {list.append(el('div','当前筛选下暂无符合条件的结构。两档均排除圆弧底和缺少两次独立测试的走势。','pattern-empty'));return;}
     rows.forEach(row=>{
-      const card=el('a',null,'pattern-row');
-      card.href='stock_chart.html?symbol='+encodeURIComponent(row.symbol)+'&universe=home-patterns&sort=rank&dir=asc&list=double-patterns&kind='+kind+'&patternIndex='+encodeURIComponent(index)+'&structure='+encodeURIComponent(tier)+'&breakout='+String(document.getElementById('doublePatternsConfirmed').checked)+'&name='+encodeURIComponent(row.name);
-      const identity=el('div'); identity.append(el('strong',row.symbol),el('span',row.name,'pattern-name'),el('small',row.indexes.join(' · '),'pattern-index'));
-      const chart=el('div',null,'pattern-mini');chart.append(miniChart(row));
-      const price=el('div',null,'pattern-price');price.append(el('strong','$'+money(row.price)),el('small','颈线 $'+money(row.neckline)),el('small','距颈线 '+(row.distance_pct>0?'+':'')+row.distance_pct.toFixed(2)+'%'));
+      const card=el('div',null,'pattern-row');
+      const href='stock_chart.html?symbol='+encodeURIComponent(row.symbol)+'&universe=home-patterns&sort=rank&dir=asc&list=double-patterns&kind='+kind+'&patternIndex='+encodeURIComponent(index)+'&structure='+encodeURIComponent(tier)+'&breakout='+String(document.getElementById('doublePatternsConfirmed').checked)+'&name='+encodeURIComponent(row.name);
+      const identity=el('a',null,'pattern-link'); identity.href=href; identity.append(el('strong',row.symbol),el('span',row.name,'pattern-name'));
+      const chart=el('a',null,'pattern-mini pattern-link');chart.href=href;chart.append(miniChart(row));
+      const price=el('a',null,'pattern-price pattern-link');price.href=href;price.append(el('strong','$'+money(row.price)),el('small','颈线 $'+money(row.neckline)+' · '+(row.distance_pct>0?'+':'')+row.distance_pct.toFixed(2)+'%'));
       const status=el('div',null,'pattern-state');
       const badges=el('div',null,'pattern-badges');
-      badges.append(el('span',row.structure==='clear'?'明确结构':'潜在结构','pattern-badge '+(row.structure==='clear'?'structure-clear':'structure-potential')));
-      badges.append(el('span',row.has_breakout?'颈线：已突破':'颈线：未突破','pattern-badge'));
-      const volumeLabels={expanded:'突破量能：放量',not_expanded:'突破量能：未放量',unavailable:'突破量能：资料不足',not_applicable:'突破量能：待突破'};
-      badges.append(el('span',volumeLabels[row.volume_state] || '突破量能：资料不足','pattern-badge '+(row.volume_state==='expanded'?'confirmed':'')));
+      badges.append(el('span',row.structure==='clear'?'明确':'潜在','pattern-badge '+(row.structure==='clear'?'structure-clear':'structure-potential')));
+      badges.append(el('span',row.has_breakout?'已突破':'待突破','pattern-badge'));
+      const volumeLabels={expanded:'放量',not_expanded:'未放量',unavailable:'资料不足',not_applicable:'待突破'};
+      if(row.has_breakout) badges.append(el('span',volumeLabels[row.volume_state] || '资料不足','pattern-badge '+(row.volume_state==='expanded'?'confirmed':'')));
       status.append(badges);
+      const details=el('details',null,'pattern-details');details.append(el('summary','详情'));
+      details.append(el('small',row.indexes.join(' · ')));
+      status.append(details);
       const reasons={unequal_extremes:'两次峰谷高度差较大',time_asymmetry:'两肩时间不对称',leg_asymmetry:'各段时长不均衡',shoulder_asymmetry:'两肩高度不对称',sloping_neckline:'颈线斜率较大',weaker_rebound:'反弹／回落力度较弱'};
-      if(row.structure==='potential') status.append(el('small','待复核：'+row.structure_notes.map(k=>reasons[k] || k).join('、')));
-      status.append(el('small','第二峰谷 '+row.second_extreme),el('small',row.has_breakout?'突破识别 '+row.price_breakout_on:'识别 '+row.detected_on));
-      if(row.has_breakout && row.volume_ratio!=null) status.append(el('small','突破日量比 '+row.volume_ratio.toFixed(2)+'×（前20日均量）'));
+      if(row.structure==='potential') details.append(el('small','待复核：'+row.structure_notes.map(k=>reasons[k] || k).join('、')));
+      details.append(el('small','第二峰谷 '+row.second_extreme),el('small',row.has_breakout?'突破识别 '+row.price_breakout_on:'识别 '+row.detected_on));
+      if(row.has_breakout && row.volume_ratio!=null) details.append(el('small','突破日量比 '+row.volume_ratio.toFixed(2)+'×（前20日均量）'));
       card.append(identity,chart,price,status);list.append(card);
     });
   }

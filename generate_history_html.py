@@ -259,7 +259,6 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         <aside class="commodity-sidebar" aria-label="Commodity charts">
             <div class="commodity-sidebar-head">
                 <div class="commodity-sidebar-title">Commodities</div>
-                <div class="commodity-sidebar-count">{len(chart_items)}</div>
             </div>
             <nav class="commodity-list">
                 {sidebar_html}
