@@ -287,3 +287,19 @@ body:not(:has(.page-layout)) .wrap>.chart-shell,body:has(#fearView) .chart-card{
 
 /* Lighter workspace background behind black chart cards. */
 body:has(:is(.page-layout,.commodity-sidebar,.chart-shell,#fearView)),body:has(.page-layout)>.container,.page-layout{background:#101010!important}
+/* Home uses the same flush, four-pixel workspace grid as chart pages. */
+body:has(.main-col){background:#101010!important}
+body:has(.main-col) .site-nav{background:#000!important;margin:0!important;border:0!important;border-radius:0!important}
+body:has(.main-col) .container{max-width:none;width:100%;padding:4px 0 0!important;margin:0;gap:4px!important}
+body:has(.main-col) .section{background:#000!important;border-radius:4px!important}
+body:has(.main-col) .main-col>.section{border-top-left-radius:0!important;border-bottom-left-radius:0!important}
+body:has(.main-col) .main-col>.section+.section{margin-top:4px!important}
+body:has(.main-col) .side-col{gap:4px!important}
+body:has(.main-col) .side-col>.section{border-top-right-radius:0!important;border-bottom-right-radius:0!important}
+body:has(.main-col) :is(.link-card,.pattern-list,.cross-list-wrap){background:transparent!important}
+body:has(.main-col) :is(button,select,.link-card){border-radius:4px!important}
+body:has(.main-col) .link-card:hover{background:#141414!important}
+@media(max-width:1100px){body:has(.main-col) .main-col>.section{border-radius:0!important}}
+@media(max-width:600px){body:has(.main-col) .side-col{grid-template-columns:1fr!important}body:has(.main-col) .side-col>.section{border-radius:0!important}}
+body:has(.main-col) .main-col{display:flex;flex-direction:column;gap:4px}
+body:has(.main-col) .main-col>.section,body:has(.main-col) .main-col>.section+.section{margin:0!important}
