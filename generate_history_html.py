@@ -460,7 +460,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             const step = plotW / visibleCount;
             const barW = Math.max(2, Math.min(22, step * 0.72));
 
-            ctx.fillStyle = '#020607';
+            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--cot-surface').trim() || '#020607';
             ctx.fillRect(0, 0, width, height);
 
             ctx.strokeStyle = '#2a2e39';

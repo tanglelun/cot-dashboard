@@ -234,3 +234,15 @@ input,select,textarea,button{color-scheme:light}
 ::-webkit-scrollbar-track,::-webkit-scrollbar-track-piece,::-webkit-scrollbar-corner{background:#000!important}
 ::-webkit-scrollbar-thumb{background:#3a3a3a!important;border:0!important;border-radius:8px}
 ::-webkit-scrollbar-thumb:hover{background:#505050!important}
+/* COT workspace: three neutral surfaces separated by gutters. */
+body:has(.commodity-sidebar){--cot-surface:#101010}
+body:has(.commodity-sidebar) .site-nav{background:var(--cot-surface)!important;margin:8px;border-radius:12px;border:0!important}
+body:has(.commodity-sidebar) .page{width:calc(100% - 16px)!important;margin:8px auto!important;gap:8px!important;height:calc(100dvh - 112px)!important}
+body:has(.commodity-sidebar) .commodity-sidebar,body:has(.commodity-sidebar) .chart-panel{background:var(--cot-surface);border-radius:12px!important}
+body:has(.commodity-sidebar) .chart-panel{padding:16px;box-sizing:border-box}
+body:has(.commodity-sidebar) .toolbar,body:has(.commodity-sidebar) canvas{background:transparent;border-radius:0}
+@media(max-width:900px){
+ body:has(.commodity-sidebar) .page{width:100%!important;height:auto!important;margin:8px 0!important}
+ body:has(.commodity-sidebar) .chart-panel{padding:16px 0;border-radius:0!important}
+ body:has(.commodity-sidebar) .chart-wrap{height:calc(100dvh - 240px);flex:none}
+}
