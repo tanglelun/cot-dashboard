@@ -226,12 +226,12 @@ body:has(.commodity-sidebar) .toolbar{padding:16px 0!important;gap:16px!importan
 body:has(.group-head) .tabs,body:has(.group-head) .group-head th{background:#141414}
 body:has(.group-head) .group-head th,body:has(.group-head) .tab:not(.active){color:#888}
 body:has(.group-head) .tab:not(.active):hover,body:has(.group-head) tr:hover td{background:#202020}
-/* Explicit dark tracks also cover classic, always-visible OS scrollbars. */
+/* Transparent tracks retain dark native scrollbar rendering. */
 html{color-scheme:dark}
 input,select,textarea,button{color-scheme:light}
-*{scrollbar-color:#3a3a3a var(--scroll-track,#000)!important}
-::-webkit-scrollbar{width:8px;height:8px;background:var(--scroll-track,#000)!important}
-::-webkit-scrollbar-track,::-webkit-scrollbar-track-piece,::-webkit-scrollbar-corner{background:var(--scroll-track,#000)!important}
+*{scrollbar-color:#3a3a3a transparent!important}
+::-webkit-scrollbar{width:8px;height:8px;background:transparent!important}
+::-webkit-scrollbar-track,::-webkit-scrollbar-track-piece,::-webkit-scrollbar-corner{background:transparent!important}
 ::-webkit-scrollbar-thumb{background:#3a3a3a!important;border:0!important;border-radius:8px}
 ::-webkit-scrollbar-thumb:hover{background:#505050!important}
 /* COT workspace: three neutral surfaces separated by gutters. */
@@ -282,6 +282,3 @@ body:not(:has(.page-layout)) .wrap>.chart-shell,body:has(#fearView) .chart-card{
 
 /* Consistent spacing between workspace cards. */
 .page-layout,body:has(.commodity-sidebar) .page{gap:4px!important}
-
-/* Blend scrollbar tracks into their surrounding card surface. */
-.commodity-sidebar,.page-layout .stock-panel,.page-layout>.sidebar,.page-layout .main-panel,.chart-panel,.chart-card{--scroll-track:#101010}
