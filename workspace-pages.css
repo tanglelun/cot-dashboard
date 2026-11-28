@@ -1,0 +1,31 @@
+/* Shared flush workspace surfaces for Calendar, Compare and Indicators. */
+.workspace-page{background:#101010!important;min-height:100dvh;--ink:#eee;--muted:#888;--line:#242424;--line-strong:#444}
+.workspace-page :is(.site-nav,.nav){background:#000!important;margin:0 0 4px!important;border-radius:0!important;border:0!important}
+.workspace-page>main{width:100%!important;max-width:none!important;margin:0!important;padding:0!important;min-height:calc(100dvh - 84px)}
+.workspace-page :is(button,select,.btn,.chip,.rating-pill){border-radius:4px!important}
+.workspace-page :is(select,.chip,.rating-pill){background:#141414!important;color:#ddd!important;border:0!important}
+.workspace-page :is(.tabs,.compare-tabs,.indicator-tabs,.toolbar){background:transparent!important;box-shadow:none!important}
+.workspace-page :is(.tab,.compare-tab,.indicator-tab,.btn):not(.active){background:#141414!important;color:#999!important;border:0!important}
+.workspace-page :is(.tab,.compare-tab,.indicator-tab).active{background:#fff!important;color:#000!important;border:0!important}
+.workspace-page :is(th,.day-row td){background:#141414!important;color:#999!important;border-color:#242424!important}
+.workspace-page :is(td,.card-value,.card-unit,.indicator-name-link){color:#ddd;border-color:#242424!important}
+.workspace-page tr:hover{background:#141414!important}
+.workspace-page :is(.table-wrap,.indicator-table-wrap,.chart-panel,.range-panel){background:#000!important;border:0!important;border-radius:4px!important}
+.workspace-calendar>main{background:#000;padding:24px 16px!important;box-sizing:border-box}
+.workspace-calendar .table-wrap{border-radius:0!important}
+.workspace-calendar tbody tr.today{background:#101010!important}
+.workspace-compare>main{display:flex;flex-direction:column;gap:4px}
+.workspace-compare main>.hero,.workspace-compare main>.controls,.workspace-compare main>.chart-shell{background:#000!important;margin:0!important;padding:24px 16px!important;border-radius:0!important}
+.workspace-compare .series-card{background:transparent!important;border-radius:4px!important}
+.workspace-compare .chart-shell{flex:1}
+.workspace-economy .home-head{background:#000;padding:24px 16px!important;margin:0 0 4px!important}
+.workspace-economy .cards{gap:4px!important}
+.workspace-economy .indicator-card{background:#000!important;border-radius:4px!important;box-shadow:none!important}
+.workspace-economy .indicator-card:hover{transform:none}
+.workspace-economy .indicator-list-section{background:#000;margin-top:4px!important;padding:16px}
+.workspace-economy .detail{background:#000;min-height:calc(100dvh - 84px);padding:24px 16px}
+.workspace-economy :is(.card-value,.card-unit,.indicator-table td,.indicator-name-link){color:#ddd!important}
+@media(max-width:900px){.workspace-calendar>main,.workspace-compare main>.hero,.workspace-compare main>.controls,.workspace-compare main>.chart-shell,.workspace-economy .detail{padding:16px 8px!important}}
+
+body.workspace-economy>main.page{padding:0!important;margin:0!important}
+body.workspace-economy #homeView{padding:0!important;margin:0!important}
