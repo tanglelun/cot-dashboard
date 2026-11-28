@@ -20,6 +20,10 @@
 }
 .site-nav,.nav{height:auto!important;min-height:64px!important;display:flex!important;align-items:center!important;gap:28px!important;padding:0 24px!important;background:#000!important;border-bottom:1px solid #1b1f2a!important;color:#fff!important;font-family:Geist,Arial,sans-serif!important}
 .site-brand,.brand{display:inline-flex!important;align-items:center!important;gap:10px!important;color:#fff!important;text-decoration:none!important;font-size:25px!important;font-weight:600!important;letter-spacing:0!important;white-space:nowrap!important}
+.site-brand .brand-mark + span,.brand .logo + span{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip-path:inset(50%);white-space:nowrap
+}
 .site-brand .brand-mark,.brand .logo{
   width:22px!important;height:26px!important;display:inline-block!important;flex:0 0 22px!important;
   background:transparent url("assets/icons/net-data-logo.svg") center / contain no-repeat!important;

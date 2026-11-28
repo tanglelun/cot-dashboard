@@ -148,7 +148,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{safe_title}</title>
     <link rel="preload" href="../assets/fonts/Geist-500.ttf" as="font" type="font/ttf" crossorigin>
-<link rel="stylesheet" href="../nav_market.css?v=3">
+<link rel="stylesheet" href="../nav_market.css?v=4">
     <style>
         :root {{
             --tv-bg: #000;
@@ -846,7 +846,7 @@ html = f'''<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CFTC Non-Commercial Positions</title>
     <link rel="preload" href="assets/fonts/Geist-500.ttf" as="font" type="font/ttf" crossorigin>
-<link rel="stylesheet" href="nav_market.css?v=3">
+<link rel="stylesheet" href="nav_market.css?v=4">
     <style>
         :root {{
             --tv-bg: #000;
