@@ -235,7 +235,7 @@ input,select,textarea,button{color-scheme:light}
 ::-webkit-scrollbar-thumb{background:#3a3a3a!important;border:0!important;border-radius:8px}
 ::-webkit-scrollbar-thumb:hover{background:#505050!important}
 /* COT workspace: three neutral surfaces separated by gutters. */
-body:has(.commodity-sidebar){--cot-surface:#101010}
+body:has(.commodity-sidebar){--cot-surface:#000}
 body:has(.commodity-sidebar) .site-nav{background:var(--cot-surface)!important;margin:8px;border-radius:12px;border:0!important}
 body:has(.commodity-sidebar) .page{width:calc(100% - 16px)!important;margin:8px auto!important;gap:8px!important;height:calc(100dvh - 112px)!important}
 body:has(.commodity-sidebar) .commodity-sidebar,body:has(.commodity-sidebar) .chart-panel{background:var(--cot-surface);border-radius:12px!important}
@@ -247,20 +247,20 @@ body:has(.commodity-sidebar) .toolbar,body:has(.commodity-sidebar) canvas{backgr
  body:has(.commodity-sidebar) .chart-wrap{height:calc(100dvh - 240px);flex:none}
 }
 /* Apply the same workspace grouping to market charts. */
-body:has(.page-layout) .site-nav,body:has(.chart-shell) .site-nav{background:#101010!important;margin:8px;border-radius:12px;border:0!important}
+body:has(.page-layout) .site-nav,body:has(.chart-shell) .site-nav{background:#000!important;margin:8px;border-radius:12px;border:0!important}
 .page-layout{padding:0 8px 8px!important;gap:8px!important}
-.page-layout .stock-panel,.page-layout>.sidebar,.page-layout .main-panel{background:#101010!important;border:0!important;border-radius:12px!important}
+.page-layout .stock-panel,.page-layout>.sidebar,.page-layout .main-panel{background:#000!important;border:0!important;border-radius:12px!important}
 .page-layout .stock-panel{top:8px!important}
 .page-layout .main-panel{padding:16px;min-width:0;box-sizing:border-box}
 .page-layout .chart-shell,.page-layout .chart-top,.page-layout .stock-list,.page-layout canvas{background:transparent!important}
-body:not(:has(.page-layout)) .chart-shell{background:#101010!important;border:0!important;border-radius:12px!important;padding:16px}
+body:not(:has(.page-layout)) .chart-shell{background:#000!important;border:0!important;border-radius:12px!important;padding:16px}
 @media(max-width:900px){
  .page-layout,.page-layout.sidebar-collapsed{padding:0!important}
  .page-layout .main-panel{padding:16px 0;border-radius:0!important}
 }
 .page-layout .topbar{background:transparent!important}
-body:has(#fearView) .site-nav{background:#101010!important;margin:8px;border-radius:12px;border:0!important}
-body:has(#fearView) .chart-card{background:#101010!important;border:0!important;border-radius:12px!important}
+body:has(#fearView) .site-nav{background:#000!important;margin:8px;border-radius:12px;border:0!important}
+body:has(#fearView) .chart-card{background:#000!important;border:0!important;border-radius:12px!important}
 body:has(#fearView) #fearView{padding:24px!important}
 @media(max-width:900px){body:has(#fearView) #fearView{padding:16px!important}}
 /* Flush outer edges; only inward-facing panel corners are rounded. */
@@ -283,4 +283,7 @@ body:not(:has(.page-layout)) .wrap>.chart-shell,body:has(#fearView) .chart-card{
 /* Consistent spacing between workspace cards. */
 .page-layout,body:has(.commodity-sidebar) .page{gap:4px!important}
 /* Paint the scroll container beneath transparent native scrollbar gutters. */
-.commodity-list,.page-layout .stock-list,.page-layout .sidebar-body{background:#101010!important;background-clip:border-box!important}
+.commodity-list,.page-layout .stock-list,.page-layout .sidebar-body{background:#000!important;background-clip:border-box!important}
+
+/* Lighter workspace background behind black chart cards. */
+body:has(:is(.page-layout,.commodity-sidebar,.chart-shell,#fearView)),body:has(.page-layout)>.container,.page-layout{background:#101010!important}
