@@ -29,6 +29,7 @@
   background:transparent url("assets/icons/net-data-logo.svg") center / contain no-repeat!important;
   border-radius:0!important;transform:none!important
 }
+.site-brand img.brand-mark,.brand img.logo{background:none!important;object-fit:contain}
 .site-brand .brand-mark::before,.site-brand .brand-mark::after{content:none!important}
 .site-nav .nav-links,.nav .nav-links{display:flex;align-items:center;gap:28px!important}
 .site-nav .nav-link,.nav .nav-link{height:auto!important;padding:0!important;color:#f3f4f6!important;text-decoration:none!important;font-family:Geist,Arial,sans-serif!important;font-size:15px!important;font-weight:500!important;line-height:1.2!important;white-space:nowrap!important}

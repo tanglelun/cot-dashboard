@@ -555,7 +555,7 @@ HTML_TEMPLATE = r'''<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Indicators - G20 Data</title>
 <link rel="preload" href="assets/fonts/Geist-500.ttf" as="font" type="font/ttf" crossorigin>
-<link rel="stylesheet" href="nav_market.css?v=4">
+<link rel="stylesheet" href="nav_market.css?v=5">
 <style>
 :root{
   --bg:#fff;
@@ -701,7 +701,7 @@ body{font-family:Geist,Arial,sans-serif;background:var(--bg);color:var(--ink);pa
 </head>
 <body>
 <nav class="site-nav" aria-label="Primary">
-  <a class="site-brand" href="index.html" aria-label="Net Data home"><span class="brand-mark" aria-hidden="true"></span><span>Net Data</span></a>
+  <a class="site-brand" href="index.html" aria-label="Net Data home"><img class="brand-mark" src="assets/icons/net-data-logo.svg" width="22" height="26" alt=""></a>
   <input class="nav-check" type="checkbox" id="navMenu">
   <label class="nav-toggle" for="navMenu" aria-label="Toggle navigation"><span></span><span></span><span></span></label>
   <div class="nav-links">
