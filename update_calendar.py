@@ -3,6 +3,7 @@ import re
 import time
 from datetime import datetime, timedelta, timezone
 from html.parser import HTMLParser
+from zoneinfo import ZoneInfo
 from pathlib import Path
 
 import requests
@@ -336,7 +337,7 @@ def parse_bea_date(date_text, time_text, year):
     for candidate in candidates:
         for fmt in ("%B %d %Y %I:%M %p", "%B %d, %Y %I:%M %p", "%Y-%m-%d %I:%M %p"):
             try:
-                return datetime.strptime(candidate, fmt).replace(tzinfo=timezone.utc).isoformat().replace("+00:00", "Z")
+                return datetime.strptime(candidate, fmt).replace(tzinfo=ZoneInfo("America/New_York")).astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
             except ValueError:
                 continue
     return None
@@ -384,9 +385,9 @@ def fetch_fomc_events():
         for row in row_pattern.finditer(section.group(0)):
             month = normalize_space(row.group(1))
             day_text = normalize_space(row.group(2))
-            day = day_text.split("-")[-1].strip()
+            day = re.sub(r"[^0-9]", "", day_text.split("-")[-1])
             try:
-                dt = datetime.strptime(f"{month} {day} {year} 2:00 PM", "%B %d %Y %I:%M %p").replace(tzinfo=timezone.utc)
+                dt = datetime.strptime(f"{month} {day} {year} 2:00 PM", "%B %d %Y %I:%M %p").replace(tzinfo=ZoneInfo("America/New_York")).astimezone(timezone.utc)
             except ValueError:
                 continue
             result.append(build_event("Federal Reserve", FED_FOMC_URL, dt.isoformat().replace("+00:00", "Z"), "FOMC Decision", "Interest Rate", "FOMC meeting"))
@@ -407,7 +408,7 @@ def in_window(event, start, end):
 def build_payload(events, generated_at):
     start = generated_at.date() - timedelta(days=WINDOW_PAST_DAYS)
     end = generated_at.date() + timedelta(days=WINDOW_FUTURE_DAYS)
-    filtered = [event for event in events if in_window(event, start, end)]
+    filtered = [event for event in events if event.get("source") != "Projected economic schedule" and in_window(event, start, end)]
     dedup = {}
     for event in filtered:
         dedup[event["id"]] = event
@@ -419,15 +420,14 @@ def build_payload(events, generated_at):
         "importance": IMPORTANCE,
         "window": {"start": start.isoformat(), "end": end.isoformat()},
         "sources": [
-            {"name": "Projected economic schedule", "url": ECONOMIC_DATA_URL},
             {"name": "U.S. Bureau of Economic Analysis", "url": BEA_JSON_URL},
             {"name": "Federal Reserve", "url": FED_FOMC_URL},
         ],
         "countries": G20_COUNTRIES,
         "coverage": {
-            "scope": "G20 countries",
+            "scope": "United States: BEA and Federal Reserve release schedules",
             "activeSources": sorted({event["countryCode"] for event in filtered}),
-            "note": "Future rows are projected from official or public indicator histories. Previous values use the latest available actual; consensus and forecasts are left blank unless a connected source provides them.",
+            "note": "Scheduled releases only. Actual, previous, consensus and forecast values are not connected. Other countries are not yet covered.",
         },
         "categories": CATEGORY_ORDER,
         "events": filtered,
@@ -449,7 +449,7 @@ def main():
     now = utc_now()
     events = []
     errors = []
-    for fetcher in (fetch_projected_economic_events, fetch_bea_events, fetch_fomc_events):
+    for fetcher in (fetch_bea_events, fetch_fomc_events):
         try:
             events.extend(fetcher())
         except Exception as error:
@@ -457,6 +457,7 @@ def main():
     if not events:
         existing = load_existing()
         if existing and existing.get("events"):
+            existing["events"] = [e for e in existing["events"] if e.get("source") != "Projected economic schedule"]
             existing["updateError"] = "; ".join(errors)
             existing["lastAttempt"] = now.isoformat().replace("+00:00", "Z")
             write_payload(existing)
