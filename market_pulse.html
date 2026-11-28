@@ -760,27 +760,27 @@ function annularSector(cx, cy, outer, inner, start, end){
 function drawGauge(score){
   const cx = 280, cy = 246, outer = 238, inner = 154;
   const visualBands = [
-    {min:0, max:24, start:-90, end:-54},
-    {min:25, max:44, start:-54, end:-18},
-    {min:45, max:54, start:-18, end:18},
-    {min:55, max:74, start:18, end:54},
+    {min:0, max:25, start:-90, end:-54},
+    {min:25, max:45, start:-54, end:-18},
+    {min:45, max:55, start:-18, end:18},
+    {min:55, max:75, start:18, end:54},
     {min:75, max:100, start:54, end:90},
   ];
   const angleForScore = rawValue => {
     const value = Math.max(0, Math.min(100, rawValue));
-    const band = visualBands.find(item => value >= item.min && value <= item.max) || visualBands[0];
+    const band = visualBands.find(item => value >= item.min && (value < item.max || item.max === 100)) || visualBands[0];
     const t = (value - band.min) / Math.max(1, band.max - band.min);
     return lerp(band.start, band.end, t);
   };
   const slices = [
-    {name:'EXTREME FEAR', lines:['EXTREME','FEAR'], min:0, max:24, start:-90, end:-54, active:'#8b1e1e', rotate:-64},
-    {name:'FEAR', lines:['FEAR'], min:25, max:44, start:-54, end:-18, active:'#ff4d00', rotate:-35},
-    {name:'NEUTRAL', lines:['NEUTRAL'], min:45, max:54, start:-18, end:18, active:'#d7a900', rotate:0},
-    {name:'GREED', lines:['GREED'], min:55, max:74, start:18, end:54, active:'#00d109', rotate:35},
+    {name:'EXTREME FEAR', lines:['EXTREME','FEAR'], min:0, max:25, start:-90, end:-54, active:'#8b1e1e', rotate:-64},
+    {name:'FEAR', lines:['FEAR'], min:25, max:45, start:-54, end:-18, active:'#ff4d00', rotate:-35},
+    {name:'NEUTRAL', lines:['NEUTRAL'], min:45, max:55, start:-18, end:18, active:'#d7a900', rotate:0},
+    {name:'GREED', lines:['GREED'], min:55, max:75, start:18, end:54, active:'#00d109', rotate:35},
     {name:'EXTREME GREED', lines:['EXTREME','GREED'], min:75, max:100, start:54, end:90, active:'#007a2f', rotate:64},
   ];
   const value = Math.max(0, Math.min(100, Number(score) || 0));
-  const activeIndex = slices.findIndex(slice => value >= slice.min && value <= slice.max);
+  const activeIndex = slices.findIndex(slice => value >= slice.min && (value < slice.max || slice.max === 100));
   $('gaugeSegments').innerHTML = slices.map((slice, index) => `
     <path d="${annularSector(cx, cy, outer, inner, slice.start, slice.end)}" fill="${index === activeIndex ? slice.active : '#151515'}" stroke="#000" stroke-width="4"/>
   `).join('');
