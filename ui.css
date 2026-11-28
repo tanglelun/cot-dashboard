@@ -303,3 +303,13 @@ body:has(.main-col) .link-card:hover{background:#141414!important}
 @media(max-width:600px){body:has(.main-col) .side-col{grid-template-columns:1fr!important}body:has(.main-col) .side-col>.section{border-radius:0!important}}
 body:has(.main-col) .main-col{display:flex;flex-direction:column;gap:4px}
 body:has(.main-col) .main-col>.section,body:has(.main-col) .main-col>.section+.section{margin:0!important}
+
+/* Commercial history: navigation and one content card; tabs stay inside. */
+body:has(.group-head){background:#101010!important;min-height:100dvh}
+body:has(.group-head) .site-nav{background:#000!important;margin:0 0 4px!important;border:0!important;border-radius:0!important}
+body:has(.group-head)>.container{background:#000!important;width:100%;max-width:none;margin:0!important;padding:24px 16px!important;border:0!important;border-radius:0!important;min-height:calc(100dvh - 84px);box-sizing:border-box}
+body:has(.group-head) .page-head{background:transparent!important;border:0!important;box-shadow:none!important}
+body:has(.group-head) .tabs{background:transparent!important;border:0!important;padding:0!important;gap:4px}
+body:has(.group-head) .tab{border-radius:4px!important}
+body:has(.group-head) .table-scroll{border:0!important;border-radius:4px!important}
+@media(max-width:900px){body:has(.group-head)>.container{padding:16px 8px!important}}
