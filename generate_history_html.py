@@ -330,9 +330,9 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
                 runSearch();
             }});
         }}
-        // Select two calendar years ending at the latest available report.
+        // Select five calendar years ending at the latest available report.
         const rangeCutoff = new Date((points.at(-1)?.date || '1970-01-01') + 'T00:00:00Z');
-        rangeCutoff.setUTCFullYear(rangeCutoff.getUTCFullYear() - 2);
+        rangeCutoff.setUTCFullYear(rangeCutoff.getUTCFullYear() - 5);
         const cutoffDate = rangeCutoff.toISOString().slice(0, 10);
         const defaultStart = Math.max(0, points.findIndex(point => point.date >= cutoffDate));
         const state = {{
