@@ -249,7 +249,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         }}
     </style>
 <link rel="stylesheet" href="../ui.css?v=4">
-<script src="../ui.js?v=1" defer></script>
+<script src="../ui.js?v=search-2" defer></script>
 </head>
 <body>
     <nav class="site-nav" aria-label="Primary">
@@ -264,10 +264,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
             <a class="nav-link" href="../compare.html">Compare</a>
             <a class="nav-link" href="../calendar.html">Calendar</a>
         </div>
-        <form class="nav-search" role="search" data-root="../">
-            <span class="nav-search-mark" aria-hidden="true"></span>
-            <input type="search" name="q" placeholder="Search stocks" autocomplete="off" aria-label="Search stocks">
-        </form>
+        <a class="nav-search-icon" href="../search.html" aria-label="Search"><span aria-hidden="true"></span></a>
     </nav>
     <main class="page">
         <aside class="commodity-sidebar" aria-label="Commodity charts">
@@ -947,7 +944,7 @@ html = f'''<!DOCTYPE html>
         }}
     </style>
 <link rel="stylesheet" href="ui.css?v=cot-5">
-<script src="ui.js?v=1" defer></script>
+<script src="ui.js?v=search-2" defer></script>
 </head>
 <body>
     <nav class="site-nav" aria-label="Primary">
@@ -962,10 +959,7 @@ html = f'''<!DOCTYPE html>
             <a class="nav-link" href="compare.html">Compare</a>
             <a class="nav-link" href="calendar.html">Calendar</a>
         </div>
-        <form class="nav-search" role="search" data-root="">
-            <span class="nav-search-mark" aria-hidden="true"></span>
-            <input type="search" name="q" placeholder="Search stocks" autocomplete="off" aria-label="Search stocks">
-        </form>
+        <a class="nav-search-icon" href="search.html" aria-label="Search"><span aria-hidden="true"></span></a>
     </nav>
     <div class="container">
         <div class="page-head">
