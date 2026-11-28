@@ -263,3 +263,19 @@ body:has(#fearView) .site-nav{background:#101010!important;margin:8px;border-rad
 body:has(#fearView) .chart-card{background:#101010!important;border:0!important;border-radius:12px!important}
 body:has(#fearView) #fearView{padding:24px!important}
 @media(max-width:900px){body:has(#fearView) #fearView{padding:16px!important}}
+/* Flush outer edges; only inward-facing panel corners are rounded. */
+body:has(:is(.page-layout,.commodity-sidebar,.chart-shell,#fearView)) .site-nav{margin:0!important;border-radius:0!important}
+.page-layout,.page-layout.sidebar-collapsed{padding:8px 0 0!important}
+.page-layout .stock-panel,.page-layout>.sidebar{border-radius:0 4px 0 0!important;height:calc(100dvh - 88px)!important}
+.page-layout .main-panel{border-radius:4px 0 0 0!important}
+body:has(.commodity-sidebar) .page{max-width:none;width:100%!important;margin:8px 0 0!important;height:calc(100dvh - 88px)!important}
+body:has(.commodity-sidebar) .commodity-sidebar{border-radius:0 4px 0 0!important}
+body:has(.commodity-sidebar) .chart-panel{border-radius:4px 0 0 0!important}
+body:not(:has(.page-layout)) .chart-shell,body:has(#fearView) .chart-card{border-radius:4px!important}
+body:has(:is(.page-layout,.commodity-sidebar,.chart-shell,#fearView)) :is(button,select,.btn,.badge,.stock-row,.commodity-link,.filter-drawer,.ma-toggle){border-radius:4px!important}
+@media(max-width:900px){
+ .page-layout .main-panel,body:has(.commodity-sidebar) .chart-panel{border-radius:0!important}
+ body:has(.commodity-sidebar) .page{height:auto!important}
+}
+body:has(.chart-shell):not(:has(.page-layout)) .wrap,body:has(#fearView) .wrap{max-width:none!important;padding:8px 0 0!important;margin:0!important}
+body:not(:has(.page-layout)) .wrap>.chart-shell,body:has(#fearView) .chart-card{border-radius:0!important}
