@@ -282,3 +282,5 @@ body:not(:has(.page-layout)) .wrap>.chart-shell,body:has(#fearView) .chart-card{
 
 /* Consistent spacing between workspace cards. */
 .page-layout,body:has(.commodity-sidebar) .page{gap:4px!important}
+/* Paint the scroll container beneath transparent native scrollbar gutters. */
+.commodity-list,.page-layout .stock-list,.page-layout .sidebar-body{background:#101010!important;background-clip:border-box!important}
