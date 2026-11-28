@@ -249,7 +249,7 @@ def write_chart_html(comm, code, chart_dates, net_values, filename):
         }}
     </style>
 <link rel="stylesheet" href="../ui.css?v=4">
-<script src="../ui.js?v=search-2" defer></script>
+<script src="../ui.js?v=search-24" defer></script>
 </head>
 <body>
     <nav class="site-nav" aria-label="Primary">
@@ -944,7 +944,7 @@ html = f'''<!DOCTYPE html>
         }}
     </style>
 <link rel="stylesheet" href="ui.css?v=cot-5">
-<script src="ui.js?v=search-2" defer></script>
+<script src="ui.js?v=search-24" defer></script>
 </head>
 <body>
     <nav class="site-nav" aria-label="Primary">

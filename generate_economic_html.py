@@ -697,7 +697,7 @@ body{font-family:Geist,Arial,sans-serif;background:var(--bg);color:var(--ink);pa
 }
 </style>
 <link rel="stylesheet" href="ui.css?v=4">
-<script src="ui.js?v=search-2" defer></script>
+<script src="ui.js?v=search-24" defer></script>
 </head>
 <body>
 <nav class="site-nav" aria-label="Primary">
